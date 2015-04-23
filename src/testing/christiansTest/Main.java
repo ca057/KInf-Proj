@@ -1,8 +1,12 @@
 package testing.christiansTest;
 
+import java.io.File;
+
 public class Main {
 	public static void main(String[] args) {
-		System.out.println("Bossa Bossa");
-		System.out.println("Hihi, ich kann in Christians Datei herumpfuschen.");
+		IOTest nioTest = new IOTest();
+		File testFile = nioTest.readFile("/testing/christiansTest/iotest.csv");
+		System.out.println("Filename: " + testFile.getName());
+		System.out.println(testFile.length());
 	}
 }
