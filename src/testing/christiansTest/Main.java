@@ -1,4 +1,4 @@
-package christiansTest;
+package testing.christiansTest;
 
 public class Main {
 	public static void main(String[] args) {

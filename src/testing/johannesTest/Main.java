@@ -1,4 +1,4 @@
-package johannesTest;
+package testing.johannesTest;
 
 public class Main {
 
