@@ -1,2 +1,17 @@
+Was man im Rahmen eines solchen Projektes mal ausprobieren könnte, wäre ein Tool wie https://slack.com/. Davon liest man des Öfteren mal.
+Ich hab mal kurz nach Alternativen gegoogelt, da gibt es wie zu erwarten einen ganzen Haufen, slack ist das mir bekannte und wahrscheinlich prominenteste.
+Vorteile könnten sein:
++ einfachere Kommunikation als über eine Text-Datei, einfacher als alles nochmal bei WhatsApp einzutippen
++ Integration von github möglich (möglicherweise können Code-Schnipsel geteilt/besprochen werden)
++ wir nutzen ein fancy-hipster-startup-Tool, das glücklicherweise auch auf all unseren Betriebssystemen läuft und sogar mobil genutzt werden kann
+Nachteile:
+- wir brauchen einen extra Account
+- ich weiß nicht, was die mit unserem Code und unseren Daten machen
+- möglicherweise nutzen wir das gar nicht und besprechen am Ende doch alles persönlich oder per WhatsApp
+/co
+
+Ich habe mal mein Eclipse auf UTF-8 eingestellt, das sollten wir vielleicht auch alle ähnlich halten, oder? /co
+Aktuelles immer oben, dann muss man nicht scrollen! /co
+
 Hier könnten wir theoretisch was schreiben / Johannes
 SQLite als Datenbank? Vorteil: CSV-Auslese nicht bei jedem Programmstart. / Johannes
