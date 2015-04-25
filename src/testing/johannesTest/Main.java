@@ -24,7 +24,7 @@ public class Main {
 
 		// Add persons to ArrayList (wrong columns)
 		for (String[] row : allRows) {
-			personen.add(new Person(row[2], row[6], row[7], row[8]));
+			personen.add(new Person(row[0], row[6], row[7], row[8]));
 		}
 
 		// Show all Persons (toString)
