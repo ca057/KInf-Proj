@@ -10,6 +10,8 @@ import java.util.List;
 
 import com.opencsv.CSVReader;
 
+
+
 public class Main {
 
 	public static void main(String[] args) throws IOException {
@@ -23,10 +25,14 @@ public class Main {
 		List<String[]> allRows = reader.readAll();
 
 		// Add persons to ArrayList (wrong columns)
+		
 		for (String[] row : allRows) {
-			
-			personen.add(new Person(row[0], row[6], row[7], row[8]));
+		
+			// personen.add(new Person(row[0], row[6], row[7], row[8]));
+			personen.add(new Person().setAll(row));
 		}
+		
+		
 
 		// Show all Persons (toString)
 		for (Person e : personen) {
@@ -34,8 +40,9 @@ public class Main {
 		}
 		
 		//whole List:
-		for(String[] row : allRows){
-	        System.out.println(Arrays.toString(row));
-	     }
+		//for(String[] row : allRows){
+	    //    System.out.println(Arrays.toString(row));
+	    // }
 	}
 }
+
