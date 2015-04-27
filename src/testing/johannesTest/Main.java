@@ -11,7 +11,6 @@ import java.util.List;
 import com.opencsv.CSVReader;
 
 
-
 public class Main {
 
 	public static void main(String[] args) throws IOException {
@@ -32,7 +31,6 @@ public class Main {
 			personen.add(new Person().setAll(row));
 		}
 		
-		
 
 		// Show all Persons (toString)
 		for (Person e : personen) {
@@ -43,6 +41,7 @@ public class Main {
 		//for(String[] row : allRows){
 	    //    System.out.println(Arrays.toString(row));
 	    // }
+		
 	}
 }
 
