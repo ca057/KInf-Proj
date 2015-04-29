@@ -28,7 +28,7 @@ public class Main {
 		String regex = ",(?=([^\"]*\"[^\"]*\")*[^\"]*$)";
 
 		// test with first line
-		// String[] columnHeads = lines.get(0).split(regex);
+		 String[] columnHeads = lines.get(0).split(regex);
 
 		// split all lines and save them as arrays in an arraylist
 		ArrayList<String[]> allLines = new ArrayList<String[]>();
@@ -38,12 +38,12 @@ public class Main {
 			allLines.add(temp);
 		}
 
-		// print all heads of the column with an index
-		// int counter = 0;
-		// for (String h : columnHeads) {
-		// System.out.println(counter + ": " + h);
-		// counter++;
-		// }
+		 // print all heads of the column with an index
+		 int counter = 0;
+		 for (String h : columnHeads) {
+		 System.out.println(counter + ": " + h);
+		 counter++;
+		 }
 
 		// print nummer, anrede und vorname
 		// for (int i = 1; i < lines.size(); i++) {
@@ -54,15 +54,15 @@ public class Main {
 		// }
 
 		// use class person by johannes
-		testing.johannesTest.Person personTest = new Person();
-		personTest.setAll(allLines.get(1));
-		System.out.println(personTest.toString() + "\n");
+		// testing.johannesTest.Person personTest = new Person();
+		// personTest.setAll(allLines.get(1));
+		// System.out.println(personTest.toString() + "\n");
 
 		// print all persons from the testfile
-		for (int i = 1; i < allLines.size(); i++) {
-			testing.johannesTest.Person tmp = new Person();
-			tmp.setAll(allLines.get(i));
-			System.out.println(tmp.toString());
-		}
+//		for (int i = 1; i < allLines.size(); i++) {
+//			testing.johannesTest.Person tmp = new Person();
+//			tmp.setAll(allLines.get(i));
+//			System.out.println(tmp.toString());
+//		}
 	}
 }
