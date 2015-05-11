@@ -23,8 +23,6 @@ public class TestDB {
 			if (con != null) {
 				System.out.println("Connected to DB");
 			}
-			// stmt.execute("CREATE SCHEMA table_test");
-			stmt.execute("CREATE TABLE table_test.test1 (id integer PRIMARY KEY NOT NULL, jahr integer NOT NULL)");
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
