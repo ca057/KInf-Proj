@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="200.0" minWidth="400.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="testing.christiansTest.javaFX.MenuController">
+   <children>
+      <MenuBar fx:id="menu">
+        <menus>
+          <Menu fx:id="menu_datei" mnemonicParsing="false" text="Datei">
+            <items>
+              <MenuItem fx:id="menu_datei_speichern" mnemonicParsing="false" onAction="#save" text="Speichern" />
+                  <MenuItem fx:id="menu_datei_beenden" mnemonicParsing="false" onAction="#closeProgram" text="Programm beenden" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Bearbeiten">
+            <items>
+              <MenuItem fx:id="menu_bearbeiten_optionen" onAction="#setOptions" mnemonicParsing="false" text="Optionen" />
+            </items>
+          </Menu>
+            <Menu mnemonicParsing="false" text="Hilfe">
+              <items>
+                <MenuItem fx:id="menu_hilfe_hilfe" mnemonicParsing="false" onAction="#getHelp" text="Hilfe" />
+                  <MenuItem fx:id="menu_hilfe_ueber" mnemonicParsing="false" onAction="#showInfo" text="Über" />
+              </items>
+            </Menu>
+        </menus>
+      </MenuBar>
+   </children>
+</VBox>
