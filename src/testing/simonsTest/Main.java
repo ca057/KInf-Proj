@@ -9,6 +9,7 @@ package testing.simonsTest;
  */
 public class Main {
 	public static void main(String[] args) {
-
+		TestDB test = new TestDB();
+		test.test();
 	}
 }
