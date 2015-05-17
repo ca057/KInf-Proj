@@ -14,6 +14,7 @@ import com.opencsv.CSVReader;
 public class Main {
 
 	public static void main(String[] args) throws IOException {
+		
 
 		// Build reader and ArrayList instance
 		CSVReader reader = new CSVReader(
@@ -24,6 +25,10 @@ public class Main {
 		List<String[]> allRows = reader.readAll();
 
 		// Add persons to ArrayList (wrong columns)
+//		for(String s : row[31]) {
+//			System.out.println(s);
+//		}
+		
 		
 		for (String[] row : allRows) {
 		

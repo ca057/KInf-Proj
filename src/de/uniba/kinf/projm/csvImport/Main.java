@@ -1,4 +1,4 @@
-package de.uniba.kinf.projm;
+package de.uniba.kinf.projm.csvImport;
 
 public class Main {
 
