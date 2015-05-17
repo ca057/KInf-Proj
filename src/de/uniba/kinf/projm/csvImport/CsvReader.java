@@ -1,4 +1,4 @@
-package csvImport;
+package de.uniba.kinf.projm.csvImport;
 
 import java.util.List;
 
