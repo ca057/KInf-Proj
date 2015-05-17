@@ -1,4 +1,4 @@
-package de.uniba.kinf.projm.hylleblomst;
+package de.uniba.kinf.projm.unukornulo;
 
 public class Main {
 
