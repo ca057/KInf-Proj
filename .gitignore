@@ -1,4 +1,5 @@
 /bin/
-/db/
+
 .gitignore
+/db/
 derby.log
