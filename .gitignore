@@ -1,5 +1,14 @@
 /bin/
+<<<<<<< HEAD
 
 .gitignore
 /db/
 derby.log
+=======
+/db/
+/derby.log
+/.gitignore
+db/
+derby.log
+.gitignore
+>>>>>>> branch 'master' of https://github.com/HannesT117/KInf-Proj.git
