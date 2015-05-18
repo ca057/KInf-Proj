@@ -13,7 +13,7 @@ import java.sql.Statement;
  */
 public class TestDB {
 	void test() {
-		String dbURL = "jdbc:derby:C:/Users/Simon/git/KInf-Projekt/db/MyDB";
+		String dbURL = "jdbc:derby:./db/MyTestingDB";
 		String user = "test";
 		String password = "test";
 
