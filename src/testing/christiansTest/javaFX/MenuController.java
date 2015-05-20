@@ -1,11 +1,9 @@
 package testing.christiansTest.javaFX;
 
-import java.util.Optional;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonType;
+import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -13,7 +11,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class MenuController {
-	private String appName = "fancy Application";
+	private UIHelper ui = new UIHelper();
 
 	@FXML
 	VBox root;
@@ -40,60 +38,45 @@ public class MenuController {
 	MenuItem menu_hilfe_ueber;
 
 	@FXML
+	Button btn_search;
+
+	@FXML
 	protected void save() {
-		functionNotAvailable();
+		ui.functionNotAvailable();
 	}
 
 	@FXML
 	protected void closeProgram() {
-		Alert alert = new Alert(AlertType.CONFIRMATION);
-		alert.setTitle(appName + " - Programm beenden");
-		alert.setHeaderText("Programm beenden");
-		alert.setContentText("Möchten Sie das Programm wirklich beenden?");
-
-		ButtonType btnJa = new ButtonType("Ja");
-		ButtonType btnNein = new ButtonType("Nein");
-
-		alert.getButtonTypes().setAll(btnJa, btnNein);
-
-		Optional<ButtonType> result = alert.showAndWait();
 		Stage stage = (Stage) root.getScene().getWindow();
-
-		if (result.get() == btnJa) {
-			alert.close();
+		if (ui.askForClosingWindow(stage)) {
 			stage.close();
-		} else {
-			alert.close();
 		}
 	}
 
 	@FXML
 	protected void setOptions() {
-		functionNotAvailable();
+		ui.functionNotAvailable();
 	}
 
 	@FXML
 	protected void getHelp() {
-		functionNotAvailable();
+		ui.functionNotAvailable();
 	}
 
 	@FXML
 	protected void showInfo() {
 		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle(appName + " - Über");
-		alert.setHeaderText(appName + " v1.82.02.22.3");
-		alert.setContentText("Mit Liebe gemacht von\nSimon Stemper, Johannes Trepesch, Christian Ost");
+		alert.setTitle(ui.getAppName() + " - Über");
+		alert.setHeaderText(ui.getAppName() + " v1.82.02.22.3");
+		String content = "Mit Liebe gemacht von\nSimon Stemper, Johannes Trepesch, Christian Ost";
+		content += "\n\u00A9 2015 WTFPL – Do What the Fuck You Want to Public License";
+		alert.setContentText(content);
 
 		alert.showAndWait();
 	}
 
-	private void functionNotAvailable() {
-		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle("fancy Application - Hinweis");
-		alert.setHeaderText(null);
-		alert.setContentText("Diese Funktion steht zur Zeit leider noch nicht zur Verfügung.");
-
-		alert.showAndWait();
+	@FXML
+	private void startSearch() {
+		ui.functionNotAvailable();
 	}
-
 }

@@ -29,100 +29,104 @@
             </Menu>
         </menus>
       </MenuBar>
-      <AnchorPane>
+      <AnchorPane prefHeight="253.0" prefWidth="447.0">
          <children>
-            <StackPane prefHeight="214.0" prefWidth="700.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <AnchorPane prefHeight="253.0" prefWidth="700.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <TabPane tabClosingPolicy="UNAVAILABLE">
-                    <tabs>
-                      <Tab text="Person">
-                        <content>
-                          <AnchorPane minHeight="0.0" minWidth="0.0">
-                                 <children>
-                                    <SplitMenuButton layoutX="14.0" layoutY="49.0" mnemonicParsing="false" text="Vorname">
-                                      <items>
-                                        <MenuItem mnemonicParsing="false" text="VORNAME HS B (AUB, I 11)" />
-                                        <MenuItem mnemonicParsing="false" text="VORNAME HS C (AUB, I 13/1)" />
-                                          <MenuItem mnemonicParsing="false" text="VORNAME HS D (AUB, I 13/2)" />
-                                          <MenuItem mnemonicParsing="false" text="VORNAME HS E (AUB, I 9)" />
-                                          <MenuItem mnemonicParsing="false" text="VORNAME HS F (AUB, I 8)" />
-                                          <MenuItem mnemonicParsing="false" text="VORNAME HS G (AUB, I 6)" />
-                                          <MenuItem mnemonicParsing="false" text="VORNAME HS H (AEB, Rep. I, Nr. 321)" />
-                                          <MenuItem mnemonicParsing="false" text="VORNAME HS I (SB Bamberg, Msc.Add.3a)" />
-                                          <MenuItem mnemonicParsing="false" text="VORNAME HS J (SB Bamberg, Msc.Add.3)" />
-                                          <MenuItem mnemonicParsing="false" text="VORNAME AUB, V E 38" />
-                                      </items>
-                                    </SplitMenuButton>
-                                    <SplitMenuButton layoutX="14.0" layoutY="88.0" mnemonicParsing="false" text="Nachname">
-                                      <items>
-                                          <MenuItem mnemonicParsing="false" text="NACHNAME HS B (AUB, I 11)" />
-                                        <MenuItem mnemonicParsing="false" text="NACHNAME HS C (AUB, I 13/1)" />
-                                        <MenuItem mnemonicParsing="false" text="NACHNAME HS D (AUB, I 13/2)" />
-                                          <MenuItem mnemonicParsing="false" text="NACHNAME HS E (AUB, I 9)" />
-                                          <MenuItem mnemonicParsing="false" text="NACHNAME HS F (AUB, I 8)" />
-                                          <MenuItem mnemonicParsing="false" text="NACHNAME HS G (AUB, I 6)" />
-                                          <MenuItem mnemonicParsing="false" text="NACHNAME HS H (AEB, Rep. I, Nr. 321)" />
-                                          <MenuItem mnemonicParsing="false" text="NACHNAME HS I (SB Bamberg, Msc.Add.3a)" />
-                                          <MenuItem mnemonicParsing="false" text="NACHNAME HS J (SB Bamberg, Msc.Add.3)" />
-                                          <MenuItem mnemonicParsing="false" text="NACHNAME AUB, V E 38" />
-                                      </items>
-                                    </SplitMenuButton>
-                                    <Label layoutX="14.0" layoutY="14.0" text="Anrede" />
-                                    <TextField layoutX="148.0" layoutY="10.0" prefHeight="25.0" prefWidth="350.0" text="Anrede" />
-                                    <TextField layoutX="148.0" layoutY="49.0" prefHeight="25.0" prefWidth="350.0" text="Vorname" />
-                                    <TextField layoutX="148.0" layoutY="88.0" prefHeight="25.0" prefWidth="350.0" text="Nachname" />
-                                    <Label layoutX="14.0" layoutY="131.0" text="Titel" />
-                                    <TextField layoutX="148.0" layoutY="127.0" prefHeight="25.0" prefWidth="350.0" text="Titel" />
-                                    <CheckBox layoutX="14.0" layoutY="158.0" mnemonicParsing="false" text="gesamte Kategorie auswählen">
-                                       <padding>
-                                          <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                       </padding>
-                                    </CheckBox>
-                                 </children>
-                              </AnchorPane>
-                        </content>
-                      </Tab>
-                      <Tab text="Ort">
-                        <content>
-                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                        </content>
-                      </Tab>
-                        <Tab text="Zeit">
-                          <content>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                          </content>
-                        </Tab>
-                        <Tab text="Hochschule">
-                          <content>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                          </content>
-                        </Tab>
-                        <Tab text="Quelle">
-                          <content>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                          </content>
-                        </Tab>
-                        <Tab text="sonstiges">
-                          <content>
-                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                          </content>
-                        </Tab>
-                    </tabs>
-                  </TabPane>
+                  <StackPane prefHeight="214.0" prefWidth="498.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <TabPane minWidth="-Infinity" tabClosingPolicy="UNAVAILABLE">
+                          <tabs>
+                            <Tab text="Person">
+                              <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0">
+                                       <children>
+                                          <SplitMenuButton layoutX="14.0" layoutY="49.0" mnemonicParsing="false" text="Vorname">
+                                            <items>
+                                              <MenuItem mnemonicParsing="false" text="VORNAME HS B (AUB, I 11)" />
+                                              <MenuItem mnemonicParsing="false" text="VORNAME HS C (AUB, I 13/1)" />
+                                                <MenuItem mnemonicParsing="false" text="VORNAME HS D (AUB, I 13/2)" />
+                                                <MenuItem mnemonicParsing="false" text="VORNAME HS E (AUB, I 9)" />
+                                                <MenuItem mnemonicParsing="false" text="VORNAME HS F (AUB, I 8)" />
+                                                <MenuItem mnemonicParsing="false" text="VORNAME HS G (AUB, I 6)" />
+                                                <MenuItem mnemonicParsing="false" text="VORNAME HS H (AEB, Rep. I, Nr. 321)" />
+                                                <MenuItem mnemonicParsing="false" text="VORNAME HS I (SB Bamberg, Msc.Add.3a)" />
+                                                <MenuItem mnemonicParsing="false" text="VORNAME HS J (SB Bamberg, Msc.Add.3)" />
+                                                <MenuItem mnemonicParsing="false" text="VORNAME AUB, V E 38" />
+                                            </items>
+                                          </SplitMenuButton>
+                                          <SplitMenuButton layoutX="14.0" layoutY="88.0" mnemonicParsing="false" text="Nachname">
+                                            <items>
+                                                <MenuItem mnemonicParsing="false" text="NACHNAME HS B (AUB, I 11)" />
+                                              <MenuItem mnemonicParsing="false" text="NACHNAME HS C (AUB, I 13/1)" />
+                                              <MenuItem mnemonicParsing="false" text="NACHNAME HS D (AUB, I 13/2)" />
+                                                <MenuItem mnemonicParsing="false" text="NACHNAME HS E (AUB, I 9)" />
+                                                <MenuItem mnemonicParsing="false" text="NACHNAME HS F (AUB, I 8)" />
+                                                <MenuItem mnemonicParsing="false" text="NACHNAME HS G (AUB, I 6)" />
+                                                <MenuItem mnemonicParsing="false" text="NACHNAME HS H (AEB, Rep. I, Nr. 321)" />
+                                                <MenuItem mnemonicParsing="false" text="NACHNAME HS I (SB Bamberg, Msc.Add.3a)" />
+                                                <MenuItem mnemonicParsing="false" text="NACHNAME HS J (SB Bamberg, Msc.Add.3)" />
+                                                <MenuItem mnemonicParsing="false" text="NACHNAME AUB, V E 38" />
+                                            </items>
+                                          </SplitMenuButton>
+                                          <Label layoutX="14.0" layoutY="14.0" text="Anrede" />
+                                          <TextField layoutX="148.0" layoutY="10.0" prefHeight="25.0" prefWidth="350.0" text="Anrede" />
+                                          <TextField layoutX="148.0" layoutY="49.0" prefHeight="25.0" prefWidth="350.0" text="Vorname" />
+                                          <TextField layoutX="148.0" layoutY="88.0" prefHeight="25.0" prefWidth="350.0" text="Nachname" />
+                                          <Label layoutX="14.0" layoutY="131.0" text="Titel" />
+                                          <TextField layoutX="148.0" layoutY="127.0" prefHeight="25.0" prefWidth="350.0" text="Titel" />
+                                          <CheckBox layoutX="14.0" layoutY="158.0" mnemonicParsing="false" text="gesamte Kategorie auswählen">
+                                             <padding>
+                                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                             </padding>
+                                          </CheckBox>
+                                       </children>
+                                    </AnchorPane>
+                              </content>
+                            </Tab>
+                            <Tab text="Ort">
+                              <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                              </content>
+                            </Tab>
+                              <Tab text="Zeit">
+                                <content>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                </content>
+                              </Tab>
+                              <Tab text="Hochschule">
+                                <content>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                </content>
+                              </Tab>
+                              <Tab text="Quelle">
+                                <content>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                </content>
+                              </Tab>
+                              <Tab text="sonstiges">
+                                <content>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                </content>
+                              </Tab>
+                          </tabs>
+                        </TabPane>
+                     </children>
+                  </StackPane>
                </children>
-            </StackPane>
-         </children>
-      </AnchorPane>
-      <AnchorPane>
-         <children>
-            <ButtonBar layoutX="601.0">
-              <buttons>
-                <Button mnemonicParsing="false" text="Suchen" />
-              </buttons>
-               <padding>
-                  <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
-               </padding>
-            </ButtonBar>
+            </AnchorPane>
+            <AnchorPane layoutY="214.0">
+               <children>
+                  <ButtonBar layoutX="601.0">
+                    <buttons>
+                      <Button fx:id="btn_search" mnemonicParsing="false" onAction="#startSearch" text="Suchen" />
+                    </buttons>
+                     <padding>
+                        <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
+                     </padding>
+                  </ButtonBar>
+               </children>
+            </AnchorPane>
          </children>
       </AnchorPane>
    </children>
