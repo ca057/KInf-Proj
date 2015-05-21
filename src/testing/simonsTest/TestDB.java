@@ -14,6 +14,7 @@ import java.util.List;
  *
  */
 public class TestDB {
+
 	void test() {
 		String dbURL = "jdbc:derby:./db/MyTestingDB";
 		String user = "test";
@@ -29,7 +30,7 @@ public class TestDB {
 
 			System.out.println(sql);
 			String table = "Presentation.seminar_norm";
-			int id = 5;
+			int id = 6;
 
 			// Muy importante: varchar attributes müssen auch mit '' umgeben
 			// werden
