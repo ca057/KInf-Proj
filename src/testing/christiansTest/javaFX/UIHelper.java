@@ -8,7 +8,7 @@ import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
 public class UIHelper {
-	private String appName = "unukornulo";
+	private String appName = "Hylleblomst";
 
 	public String getAppName() {
 		return appName;
