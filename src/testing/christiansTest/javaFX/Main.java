@@ -17,7 +17,7 @@ public class Main extends Application {
 			VBox root = (VBox) FXMLLoader.load(getClass().getResource(
 					"mainview.fxml"));
 
-			Scene scene = new Scene(root, 600, 400);
+			Scene scene = new Scene(root);
 			primaryStage.setTitle(ui.getAppName() + " v1.82.02.22.3");
 			primaryStage.setScene(scene);
 			primaryStage.show();
