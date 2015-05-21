@@ -29,9 +29,9 @@
             </Menu>
         </menus>
       </MenuBar>
-      <AnchorPane prefHeight="253.0" prefWidth="447.0">
+      <AnchorPane>
          <children>
-            <AnchorPane prefHeight="253.0" prefWidth="700.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <AnchorPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <StackPane prefHeight="214.0" prefWidth="498.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <children>
@@ -81,32 +81,50 @@
                                              </padding>
                                           </CheckBox>
                                        </children>
+                                       <padding>
+                                          <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
+                                       </padding>
                                     </AnchorPane>
                               </content>
                             </Tab>
                             <Tab text="Ort">
                               <content>
-                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <padding>
+                                          <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
+                                       </padding></AnchorPane>
                               </content>
                             </Tab>
                               <Tab text="Zeit">
                                 <content>
-                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <padding>
+                                          <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
+                                       </padding></AnchorPane>
                                 </content>
                               </Tab>
                               <Tab text="Hochschule">
                                 <content>
-                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <padding>
+                                          <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
+                                       </padding></AnchorPane>
                                 </content>
                               </Tab>
                               <Tab text="Quelle">
                                 <content>
-                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <padding>
+                                          <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
+                                       </padding></AnchorPane>
                                 </content>
                               </Tab>
                               <Tab text="sonstiges">
                                 <content>
-                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <padding>
+                                          <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
+                                       </padding></AnchorPane>
                                 </content>
                               </Tab>
                           </tabs>
@@ -115,16 +133,14 @@
                   </StackPane>
                </children>
             </AnchorPane>
-            <AnchorPane layoutY="214.0">
+            <AnchorPane layoutY="214.0" prefHeight="40.0">
                <children>
-                  <ButtonBar layoutX="601.0">
-                    <buttons>
-                      <Button fx:id="btn_search" mnemonicParsing="false" onAction="#startSearch" text="Suchen" />
-                    </buttons>
+                  <ButtonBar layoutX="295.0">
                      <padding>
                         <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
                      </padding>
                   </ButtonBar>
+                <Button fx:id="btn_search" layoutX="14.0" layoutY="7.0" mnemonicParsing="false" onAction="#startSearch" text="Suchen" />
                </children>
             </AnchorPane>
          </children>
