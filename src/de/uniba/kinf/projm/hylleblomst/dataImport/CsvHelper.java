@@ -9,13 +9,11 @@ import com.opencsv.CSVReader;
 
 public class CsvHelper {
 	List<String[]> allLines;
-	String path;
+	Path path;
 
-	public CsvHelper(Path path) throws ImportException {
+	CsvHelper(Path path) throws ImportException {
 		if (Validation.isValidCSV(path)) {
-			this.path = path.toString();
-		} else {
-			throw new ImportException("asdf");
+			this.path = path;
 		}
 	}
 
@@ -26,14 +24,18 @@ public class CsvHelper {
 	 * @throws IOException
 	 * @throws ImportException
 	 */
-	public void getAllLines() throws IOException, ImportException {
-		if (Validation.isNotNull(path)) {
-			CSVReader reader = new CSVReader(new FileReader(path), ',', '"', 1);
-			allLines = reader.readAll();
-			reader.close();
-		} else {
-			throw new ImportException("Dieser Pfad ist nicht korrekt.");
+	List<String[]> getAllLines() throws IOException, ImportException {
+		if (!Validation.isNotNull(path)) {
+			throw new ImportException("Es wurde kein Pfad angegeben (null).");
+		} else if (!Validation.isValidCSV(path)) {
+			throw new ImportException(
+					"Die angegebene Datei muss auf .csv enden.");
 		}
+		CSVReader reader = new CSVReader(new FileReader(path.toString()), ',',
+				'"', 1);
+		allLines = reader.readAll();
+		reader.close();
+		return allLines;
 	}
 
 	/**
@@ -44,10 +46,10 @@ public class CsvHelper {
 	 * @throws IOException
 	 * @throws ImportException
 	 */
-	public String[] getLine(int lineNumber) throws IOException, ImportException {
+	String[] getLine(int lineNumber) throws IOException, ImportException {
 		if (allLines.isEmpty()) {
 			getAllLines();
 		}
-		return allLines.get(lineNumber);
+		return allLines.get(lineNumber + 1);
 	}
 }
