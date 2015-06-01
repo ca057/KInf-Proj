@@ -1,21 +1,26 @@
 package de.uniba.kinf.projm.hylleblomst.dataImport;
 
-import java.io.IOException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
 public class Import {
 
-	public static void addImport(String pathS) throws ImportException {
-		try {
-			Path path = Paths.get(pathS);
-			CsvHelper csvhelper = new CsvHelper(path);
-			List<String[]> test = csvhelper.getAllLines();
-			System.out.println(test);
-		} catch (IOException e) {
-			throw new ImportException(e.getMessage());
-		}
+	/**
+	 * Adds data of a file to the database
+	 * 
+	 * @param path
+	 *            The path of the file
+	 * @throws ImportException
+	 *             if there was a problem during import
+	 */
+	public static void addImport(String path) throws ImportException {
+		CsvHelper csvhelper = new CsvHelper();
+		csvhelper.setPath(Paths.get(path));
+		List<String[]> test = csvhelper.getAllLines();
+		System.out.println(test);
+		// TODO Methode zur Validierung aufrufen
+		// TODO Methode zur Weitergabe an DB aufrufen
+
 	}
 
 }

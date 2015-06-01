@@ -1,52 +1,66 @@
 package de.uniba.kinf.projm.hylleblomst.dataImport;
 
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.util.List;
 
 import com.opencsv.CSVReader;
 
 public class CsvHelper {
-	List<String[]> allLines;
-	Path path;
+	private List<String[]> allLines;
+	private Path path;
 
-	CsvHelper(Path path) throws ImportException {
+	CsvHelper() {
+	}
+
+	void setPath(Path path) throws ImportException {
 		if (Validation.isValidCSV(path)) {
 			this.path = path;
-		}
-	}
-
-	/**
-	 * Gets a line
-	 * 
-	 * @return A line of a CSV-File.
-	 * @throws IOException
-	 * @throws ImportException
-	 */
-	List<String[]> getAllLines() throws IOException, ImportException {
-		if (!Validation.isNotNull(path)) {
-			throw new ImportException("Es wurde kein Pfad angegeben (null).");
-		} else if (!Validation.isValidCSV(path)) {
+		} else {
 			throw new ImportException(
-					"Die angegebene Datei muss auf .csv enden.");
+					"Der angegebene Pfad führt nicht zu einer korrekten CSV-Datei.");
 		}
-		CSVReader reader = new CSVReader(new FileReader(path.toString()), ',',
-				'"', 1);
-		allLines = reader.readAll();
-		reader.close();
-		return allLines;
 	}
 
 	/**
+	 * Returns all lines of a .csv.
 	 * 
-	 * @param path
-	 * @param lineNumber
-	 * @return
-	 * @throws IOException
+	 * @return A line of a CSV-File
 	 * @throws ImportException
+	 *             if path was not set correctly or there was a problem during
+	 *             import
 	 */
-	String[] getLine(int lineNumber) throws IOException, ImportException {
+	List<String[]> getAllLines() throws ImportException {
+		try {
+			if (!Validation.isNotNull(path)) {
+				throw new ImportException(
+						"Es wurde kein Pfad angegeben (null).");
+			} else if (!Validation.isValidCSV(path)) {
+				throw new ImportException(
+						"Die angegebene Datei muss auf .csv enden.");
+			}
+			CSVReader reader = new CSVReader(new InputStreamReader(
+					new FileInputStream(path.toString()), "UTF-8"));
+			allLines = reader.readAll();
+			reader.close();
+			return allLines;
+		} catch (IOException e) {
+			throw new ImportException("Fehler beim Einlesen: " + e.getMessage());
+		}
+	}
+
+	/**
+	 * Returns a specific line of a file.
+	 * 
+	 * @param lineNumber
+	 *            the number of the wanted line.
+	 * @return An array with all fields of a line
+	 * @throws ImportException
+	 *             if there was a problem during import
+	 */
+	String[] getLine(int lineNumber) throws ImportException {
 		if (allLines.isEmpty()) {
 			getAllLines();
 		}
