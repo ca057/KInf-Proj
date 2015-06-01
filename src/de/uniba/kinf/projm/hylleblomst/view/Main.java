@@ -3,7 +3,7 @@ package de.uniba.kinf.projm.hylleblomst.view;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class Main extends Application {
@@ -11,8 +11,8 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			VBox root = (VBox) FXMLLoader.load(getClass().getResource(
-					"hylleblomstView.fxml"));
+			BorderPane root = (BorderPane) FXMLLoader.load(getClass()
+					.getResource("hylleblomstView.fxml"));
 
 			Scene scene = new Scene(root);
 			primaryStage.setTitle("hylleblomst");
