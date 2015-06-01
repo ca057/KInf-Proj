@@ -1,4 +1,4 @@
-package de.uniba.kinf.projm.csvImport;
+package de.uniba.kinf.projm.hylleblomst.csvImport;
 
 public class Main {
 

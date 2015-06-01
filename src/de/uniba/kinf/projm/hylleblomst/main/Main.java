@@ -1,4 +1,4 @@
-package de.uniba.kinf.projm.hylleblomst;
+package de.uniba.kinf.projm.hylleblomst.main;
 
 public class Main {
 
