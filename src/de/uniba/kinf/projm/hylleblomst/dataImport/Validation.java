@@ -48,4 +48,12 @@ public class Validation {
 		}
 	}
 
+	/**
+	 * 
+	 * @param list
+	 */
+	public static void checkIDs(String id) {
+
+	}
+
 }
