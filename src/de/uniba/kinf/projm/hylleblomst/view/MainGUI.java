@@ -1,12 +1,15 @@
 package de.uniba.kinf.projm.hylleblomst.view;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 public class MainGUI extends Application {
+	private UIHelper ui = new UIHelper();
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -15,9 +18,19 @@ public class MainGUI extends Application {
 					.getResource("hylleblomstView.fxml"));
 
 			Scene scene = new Scene(root);
-			primaryStage.setTitle("Hylleblomst");
+
+			primaryStage.setTitle(ui.getAppName());
 			primaryStage.setScene(scene);
 			primaryStage.show();
+			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+				public void handle(WindowEvent we) {
+					if (ui.askForClosingWindow(primaryStage)) {
+						primaryStage.close();
+					} else {
+						we.consume();
+					}
+				}
+			});
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

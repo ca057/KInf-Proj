@@ -10,8 +10,14 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
 public class Controller {
+	private UIHelper ui;
+
+	@FXML
+	BorderPane root;
 
 	@FXML
 	MenuBar mainMenu;
@@ -72,4 +78,21 @@ public class Controller {
 
 	@FXML
 	TextArea infoArea;
+
+	private String getFullTextSearchInput() {
+		return null;
+	}
+
+	@FXML
+	private void clearSearchInput() {
+		search_fulltext.clear();
+	}
+
+	@FXML
+	protected void closeWindow() {
+		Stage stage = (Stage) root.getScene().getWindow();
+		if (ui.askForClosingWindow(stage)) {
+			stage.close();
+		}
+	}
 }

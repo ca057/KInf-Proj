@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.layout.BorderPane?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniba.kinf.projm.hylleblomst.view.Controller">
+<BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniba.kinf.projm.hylleblomst.view.Controller">
    <top>
       <MenuBar fx:id="mainMenu" BorderPane.alignment="CENTER">
         <menus>
@@ -59,7 +59,7 @@
                               </Accordion>
                               <ButtonBar fx:id="searchMenu" maxHeight="40.0" minHeight="40.0" prefHeight="40.0" prefWidth="200.0">
                                 <buttons>
-                                  <Button fx:id="searchMenu_clearSearch" mnemonicParsing="false" text="Suche leeren" />
+                                  <Button fx:id="searchMenu_clearSearch" mnemonicParsing="false" onAction="#clearSearchInput" text="Suche leeren" />
                                     <Button fx:id="searchMenu_search" mnemonicParsing="false" text="Suchen" />
                                 </buttons>
                                  <padding>
