@@ -14,7 +14,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class Controller {
-	private UIHelper ui;
+	private UIHelper ui = new UIHelper();
 
 	@FXML
 	BorderPane root;
@@ -79,20 +79,47 @@ public class Controller {
 	@FXML
 	TextArea infoArea;
 
+	/**
+	 * Gets the input of the fulltext search.
+	 * 
+	 * @return the input as a string
+	 */
 	private String getFullTextSearchInput() {
 		return null;
 	}
 
+	/**
+	 * Starts the search.
+	 */
+	@FXML
+	private void startSearch() {
+		ui.functionNotAvailable();
+	}
+
+	/**
+	 * Clears all input field of the search.
+	 */
 	@FXML
 	private void clearSearchInput() {
 		search_fulltext.clear();
 	}
 
+	/**
+	 * Closes the window when the users submits the action.
+	 */
 	@FXML
 	protected void closeWindow() {
 		Stage stage = (Stage) root.getScene().getWindow();
 		if (ui.askForClosingWindow(stage)) {
 			stage.close();
 		}
+	}
+
+	/**
+	 * Opens an alert window with some random information.
+	 */
+	@FXML
+	private void showInfo() {
+		ui.showInfo();
 	}
 }
