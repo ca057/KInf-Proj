@@ -9,7 +9,7 @@ import de.uniba.kinf.projm.hylleblomst.database.ImportDatabase;
 import de.uniba.kinf.projm.hylleblomst.database.ImportDatabaseImpl;
 import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 
-public class ImportImpl implements ImportData {
+public class ImportDataImpl implements ImportData {
 
 	@Override
 	public void addData(String path) throws ImportException {
@@ -43,7 +43,6 @@ public class ImportImpl implements ImportData {
 	private void addCSV(Path path) throws ImportException {
 		CsvHelper csvhelper = new CsvHelper(path);
 		List<String[]> rows = csvhelper.getAllLines();
-		System.out.println(rows);
 		try {
 			ImportDatabase database = new ImportDatabaseImpl();
 			database.importData(rows);

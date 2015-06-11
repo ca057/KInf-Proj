@@ -8,7 +8,7 @@ public class ImportDatabaseImpl implements ImportDatabase {
 	@Override
 	public void importData(List<String[]> rows) throws Exception {
 		// TODO Auto-generated method stub
-
+		System.out.println("Kommt in ImportDatabseImpl an" + rows);
 	}
 
 }
