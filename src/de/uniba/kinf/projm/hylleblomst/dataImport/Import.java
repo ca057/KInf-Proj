@@ -1,40 +1,29 @@
 package de.uniba.kinf.projm.hylleblomst.dataImport;
 
-import java.nio.file.Paths;
-import java.util.List;
-
 import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 
-public class Import {
-	List<String[]> rows;
+/**
+ * Adds new entries to the database.
+ * 
+ * @author Hannes
+ *
+ */
+public interface Import {
 
+	// FIXME @see Link funktioniert nicht
 	/**
-	 * Adds data of a file to the database.
-	 * <p>
-	 * 
-	 * Reads a CSV-file and passes on a <code>List</code> of
-	 * <code>String[]</code>.
+	 * Takes the passed {@code String} path to the file and starts the import.
+	 * First, the {@code String} is validated, then the single rows are given to
+	 * the database-import.
 	 * 
 	 * @param path
-	 *            The path of the file
+	 *            The path to the file as {@code String}
+	 * @return true - if import was successful
+	 * @return false - if import failed
 	 * @throws ImportException
-	 *             if there was a problem during import
+	 * 
+	 * @see {@link database.Import}
 	 */
-	public void addCSV(String path) throws ImportException {
-		CsvHelper csvhelper = new CsvHelper();
-		csvhelper.setPath(Paths.get(path));
-		rows = csvhelper.getAllLines();
-		System.out.println(rows);
-		for (String[] row : rows) {
-			Validation.checkIDs(row[0]);
-		}
-		try {
-			// databse.Import.addToDatabase(rows);
-		} catch (Exception e) {
-			// TODO Exception anpassen
-			throw new ImportException(
-					"Ein Fehler beim Schreiben der Daten ist aufgetreten: " + e);
-		}
+	public void addData(String path) throws ImportException;
 
-	}
 }
