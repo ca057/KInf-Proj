@@ -8,20 +8,14 @@ import java.util.List;
 
 import com.opencsv.CSVReader;
 
-public class CsvHelper {
+import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
+
+class CsvHelper {
 	private List<String[]> allLines;
 	private Path path;
 
-	CsvHelper() {
-	}
-
-	void setPath(Path path) throws ImportException {
-		if (Validation.isValidCSV(path)) {
-			this.path = path;
-		} else {
-			throw new ImportException(
-					"Der angegebene Pfad führt nicht zu einer korrekten CSV-Datei.");
-		}
+	CsvHelper(Path path) {
+		this.path = path;
 	}
 
 	/**
@@ -34,13 +28,6 @@ public class CsvHelper {
 	 */
 	List<String[]> getAllLines() throws ImportException {
 		try {
-			if (!Validation.isNotNull(path)) {
-				throw new ImportException(
-						"Es wurde kein Pfad angegeben (null).");
-			} else if (!Validation.isValidCSV(path)) {
-				throw new ImportException(
-						"Die angegebene Datei muss auf .csv enden.");
-			}
 			CSVReader reader = new CSVReader(new InputStreamReader(
 					new FileInputStream(path.toString()), "UTF-8"));
 			allLines = reader.readAll();
