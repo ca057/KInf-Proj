@@ -138,7 +138,7 @@ public class Controller {
 	 * info area.
 	 */
 	private void setInfoText() {
-		String info = "Suchanfrage\n-----------";
+		String info = "Suchanfragen\n------------";
 		info += "Volltextsuche: " + getFullTextSearchInput() + "\n";
 		infoArea.setText(info);
 	}
