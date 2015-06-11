@@ -3,9 +3,12 @@ package de.uniba.kinf.projm.hylleblomst.dataImport;
 import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 
 /**
- * Adds new entries to the database.
+ * Passes rows to
+ * {@link de.uniba.kinf.projm.hylleblomst.database.ImportDatabase}.
  * 
  * @author Hannes
+ * 
+ * @see {@link de.uniba.kinf.projm.hylleblomst.database.ImportDatabase}
  *
  */
 public interface ImportData {
