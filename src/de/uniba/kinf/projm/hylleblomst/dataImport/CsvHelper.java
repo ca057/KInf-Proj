@@ -8,6 +8,8 @@ import java.util.List;
 
 import com.opencsv.CSVReader;
 
+import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
+
 public class CsvHelper {
 	private List<String[]> allLines;
 	private Path path;

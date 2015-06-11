@@ -1,4 +1,4 @@
-package de.uniba.kinf.projm.hylleblomst.dataImport;
+package de.uniba.kinf.projm.hylleblomst.exceptions;
 
 public class ImportException extends Exception {
 

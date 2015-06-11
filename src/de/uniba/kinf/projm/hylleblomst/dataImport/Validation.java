@@ -6,18 +6,6 @@ import java.nio.file.Path;
 public class Validation {
 
 	/**
-	 * Checks if an ID is already in use in the database.
-	 * 
-	 * @return true if taken <br/>
-	 *         false if new ID
-	 */
-	public static boolean isTakenID() {
-		// TODO Implement: If person number is taken, return true. (via
-		// SQL-query)
-		return false;
-	}
-
-	/**
 	 * Checks whether a path leads to a valid CSV.
 	 * 
 	 * @param path

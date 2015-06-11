@@ -3,8 +3,10 @@ package de.uniba.kinf.projm.hylleblomst.dataImport;
 import java.nio.file.Paths;
 import java.util.List;
 
+import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
+
 public class Import {
-	// FIXME Static oder rows als Instanzvariable?
+	List<String[]> rows;
 
 	/**
 	 * Adds data of a file to the database.
@@ -18,23 +20,21 @@ public class Import {
 	 * @throws ImportException
 	 *             if there was a problem during import
 	 */
-	public static void addImport(String path) throws ImportException {
+	public void addCSV(String path) throws ImportException {
 		CsvHelper csvhelper = new CsvHelper();
 		csvhelper.setPath(Paths.get(path));
-		List<String[]> rows = csvhelper.getAllLines();
+		rows = csvhelper.getAllLines();
 		System.out.println(rows);
 		for (String[] row : rows) {
 			Validation.checkIDs(row[0]);
 		}
-		addToDatabase(rows);
+		try {
+			// databse.Import.addToDatabase(rows);
+		} catch (Exception e) {
+			// TODO Exception anpassen
+			throw new ImportException(
+					"Ein Fehler beim Schreiben der Daten ist aufgetreten: " + e);
+		}
+
 	}
-
-	/**
-	 * 
-	 * @param list
-	 */
-	private static void addToDatabase(List<String[]> list) {
-
-	}
-
 }
