@@ -85,7 +85,13 @@ public class Controller {
 	 * @return the input as a string
 	 */
 	private String getFullTextSearchInput() {
-		return null;
+		if (search_fulltext.getText() == null
+				|| "".equals(search_fulltext.getText())) {
+			// TODO Was zurückgeben wenn kein Eintrag erfolgt ist? Was benötigt
+			// die Suche an Infos in welchem Format?
+			return "Volltext ist leer";
+		}
+		return search_fulltext.getText();
 	}
 
 	/**
@@ -93,11 +99,14 @@ public class Controller {
 	 */
 	@FXML
 	private void startSearch() {
-		ui.functionNotAvailable();
+		// ui.functionNotAvailable();
+		// FIXME Eingaben sammeln und an Suche übergeben
+		// Aktuell wird nur der Info-Text ausgegeben
+		setInfoText();
 	}
 
 	/**
-	 * Clears all input field of the search.
+	 * Clears all input fields of the search.
 	 */
 	@FXML
 	private void clearSearchInput() {
@@ -121,5 +130,16 @@ public class Controller {
 	@FXML
 	private void showInfo() {
 		ui.showInfo();
+	}
+
+	/**
+	 * Helps ensuring full functionality and provides a feedback of the search
+	 * input. Collects the user input from all input fields prints it to the
+	 * info area.
+	 */
+	private void setInfoText() {
+		String info = "Suchanfragen\n------------";
+		info += "Volltextsuche: " + getFullTextSearchInput() + "\n";
+		infoArea.setText(info);
 	}
 }
