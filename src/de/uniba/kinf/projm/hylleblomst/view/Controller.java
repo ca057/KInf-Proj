@@ -100,11 +100,13 @@ public class Controller {
 	@FXML
 	private void startSearch() {
 		// ui.functionNotAvailable();
-		setInfoText(getFullTextSearchInput());
+		// FIXME Eingaben sammeln und an Suche übergeben
+		// Aktuell wird nur der Info-Text ausgegeben
+		setInfoText();
 	}
 
 	/**
-	 * Clears all input field of the search.
+	 * Clears all input fields of the search.
 	 */
 	@FXML
 	private void clearSearchInput() {
@@ -130,7 +132,14 @@ public class Controller {
 		ui.showInfo();
 	}
 
-	private void setInfoText(String infoText) {
-		infoArea.setText(infoText);
+	/**
+	 * Helps ensuring full functionality and provides a feedback of the search
+	 * input. Collects the user input from all input fields prints it to the
+	 * info area.
+	 */
+	private void setInfoText() {
+		String info = "Suchanfrage\n-----------";
+		info += "Volltextsuche: " + getFullTextSearchInput() + "\n";
+		infoArea.setText(info);
 	}
 }
