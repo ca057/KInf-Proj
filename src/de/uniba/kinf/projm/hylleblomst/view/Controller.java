@@ -85,7 +85,13 @@ public class Controller {
 	 * @return the input as a string
 	 */
 	private String getFullTextSearchInput() {
-		return null;
+		if (search_fulltext.getText() == null
+				|| "".equals(search_fulltext.getText())) {
+			// TODO Was zurückgeben wenn kein Eintrag erfolgt ist? Was benötigt
+			// die Suche an Infos in welchem Format?
+			return "Volltext ist leer";
+		}
+		return search_fulltext.getText();
 	}
 
 	/**
@@ -93,7 +99,8 @@ public class Controller {
 	 */
 	@FXML
 	private void startSearch() {
-		ui.functionNotAvailable();
+		// ui.functionNotAvailable();
+		setInfoText(getFullTextSearchInput());
 	}
 
 	/**
@@ -121,5 +128,9 @@ public class Controller {
 	@FXML
 	private void showInfo() {
 		ui.showInfo();
+	}
+
+	private void setInfoText(String infoText) {
+		infoArea.setText(infoText);
 	}
 }
