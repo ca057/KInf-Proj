@@ -5,9 +5,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
+import de.uniba.kinf.projm.hylleblomst.database.ImportDatabase;
+import de.uniba.kinf.projm.hylleblomst.database.ImportDatabaseImpl;
 import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 
-public class ImportImpl implements Import {
+public class ImportImpl implements ImportData {
 
 	@Override
 	public void addData(String path) throws ImportException {
@@ -42,6 +44,13 @@ public class ImportImpl implements Import {
 		CsvHelper csvhelper = new CsvHelper(path);
 		List<String[]> rows = csvhelper.getAllLines();
 		System.out.println(rows);
-		// database.Import.addToDatabase(rows);
+		try {
+			ImportDatabase database = new ImportDatabaseImpl();
+			database.importData(rows);
+		} catch (Exception e) {
+			// TODO gefangene Exception genauer definieren, wenn in Database
+			// passiert
+			throw new ImportException(e.getMessage());
+		}
 	}
 }

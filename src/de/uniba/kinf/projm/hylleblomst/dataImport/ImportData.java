@@ -8,7 +8,7 @@ import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
  * @author Hannes
  *
  */
-public interface Import {
+public interface ImportData {
 
 	// FIXME @see Link funktioniert nicht
 	/**
@@ -22,7 +22,7 @@ public interface Import {
 	 * @return false - if import failed
 	 * @throws ImportException
 	 * 
-	 * @see {@link database.Import}
+	 * @see {@link ImportData.Import}
 	 */
 	public void addData(String path) throws ImportException;
 
