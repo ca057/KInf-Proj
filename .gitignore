@@ -1,5 +1,7 @@
 /bin/
-
+/MyTestingDB
 .gitignore
+
+.log
 /db/
 /derby.log
