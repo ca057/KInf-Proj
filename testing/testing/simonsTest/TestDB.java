@@ -2,10 +2,9 @@ package testing.simonsTest;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Formulate some statements to interact with Derby-database
@@ -15,58 +14,110 @@ import java.util.List;
  */
 public class TestDB {
 
-	void test() {
-		String dbURL = "jdbc:derby:./db/MyTestingDB";
-		String user = "test";
-		String password = "test";
+	public static void main(String[] args) {
+		String dbURL = "jdbc:derby:./db/MyDB;create=true";
+		String user = "admin";
+		String password = "password";
+
+		ResultSet rs = null;
+
+		// try (Connection con = DriverManager
+		// .getConnection(dbURL, user, password);
+		// Statement stmt = con.createStatement(
+		// ResultSet.TYPE_SCROLL_INSENSITIVE,
+		// ResultSet.CONCUR_READ_ONLY);
+		//
+		// ) {
+		// System.out.println("CREATE SCHEMA test: "
+		// + !stmt.execute("CREATE SCHEMA test"));
+		// System.out
+		// .println("CREATE TABLE test.tableOne(id integer PRIMARY KEY NOT NULL, name varchar(40) NOT NULL): "
+		// +
+		// !stmt.execute("CREATE TABLE test.tableOne(id integer PRIMARY KEY NOT NULL, name varchar(40) NOT NULL)"));
+		// System.out
+		// .println("INSERT into test.tableOne values(1, 'Germany'): "
+		// + !stmt.execute("INSERT into test.tableOne values(1, 'Germany')"));
+		// System.out.println("DROP TABLE test.tableOne: "
+		// + !stmt.execute("DROP TABLE test.tableOne"));
+		// System.out.println("DROP SCHEMA test Restrict: "
+		// + !stmt.execute("DROP SCHEMA test Restrict"));
+		// } catch (SQLException e) {
+		// e.printStackTrace();
+		// }
+
+		System.out
+				.println("============================================================");
+		System.out.println("TestFullAccess");
+		try (Connection con = DriverManager
+				.getConnection(dbURL, user, password);
+				Statement stmt = con.createStatement(
+						ResultSet.TYPE_SCROLL_INSENSITIVE,
+						ResultSet.CONCUR_READ_ONLY);) {
+			System.out.println("con.getAutoCommit(): " + con.getAutoCommit());
+			if (con != null) {
+				System.out.println("Connection to database is established");
+			}
+
+			String sql = "INSERT INTO test.tableONE values(" + 14
+					+ ", 'Malta')";
+			stmt.execute(sql);
+
+			rs = stmt.executeQuery("SELECT id, name FROM test.tableOne");
+
+			con.setAutoCommit(false);
+			// System.out.println("con.getAutoCommit(): " +
+			// con.getAutoCommit());
+			// System.out.println(rs);
+			for (; rs.next();) {
+				System.out
+						.println(rs.getInt("id") + " " + rs.getString("name"));
+			}
+
+			con.setAutoCommit(true);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		System.out
+				.println("============================================================");
+		System.out.println("TestReadOnlyAccess");
+		dbURL = "jdbc:derby:./db/MyDB";
+		user = "guest";
+		password = "guest";
+
+		rs = null;
 
 		try (Connection con = DriverManager
 				.getConnection(dbURL, user, password);
-				Statement stmt = con.createStatement();) {
+				Statement stmt = con.createStatement(
+						ResultSet.TYPE_SCROLL_INSENSITIVE,
+						ResultSet.CONCUR_READ_ONLY);) {
+			// System.out.println("con.getAutoCommit(): " +
+			// con.getAutoCommit());
 			if (con != null) {
-				System.out.println("Connected to DB");
+				System.out.println("Connection to database is established");
 			}
-			String sql = "INSERT into PRESENTATION.SEMINAR_NORM values (3, 'In vino est veritas')";
 
-			System.out.println(sql);
-			String table = "Presentation.seminar_norm";
-			int id = 6;
-
-			// Muy importante: varchar attributes müssen auch mit '' umgeben
-			// werden
-			String value1 = "\'In vino\'";
-
-			sql = "INSERT INTO " + table + " values (" + id + ", " + value1
-					+ ")";
-
-			System.out.println(sql);
-			// Test
-			List<String> tmp = new LinkedList<>();
-			tmp.add("In vino");
-			sql = composeSQLInsertStmt("Presentation.seminar_norm", 6, tmp);
-
+			String sql = "INSERT INTO test.tableONE values(" + 4564
+					+ ", 'Malta')";
 			stmt.execute(sql);
 
+			rs = stmt.executeQuery("SELECT id, name FROM test.tableOne");
+
+			con.setAutoCommit(false);
+			// System.out.println("con.getAutoCommit(): " +
+			// con.getAutoCommit());
+			// System.out.println(rs);
+
+			for (; rs.next();) {
+				System.out
+						.println(rs.getInt("id") + " " + rs.getString("name"));
+			}
+
+			con.setAutoCommit(true);
+
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			System.out.println(e.getSQLState() + "\n" + e.getMessage());
+			System.out.println("Operation failed: " + e.getMessage());
 		}
-	}
-
-	String composeSQLInsertStmt(String table, int id, List<String> values) {
-		String sql = "INSERT into " + table + " values (" + id + ", "
-				+ composeValuesIntoString(values) + ")";
-		System.out.println(sql);
-		return sql;
-	}
-
-	private String composeValuesIntoString(List<String> values) {
-		String valuelist = "";
-		for (String string : values) {
-			valuelist += "\'" + string + "\'" + ", ";
-		}
-		valuelist = valuelist.substring(0, valuelist.length() - 2);
-		System.out.println(valuelist);
-		return valuelist;
 	}
 }
