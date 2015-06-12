@@ -29,7 +29,7 @@ public class Main {
 		ImportDatabaseImpl imports = new ImportDatabaseImpl(dbURL, user,
 				password);
 
-		System.out.println(imports.getMaxID("hylleblomst.anrede_norm"));
+		// System.out.println(imports.getMaxID("hylleblomst.anrede_norm"));
 
 		// try (Connection con = DriverManager
 		// .getConnection(dbURL, user, password);

@@ -6,7 +6,7 @@ CREATE SCHEMA hylleblomst;
 --DROP table hylleblomst.anrede_norm;
 CREATE TABLE hylleblomst.anrede_norm(AnredeNormID integer PRIMARY KEY NOT NULL,Name varchar(255));
 --DROP table hylleblomst.fach_norm;
-CREATE TABLE hylleblomst.fach_norm(FachNormID integer PRIMARY KEY,Name varchar(255));
+CREATE TABLE hylleblomst.fach_norm(FachNormID integer PRIMARY KEY NOT NULL,Name varchar(255));
 --DROP table hylleblomst.fakultaeten;
 CREATE TABLE hylleblomst.fakultaeten(FakultaetID integer PRIMARY KEY NOT NULL, Fakultaetsname varchar(255));
 --DROP table hylleblomst.fundorte;
