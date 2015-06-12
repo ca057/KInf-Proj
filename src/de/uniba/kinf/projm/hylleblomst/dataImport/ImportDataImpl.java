@@ -44,7 +44,8 @@ public class ImportDataImpl implements ImportData {
 		CsvHelper csvhelper = new CsvHelper(path);
 		List<String[]> rows = csvhelper.getAllLines();
 		try {
-			ImportDatabase database = new ImportDatabaseImpl();
+			ImportDatabase database = new ImportDatabaseImpl(
+					"jdbc:derby:./db/MyDB;create=true", "admin", "password");
 			database.importData(rows);
 		} catch (Exception e) {
 			// TODO gefangene Exception genauer definieren, wenn in Database
