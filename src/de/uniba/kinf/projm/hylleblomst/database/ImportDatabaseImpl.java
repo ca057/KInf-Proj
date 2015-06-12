@@ -2,7 +2,6 @@ package de.uniba.kinf.projm.hylleblomst.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
@@ -10,6 +9,8 @@ import java.util.List;
 import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 
 public class ImportDatabaseImpl implements ImportDatabase {
+
+	private Validation validation;
 
 	private String dbURL;
 	private String user;
@@ -26,9 +27,10 @@ public class ImportDatabaseImpl implements ImportDatabase {
 			this.user = user;
 		}
 		this.password = password;
+
+		validation = new Validation(dbURL, user, password);
 	}
 
-	// TODO Exception genauer definieren
 	@Override
 	public void importData(List<String[]> rows) throws ImportException {
 		System.out.println("Kommt in ImportDatabaseImpl an" + rows);
@@ -38,65 +40,160 @@ public class ImportDatabaseImpl implements ImportDatabase {
 		for (String[] strings : rows) {
 
 			if (!strings[4].equals("")) {
-				System.out.println(strings[4]);
 				insertAnredeNorm(strings[4]);
+			}
+			if (!strings[6].equals("")) {
+				insertVornameNorm(strings[6]);
+			}
+			if (!strings[18].equals("")) {
+				insertNameNorm(strings[18]);
+			}
+			if (!strings[42].equals("")) {
+				insertOrtAbweichungNorm(strings[42]);
+			}
+			if (!strings[47].equals("")) {
+				// insertFakultaeten(strings[47]);
+			}
+			if (!strings[49].equals("")) {
+				insertFachNorm(strings[49]);
+			}
+			if (!strings[52].equals("")) {
+				// insertWirtschaftslageNorm(strings[52]);
+			}
+			if (!strings[57].equals("")) {
+				// insertSeminarNorm(strings[57]);
+			}
+			if (!strings[65].equals("")) {
+				// insertTitelNorm(strings[65]);
+			}
+			if (!strings[77].equals("")) {
+				// insertFundorte(strings[77]);
 			}
 		}
 	}
 
-	private boolean insertAnredeNorm(String anredeNorm) throws ImportException {
-		try (Connection con = DriverManager
-				.getConnection(dbURL, user, password);
-				Statement stmt = con.createStatement();) {
+	// TODO Erweiterung um Anmerkungen (Spalte 78)
+	private boolean insertOrtAbweichungNorm(String nameNorm)
+			throws ImportException {
+		String table = "hylleblomst.Ort_Abweichung_Norm";
+		String column = "Name";
 
-			String table = "hylleblomst.Anrede_Norm";
-			int id = getMaxID(table) + 1;
+		if (!validation.entryAlreadyInDatabase(nameNorm, table, column)) {
+			try (Connection con = DriverManager.getConnection(dbURL, user,
+					password); Statement stmt = con.createStatement();) {
 
-			String insertStmt = String.format("%1$s %2$s values(%3$d, '%4$s')",
-					insertSql, table, id, anredeNorm);
+				int id = validation.getMaxID(table) + 1;
 
-			stmt.execute(insertStmt);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			// throw new ImportException("AnredeNorm could not be inserted", e);
+				String insertStmt = String.format(
+						"%1$s %2$s values(%3$d, '%4$s')", insertSql, table, id,
+						nameNorm);
+
+				stmt.execute(insertStmt);
+
+				return true;
+			} catch (SQLException e) {
+				throw new ImportException(
+						"A AbweichungNorm could not be inserted", e);
+			}
 		}
 		return false;
 	}
 
-	/**
-	 * Returns the highest ID already taken in a table of the schema HYLLEBLOMST
-	 * 
-	 * @param tableName
-	 *            The table in which to look for highest given ID Must be in the
-	 *            format <code>HYLLEBLOMST.table_name</code>
-	 * @return The maximum ID as <code>int</code>
-	 */
-	private int getMaxID(String tableName) {
-		int result = 0;
+	private boolean insertVornameNorm(String nameNorm) throws ImportException {
+		String table = "hylleblomst.Vorname_Norm";
+		String column = "Name";
 
-		try (Connection con = DriverManager
-				.getConnection(dbURL, user, password);
-				Statement stmt = con.createStatement(
-						ResultSet.TYPE_SCROLL_INSENSITIVE,
-						ResultSet.CONCUR_READ_ONLY)) {
+		if (!validation.entryAlreadyInDatabase(nameNorm, table, column)) {
+			try (Connection con = DriverManager.getConnection(dbURL, user,
+					password); Statement stmt = con.createStatement();) {
 
-			String columnName = (tableName.replace("_", "") + "ID").replace(
-					"hylleblomst.", "");
-			String getMaxIDSQL = String.format("SELECT max(%s) FROM %s",
-					columnName, tableName);
-			ResultSet rs = stmt.executeQuery(getMaxIDSQL);
+				int id = validation.getMaxID(table) + 1;
 
-			con.setAutoCommit(false);
+				String insertStmt = String.format(
+						"%1$s %2$s values(%3$d, '%4$s')", insertSql, table, id,
+						nameNorm);
 
-			rs.first();
-			result += rs.getInt(1);
+				stmt.execute(insertStmt);
 
-			con.setAutoCommit(true);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+				return true;
+			} catch (SQLException e) {
+				throw new ImportException(
+						"A VornameNorm could not be inserted", e);
+			}
 		}
+		return false;
+	}
 
-		return result;
+	private boolean insertNameNorm(String nameNorm) throws ImportException {
+		String table = "hylleblomst.Name_Norm";
+		String column = "Name";
+
+		if (!validation.entryAlreadyInDatabase(nameNorm, table, column)) {
+			try (Connection con = DriverManager.getConnection(dbURL, user,
+					password); Statement stmt = con.createStatement();) {
+
+				int id = validation.getMaxID(table) + 1;
+
+				String insertStmt = String.format(
+						"%1$s %2$s values(%3$d, '%4$s')", insertSql, table, id,
+						nameNorm);
+
+				stmt.execute(insertStmt);
+
+				return true;
+			} catch (SQLException e) {
+				throw new ImportException("A NameNorm could not be inserted", e);
+			}
+		}
+		return false;
+	}
+
+	private boolean insertFachNorm(String fachNorm) throws ImportException {
+		String table = "hylleblomst.Fach_Norm";
+		String column = "Name";
+
+		if (!validation.entryAlreadyInDatabase(fachNorm, table, column)) {
+			try (Connection con = DriverManager.getConnection(dbURL, user,
+					password); Statement stmt = con.createStatement();) {
+
+				int id = validation.getMaxID(table) + 1;
+
+				String insertStmt = String.format(
+						"%1$s %2$s values(%3$d, '%4$s')", insertSql, table, id,
+						fachNorm);
+
+				stmt.execute(insertStmt);
+
+				return true;
+			} catch (SQLException e) {
+				throw new ImportException("A FachNorm could not be inserted", e);
+			}
+		}
+		return false;
+	}
+
+	private boolean insertAnredeNorm(String anredeNorm) throws ImportException {
+		String table = "hylleblomst.Anrede_Norm";
+		String column = "Name";
+
+		if (!validation.entryAlreadyInDatabase(anredeNorm, table, column)) {
+			try (Connection con = DriverManager.getConnection(dbURL, user,
+					password); Statement stmt = con.createStatement();) {
+
+				int id = validation.getMaxID(table) + 1;
+
+				String insertStmt = String.format(
+						"%1$s %2$s values(%3$d, '%4$s')", insertSql, table, id,
+						anredeNorm);
+
+				stmt.execute(insertStmt);
+
+				return true;
+			} catch (SQLException e) {
+				throw new ImportException("A AnredeNorm could not be inserted",
+						e);
+			}
+		}
+		return false;
 	}
 }
