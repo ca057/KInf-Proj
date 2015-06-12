@@ -2,15 +2,19 @@
 
 CREATE SCHEMA hylleblomst;
 
+DELETE from HYLLEBLOMST.Anrede_NORM;
+DELETE from HYLLEBLOMST.FACH_NORM;
+
 --CREATE tables which do not require foreign key relations
 CREATE TABLE hylleblomst.anrede_norm(AnredeNormID integer PRIMARY KEY NOT NULL,Name varchar(255));
 CREATE TABLE hylleblomst.fach_norm(FachNormID integer PRIMARY KEY NOT NULL,Name varchar(255));
-CREATE TABLE hylleblomst.fakultaeten(FakultaetID integer PRIMARY KEY NOT NULL, Fakultaetsname varchar(255));
+CREATE TABLE hylleblomst.fakultaeten(FakultaetID integer PRIMARY KEY NOT NULL, Name varchar(255));
 CREATE TABLE hylleblomst.fundorte(FundorteID integer PRIMARY KEY NOT NULL,Name varchar(255));
+CREATE TABLE hylleblomst.vorname_norm(VornameNormID integer PRIMARY KEY NOT NULL, Name varchar(255));
 CREATE TABLE hylleblomst.name_norm(NameNormID integer PRIMARY KEY NOT NULL, Name varchar(255));
-CREATE TABLE hylleblomst.ort_abweichung_norm(AbweichungNormID integer PRIMARY KEY NOT NULL,Name varchar(255),Anmerkung varchar(255));
+CREATE TABLE hylleblomst.ort_abweichung_norm(OrtAbweichungNormID integer PRIMARY KEY NOT NULL, Name varchar(255),Anmerkung varchar(255));
 CREATE TABLE hylleblomst.quellen(QuellenID integer PRIMARY KEY NOT NULL, QuellenName varchar(255));
-CREATE TABLE hylleblomst.seminar_norm(SeminarNormID integer PRIMARY KEY NOT NULL, Seminar varchar(255));
+CREATE TABLE hylleblomst.seminar_norm(SeminarNormID integer PRIMARY KEY NOT NULL, Name varchar(255));
 CREATE TABLE hylleblomst.titel_norm(TitelNormID integer PRIMARY KEY NOT NULL,Name varchar(255));
 CREATE TABLE hylleblomst.wirtschaftslage_norm(WirtschaftslageNormID integer PRIMARY KEY NOT NULL, Name varchar(255));
 
@@ -22,7 +26,13 @@ CREATE TABLE hylleblomst.person(PersonID integer PRIMARY KEY NOT NULL,	SeiteOrig
 
 CREATE TABLE hylleblomst.fach_trad(FachTradID integer PRIMARY KEY NOT NULL, Name varchar(255), FachNormID integer NOT NULL,	CONSTRAINT FachTrad_FachNorm_FK FOREIGN KEY (FachNormID) REFERENCES hylleblomst.fach_norm(FachNormID) ON DELETE RESTRICT ON UPDATE RESTRICT);	
 CREATE TABLE hylleblomst.fach_info(FachTradID integer NOT NULL,	PersonID integer NOT NULL, QuellenID integer NOT NULL, CONSTRAINT FachInfo_FachTrad_FK FOREIGN KEY (FachTradID) REFERENCES HYLLEBLOMST.FACH_TRAD(FachTradID) ON DELETE RESTRICT ON UPDATE RESTRICT,	CONSTRAINT FachInfo_Person_FK FOREIGN KEY (PersonID) REFERENCES HYLLEBLOMST.Person(PersonID) ON DELETE RESTRICT ON UPDATE RESTRICT,	CONSTRAINT FachInfo_Quelle_FK FOREIGN KEY (QuellenID) REFERENCES HYLLEBLOMST.Quellen(QuellenID) ON DELETE RESTRICT ON UPDATE RESTRICT);
+
+CREATE TABLE hylleblomst.vorname_trad(VornameTradID integer PRIMARY KEY NOT NULL, VornameTrad varchar(255), VornameNormID integer NOT NULL, CONSTRAINT VornameTrad_VornameNorm_FK FOREIGN KEY (VornameNormID) REFERENCES hylleblomst.vorname_norm(VornameNormID) ON DELETE RESTRICT ON UPDATE RESTRICT);
+
 CREATE TABLE hylleblomst.name_trad(NameTradID integer PRIMARY KEY NOT NULL, NameTrad varchar(255), NameNormID integer NOT NULL, CONSTRAINT NameTrad_NameNorm_FK FOREIGN KEY (NameNormID) REFERENCES hylleblomst.name_norm(NameNormID) ON DELETE RESTRICT ON UPDATE RESTRICT);
+
+CREATE TABLE hylleblomst.vorname_info(QuellenID integer NOT NULL, VornameTradID integer NOT NULL, PersonID integer NOT NULL,	CONSTRAINT VornameInfo_Quelle_FK FOREIGN KEY (QuellenID) REFERENCES hylleblomst.Quellen(QuellenID) ON DELETE RESTRICT	ON UPDATE RESTRICT,	CONSTRAINT VornameInfo_VornameTrad_FK	FOREIGN KEY (VornameTradID) REFERENCES hylleblomst.Vorname_Trad(VornameTradID) ON DELETE RESTRICT ON UPDATE RESTRICT, CONSTRAINT VornameInfo_Person_FK FOREIGN KEY (PersonID) REFERENCES hylleblomst.Person(PersonID) ON DELETE RESTRICT ON UPDATE RESTRICT);
+
 CREATE TABLE hylleblomst.name_info(QuellenID integer NOT NULL,	NameTradID integer NOT NULL, PersonID integer NOT NULL,	CONSTRAINT NameInfo_Quelle_FK FOREIGN KEY (QuellenID) REFERENCES hylleblomst.Quellen(QuellenID) ON DELETE RESTRICT	ON UPDATE RESTRICT,	CONSTRAINT NameInfo_NameTrad_FK	FOREIGN KEY (NameTradID) REFERENCES hylleblomst.Name_Trad(NameTradID) ON DELETE RESTRICT ON UPDATE RESTRICT, CONSTRAINT NameInfo_Person_FK FOREIGN KEY (PersonID) REFERENCES hylleblomst.Person(PersonID) ON DELETE RESTRICT ON UPDATE RESTRICT);
 CREATE TABLE hylleblomst.ort_norm(OrtNormID integer PRIMARY KEY NOT NULL, OrtNorm varchar(255), OrtAbweichungID integer NOT NULL, CONSTRAINT OrtNorm_OrtAbweichung_FK FOREIGN KEY (OrtAbweichungID) REFERENCES HYLLEBLOMST.ORT_ABWEICHUNG_NORM(AbweichungNormID) ON DELETE RESTRICT ON UPDATE RESTRICT);
 CREATE TABLE hylleblomst.ort_trad(OrtTradID integer PRIMARY KEY NOT NULL,Schreibweise varchar(255),OrtNormID integer NOT NULL, CONSTRAINT OrtTrad_OrtNorm_FK FOREIGN KEY (OrtNormID) REFERENCES hylleblomst.ort_norm(OrtNormID) ON DELETE RESTRICT ON UPDATE RESTRICT);
