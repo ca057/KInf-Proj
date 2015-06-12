@@ -52,12 +52,13 @@ public class ImportDatabaseImpl implements ImportDatabase {
 			String table = "hylleblomst.Anrede_Norm";
 			int id = getMaxID(table) + 1;
 
-			String insertStmt = String.format("%1$s %2$s values(%3$d, %4$s)",
+			String insertStmt = String.format("%1$s %2$s values(%3$d, '%4$s')",
 					insertSql, table, id, anredeNorm);
 
 			stmt.execute(insertStmt);
 		} catch (SQLException e) {
-			throw new ImportException("AnredeNorm could not be inserted", e);
+			e.printStackTrace();
+			// throw new ImportException("AnredeNorm could not be inserted", e);
 		}
 		return false;
 	}
