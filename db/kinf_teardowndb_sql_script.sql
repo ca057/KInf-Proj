@@ -2,7 +2,6 @@ DROP TABLE HYLLEBLOMST.zusaetze_info;
 DROP TABLE hylleblomst.zusaetze;	
 DROP TABLE hylleblomst.wirtschaftslage_info;
 DROP TABLE hylleblomst.wirtschaftslage_trad;
-DROP TABLE hylleblomst.titel_trad;
 DROP TABLE hylleblomst.seminar_info;
 DROP TABLE hylleblomst.seminar_trad;
 DROP TABLE hylleblomst.ort_info;
@@ -15,6 +14,7 @@ DROP TABLE hylleblomst.name_trad;
 DROP TABLE hylleblomst.fach_info;
 DROP TABLE hylleblomst.fach_trad;	
 DROP TABLE hylleblomst.person;
+DROP TABLE hylleblomst.titel_trad;
 DROP TABLE hylleblomst.anrede_trad;
 
 DROP TABLE hylleblomst.anrede_norm;

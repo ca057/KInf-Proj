@@ -24,12 +24,39 @@ public class Validation {
 	 * Checks if an ID is already in use in the database.
 	 * 
 	 * @return true if taken <br/>
-	 *         false if new ID
+	 *         false if new ID is necessary
 	 */
-	public static boolean isTakenID() {
-		// TODO Implement: If person number is taken, return true. (via
-		// SQL-query)
-		return false;
+	public boolean personIDIsTaken(int personID) {
+		boolean result = true;
+
+		String table = "hylleblomst.person";
+
+		try (Connection con = DriverManager
+				.getConnection(dbURL, user, password);
+				Statement stmt = con.createStatement(
+						ResultSet.TYPE_SCROLL_INSENSITIVE,
+						ResultSet.CONCUR_READ_ONLY)) {
+
+			String querySql = String.format(
+					"SELECT PersonID FROM %s WHERE PersonID=%d", table,
+					personID);
+			ResultSet rs = stmt.executeQuery(querySql);
+
+			con.setAutoCommit(false);
+
+			/*
+			 * Returns true if ResultSet is not empty, false otherwise
+			 */
+			result = rs.isBeforeFirst();
+
+			con.setAutoCommit(true);
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return result;
 	}
 
 	/**

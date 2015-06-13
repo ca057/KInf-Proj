@@ -24,9 +24,10 @@ public interface ImportData {
 	 * @return true - if import was successful
 	 * @return false - if import failed
 	 * @throws ImportException
+	 * @throws Exception
 	 * 
 	 * @see {@link ImportData.Import}
 	 */
-	public void addData(String path) throws ImportException;
+	public void addData(String path) throws ImportException, Exception;
 
 }

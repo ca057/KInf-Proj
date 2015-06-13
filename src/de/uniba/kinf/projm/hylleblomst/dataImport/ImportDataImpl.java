@@ -12,7 +12,7 @@ import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 public class ImportDataImpl implements ImportData {
 
 	@Override
-	public void addData(String path) throws ImportException {
+	public void addData(String path) throws Exception {
 		if (path == null || path.isEmpty()) {
 			throw new IllegalArgumentException(
 					"Der übergebene String ist leer oder {@code null}");
@@ -37,17 +37,16 @@ public class ImportDataImpl implements ImportData {
 	 * 
 	 * @param path
 	 *            The path of the file
-	 * @throws ImportException
-	 *             if there was a problem during import
+	 * @throws Exception
 	 */
-	private void addCSV(Path path) throws ImportException {
+	private void addCSV(Path path) throws Exception {
 		CsvHelper csvhelper = new CsvHelper(path);
 		List<String[]> rows = csvhelper.getAllLines();
 		try {
 			ImportDatabase database = new ImportDatabaseImpl(
 					"jdbc:derby:./db/MyDB;create=true", "admin", "password");
 			database.importData(rows);
-		} catch (Exception e) {
+		} catch (ImportException e) {
 			// TODO gefangene Exception genauer definieren, wenn in Database
 			// passiert
 			throw new ImportException(e.getMessage());
