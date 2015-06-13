@@ -1,7 +1,7 @@
 package de.uniba.kinf.projm.hylleblomst.logic;
 
 import java.sql.SQLException;
-import java.util.Map;
+import java.util.List;
 
 public interface Queries {
 
@@ -17,5 +17,5 @@ public interface Queries {
 	 * 
 	 * @param map
 	 */
-	void extendedSearch(Map<Enum<ColumnKeys>, Object> map);
+	void extendedSearch(List<Object[]> list);
 }
