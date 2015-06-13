@@ -95,10 +95,8 @@ public class Controller {
 	private String getFullTextSearchInput() {
 		if (search_fulltext.getText() == null
 				|| "".equals(search_fulltext.getText())) {
-			throw new InputMismatchException("Die Volltextsuche");
-			// TODO Was zurückgeben wenn kein Eintrag erfolgt ist? Was benötigt
-			// die Suche an Infos in welchem Format?
-			return "Volltext ist leer";
+			throw new InputMismatchException(
+					"Für eine Volltextsuche muss eine Eingabe in das Suchfeld vorhanden sein.");
 		}
 		return search_fulltext.getText();
 	}
@@ -108,7 +106,6 @@ public class Controller {
 	 */
 	@FXML
 	private void startSearch() {
-		// ui.functionNotAvailable();
 		// FIXME Eingaben sammeln und an Suche übergeben
 		// Aktuell wird nur der Info-Text ausgegeben
 		setInfoText();
@@ -120,7 +117,14 @@ public class Controller {
 	 */
 	@FXML
 	private void startFulltextSearch() {
-		querieImpl.fullTextSearch(getFullTextSearchInput());
+		try {
+			// FIXME setInfoText am Ende entfernen, zur Zeit nur für Testzwecke
+			// enthalten
+			setInfoText();
+			querieImpl.fullTextSearch(getFullTextSearchInput());
+		} catch (Exception e) {
+			ui.showErrorMessage(e.getMessage());
+		}
 	}
 
 	/**
