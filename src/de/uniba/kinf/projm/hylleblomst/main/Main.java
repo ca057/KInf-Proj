@@ -10,6 +10,9 @@ public class Main {
 			new ImportDataImpl().addData("doc/example_data.csv");
 		} catch (ImportException e) {
 			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 

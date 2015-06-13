@@ -3,8 +3,9 @@ package de.uniba.kinf.projm.hylleblomst.database;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.Types;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -107,11 +108,17 @@ public class ImportDatabaseImpl implements ImportDatabase {
 			}
 			java.sql.Date datum = new Date(new GregorianCalendar(jahr, monat,
 					tag).getTimeInMillis());
+			int nummerHess;
+			try {
+				nummerHess = Integer.parseInt(strings[2]);
+			} catch (NumberFormatException e) {
+				nummerHess = 0;
+			}
 
-			insertPerson(personID, Integer.parseInt(strings[1]),
-					Integer.parseInt(strings[2]), strings[29], strings[17],
-					datum, strings[46], strings[63], strings[78], anredeNormID,
-					fakultaetenID, fundortID, titelTradID);
+			insertPerson(personID, Integer.parseInt(strings[1]), nummerHess,
+					strings[29], strings[17], datum, strings[46], strings[63],
+					strings[78], anredeTradID, fakultaetenID, fundortID,
+					titelTradID);
 
 			if (!strings[6].equals("")) {
 				vornameNormID = insertIntoTableOneAttributeNoForeignKeys(
@@ -159,25 +166,76 @@ public class ImportDatabaseImpl implements ImportDatabase {
 		}
 	}
 
+	/**
+	 * Inserts persons into the database
+	 * 
+	 * @param personID
+	 * @param seite
+	 * @param nummerHess
+	 * @param jesuit
+	 * @param adlig
+	 * @param datum
+	 * @param studienjahr
+	 * @param graduiert
+	 * @param anmerkung
+	 * @param anredeTradID
+	 * @param fakultaetenID
+	 * @param fundortID
+	 * @param titelTradID
+	 * @return
+	 * @throws ImportException
+	 */
 	private boolean insertPerson(int personID, int seite, int nummerHess,
-			String jesuit, String adelig, Date datum, String studienjahr,
-			String graduiert, String anmerkung, int anredeNormID,
+			String jesuit, String adlig, Date datum, String studienjahr,
+			String graduiert, String anmerkung, int anredeTradID,
 			int fakultaetenID, int fundortID, int titelTradID)
 			throws ImportException {
 
-		String table = "hylleblomst.person";
+		String sqlQuery = "INSERT INTO hylleblomst.person values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 		if (!validation.personIDIsTaken(personID)) {
 			try (Connection con = DriverManager.getConnection(dbURL, user,
-					password); Statement stmt = con.createStatement();) {
+					password);
+					PreparedStatement stmt = con.prepareStatement(sqlQuery);) {
 
-				String insertStmt = String
-						.format("%1$s %2$s values(%3$d, %4$d, %5$d, '%6$s', '%7$s', %8$tD, '%9$s', '%10$s', '%11$s', %12$d, %13$d, %14$d, %15$d)",
-								insertSql, table, personID, seite, nummerHess,
-								jesuit, adelig, datum, studienjahr, graduiert,
-								anmerkung, anredeNormID, fakultaetenID,
-								fundortID, titelTradID);
+				stmt.setInt(1, personID);
+				stmt.setInt(2, seite);
 
+				if (nummerHess == 0) {
+					stmt.setNull(3, Types.INTEGER);
+				} else {
+					stmt.setInt(3, nummerHess);
+				}
+				stmt.setString(4, jesuit);
+				stmt.setString(5, adlig);
+				stmt.setDate(6, datum);
+				stmt.setString(7, studienjahr);
+				stmt.setString(8, graduiert);
+				stmt.setString(9, anmerkung);
+				if (anredeTradID == 0) {
+					stmt.setNull(10, Types.INTEGER);
+				} else {
+					stmt.setInt(10, anredeTradID);
+				}
+				if (fakultaetenID == 0) {
+					stmt.setNull(11, Types.INTEGER);
+				} else {
+					stmt.setInt(11, fakultaetenID);
+				}
+				if (fundortID == 0) {
+					stmt.setNull(12, Types.INTEGER);
+				} else {
+					stmt.setInt(12, fundortID);
+				}
+				if (titelTradID == 0) {
+					stmt.setNull(13, Types.INTEGER);
+				} else {
+					stmt.setInt(13, titelTradID);
+				}
+
+				stmt.executeUpdate();
+
+				return true;
 			} catch (SQLException e) {
 				throw new ImportException("A Person could not be inserted "
 						+ e.getMessage());
@@ -189,28 +247,7 @@ public class ImportDatabaseImpl implements ImportDatabase {
 	// TODO Erweiterung um Anmerkungen
 	private boolean insertOrtAbweichungNorm(String nameNorm)
 			throws ImportException {
-		String table = "hylleblomst.Ort_Abweichung_Norm";
-		String column = "Name";
 
-		if (!validation.entryAlreadyInDatabase(nameNorm, table)) {
-			try (Connection con = DriverManager.getConnection(dbURL, user,
-					password); Statement stmt = con.createStatement();) {
-
-				int id = validation.getMaxID(table) + 1;
-
-				String insertStmt = String.format(
-						"%1$s %2$s values(%3$d, '%4$s')", insertSql, table, id,
-						nameNorm);
-
-				stmt.execute(insertStmt);
-
-				return true;
-			} catch (SQLException e) {
-				throw new ImportException(
-						"A AbweichungNorm could not be inserted"
-								+ e.getMessage());
-			}
-		}
 		return false;
 	}
 
@@ -231,20 +268,19 @@ public class ImportDatabaseImpl implements ImportDatabase {
 	private int insertIntoTableOneAttributeNoForeignKeys(String table,
 			String entry) throws ImportException {
 		table = String.format("hylleblomst.%s", table);
-
+		String sqlQuery = String.format("INSERT INTO %s values(?, ?)", table);
 		int id;
 
 		if (!validation.entryAlreadyInDatabase(entry, table)) {
 			try (Connection con = DriverManager.getConnection(dbURL, user,
-					password); Statement stmt = con.createStatement();) {
-
+					password);) {
+				PreparedStatement stmt = con.prepareStatement(sqlQuery);
 				id = validation.getMaxID(table) + 1;
 
-				String insertStmt = String.format(
-						"%1$s %2$s values(%3$d, '%4$s')", insertSql, table, id,
-						entry);
+				stmt.setInt(1, id);
+				stmt.setString(2, entry);
 
-				stmt.execute(insertStmt);
+				stmt.executeUpdate();
 
 			} catch (SQLException e) {
 				throw new ImportException(String.format(
@@ -258,24 +294,21 @@ public class ImportDatabaseImpl implements ImportDatabase {
 
 	private int insertIntoTableOneAttributeOneForeignKey(String table,
 			String entry, int foreignKey) throws ImportException {
-		if (foreignKey == 0) {
-			throw new ImportException("ForeignKey is empty");
-		}
 		table = String.format("hylleblomst.%s", table);
-
+		String sqlQuery = String.format("INSERT INTO %s values(?,?,?)", table);
 		int id;
 
 		if (!validation.entryAlreadyInDatabase(entry, foreignKey, table)) {
 			try (Connection con = DriverManager.getConnection(dbURL, user,
-					password); Statement stmt = con.createStatement();) {
-
+					password);) {
+				PreparedStatement stmt = con.prepareStatement(sqlQuery);
 				id = validation.getMaxID(table) + 1;
 
-				String insertStmt = String.format(
-						"%1$s %2$s values(%3$d, '%4$s', %5$d)", insertSql,
-						table, id, entry, foreignKey);
+				stmt.setInt(1, id);
+				stmt.setString(2, entry);
+				stmt.setInt(3, foreignKey);
 
-				stmt.execute(insertStmt);
+				stmt.executeUpdate();
 
 			} catch (SQLException e) {
 				throw new ImportException(String.format(
@@ -290,17 +323,19 @@ public class ImportDatabaseImpl implements ImportDatabase {
 	private void insertIntoTableNoAttributesThreeForeignKeys(String table,
 			int tradID, int quellenID, int personID) throws ImportException {
 		table = String.format("hylleblomst.%s", table);
+		String sqlQuery = String.format("INSERT INTO %s values(?,?,?)", table);
 
 		if (!validation.entryAlreadyInDatabase(tradID, quellenID, personID,
 				table)) {
 			try (Connection con = DriverManager.getConnection(dbURL, user,
-					password); Statement stmt = con.createStatement();) {
+					password);) {
+				PreparedStatement stmt = con.prepareStatement(sqlQuery);
 
-				String insertStmt = String.format(
-						"%1$s %2$s values(%3$d, %4$d, %5$d)", insertSql, table,
-						tradID, quellenID, personID);
+				stmt.setInt(1, tradID);
+				stmt.setInt(2, quellenID);
+				stmt.setInt(3, personID);
 
-				stmt.execute(insertStmt);
+				stmt.executeUpdate();
 
 			} catch (SQLException e) {
 				throw new ImportException("An info table could not be created"

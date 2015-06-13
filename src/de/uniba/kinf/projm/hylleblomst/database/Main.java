@@ -2,10 +2,9 @@ package de.uniba.kinf.projm.hylleblomst.database;
 
 import de.uniba.kinf.projm.hylleblomst.dataImport.ImportData;
 import de.uniba.kinf.projm.hylleblomst.dataImport.ImportDataImpl;
-import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 
 public class Main {
-	public static void main(String[] args) throws ImportException {
+	public static void main(String[] args) throws Exception {
 
 		String dbURL = "jdbc:derby:C:/Users/Simon/git/KInf-Projekt/db/MyDB";
 		String user = "admin";
