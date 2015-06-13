@@ -1,6 +1,7 @@
 package de.uniba.kinf.projm.hylleblomst.view;
 
 import java.util.InputMismatchException;
+import java.util.Map;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -14,6 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import de.uniba.kinf.projm.hylleblomst.logic.ColumnKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.QueriesImpl;
 
 public class Controller {
@@ -64,6 +66,12 @@ public class Controller {
 	TitledPane searchCategory_person;
 
 	@FXML
+	TextField searchCategory_person_anrede;
+
+	@FXML
+	TextField searchCategory_person_titel;
+
+	@FXML
 	TitledPane searchCategory_personExtended;
 
 	@FXML
@@ -101,14 +109,26 @@ public class Controller {
 		return search_fulltext.getText();
 	}
 
+	private Map<Enum<ColumnKeys>, Object> getSearchInput() {
+		// Map<Enum<ColumnKeys>, Object> map
+		return null;
+	}
+
 	/**
-	 * Starts the search.
+	 * Starts the extended search.
 	 */
 	@FXML
 	private void startSearch() {
-		// FIXME Eingaben sammeln und an Suche übergeben
-		// Aktuell wird nur der Info-Text ausgegeben
-		setInfoText();
+		try {
+			// FIXME setInfoText am Ende entfernen, zur Zeit nur für Testzwecke
+			// enthalten
+			setInfoText();
+			querieImpl.extendedSearch(getSearchInput());
+		} catch (Exception e) {
+			// TODO korrekte Exception fangen und nicht einfach mal alles
+			e.printStackTrace();
+			ui.showErrorMessage(e.getMessage() + "kacka");
+		}
 	}
 
 	/**
@@ -123,6 +143,8 @@ public class Controller {
 			setInfoText();
 			querieImpl.fullTextSearch(getFullTextSearchInput());
 		} catch (Exception e) {
+			// TODO korrekte Exception fangen und nicht einfach mal alles
+			e.printStackTrace();
 			ui.showErrorMessage(e.getMessage());
 		}
 	}
@@ -132,6 +154,7 @@ public class Controller {
 	 */
 	@FXML
 	private void clearSearchInput() {
+		// TODO clear all input fields
 		search_fulltext.clear();
 	}
 
@@ -161,7 +184,8 @@ public class Controller {
 	 */
 	private void setInfoText() {
 		String info = "Suchanfrage\n-----------";
-		info += "Volltextsuche: " + getFullTextSearchInput() + "\n";
+		// info += "Volltextsuche: " + getFullTextSearchInput() + "\n";
+		info += "\nSuche in Person\n";
 		infoArea.setText(info);
 	}
 }
