@@ -72,6 +72,7 @@ public class ImportDatabaseImpl implements ImportDatabase {
 			int nameTradID;
 			int fachTradID;
 			int wirtschaftslageTradID;
+			int seminarTradID;
 
 			if (!strings[4].equals("")) {
 				anredeNormID = insertIntoTableOneAttributeNoForeignKeys(
@@ -151,7 +152,7 @@ public class ImportDatabaseImpl implements ImportDatabase {
 						"name_norm", strings[18]);
 			}
 			// Insert all different variations of name
-			current = 0;
+			current = 1;
 			for (int i = 19; i <= 28; i++) {
 				if (!strings[i].equals("")) {
 					nameTradID = insertIntoTableOneAttributeOneForeignKey(
@@ -162,8 +163,25 @@ public class ImportDatabaseImpl implements ImportDatabase {
 				current++;
 			}
 
+			int ortAbweichNormID = 0;
 			if (!strings[42].equals("")) {
-				// insertOrtAbweichungNorm(strings[42]);
+				ortAbweichNormID = insertIntoOrtAbweichungNorm(strings[42]);
+			}
+			int ortNormID = 0;
+			if (!strings[41].equals("")) {
+				ortNormID = insertIntoTableOneAttributeOneForeignKey(
+						"ort_norm", strings[41], ortAbweichNormID);
+			}
+			current = 0;
+			for (int i = 30; i <= 40; i++) {
+				if (!strings[i].equals("")) {
+					int ortTradID = insertIntoTableOneAttributeOneForeignKey(
+							"ort_trad", strings[i], ortNormID);
+
+					insertIntoTableNoAttributesThreeForeignKeys("ort_info",
+							ortTradID, quellenID[current], personID);
+				}
+				current++;
 			}
 
 			if (!strings[49].equals("")) {
@@ -188,23 +206,25 @@ public class ImportDatabaseImpl implements ImportDatabase {
 						"wirtschaftslage_norm", strings[52]);
 			}
 
-			int[] tmp = { 51, 53, 54, 55 };
+			int[] tmpWirtschaftslage = { 51, 53, 54, 55 };
 			current = 0;
-			for (int i : tmp) {
+			for (int i : tmpWirtschaftslage) {
 				if (!strings[i].equals("")) {
 					wirtschaftslageTradID = insertIntoTableOneAttributeOneForeignKey(
 							"wirtschaftslage_trad", strings[i],
 							wirtschaftslageNormID);
+
 					insertIntoTableNoAttributesThreeForeignKeys(
-							"wirtschaftslage_trad", wirtschaftslageTradID,
+							"wirtschaftslage_info", wirtschaftslageTradID,
 							quellenID[current], personID);
-					if (i == 51) {
-						current = 1;
-					} else if (i == 53) {
-						current = 3;
-					} else if (i == 54) {
-						current = 9;
-					}
+
+				}
+				if (i == 51) {
+					current = 1;
+				} else if (i == 53) {
+					current = 3;
+				} else if (i == 54) {
+					current = 9;
 				}
 			}
 
@@ -212,9 +232,37 @@ public class ImportDatabaseImpl implements ImportDatabase {
 				seminarNormID = insertIntoTableOneAttributeNoForeignKeys(
 						"seminar_norm", strings[57]);
 			}
-			if (!strings[56].equals("")) {
-				insertIntoTableOneAttributeOneForeignKey("seminar_trad",
-						strings[56], seminarNormID);
+
+			current = 0;
+			int[] tmpSeminar = { 56, 58, 59, 60, 61, 62 };
+			for (int i : tmpSeminar) {
+				if (!strings[i].equals("")) {
+					seminarTradID = insertIntoTableOneAttributeOneForeignKey(
+							"seminar_trad", strings[i], seminarNormID);
+					insertIntoTableNoAttributesThreeForeignKeys("seminar_info",
+							seminarTradID, quellenID[current], personID);
+				}
+				if (i == 56) {
+					current = 1;
+				} else if (i == 58) {
+					current = 3;
+				} else if (i == 59) {
+					current = 4;
+				} else if (i >= 60) {
+					current++;
+				}
+			}
+
+			current = 0;
+			for (int i = 66; i <= 76; i++) {
+				if (!strings[i].equals("")) {
+					int zusaetzeID = insertIntoTableOneAttributeNoForeignKeys(
+							"zusaetze", strings[i]);
+					insertIntoTableNoAttributesThreeForeignKeys(
+							"zusaetze_info", zusaetzeID, quellenID[current],
+							personID);
+				}
+				current++;
 			}
 
 		}
@@ -299,10 +347,38 @@ public class ImportDatabaseImpl implements ImportDatabase {
 	}
 
 	// TODO Erweiterung um Anmerkungen
-	private boolean insertOrtAbweichungNorm(String nameNorm)
+	private int insertIntoOrtAbweichungNorm(String entry)
 			throws ImportException {
+		String table = "hylleblomst.ort_abweichung_norm";
+		String sqlQuery = String
+				.format("INSERT INTO %s values(?, ?, ?)", table);
+		int id;
+		String anmerkung = "";
+		if (entry.contains("*")) {
+			int indexOfStar = entry.indexOf("*");
+			anmerkung = entry.substring(indexOfStar + 1);
+		}
 
-		return false;
+		if (!validation.entryAlreadyInDatabase(entry, anmerkung, table)) {
+			try (Connection con = DriverManager.getConnection(dbURL, user,
+					password);) {
+				PreparedStatement stmt = con.prepareStatement(sqlQuery);
+				id = validation.getMaxID(table) + 1;
+
+				stmt.setInt(1, id);
+				stmt.setString(2, entry);
+				stmt.setString(3, anmerkung);
+
+				stmt.executeUpdate();
+			} catch (SQLException e) {
+				throw new ImportException(String.format(
+						"A %s could not be inserted", entry) + e.getMessage());
+			}
+		} else {
+			id = validation.getIDOfEntry(entry, anmerkung, table);
+		}
+
+		return id;
 	}
 
 	/**
@@ -360,8 +436,11 @@ public class ImportDatabaseImpl implements ImportDatabase {
 
 				stmt.setInt(1, id);
 				stmt.setString(2, entry);
-				stmt.setInt(3, foreignKey);
-
+				if (foreignKey == 0) {
+					stmt.setNull(3, Types.INTEGER);
+				} else {
+					stmt.setInt(3, foreignKey);
+				}
 				stmt.executeUpdate();
 
 			} catch (SQLException e) {

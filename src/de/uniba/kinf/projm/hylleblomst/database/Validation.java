@@ -2,6 +2,7 @@ package de.uniba.kinf.projm.hylleblomst.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -137,6 +138,40 @@ public class Validation {
 		}
 
 		return result;
+	}
+
+	boolean entryAlreadyInDatabase(String entry, String anmerkung, String table) {
+		boolean result = true;
+
+		String columnOne = getColumnName(table, 1);
+		String columnTwo = getColumnName(table, 2);
+		String columnThree = getColumnName(table, 3);
+
+		try (Connection con = DriverManager
+				.getConnection(dbURL, user, password);) {
+			String sqlQuery = String.format(
+					"SELECT %2$s FROM %1$s WHERE %3$s=? AND %4$s=?", table,
+					columnOne, columnTwo, columnThree);
+			PreparedStatement stmt = con.prepareStatement(sqlQuery,
+					ResultSet.TYPE_SCROLL_INSENSITIVE,
+					ResultSet.CONCUR_READ_ONLY);
+
+			stmt.setString(1, entry);
+			stmt.setString(2, anmerkung);
+
+			ResultSet rs = stmt.executeQuery();
+
+			con.setAutoCommit(false);
+
+			result = rs.isBeforeFirst();
+
+			con.setAutoCommit(true);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return false;
 	}
 
 	boolean entryAlreadyInDatabase(int tradID, int quellenID, int personID,
@@ -310,6 +345,40 @@ public class Validation {
 		} catch (SQLException e) {
 			// TODO: handle exception
 			e.printStackTrace();
+		}
+		return id;
+	}
+
+	int getIDOfEntry(String entry, String anmerkung, String table) {
+		int id = 0;
+
+		String columnOne = getColumnName(table, 1);
+		String columnTwo = getColumnName(table, 2);
+		String columnThree = getColumnName(table, 3);
+
+		try (Connection con = DriverManager
+				.getConnection(dbURL, user, password);) {
+			String sqlQuery = String.format(
+					"SELECT %2$s FROM %1$s WHERE %3$s=? AND %4$s=?", table,
+					columnOne, columnTwo, columnThree);
+			PreparedStatement stmt = con.prepareStatement(sqlQuery,
+					ResultSet.TYPE_SCROLL_INSENSITIVE,
+					ResultSet.CONCUR_READ_ONLY);
+
+			stmt.setString(1, entry);
+			stmt.setString(2, anmerkung);
+
+			ResultSet rs = stmt.executeQuery(sqlQuery);
+			con.setAutoCommit(false);
+
+			rs.next();
+			id = rs.getInt(1);
+
+			con.setAutoCommit(true);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return 0;
 		}
 		return id;
 	}
