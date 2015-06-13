@@ -23,7 +23,7 @@ CREATE TABLE hylleblomst.person(
 	Jesuit varchar(100), 
 	Adlig varchar(100), 
 	Datum date, 
-	Einschreibejahr date, 
+	Studienjahr varchar(30), 
 	Graduiert varchar(100), 
 	Anmerkung varchar(255), 
 	AnredeID integer NOT NULL, 
