@@ -53,6 +53,9 @@ public class Controller {
 	TextField search_fulltext;
 
 	@FXML
+	Button searchFulltext_searchBtn;
+
+	@FXML
 	TitledPane searchCategory_person;
 
 	@FXML
@@ -103,6 +106,11 @@ public class Controller {
 		// FIXME Eingaben sammeln und an Suche übergeben
 		// Aktuell wird nur der Info-Text ausgegeben
 		setInfoText();
+	}
+
+	@FXML
+	private void startFulltextSearch() {
+
 	}
 
 	/**
