@@ -53,6 +53,7 @@ public class ImportDatabaseImpl implements ImportDatabase {
 
 		for (String[] strings : rows) {
 			int personID = Integer.parseInt(strings[0]);
+			int current;
 
 			int anredeNormID = 0;
 			int anredeTradID = 0;
@@ -62,11 +63,15 @@ public class ImportDatabaseImpl implements ImportDatabase {
 			int titelTradID = 0;
 
 			int vornameNormID = 0;
+			int nameNormID = 0;
 			int fachNormID = 0;
 			int wirtschaftslageNormID = 0;
 			int seminarNormID = 0;
 
 			int vornameTradID;
+			int nameTradID;
+			int fachTradID;
+			int wirtschaftslageTradID;
 
 			if (!strings[4].equals("")) {
 				anredeNormID = insertIntoTableOneAttributeNoForeignKeys(
@@ -92,7 +97,8 @@ public class ImportDatabaseImpl implements ImportDatabase {
 				titelTradID = insertIntoTableOneAttributeOneForeignKey(
 						"titel_trad", strings[64], titelNormID);
 			}
-			// TODO Person can now be inserted
+
+			// Preparatory statements for inserting persons
 			int tag = -1;
 			int monat = -1;
 			int jahr = -1;
@@ -106,6 +112,7 @@ public class ImportDatabaseImpl implements ImportDatabase {
 			if (!strings[45].equals("")) {
 				jahr = Integer.parseInt(strings[45]);
 			}
+
 			java.sql.Date datum = new Date(new GregorianCalendar(jahr, monat,
 					tag).getTimeInMillis());
 			int nummerHess;
@@ -124,15 +131,37 @@ public class ImportDatabaseImpl implements ImportDatabase {
 				vornameNormID = insertIntoTableOneAttributeNoForeignKeys(
 						"vorname_norm", strings[6]);
 			}
-			if (!strings[5].equals("")) {
-				vornameTradID = insertIntoTableOneAttributeOneForeignKey(
-						"vorname_trad", strings[5], vornameNormID);
-				// insertIntoTableNoAttributesThreeForeignKeys("vorname_info",
-				// vornameTradID, quellenID[0], personID);
+			// Insert all different variations of name
+			current = 0;
+			for (int i = 5; i <= 16; i++) {
+				if (i != 6) {
+					if (!strings[i].equals("")) {
+						vornameTradID = insertIntoTableOneAttributeOneForeignKey(
+								"vorname_trad", strings[i], vornameNormID);
+						insertIntoTableNoAttributesThreeForeignKeys(
+								"vorname_info", vornameTradID,
+								quellenID[current], personID);
+					}
+					current++;
+				}
 			}
+
 			if (!strings[18].equals("")) {
-				// insertNameIntoSimpleTable("name_norm", strings[47]);
+				nameNormID = insertIntoTableOneAttributeNoForeignKeys(
+						"name_norm", strings[18]);
 			}
+			// Insert all different variations of name
+			current = 0;
+			for (int i = 19; i <= 28; i++) {
+				if (!strings[i].equals("")) {
+					nameTradID = insertIntoTableOneAttributeOneForeignKey(
+							"name_trad", strings[i], nameNormID);
+					insertIntoTableNoAttributesThreeForeignKeys("name_info",
+							nameTradID, quellenID[current], personID);
+				}
+				current++;
+			}
+
 			if (!strings[42].equals("")) {
 				// insertOrtAbweichungNorm(strings[42]);
 			}
@@ -141,19 +170,44 @@ public class ImportDatabaseImpl implements ImportDatabase {
 				fachNormID = insertIntoTableOneAttributeNoForeignKeys(
 						"fach_norm", strings[49]);
 			}
+
 			if (!strings[48].equals("")) {
-				insertIntoTableOneAttributeOneForeignKey("fach_trad",
-						strings[48], fachNormID);
+				fachTradID = insertIntoTableOneAttributeOneForeignKey(
+						"fach_trad", strings[48], fachNormID);
+				insertIntoTableNoAttributesThreeForeignKeys("fach_info",
+						fachTradID, quellenID[0], personID);
+			}
+			if (!strings[50].equals("")) {
+				fachTradID = insertIntoTableOneAttributeOneForeignKey(
+						"fach_trad", strings[50], fachNormID);
+				insertIntoTableNoAttributesThreeForeignKeys("fach_info",
+						fachTradID, quellenID[1], personID);
 			}
 			if (!strings[52].equals("")) {
 				wirtschaftslageNormID = insertIntoTableOneAttributeNoForeignKeys(
 						"wirtschaftslage_norm", strings[52]);
 			}
-			if (!strings[51].equals("")) {
-				insertIntoTableOneAttributeOneForeignKey(
-						"wirtschaftslage_trad", strings[51],
-						wirtschaftslageNormID);
+
+			int[] tmp = { 51, 53, 54, 55 };
+			current = 0;
+			for (int i : tmp) {
+				if (!strings[i].equals("")) {
+					wirtschaftslageTradID = insertIntoTableOneAttributeOneForeignKey(
+							"wirtschaftslage_trad", strings[i],
+							wirtschaftslageNormID);
+					insertIntoTableNoAttributesThreeForeignKeys(
+							"wirtschaftslage_trad", wirtschaftslageTradID,
+							quellenID[current], personID);
+					if (i == 51) {
+						current = 1;
+					} else if (i == 53) {
+						current = 3;
+					} else if (i == 54) {
+						current = 9;
+					}
+				}
 			}
+
 			if (!strings[57].equals("")) {
 				seminarNormID = insertIntoTableOneAttributeNoForeignKeys(
 						"seminar_norm", strings[57]);
