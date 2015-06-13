@@ -1,5 +1,7 @@
 package de.uniba.kinf.projm.hylleblomst.view;
 
+import java.util.InputMismatchException;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
@@ -12,9 +14,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import de.uniba.kinf.projm.hylleblomst.logic.QueriesImpl;
 
 public class Controller {
 	private UIHelper ui = new UIHelper();
+
+	private QueriesImpl querieImpl = new QueriesImpl();
 
 	@FXML
 	BorderPane root;
@@ -90,6 +95,7 @@ public class Controller {
 	private String getFullTextSearchInput() {
 		if (search_fulltext.getText() == null
 				|| "".equals(search_fulltext.getText())) {
+			throw new InputMismatchException("Die Volltextsuche");
 			// TODO Was zurückgeben wenn kein Eintrag erfolgt ist? Was benötigt
 			// die Suche an Infos in welchem Format?
 			return "Volltext ist leer";
@@ -108,9 +114,13 @@ public class Controller {
 		setInfoText();
 	}
 
+	/**
+	 * Takes the input of the fulltext search field and starts the fulltext
+	 * search.
+	 */
 	@FXML
 	private void startFulltextSearch() {
-
+		querieImpl.fullTextSearch(getFullTextSearchInput());
 	}
 
 	/**
