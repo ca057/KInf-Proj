@@ -25,6 +25,11 @@ public class Controller {
 
 	private QueriesImpl querieImpl = new QueriesImpl();
 
+	private int inputCounter = 4;
+
+	public Controller() {
+	}
+
 	@FXML
 	BorderPane root;
 
@@ -104,6 +109,26 @@ public class Controller {
 	TextArea infoArea;
 
 	/**
+	 * Builds an array with all input fields which are in the user interface.
+	 * 
+	 * @return the two-dimensional array with the {@link ColumnKeys} at position
+	 *         0 and the value from the corresponding input at position 1
+	 */
+	private Object[][] setUpArrayWithInputValues() {
+		Object[][] inputArray = new Object[inputCounter][2];
+		inputArray[0][0] = ColumnKeys.ANREDE;
+		inputArray[0][1] = searchCategory_person_anrede.getText();
+		inputArray[1][0] = ColumnKeys.ANREDE_NORM;
+		inputArray[1][1] = searchCategory_person_anredenorm.getText();
+		inputArray[2][0] = ColumnKeys.TITEL;
+		inputArray[2][1] = searchCategory_person_titel.getText();
+		inputArray[3][0] = ColumnKeys.TITEL_NORM;
+		inputArray[3][1] = searchCategory_person_titelnorm.getText();
+
+		return inputArray;
+	}
+
+	/**
 	 * Gets the input of the fulltext search.
 	 * 
 	 * @return the input as a string
@@ -141,21 +166,20 @@ public class Controller {
 	 * 
 	 * @return The {@link HashMap} with all inputs
 	 */
+	@SuppressWarnings("unchecked")
 	private Map<Enum<ColumnKeys>, Object> getSearchInput() {
+		Object[][] allInputFields = setUpArrayWithInputValues();
+		if (allInputFields == null || allInputFields.length == 0) {
+			throw new InputMismatchException(
+					"Die Liste mit Eingabefeldern ist leer oder hat keinen Wert.");
+		}
 		Map<Enum<ColumnKeys>, Object> map = new HashMap<Enum<ColumnKeys>, Object>();
-		if (!"".equals(searchCategory_person_anrede.getText())) {
-			map.put(ColumnKeys.ANREDE, searchCategory_person_anrede.getText());
-		}
-		if (!"".equals(searchCategory_person_anredenorm.getText())) {
-			map.put(ColumnKeys.ANREDE_NORM,
-					searchCategory_person_anredenorm.getText());
-		}
-		if (!"".equals(searchCategory_person_titel.getText())) {
-			map.put(ColumnKeys.TITEL, searchCategory_person_titel.getText());
-		}
-		if (!"".equals(searchCategory_person_titelnorm.getText())) {
-			map.put(ColumnKeys.TITEL_NORM,
-					searchCategory_person_titelnorm.getText());
+
+		for (int i = 0; i < allInputFields.length; i++) {
+			if (!"".equals((allInputFields[i][1]))) {
+				map.put((Enum<ColumnKeys>) allInputFields[i][0],
+						allInputFields[i][1]);
+			}
 		}
 
 		return map;
