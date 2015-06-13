@@ -2,7 +2,8 @@ package de.uniba.kinf.projm.hylleblomst.logic;
 
 public class SourceKeys {
 
-	static Integer Standard = 1;
+	static Integer NORM = 0;
+	static Integer STANDARD = 1;
 	static Integer HSB_AUB_I11 = 2;
 	static Integer HSC_AUB_I131 = 3;
 	static Integer HSD_AUB_I132 = 4;

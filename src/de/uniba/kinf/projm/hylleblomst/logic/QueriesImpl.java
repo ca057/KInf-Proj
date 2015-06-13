@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
 
 public class QueriesImpl implements Queries {
 	String dbURL = "jdbc:derby:db/MyDB";
@@ -18,8 +17,7 @@ public class QueriesImpl implements Queries {
 	}
 
 	@Override
-	public void extendedSearch(List<Object[]> list) {
-		// TODO Auto-generated method stub
+	public void extendedSearch(ColumnKeys[] colums, Object[] input, int[] source) {
 
 	}
 
