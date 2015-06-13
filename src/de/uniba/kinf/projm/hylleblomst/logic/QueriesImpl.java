@@ -8,12 +8,12 @@ import java.sql.Statement;
 import java.util.Map;
 
 public class QueriesImpl implements Queries {
-	String dbURL = "jdbc:derby:db/MyDB";
+	String dbURL = "jdbc:derby:/Users/Hannes/git/KInf-Proj/db/MyDB";
 	String user = "admin";
 	String password = "password";
 
 	@Override
-	public void fullTextSearch(String query) {
+	public void fullTextSearch(String query) throws SQLException {
 		startQuery(query);
 	}
 
@@ -23,18 +23,18 @@ public class QueriesImpl implements Queries {
 
 	}
 
-	private void startQuery(String query) {
-		try {
-			Connection con = DriverManager.getConnection(dbURL, user, password);
-			Statement stmt = con.createStatement();
-			ResultSet results = stmt
-					.executeQuery("SELECT " + query + " FROM *");
+	private void startQuery(String query) throws SQLException {
+		try (Connection con = DriverManager
+				.getConnection(dbURL, user, password);
+				Statement stmt = con.createStatement();
+				ResultSet results = stmt.executeQuery("SELECT NAME"
+						+ " FROM ORT" + " WHERE CONTAINS " + query);) {
 			System.out.println(results);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new SQLException(e.getMessage());
+		} finally {
+
 		}
 
 	}
-
 }

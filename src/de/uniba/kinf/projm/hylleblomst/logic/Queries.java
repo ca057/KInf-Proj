@@ -1,10 +1,11 @@
 package de.uniba.kinf.projm.hylleblomst.logic;
 
+import java.sql.SQLException;
 import java.util.Map;
 
 public interface Queries {
 
-	public void fullTextSearch(String query);
+	public void fullTextSearch(String query) throws SQLException;
 
 	/**
 	 * 
