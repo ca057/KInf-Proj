@@ -27,8 +27,13 @@ public class QueriesImpl implements Queries {
 		try (Connection con = DriverManager
 				.getConnection(dbURL, user, password);
 				Statement stmt = con.createStatement();
-				ResultSet results = stmt.executeQuery("SELECT * FROM ORT");) {
-			System.out.println(results);
+				ResultSet results = stmt
+						.executeQuery("SELECT *  WHERE CONTAINS (" + query
+								+ ")");) {
+			while (results.next()) {
+				System.out.printf("%s, %s, %s%n", results.getString(1),
+						results.getString(2), results.getString(3));
+			}
 		} catch (SQLException e) {
 			throw new SQLException(e.getMessage());
 		} finally {
