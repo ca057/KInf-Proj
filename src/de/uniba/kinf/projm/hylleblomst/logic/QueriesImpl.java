@@ -8,7 +8,7 @@ import java.sql.Statement;
 import java.util.Map;
 
 public class QueriesImpl implements Queries {
-	String dbURL = "jdbc:derby:/Users/Hannes/git/KInf-Proj/db/MyDB";
+	String dbURL = "jdbc:derby:db/MyDB";
 	String user = "admin";
 	String password = "password";
 
@@ -27,8 +27,7 @@ public class QueriesImpl implements Queries {
 		try (Connection con = DriverManager
 				.getConnection(dbURL, user, password);
 				Statement stmt = con.createStatement();
-				ResultSet results = stmt.executeQuery("SELECT NAME"
-						+ " FROM ORT" + " WHERE CONTAINS " + query);) {
+				ResultSet results = stmt.executeQuery("SELECT * FROM ORT");) {
 			System.out.println(results);
 		} catch (SQLException e) {
 			throw new SQLException(e.getMessage());
