@@ -8,7 +8,7 @@ import java.sql.Statement;
 import java.util.Map;
 
 public class QueriesImpl implements Queries {
-	String dbURL = "jdbc:derby:/db/MyDB";
+	String dbURL = "jdbc:derby:db/MyDB";
 	String user = "admin";
 	String password = "password";
 
@@ -25,11 +25,11 @@ public class QueriesImpl implements Queries {
 
 	private void startQuery(String query) {
 		try {
-
 			Connection con = DriverManager.getConnection(dbURL, user, password);
 			Statement stmt = con.createStatement();
-			ResultSet results = stmt.executeQuery("SELECT "
-					+ query.toUpperCase() + " FROM *");
+			ResultSet results = stmt
+					.executeQuery("SELECT " + query + " FROM *");
+			System.out.println(results);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
