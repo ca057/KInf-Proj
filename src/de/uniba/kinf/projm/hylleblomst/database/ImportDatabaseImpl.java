@@ -1,9 +1,11 @@
 package de.uniba.kinf.projm.hylleblomst.database;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
@@ -90,6 +92,26 @@ public class ImportDatabaseImpl implements ImportDatabase {
 						"titel_trad", strings[64], titelNormID);
 			}
 			// TODO Person can now be inserted
+			int tag = -1;
+			int monat = -1;
+			int jahr = -1;
+			if (!strings[43].equals("")) {
+				tag = Integer.parseInt(strings[43]);
+			}
+			if (!strings[44].equals("")) {
+				// Minus one as month is 0-based (0 is January)
+				monat = Integer.parseInt(strings[44]) - 1;
+			}
+			if (!strings[45].equals("")) {
+				jahr = Integer.parseInt(strings[45]);
+			}
+			java.sql.Date datum = new Date(new GregorianCalendar(jahr, monat,
+					tag).getTimeInMillis());
+
+			insertPerson(personID, Integer.parseInt(strings[1]),
+					Integer.parseInt(strings[2]), strings[29], strings[17],
+					datum, strings[46], strings[63], strings[78], anredeNormID,
+					fakultaetenID, fundortID, titelTradID);
 
 			if (!strings[6].equals("")) {
 				vornameNormID = insertIntoTableOneAttributeNoForeignKeys(
@@ -135,6 +157,33 @@ public class ImportDatabaseImpl implements ImportDatabase {
 			}
 
 		}
+	}
+
+	private boolean insertPerson(int personID, int seite, int nummerHess,
+			String jesuit, String adelig, Date datum, String studienjahr,
+			String graduiert, String anmerkung, int anredeNormID,
+			int fakultaetenID, int fundortID, int titelTradID)
+			throws ImportException {
+
+		String table = "hylleblomst.person";
+
+		if (!validation.personIDIsTaken(personID)) {
+			try (Connection con = DriverManager.getConnection(dbURL, user,
+					password); Statement stmt = con.createStatement();) {
+
+				String insertStmt = String
+						.format("%1$s %2$s values(%3$d, %4$d, %5$d, '%6$s', '%7$s', %8$tD, '%9$s', '%10$s', '%11$s', %12$d, %13$d, %14$d, %15$d)",
+								insertSql, table, personID, seite, nummerHess,
+								jesuit, adelig, datum, studienjahr, graduiert,
+								anmerkung, anredeNormID, fakultaetenID,
+								fundortID, titelTradID);
+
+			} catch (SQLException e) {
+				throw new ImportException("A Person could not be inserted "
+						+ e.getMessage());
+			}
+		}
+		return false;
 	}
 
 	// TODO Erweiterung um Anmerkungen
