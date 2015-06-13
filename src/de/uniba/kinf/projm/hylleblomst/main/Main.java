@@ -7,9 +7,6 @@ public class Main {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 
