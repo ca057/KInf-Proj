@@ -1,7 +1,9 @@
 package de.uniba.kinf.projm.hylleblomst.view;
 
+import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -69,7 +71,13 @@ public class Controller {
 	TextField searchCategory_person_anrede;
 
 	@FXML
+	TextField searchCategory_person_anredenorm;
+
+	@FXML
 	TextField searchCategory_person_titel;
+
+	@FXML
+	TextField searchCategory_person_titelnorm;
 
 	@FXML
 	TitledPane searchCategory_personExtended;
@@ -109,9 +117,48 @@ public class Controller {
 		return search_fulltext.getText();
 	}
 
+	/**
+	 * Takes the input of the fulltext search field and starts the fulltext
+	 * search.
+	 */
+	@FXML
+	private void startFulltextSearch() {
+		try {
+			// FIXME setInfoText am Ende entfernen, zur Zeit nur für Testzwecke
+			// enthalten
+			setInfoText();
+			querieImpl.fullTextSearch(getFullTextSearchInput());
+		} catch (Exception e) {
+			// TODO korrekte Exception fangen und nicht einfach mal alles
+			e.printStackTrace();
+			ui.showErrorMessage(e.getMessage());
+		}
+	}
+
+	/**
+	 * Gets the input of all user input fields and stores it in a
+	 * {@link HashMap}.
+	 * 
+	 * @return The {@link HashMap} with all inputs
+	 */
 	private Map<Enum<ColumnKeys>, Object> getSearchInput() {
-		// Map<Enum<ColumnKeys>, Object> map
-		return null;
+		Map<Enum<ColumnKeys>, Object> map = new HashMap<Enum<ColumnKeys>, Object>();
+		if (!"".equals(searchCategory_person_anrede.getText())) {
+			map.put(ColumnKeys.ANREDE, searchCategory_person_anrede.getText());
+		}
+		if (!"".equals(searchCategory_person_anredenorm.getText())) {
+			map.put(ColumnKeys.ANREDE_NORM,
+					searchCategory_person_anredenorm.getText());
+		}
+		if (!"".equals(searchCategory_person_titel.getText())) {
+			map.put(ColumnKeys.TITEL, searchCategory_person_titel.getText());
+		}
+		if (!"".equals(searchCategory_person_titelnorm.getText())) {
+			map.put(ColumnKeys.TITEL_NORM,
+					searchCategory_person_titelnorm.getText());
+		}
+
+		return map;
 	}
 
 	/**
@@ -124,24 +171,6 @@ public class Controller {
 			// enthalten
 			setInfoText();
 			querieImpl.extendedSearch(getSearchInput());
-		} catch (Exception e) {
-			// TODO korrekte Exception fangen und nicht einfach mal alles
-			e.printStackTrace();
-			ui.showErrorMessage(e.getMessage() + "kacka");
-		}
-	}
-
-	/**
-	 * Takes the input of the fulltext search field and starts the fulltext
-	 * search.
-	 */
-	@FXML
-	private void startFulltextSearch() {
-		try {
-			// FIXME setInfoText am Ende entfernen, zur Zeit nur für Testzwecke
-			// enthalten
-			setInfoText();
-			querieImpl.fullTextSearch(getFullTextSearchInput());
 		} catch (Exception e) {
 			// TODO korrekte Exception fangen und nicht einfach mal alles
 			e.printStackTrace();
@@ -183,9 +212,15 @@ public class Controller {
 	 * info area.
 	 */
 	private void setInfoText() {
-		String info = "Suchanfrage\n-----------";
+		String info = "Suchanfrage\n-----------\n";
+		// if (!(getFullTextSearchInput() == null)) {
 		// info += "Volltextsuche: " + getFullTextSearchInput() + "\n";
-		info += "\nSuche in Person\n";
+		// }
+		Map<Enum<ColumnKeys>, Object> map = getSearchInput();
+
+		for (Entry<Enum<ColumnKeys>, Object> entry : map.entrySet()) {
+			info += entry.getKey() + ": " + entry.getValue() + "\n";
+		}
 		infoArea.setText(info);
 	}
 }
