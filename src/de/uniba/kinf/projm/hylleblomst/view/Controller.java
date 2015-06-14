@@ -1,5 +1,8 @@
 package de.uniba.kinf.projm.hylleblomst.view;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
@@ -14,6 +17,7 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import de.uniba.kinf.projm.hylleblomst.logic.QueriesImpl;
+import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
 import de.uniba.kinf.projm.hylleblomst.logic.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.SourceKeys;
 
@@ -200,33 +204,29 @@ public class Controller {
 				throw new IllegalArgumentException(
 						"Die Liste mit Eingabefeldern ist leer oder hat keinen Wert.");
 			}
-			int counter = 0;
 
-			SearchFieldKeys[] columns = new SearchFieldKeys[inputCounter];
-			Object[] input = new Object[inputCounter];
-			int[] source = new int[inputCounter];
+			List<QueryRequest> requestList = new ArrayList<QueryRequest>();
 
 			for (int i = 0; i < inputCounter; i++) {
+				// FIXME derzeit nur mit TextEingabe möglich, oder?
+				System.out.println(allInputFields[i][1]);
 				if (!"".equals((allInputFields[i][1]))) {
-
-					// columns[counter] = (SearchFieldKeys)
-					// allInputFields[i][0];
-					// input[counter] = allInputFields[i][1];
-					// source[counter] = (int) allInputFields[i][2];
-					// counter++;
+					SearchFieldKeys sfk = (SearchFieldKeys) allInputFields[i][0];
+					int source = (int) allInputFields[i][2];
+					QueryRequest tmpReq = new QueryRequest(sfk,
+							allInputFields[i][1], source);
+					requestList.add(tmpReq);
 				}
 			}
 
-			// FIXME array ist länger als benötigt - vor Übergabe kürzen?
-
-			if (counter == 0) {
+			if (requestList.size() == 0) {
 				throw new IllegalArgumentException(
-						"Es wurden keine Sucheingaben gefunden, die abgerufen werden können.");
+						"Es wurden keine Sucheingaben gefunden, für die eine Suchanfrage gestellt werden kann.");
 			} else {
 				// FIXME setInfoText am Ende entfernen, zur Zeit nur für
 				// Testzwecke enthalten
-				setInfoTextExtendedSearch(columns, input, source);
-				querieImpl.extendedSearch(columns, input, source);
+				// setInfoTextExtendedSearch();
+				// querieImpl.extendedSearch(requestList);
 			}
 		} catch (IllegalArgumentException e) {
 			// e.printStackTrace();
@@ -273,18 +273,9 @@ public class Controller {
 	 * input. Collects the user input from all input fields prints it to the
 	 * info area.
 	 */
-	private void setInfoTextExtendedSearch(SearchFieldKeys[] columns,
-			Object[] input, int[] source) {
+	private void setInfoTextExtendedSearch() {
 		String info = "Suchanfrage\n-----------\n";
-		if (columns[0] == null) {
-			info += "Keine Eingaben gefunden";
-		} else {
-			for (int i = 0; i < columns.length; i++) {
-				info += columns[i].toString() + ": "
-						+ (String) input[i].toString() + "; " + source[i]
-						+ "\n";
-			}
-		}
+
 		infoArea.setText(info);
 	}
 }
