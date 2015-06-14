@@ -12,7 +12,8 @@ public interface Queries {
 	 * 
 	 * @param map
 	 */
-	public void extendedSearch(ColumnKeys[] colums, Object[] input, int[] source);
+	void extendedSearch(QueryRequest[] queryRequest);
 
-	public void setDatabase(String dbURL, String user, String password);
+	void setDatabase(String dbURL, String user, String password);
+
 }

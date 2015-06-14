@@ -4,26 +4,26 @@ public class QueriesImpl implements Queries {
 	DBAccess db;
 
 	@Override
-	public void extendedSearch(ColumnKeys[] columns, Object[] input,
-			int[] source) {
+	public void extendedSearch(QueryRequest[] queryRequest) {
 		String select = "SELECT *";
 		String from = "FROM ";
 		String where = "WHERE ";
-		for (int i = 0; i < columns.length; i++) {
-			from += columns[i] + " ";
-			where += columns[i] + "." + columns[i].toString() + " = "
-					+ input[i];
+		for (int i = 0; i < queryRequest.length; i++) {
+
 		}
 		System.out.println(select + from + where);
 	}
 
 	@Override
 	public void setDatabase(String dbURL, String user, String password) {
-		db = new DBAccess("jdbc:derby:db/MyDB", "admin", "password");
+		db = new DBAccess(dbURL, user, password);
 	}
 
-	private void startQuery() {
-
+	private String searchFieldKeyToTable(SearchFieldKeys key) {
+		if (key.toString().equals("ANREDE")) {
+			return "ANREDE_TRAD";
+		}
+		return null;
 	}
 
 }

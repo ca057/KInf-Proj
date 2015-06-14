@@ -1,6 +1,6 @@
 package de.uniba.kinf.projm.hylleblomst.logic;
 
-public enum ColumnKeys {
+public enum SearchFieldKeys {
 	
 	ANREDE,
 	ANREDE_NORM,
