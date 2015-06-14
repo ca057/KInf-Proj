@@ -12,7 +12,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import de.uniba.kinf.projm.hylleblomst.logic.ColumnKeys;
+import de.uniba.kinf.projm.hylleblomst.logic.TableKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.QueriesImpl;
 import de.uniba.kinf.projm.hylleblomst.logic.SourceKeys;
 
@@ -107,21 +107,21 @@ public class Controller {
 	/**
 	 * Builds an array with all input fields which are in the user interface.
 	 * 
-	 * @return the two-dimensional array with the {@link ColumnKeys} at position
+	 * @return the two-dimensional array with the {@link TableKeys} at position
 	 *         0 and the value from the corresponding input at position 1
 	 */
 	private Object[][] setUpArrayWithInputValues() {
 		Object[][] inputArray = new Object[inputCounter][3];
-		inputArray[0][0] = ColumnKeys.ANREDE;
+		inputArray[0][0] = TableKeys.ANREDE;
 		inputArray[0][1] = searchCategory_person_anrede.getText();
 		inputArray[0][2] = SourceKeys.STANDARD;
-		inputArray[1][0] = ColumnKeys.ANREDE_NORM;
+		inputArray[1][0] = TableKeys.ANREDE_NORM;
 		inputArray[1][1] = searchCategory_person_anredenorm.getText();
 		inputArray[1][2] = SourceKeys.NORM;
-		inputArray[2][0] = ColumnKeys.TITEL;
+		inputArray[2][0] = TableKeys.TITEL;
 		inputArray[2][1] = searchCategory_person_titel.getText();
 		inputArray[2][2] = SourceKeys.STANDARD;
-		inputArray[3][0] = ColumnKeys.TITEL_NORM;
+		inputArray[3][0] = TableKeys.TITEL_NORM;
 		inputArray[3][1] = searchCategory_person_titelnorm.getText();
 		inputArray[3][2] = SourceKeys.NORM;
 
@@ -178,13 +178,13 @@ public class Controller {
 			}
 			int counter = 0;
 
-			ColumnKeys[] columns = new ColumnKeys[inputCounter];
+			TableKeys[] columns = new TableKeys[inputCounter];
 			Object[] input = new Object[inputCounter];
 			int[] source = new int[inputCounter];
 
 			for (int i = 0; i < inputCounter; i++) {
 				if (!"".equals((allInputFields[i][1]))) {
-					columns[counter] = (ColumnKeys) allInputFields[i][0];
+					columns[counter] = (TableKeys) allInputFields[i][0];
 					input[counter] = allInputFields[i][1];
 					source[counter] = (int) allInputFields[i][2];
 					counter++;
@@ -243,7 +243,7 @@ public class Controller {
 	 * input. Collects the user input from all input fields prints it to the
 	 * info area.
 	 */
-	private void setInfoTextExtendedSearch(ColumnKeys[] columns,
+	private void setInfoTextExtendedSearch(TableKeys[] columns,
 			Object[] input, int[] source) {
 		String info = "Suchanfrage\n-----------\n";
 		if (columns[0] == null) {

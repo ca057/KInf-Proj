@@ -4,9 +4,9 @@ public class QueriesImpl implements Queries {
 	DBAccess db;
 
 	@Override
-	public void extendedSearch(ColumnKeys[] columns, Object[] input,
+	public void extendedSearch(TableKeys[] columns, Object[] input,
 			int[] source) {
-		startQuery();
+
 	}
 
 	@Override

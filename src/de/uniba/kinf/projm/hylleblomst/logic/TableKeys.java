@@ -1,6 +1,6 @@
 package de.uniba.kinf.projm.hylleblomst.logic;
 
-public class ColumnKeys {
+public class TableKeys {
 
 	public static String ANREDE = "ANREDE_TRAD";
 	public static String ANREDE_NORM = "ANREDE_NORM";

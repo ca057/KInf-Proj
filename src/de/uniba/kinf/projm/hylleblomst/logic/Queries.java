@@ -13,7 +13,7 @@ public interface Queries {
 	 * 
 	 * @param map
 	 */
-	public void extendedSearch(ColumnKeys[] colums, Object[] input, int[] source);
+	public void extendedSearch(TableKeys[] colums, Object[] input, int[] source);
 
 	public void setDatabase(String dbURL, String user, String password);
 }
