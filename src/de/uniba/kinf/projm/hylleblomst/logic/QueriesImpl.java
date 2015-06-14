@@ -4,7 +4,8 @@ public class QueriesImpl implements Queries {
 	DBAccess db;
 
 	@Override
-	public void extendedSearch(TableKeys[] columns, Object[] input, int[] source) {
+	public void extendedSearch(ColumnKeys[] columns, Object[] input,
+			int[] source) {
 		String select = "SELECT *";
 		String from = "FROM ";
 		String where = "WHERE ";

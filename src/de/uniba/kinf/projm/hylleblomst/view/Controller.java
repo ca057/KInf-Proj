@@ -13,9 +13,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import de.uniba.kinf.projm.hylleblomst.logic.ColumnKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.QueriesImpl;
 import de.uniba.kinf.projm.hylleblomst.logic.SourceKeys;
-import de.uniba.kinf.projm.hylleblomst.logic.TableKeys;
 
 public class Controller {
 	private UIHelper ui = new UIHelper();
@@ -122,29 +122,29 @@ public class Controller {
 	/**
 	 * Builds an array with all input fields which are in the user interface.
 	 * 
-	 * @return the two-dimensional array with the {@link TableKeys} at position
+	 * @return the two-dimensional array with the {@link ColumnKeys} at position
 	 *         0 and the value from the corresponding input at position 1
 	 */
 	private Object[][] setUpArrayWithInputValues() {
 		Object[][] inputArray = new Object[inputCounter][3];
-		inputArray[0][0] = TableKeys.ANREDE;
+		inputArray[0][0] = ColumnKeys.ANREDE;
 		inputArray[0][1] = searchCategory_person_anrede.getText();
 		inputArray[0][2] = SourceKeys.STANDARD;
-		inputArray[1][0] = TableKeys.ANREDE_NORM;
+		inputArray[1][0] = ColumnKeys.ANREDE_NORM;
 		inputArray[1][1] = searchCategory_person_anredenorm.getText();
 		inputArray[1][2] = SourceKeys.NORM;
-		inputArray[2][0] = TableKeys.TITEL;
+		inputArray[2][0] = ColumnKeys.TITEL;
 		inputArray[2][1] = searchCategory_person_titel.getText();
 		inputArray[2][2] = SourceKeys.STANDARD;
-		inputArray[3][0] = TableKeys.TITEL_NORM;
+		inputArray[3][0] = ColumnKeys.TITEL_NORM;
 		inputArray[3][1] = searchCategory_person_titelnorm.getText();
 		inputArray[3][2] = SourceKeys.NORM;
 		// FIXME korrekte SourceKeys speichern
-		inputArray[4][0] = TableKeys.TITEL_NORM;
+		inputArray[4][0] = ColumnKeys.TITEL_NORM;
 		inputArray[4][1] = searchCategory_person_vornameinput.getText();
 		inputArray[4][2] = null;
 		// FIXME korrekte SourceKeys speichern
-		inputArray[5][0] = TableKeys.TITEL_NORM;
+		inputArray[5][0] = ColumnKeys.TITEL_NORM;
 		inputArray[5][1] = searchCategory_person_nachnameinput.getText();
 		inputArray[5][2] = null;
 
@@ -201,13 +201,13 @@ public class Controller {
 			}
 			int counter = 0;
 
-			String[] columns = new String[inputCounter];
+			ColumnKeys[] columns = new ColumnKeys[inputCounter];
 			Object[] input = new Object[inputCounter];
 			int[] source = new int[inputCounter];
 
 			for (int i = 0; i < inputCounter; i++) {
 				if (!"".equals((allInputFields[i][1]))) {
-					columns[counter] = (String) allInputFields[i][0];
+					columns[counter] = (ColumnKeys) allInputFields[i][0];
 					input[counter] = allInputFields[i][1];
 					source[counter] = (int) allInputFields[i][2];
 					counter++;
@@ -270,8 +270,8 @@ public class Controller {
 	 * input. Collects the user input from all input fields prints it to the
 	 * info area.
 	 */
-	private void setInfoTextExtendedSearch(String[] columns, Object[] input,
-			int[] source) {
+	private void setInfoTextExtendedSearch(ColumnKeys[] columns,
+			Object[] input, int[] source) {
 		String info = "Suchanfrage\n-----------\n";
 		if (columns[0] == null) {
 			info += "Keine Eingaben gefunden";
