@@ -3,7 +3,7 @@ package de.uniba.kinf.projm.hylleblomst.logic;
 public class TableKeys {
 
 	public static final String ANREDE = "ANREDE_TRAD";
-	public static final String ANREDE_NORM = "ANREDE_NORM";
+	public static final String ANREDE_NORM = "ANREDE_NORM.";
 	public static final String TITEL = "TITEL_TRAD";
 	public static final String TITEL_NORM = "TITEL_NORM";
 	public static final String VORNAME_NORM = "VORNAME_NORM";

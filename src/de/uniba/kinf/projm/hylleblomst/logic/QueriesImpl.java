@@ -4,9 +4,16 @@ public class QueriesImpl implements Queries {
 	DBAccess db;
 
 	@Override
-	public void extendedSearch(TableKeys[] columns, Object[] input,
-			int[] source) {
-
+	public void extendedSearch(TableKeys[] columns, Object[] input, int[] source) {
+		String select = "SELECT *";
+		String from = "FROM ";
+		String where = "WHERE ";
+		for (int i = 0; i < columns.length; i++) {
+			from += columns[i] + " ";
+			where += columns[i] + "." + columns[i].toString() + " = "
+					+ input[i];
+		}
+		System.out.println(select + from + where);
 	}
 
 	@Override
