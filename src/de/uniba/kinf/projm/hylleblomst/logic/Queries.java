@@ -1,10 +1,7 @@
 package de.uniba.kinf.projm.hylleblomst.logic;
 
-import java.sql.SQLException;
 
 public interface Queries {
-
-	public void fullTextSearch(String query) throws SQLException;
 
 	/**
 	 * 
@@ -16,5 +13,7 @@ public interface Queries {
 	 * 
 	 * @param map
 	 */
-	void extendedSearch(ColumnKeys[] colums, Object[] input, int[] source);
+	public void extendedSearch(ColumnKeys[] colums, Object[] input, int[] source);
+
+	public void setDatabase(String dbURL, String user, String password);
 }
