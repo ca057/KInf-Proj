@@ -6,10 +6,10 @@ import java.util.List;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -79,16 +79,50 @@ public class Controller {
 	@FXML
 	TextField searchCategory_person_titelnorm;
 
-	@SuppressWarnings("rawtypes")
 	@FXML
-	ChoiceBox searchCategory_person_vornameselection;
+	SplitMenuButton searchCategory_person_vornameselection;
+
+	@FXML
+	MenuItem selection_vorname;
+
+	@FXML
+	MenuItem selection_vornameNorm;
+
+	@FXML
+	MenuItem selection_vornameHSB;
+
+	@FXML
+	MenuItem selection_vornameHSC;
+
+	@FXML
+	MenuItem selection_vornameHSD;
+
+	@FXML
+	MenuItem selection_vornameHSE;
+
+	@FXML
+	MenuItem selection_vornameHSF;
+
+	@FXML
+	MenuItem selection_vornameHSG;
+
+	@FXML
+	MenuItem selection_vornameHSH;
+
+	@FXML
+	MenuItem selection_vornameHSI;
+
+	@FXML
+	MenuItem selection_vornameHSJ;
+
+	@FXML
+	MenuItem selection_vornameAUB;
 
 	@FXML
 	TextField searchCategory_person_vornameinput;
 
-	@SuppressWarnings("rawtypes")
 	@FXML
-	ChoiceBox searchCategory_person_nachnameselection;
+	SplitMenuButton searchCategory_person_nachnameselection;
 
 	@FXML
 	TextField searchCategory_person_nachnameinput;
