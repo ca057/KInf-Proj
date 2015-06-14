@@ -226,7 +226,7 @@ public class Controller {
 				// FIXME setInfoText am Ende entfernen, zur Zeit nur für
 				// Testzwecke enthalten
 				// setInfoTextExtendedSearch();
-				// querieImpl.extendedSearch(requestList);
+				querieImpl.search(requestList);
 			}
 		} catch (IllegalArgumentException e) {
 			// e.printStackTrace();
