@@ -1,42 +1,37 @@
 package de.uniba.kinf.projm.hylleblomst.logic;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
 public class QueriesImpl implements Queries {
-	String dbURL = "jdbc:derby:db/MyDB";
-	String user = "admin";
-	String password = "password";
+	DBAccess db;
 
 	@Override
-	public void fullTextSearch(String query) throws SQLException {
-		startQuery(query);
+	public void extendedSearch(ColumnKeys[] columns, Object[] input,
+			int[] source) {
+		getColumns(columns);
+		startQuery();
 	}
 
 	@Override
-	public void extendedSearch(ColumnKeys[] colums, Object[] input, int[] source) {
-
+	public void setDatabase(String dbURL, String user, String password) {
+		db = new DBAccess("jdbc:derby:db/MyDB", "admin", "password");
 	}
 
-	private void startQuery(String query) throws SQLException {
-		try (Connection con = DriverManager
-				.getConnection(dbURL, user, password);
-				Statement stmt = con.createStatement();
-				ResultSet results = stmt
-						.executeQuery("SELECT *  WHERE CONTAINS (" + query
-								+ ")");) {
-			while (results.next()) {
-				System.out.printf("%s, %s, %s%n", results.getString(1),
-						results.getString(2), results.getString(3));
+	private void getColumns(ColumnKeys[] columns) {
+		String[] result = new String[columns.length];
+		for (int i = 0; i < columns.length - 1; i++) {
+			if (ColumnKeys.ANREDE.equals(columns[i])) {
+				result[i] = "";
+			} else if (ColumnKeys.ANREDE_NORM.equals(columns[i])) {
+				result[i] = null;
+			} else if (ColumnKeys.TITEL.equals(columns[i])) {
+				result[i] = "846c00a0-014d-ee95-e094-0000074d4de8";
+			} else if (ColumnKeys.TITEL_NORM.equals(columns[i])) {
+				result[i] = "295dc08b-014d-ee95-e094-0000074d4de8";
 			}
-		} catch (SQLException e) {
-			throw new SQLException(e.getMessage());
-		} finally {
-
 		}
+	}
+
+	private void startQuery() {
 
 	}
+
 }
