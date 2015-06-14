@@ -1,6 +1,5 @@
 package de.uniba.kinf.projm.hylleblomst.view;
 
-import java.util.InputMismatchException;
 import java.util.Optional;
 
 import javafx.scene.control.Alert;
@@ -114,8 +113,8 @@ public class UIHelper {
 	 */
 	protected void showErrorMessage(String errorMsg) {
 		if (errorMsg == null) {
-			throw new InputMismatchException(
-					"Fehlermeldung darf nicht null sein.");
+			throw new IllegalArgumentException(
+					"Fehlermeldung hat keinen Wert (ist null).");
 		}
 		Alert exceptionAlert = new Alert(AlertType.ERROR);
 		exceptionAlert.setTitle(appName + " - Fehler");
