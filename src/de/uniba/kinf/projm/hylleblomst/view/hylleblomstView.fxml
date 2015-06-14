@@ -41,20 +41,7 @@
                      <children>
                         <VBox maxWidth="300.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <AnchorPane maxHeight="80.0" maxWidth="300.0" minHeight="80.0" minWidth="300.0" prefHeight="80.0" prefWidth="300.0">
-                                 <children>
-                                    <TextField fx:id="search_fulltext" editable="false" layoutX="28.0" layoutY="10.0" prefWidth="250.0" promptText="Volltextsuche" />
-                                    <ButtonBar layoutX="3.0" layoutY="35.0" maxHeight="40.0" minHeight="40.0" prefHeight="40.0" prefWidth="300.0">
-                                      <buttons>
-                                        <Button fx:id="searchFulltext_searchBtn" mnemonicParsing="false" onAction="#startFulltextSearch" text="Volltextsuche starten" />
-                                      </buttons>
-                                       <padding>
-                                          <Insets bottom="10.0" left="10.0" right="25.0" top="10.0" />
-                                       </padding>
-                                    </ButtonBar>
-                                 </children>
-                              </AnchorPane>
-                              <Accordion prefHeight="590.0" prefWidth="300.0">
+                              <Accordion prefHeight="635.0" prefWidth="300.0">
                                 <panes>
                                   <TitledPane fx:id="searchCategory_person" animated="false" text="Person">
                                        <content>
@@ -112,7 +99,7 @@
                                     <TitledPane fx:id="searchCategory_other" animated="false" text="sonstiges" />
                                 </panes>
                               </Accordion>
-                              <ButtonBar fx:id="searchMenu" maxHeight="40.0" minHeight="40.0" prefHeight="40.0" prefWidth="200.0">
+                              <ButtonBar fx:id="searchMenu" maxHeight="40.0" maxWidth="300.0" minHeight="40.0" prefHeight="40.0" prefWidth="300.0">
                                 <buttons>
                                   <Button fx:id="searchMenu_clearSearch" mnemonicParsing="false" onAction="#clearSearchInput" text="Suche leeren" />
                                     <Button fx:id="searchMenu_search" mnemonicParsing="false" onAction="#startSearch" text="Suchen" />
