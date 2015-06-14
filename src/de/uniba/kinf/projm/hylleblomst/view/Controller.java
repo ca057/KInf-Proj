@@ -3,6 +3,7 @@ package de.uniba.kinf.projm.hylleblomst.view;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -21,7 +22,7 @@ public class Controller {
 
 	private QueriesImpl querieImpl = new QueriesImpl();
 
-	private int inputCounter = 4;
+	private int inputCounter = 6;
 
 	public Controller() {
 	}
@@ -80,6 +81,20 @@ public class Controller {
 	@FXML
 	TextField searchCategory_person_titelnorm;
 
+	@SuppressWarnings("rawtypes")
+	@FXML
+	ChoiceBox searchCategory_person_vornameselection;
+
+	@FXML
+	TextField searchCategory_person_vornameinput;
+
+	@SuppressWarnings("rawtypes")
+	@FXML
+	ChoiceBox searchCategory_person_nachnameselection;
+
+	@FXML
+	TextField searchCategory_person_nachnameinput;
+
 	@FXML
 	TitledPane searchCategory_personExtended;
 
@@ -124,6 +139,14 @@ public class Controller {
 		inputArray[3][0] = TableKeys.TITEL_NORM;
 		inputArray[3][1] = searchCategory_person_titelnorm.getText();
 		inputArray[3][2] = SourceKeys.NORM;
+		// FIXME korrekte SourceKeys speichern
+		inputArray[4][0] = TableKeys.TITEL_NORM;
+		inputArray[4][1] = searchCategory_person_vornameinput.getText();
+		inputArray[4][2] = null;
+		// FIXME korrekte SourceKeys speichern
+		inputArray[5][0] = TableKeys.TITEL_NORM;
+		inputArray[5][1] = searchCategory_person_nachnameinput.getText();
+		inputArray[5][2] = null;
 
 		return inputArray;
 	}
@@ -178,18 +201,20 @@ public class Controller {
 			}
 			int counter = 0;
 
-			TableKeys[] columns = new TableKeys[inputCounter];
+			String[] columns = new String[inputCounter];
 			Object[] input = new Object[inputCounter];
 			int[] source = new int[inputCounter];
 
 			for (int i = 0; i < inputCounter; i++) {
 				if (!"".equals((allInputFields[i][1]))) {
-					columns[counter] = (TableKeys) allInputFields[i][0];
+					columns[counter] = (String) allInputFields[i][0];
 					input[counter] = allInputFields[i][1];
 					source[counter] = (int) allInputFields[i][2];
 					counter++;
 				}
 			}
+
+			// FIXME array ist länger als benötigt - vor Übergabe kürzen?
 
 			if (counter == 0) {
 				throw new IllegalArgumentException(
@@ -216,6 +241,8 @@ public class Controller {
 		searchCategory_person_anredenorm.clear();
 		searchCategory_person_titel.clear();
 		searchCategory_person_titelnorm.clear();
+		searchCategory_person_vornameinput.clear();
+		searchCategory_person_nachnameinput.clear();
 		search_fulltext.clear();
 	}
 
@@ -243,7 +270,7 @@ public class Controller {
 	 * input. Collects the user input from all input fields prints it to the
 	 * info area.
 	 */
-	private void setInfoTextExtendedSearch(TableKeys[] columns, Object[] input,
+	private void setInfoTextExtendedSearch(String[] columns, Object[] input,
 			int[] source) {
 		String info = "Suchanfrage\n-----------\n";
 		if (columns[0] == null) {

@@ -87,7 +87,7 @@
                                                       <Insets top="15.0" />
                                                    </VBox.margin>
                                                 </Label>
-                                                <ChoiceBox prefWidth="150.0" />
+                                                <ChoiceBox fx:id="searchCategory_person_vornameselection" prefWidth="150.0" />
                                                 <TextField fx:id="searchCategory_person_vornameinput" promptText="Vorname">
                                                    <VBox.margin>
                                                       <Insets top="5.0" />
@@ -98,6 +98,7 @@
                                                       <Insets top="15.0" />
                                                    </VBox.margin>
                                                 </Label>
+                                                <ChoiceBox fx:id="searchCategory_person_nachnameselection" prefWidth="150.0" />
                                                 <TextField fx:id="searchCategory_person_nachnameinput" promptText="Nachname">
                                                    <VBox.margin>
                                                       <Insets top="5.0" />
