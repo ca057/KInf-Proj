@@ -75,13 +75,34 @@
                                                       <Insets top="15.0" />
                                                    </VBox.margin>
                                                 </Label>
-                                                <TextField fx:id="searchCategory_person_titel" promptText="Titel"/>
+                                                <TextField fx:id="searchCategory_person_titel" promptText="Titel" />
                                                 <Label text="Titel (normalisiert)">
                                                    <VBox.margin>
                                                       <Insets top="5.0" />
                                                    </VBox.margin>
                                                 </Label>
-                                                <TextField fx:id="searchCategory_person_titelnorm"  promptText="Titel (normalisiert)"/>
+                                                <TextField fx:id="searchCategory_person_titelnorm" promptText="Titel (normalisiert)" />
+                                                <Label text="Vorname">
+                                                   <VBox.margin>
+                                                      <Insets top="15.0" />
+                                                   </VBox.margin>
+                                                </Label>
+                                                <ChoiceBox prefWidth="150.0" />
+                                                <TextField fx:id="searchCategory_person_vornameinput" promptText="Vorname">
+                                                   <VBox.margin>
+                                                      <Insets top="5.0" />
+                                                   </VBox.margin>
+                                                </TextField>
+                                                <Label text="Nachname">
+                                                   <VBox.margin>
+                                                      <Insets top="15.0" />
+                                                   </VBox.margin>
+                                                </Label>
+                                                <TextField fx:id="searchCategory_person_nachnameinput" promptText="Nachname">
+                                                   <VBox.margin>
+                                                      <Insets top="5.0" />
+                                                   </VBox.margin>
+                                                </TextField>
                                              </children>
                                           </VBox>
                                        </content></TitledPane>
