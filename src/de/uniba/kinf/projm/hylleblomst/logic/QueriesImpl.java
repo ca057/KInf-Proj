@@ -1,48 +1,50 @@
 package de.uniba.kinf.projm.hylleblomst.logic;
 
+import java.util.List;
+
 public class QueriesImpl implements Queries {
 	DBAccess db;
 
 	@Override
-	public void extendedSearch(QueryRequest[] queryRequests) {
+	public void search(List<QueryRequest> queryRequests) {
 
 		buildQuery(queryRequests);
 	}
 
-	private void buildQuery(QueryRequest[] queryRequests) {
+	private void buildQuery(List<QueryRequest> queryRequests) {
 		StringBuffer query = new StringBuffer();
-		for (int i = 0; i < queryRequests.length; i++) {
+		for (int i = 0; i < queryRequests.size(); i++) {
 			// QueryRequest request : queryRequests) {
 			if (i == 0) {
 				query.append("SELECT: "
-						+ searchFieldKeyToTable(queryRequests[i]
+						+ searchFieldKeyToTable(queryRequests.get(i)
 								.getSearchField()));
 			} else {
 				query.append(", "
-						+ searchFieldKeyToTable(queryRequests[i]
+						+ searchFieldKeyToTable(queryRequests.get(i)
 								.getSearchField()));
 			}
 		}
-		for (int i = 0; i < queryRequests.length; i++) {
+		for (int i = 0; i < queryRequests.size(); i++) {
 			// QueryRequest request : queryRequests) {
 			if (i == 0) {
 				query.append("FROM: "
-						+ searchFieldKeyToTable(queryRequests[i]
+						+ searchFieldKeyToTable(queryRequests.get(i)
 								.getSearchField()));
 			} else {
 				query.append(", "
-						+ searchFieldKeyToTable(queryRequests[i]
+						+ searchFieldKeyToTable(queryRequests.get(i)
 								.getSearchField()));
 			}
 		}
-		for (int i = 0; i < queryRequests.length; i++) {
+		for (int i = 0; i < queryRequests.size(); i++) {
 			// QueryRequest request : queryRequests) {
 			if (i == 0) {
 				query.append("WHERE: " + searchFieldKeyToTable(null) + "="
-						+ queryRequests[i].getInput());
+						+ queryRequests.get(i).getInput());
 			} else {
 				query.append(", " + searchFieldKeyToTable(null) + "="
-						+ queryRequests[i].getInput());
+						+ queryRequests.get(i).getInput());
 			}
 		}
 	}
