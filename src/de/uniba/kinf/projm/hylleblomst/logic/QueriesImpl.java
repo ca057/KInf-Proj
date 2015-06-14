@@ -6,25 +6,33 @@ public class QueriesImpl implements Queries {
 	@Override
 	public void extendedSearch(QueryRequest[] queryRequests) {
 
+		buildQuery(queryRequests);
+	}
+
+	private void buildQuery(QueryRequest[] queryRequests) {
 		StringBuffer query = new StringBuffer();
 		for (int i = 0; i < queryRequests.length; i++) {
 			// QueryRequest request : queryRequests) {
 			if (i == 0) {
 				query.append("SELECT: "
-						+ searchFieldKeyToTable(queryRequests[i].getSearchField()));
+						+ searchFieldKeyToTable(queryRequests[i]
+								.getSearchField()));
 			} else {
 				query.append(", "
-						+ searchFieldKeyToTable(queryRequests[i].getSearchField()));
+						+ searchFieldKeyToTable(queryRequests[i]
+								.getSearchField()));
 			}
 		}
 		for (int i = 0; i < queryRequests.length; i++) {
 			// QueryRequest request : queryRequests) {
 			if (i == 0) {
 				query.append("FROM: "
-						+ searchFieldKeyToTable(queryRequests[i].getSearchField()));
+						+ searchFieldKeyToTable(queryRequests[i]
+								.getSearchField()));
 			} else {
 				query.append(", "
-						+ searchFieldKeyToTable(queryRequests[i].getSearchField()));
+						+ searchFieldKeyToTable(queryRequests[i]
+								.getSearchField()));
 			}
 		}
 		for (int i = 0; i < queryRequests.length; i++) {
