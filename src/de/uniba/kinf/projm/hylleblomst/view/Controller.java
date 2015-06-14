@@ -65,12 +65,6 @@ public class Controller {
 	MenuItem mainMenu_help_about;
 
 	@FXML
-	TextField search_fulltext;
-
-	@FXML
-	Button searchFulltext_searchBtn;
-
-	@FXML
 	TitledPane searchCategory_person;
 
 	@FXML
@@ -144,49 +138,16 @@ public class Controller {
 		inputArray[3][0] = SearchFieldKeys.TITEL_NORM;
 		inputArray[3][1] = searchCategory_person_titelnorm.getText();
 		inputArray[3][2] = SourceKeys.NORM;
-		// FIXME korrekte SourceKeys speichern
-		inputArray[4][0] = SearchFieldKeys.TITEL_NORM;
+		// FIXME korrekte SearchFieldKeys und SourceKeys abhängig von speichern
+		inputArray[4][0] = null;
 		inputArray[4][1] = searchCategory_person_vornameinput.getText();
 		inputArray[4][2] = null;
-		// FIXME korrekte SourceKeys speichern
-		inputArray[5][0] = SearchFieldKeys.TITEL_NORM;
+		// FIXME korrekte SearchFieldKeys und SourceKeys speichern
+		inputArray[5][0] = null;
 		inputArray[5][1] = searchCategory_person_nachnameinput.getText();
 		inputArray[5][2] = null;
 
 		return inputArray;
-	}
-
-	/**
-	 * Gets the input of the fulltext search.
-	 * 
-	 * @return the input as a string
-	 */
-	private String getFullTextSearchInput() {
-		if (search_fulltext.getText() == null
-				|| "".equals(search_fulltext.getText())) {
-			throw new IllegalArgumentException(
-					"Für eine Volltextsuche muss eine Eingabe in das Suchfeld vorhanden sein.");
-		}
-		return search_fulltext.getText();
-	}
-
-	/**
-	 * Takes the input of the fulltext search field and starts the fulltext
-	 * search.
-	 */
-	@FXML
-	private void startFulltextSearch() {
-		try {
-			// FIXME setInfoText am Ende entfernen, zur Zeit nur für Testzwecke
-			// enthalten
-			// setInfoText();
-			// querieImpl.fullTextSearch(getFullTextSearchInput());
-			ui.functionNotAvailable();
-		} catch (Exception e) {
-			// TODO korrekte Exception fangen und nicht einfach mal alles
-			e.printStackTrace();
-			ui.showErrorMessage(e.getMessage());
-		}
 	}
 
 	/**
@@ -246,7 +207,6 @@ public class Controller {
 		searchCategory_person_titelnorm.clear();
 		searchCategory_person_vornameinput.clear();
 		searchCategory_person_nachnameinput.clear();
-		search_fulltext.clear();
 	}
 
 	/**
