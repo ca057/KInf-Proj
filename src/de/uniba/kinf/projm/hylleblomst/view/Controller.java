@@ -173,13 +173,13 @@ public class Controller {
 		inputArray[3][1] = searchCategory_person_titelnorm.getText();
 		inputArray[3][2] = SourceKeys.NORM;
 		// FIXME korrekte SearchFieldKeys und SourceKeys abhängig von speichern
-		inputArray[4][0] = null;
+		inputArray[4][0] = SearchFieldKeys.VORNAME_TRAD;
 		inputArray[4][1] = searchCategory_person_vornameinput.getText();
-		inputArray[4][2] = null;
+		inputArray[4][2] = SourceKeys.STANDARD;
 		// FIXME korrekte SearchFieldKeys und SourceKeys speichern
-		inputArray[5][0] = null;
+		inputArray[5][0] = SearchFieldKeys.NACHNAME_TRAD;
 		inputArray[5][1] = searchCategory_person_nachnameinput.getText();
-		inputArray[5][2] = null;
+		inputArray[5][2] = SourceKeys.STANDARD;
 
 		return inputArray;
 	}
@@ -204,7 +204,6 @@ public class Controller {
 
 			for (int i = 0; i < inputCounter; i++) {
 				// FIXME derzeit nur mit TextEingabe möglich, oder?
-				System.out.println(allInputFields[i][1]);
 				if (!"".equals((allInputFields[i][1]))) {
 					SearchFieldKeys sfk = (SearchFieldKeys) allInputFields[i][0];
 					int source = (int) allInputFields[i][2];
