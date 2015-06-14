@@ -176,12 +176,12 @@ public class Controller {
 				throw new IllegalArgumentException(
 						"Die Liste mit Eingabefeldern ist leer oder hat keinen Wert.");
 			}
+			int counter = 0;
 
 			ColumnKeys[] columns = new ColumnKeys[inputCounter];
 			Object[] input = new Object[inputCounter];
 			int[] source = new int[inputCounter];
 
-			int counter = 0;
 			for (int i = 0; i < inputCounter; i++) {
 				if (!"".equals((allInputFields[i][1]))) {
 					columns[counter] = (ColumnKeys) allInputFields[i][0];
@@ -190,13 +190,18 @@ public class Controller {
 					counter++;
 				}
 			}
-			// FIXME setInfoText am Ende entfernen, zur Zeit nur für Testzwecke
-			// enthalten
-			setInfoTextExtendedSearch(columns, input, source);
-			querieImpl.extendedSearch(columns, input, source);
+
+			if (counter == 0) {
+				throw new IllegalArgumentException(
+						"Es wurden keine Sucheingaben gefunden, die abgerufen werden können.");
+			} else {
+				// FIXME setInfoText am Ende entfernen, zur Zeit nur für
+				// Testzwecke enthalten
+				setInfoTextExtendedSearch(columns, input, source);
+				querieImpl.extendedSearch(columns, input, source);
+			}
 		} catch (IllegalArgumentException e) {
-			// TODO korrekte Exception fangen und nicht einfach mal alles
-			e.printStackTrace();
+			// e.printStackTrace();
 			ui.showErrorMessage(e.getMessage());
 		}
 	}
