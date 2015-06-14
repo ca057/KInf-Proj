@@ -43,7 +43,7 @@
                            <children>
                               <AnchorPane maxHeight="80.0" maxWidth="300.0" minHeight="80.0" minWidth="300.0" prefHeight="80.0" prefWidth="300.0">
                                  <children>
-                                    <TextField fx:id="search_fulltext" layoutX="28.0" layoutY="10.0" prefWidth="250.0" />
+                                    <TextField fx:id="search_fulltext" editable="false" layoutX="28.0" layoutY="10.0" prefWidth="250.0" promptText="Volltextsuche" />
                                     <ButtonBar layoutX="3.0" layoutY="35.0" maxHeight="40.0" minHeight="40.0" prefHeight="40.0" prefWidth="300.0">
                                       <buttons>
                                         <Button fx:id="searchFulltext_searchBtn" mnemonicParsing="false" onAction="#startFulltextSearch" text="Volltextsuche starten" />
@@ -64,24 +64,24 @@
                                              </padding>
                                              <children>
                                                 <Label text="Anrede" />
-                                                <TextField fx:id="searchCategory_person_anrede" />
+                                                <TextField fx:id="searchCategory_person_anrede" promptText="Anrede" />
                                                 <Label text="Anrede (normalisiert)">
                                                    <VBox.margin>
                                                       <Insets top="5.0" />
                                                    </VBox.margin></Label>
-                                                <TextField fx:id="searchCategory_person_anredenorm" />
+                                                <TextField fx:id="searchCategory_person_anredenorm" promptText="Anrede (normalisiert)" />
                                                 <Label text="Titel">
                                                    <VBox.margin>
                                                       <Insets top="15.0" />
                                                    </VBox.margin>
                                                 </Label>
-                                                <TextField fx:id="searchCategory_person_titel" />
+                                                <TextField fx:id="searchCategory_person_titel" promptText="Titel"/>
                                                 <Label text="Titel (normalisiert)">
                                                    <VBox.margin>
                                                       <Insets top="5.0" />
                                                    </VBox.margin>
                                                 </Label>
-                                                <TextField fx:id="searchCategory_person_titelnorm" />
+                                                <TextField fx:id="searchCategory_person_titelnorm"  promptText="Titel (normalisiert)"/>
                                              </children>
                                           </VBox>
                                        </content></TitledPane>

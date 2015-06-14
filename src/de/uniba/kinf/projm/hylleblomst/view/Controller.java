@@ -1,10 +1,5 @@
 package de.uniba.kinf.projm.hylleblomst.view;
 
-import java.util.HashMap;
-import java.util.InputMismatchException;
-import java.util.Map;
-import java.util.Map.Entry;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
@@ -19,6 +14,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import de.uniba.kinf.projm.hylleblomst.logic.ColumnKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.QueriesImpl;
+import de.uniba.kinf.projm.hylleblomst.logic.SourceKeys;
 
 public class Controller {
 	private UIHelper ui = new UIHelper();
@@ -115,15 +111,19 @@ public class Controller {
 	 *         0 and the value from the corresponding input at position 1
 	 */
 	private Object[][] setUpArrayWithInputValues() {
-		Object[][] inputArray = new Object[inputCounter][2];
+		Object[][] inputArray = new Object[inputCounter][3];
 		inputArray[0][0] = ColumnKeys.ANREDE;
 		inputArray[0][1] = searchCategory_person_anrede.getText();
+		inputArray[0][2] = SourceKeys.STANDARD;
 		inputArray[1][0] = ColumnKeys.ANREDE_NORM;
 		inputArray[1][1] = searchCategory_person_anredenorm.getText();
+		inputArray[1][2] = SourceKeys.NORM;
 		inputArray[2][0] = ColumnKeys.TITEL;
 		inputArray[2][1] = searchCategory_person_titel.getText();
+		inputArray[2][2] = SourceKeys.STANDARD;
 		inputArray[3][0] = ColumnKeys.TITEL_NORM;
 		inputArray[3][1] = searchCategory_person_titelnorm.getText();
+		inputArray[3][2] = SourceKeys.NORM;
 
 		return inputArray;
 	}
@@ -136,7 +136,7 @@ public class Controller {
 	private String getFullTextSearchInput() {
 		if (search_fulltext.getText() == null
 				|| "".equals(search_fulltext.getText())) {
-			throw new InputMismatchException(
+			throw new IllegalArgumentException(
 					"Für eine Volltextsuche muss eine Eingabe in das Suchfeld vorhanden sein.");
 		}
 		return search_fulltext.getText();
@@ -151,8 +151,9 @@ public class Controller {
 		try {
 			// FIXME setInfoText am Ende entfernen, zur Zeit nur für Testzwecke
 			// enthalten
-			setInfoText();
-			querieImpl.fullTextSearch(getFullTextSearchInput());
+			// setInfoText();
+			// querieImpl.fullTextSearch(getFullTextSearchInput());
+			ui.functionNotAvailable();
 		} catch (Exception e) {
 			// TODO korrekte Exception fangen und nicht einfach mal alles
 			e.printStackTrace();
@@ -161,41 +162,39 @@ public class Controller {
 	}
 
 	/**
-	 * Gets the input of all user input fields and stores it in a
-	 * {@link HashMap}.
+	 * Collects all data from the input fields and starts the search.
 	 * 
-	 * @return The {@link HashMap} with all inputs
-	 */
-	@SuppressWarnings("unchecked")
-	private Map<Enum<ColumnKeys>, Object> getSearchInput() {
-		Object[][] allInputFields = setUpArrayWithInputValues();
-		if (allInputFields == null || allInputFields.length == 0) {
-			throw new InputMismatchException(
-					"Die Liste mit Eingabefeldern ist leer oder hat keinen Wert.");
-		}
-		Map<Enum<ColumnKeys>, Object> map = new HashMap<Enum<ColumnKeys>, Object>();
-
-		for (int i = 0; i < allInputFields.length; i++) {
-			if (!"".equals((allInputFields[i][1]))) {
-				map.put((Enum<ColumnKeys>) allInputFields[i][0],
-						allInputFields[i][1]);
-			}
-		}
-
-		return map;
-	}
-
-	/**
-	 * Starts the extended search.
+	 * @throws IllegalArgumentException
+	 *             if the list with all input fields could not be generated or
+	 *             is null
 	 */
 	@FXML
 	private void startSearch() {
 		try {
+			Object[][] allInputFields = setUpArrayWithInputValues();
+			if (allInputFields == null || allInputFields.length == 0) {
+				throw new IllegalArgumentException(
+						"Die Liste mit Eingabefeldern ist leer oder hat keinen Wert.");
+			}
+
+			ColumnKeys[] columns = new ColumnKeys[inputCounter];
+			Object[] input = new Object[inputCounter];
+			int[] source = new int[inputCounter];
+
+			int counter = 0;
+			for (int i = 0; i < inputCounter; i++) {
+				if (!"".equals((allInputFields[i][1]))) {
+					columns[counter] = (ColumnKeys) allInputFields[i][0];
+					input[counter] = allInputFields[i][1];
+					source[counter] = (int) allInputFields[i][2];
+					counter++;
+				}
+			}
 			// FIXME setInfoText am Ende entfernen, zur Zeit nur für Testzwecke
 			// enthalten
-			setInfoText();
-			querieImpl.extendedSearch(getSearchInput());
-		} catch (Exception e) {
+			setInfoTextExtendedSearch(columns, input, source);
+			querieImpl.extendedSearch(columns, input, source);
+		} catch (IllegalArgumentException e) {
 			// TODO korrekte Exception fangen und nicht einfach mal alles
 			e.printStackTrace();
 			ui.showErrorMessage(e.getMessage());
@@ -208,6 +207,10 @@ public class Controller {
 	@FXML
 	private void clearSearchInput() {
 		// TODO clear all input fields
+		searchCategory_person_anrede.clear();
+		searchCategory_person_anredenorm.clear();
+		searchCategory_person_titel.clear();
+		searchCategory_person_titelnorm.clear();
 		search_fulltext.clear();
 	}
 
@@ -235,15 +238,17 @@ public class Controller {
 	 * input. Collects the user input from all input fields prints it to the
 	 * info area.
 	 */
-	private void setInfoText() {
+	private void setInfoTextExtendedSearch(ColumnKeys[] columns,
+			Object[] input, int[] source) {
 		String info = "Suchanfrage\n-----------\n";
-		// if (!(getFullTextSearchInput() == null)) {
-		// info += "Volltextsuche: " + getFullTextSearchInput() + "\n";
-		// }
-		Map<Enum<ColumnKeys>, Object> map = getSearchInput();
-
-		for (Entry<Enum<ColumnKeys>, Object> entry : map.entrySet()) {
-			info += entry.getKey() + ": " + entry.getValue() + "\n";
+		if (columns[0] == null) {
+			info += "Keine Eingaben gefunden";
+		} else {
+			for (int i = 0; i < columns.length; i++) {
+				info += columns[i].toString() + ": "
+						+ (String) input[i].toString() + "; " + source[i]
+						+ "\n";
+			}
 		}
 		infoArea.setText(info);
 	}
