@@ -127,13 +127,13 @@ public class Controller {
 	 */
 	private Object[][] setUpArrayWithInputValues() {
 		Object[][] inputArray = new Object[inputCounter][3];
-		inputArray[0][0] = SearchFieldKeys.ANREDE;
+		inputArray[0][0] = SearchFieldKeys.ANREDE_TRAD;
 		inputArray[0][1] = searchCategory_person_anrede.getText();
 		inputArray[0][2] = SourceKeys.STANDARD;
 		inputArray[1][0] = SearchFieldKeys.ANREDE_NORM;
 		inputArray[1][1] = searchCategory_person_anredenorm.getText();
 		inputArray[1][2] = SourceKeys.NORM;
-		inputArray[2][0] = SearchFieldKeys.TITEL;
+		inputArray[2][0] = SearchFieldKeys.TITEL_TRAD;
 		inputArray[2][1] = searchCategory_person_titel.getText();
 		inputArray[2][2] = SourceKeys.STANDARD;
 		inputArray[3][0] = SearchFieldKeys.TITEL_NORM;

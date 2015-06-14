@@ -1,12 +1,12 @@
 package de.uniba.kinf.projm.hylleblomst.logic;
 
 public class QueryRequest {
-	private SearchFieldKeys columns;
+	private SearchFieldKeys searchField;
 	private Object input;
 	private int source;
 
 	public QueryRequest(SearchFieldKeys columns, Object input, int source) {
-		setColumns(columns);
+		setSearchField(columns);
 		setInput(input);
 		setSource(source);
 	}
@@ -14,12 +14,12 @@ public class QueryRequest {
 	QueryRequest() {
 	}
 
-	public SearchFieldKeys getColumns() {
-		return columns;
+	public SearchFieldKeys getSearchField() {
+		return searchField;
 	}
 
-	public void setColumns(SearchFieldKeys columns) {
-		this.columns = columns;
+	public void setSearchField(SearchFieldKeys columns) {
+		this.searchField = columns;
 	}
 
 	public Object getInput() {
