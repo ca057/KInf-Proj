@@ -12,9 +12,9 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import de.uniba.kinf.projm.hylleblomst.logic.TableKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.QueriesImpl;
 import de.uniba.kinf.projm.hylleblomst.logic.SourceKeys;
+import de.uniba.kinf.projm.hylleblomst.logic.TableKeys;
 
 public class Controller {
 	private UIHelper ui = new UIHelper();
@@ -243,8 +243,8 @@ public class Controller {
 	 * input. Collects the user input from all input fields prints it to the
 	 * info area.
 	 */
-	private void setInfoTextExtendedSearch(TableKeys[] columns,
-			Object[] input, int[] source) {
+	private void setInfoTextExtendedSearch(TableKeys[] columns, Object[] input,
+			int[] source) {
 		String info = "Suchanfrage\n-----------\n";
 		if (columns[0] == null) {
 			info += "Keine Eingaben gefunden";
