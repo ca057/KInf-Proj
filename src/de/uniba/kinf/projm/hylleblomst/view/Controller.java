@@ -160,6 +160,9 @@ public class Controller {
 	 */
 	private Object[][] setUpArrayWithInputValues() {
 		Object[][] inputArray = new Object[inputCounter][3];
+		// TODO feste Einträge wie die Zuordnung zu Suchfeld oder Quelle in
+		// Konstruktor auslagern, da dies nur zu Beginn der Laufzeit
+		// durchgeführt werden muss
 		inputArray[0][0] = SearchFieldKeys.ANREDE_TRAD;
 		inputArray[0][1] = searchCategory_person_anrede.getText();
 		inputArray[0][2] = SourceKeys.STANDARD;
@@ -219,11 +222,12 @@ public class Controller {
 			} else {
 				// FIXME setInfoText am Ende entfernen, zur Zeit nur für
 				// Testzwecke enthalten
-				// setInfoTextExtendedSearch();
+				setInfoTextExtendedSearch(requestList);
 				querieImpl.search(requestList);
 			}
-		} catch (IllegalArgumentException e) {
-			// e.printStackTrace();
+		} catch (Exception /* | IllegalArgumentException */e) {
+			// FIXME korrekte Exceptions fangen!
+			e.printStackTrace();
 			ui.showErrorMessage(e.getMessage());
 		}
 	}
@@ -266,8 +270,17 @@ public class Controller {
 	 * input. Collects the user input from all input fields prints it to the
 	 * info area.
 	 */
-	private void setInfoTextExtendedSearch() {
+	private void setInfoTextExtendedSearch(List<QueryRequest> requestList) {
 		String info = "Suchanfrage\n-----------\n";
+		if (requestList == null || requestList.size() == 0) {
+			info += "Keine Sucheingaben gefunden.";
+		} else {
+			for (QueryRequest qr : requestList) {
+				info += qr.getSearchField().toString() + ": ";
+				info += (String) qr.getInput() + "; ";
+				info += "Quellen#: " + qr.getSource() + "\n";
+			}
+		}
 
 		infoArea.setText(info);
 	}

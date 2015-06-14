@@ -112,14 +112,10 @@ public class UIHelper {
 	 *            The error message as String
 	 */
 	protected void showErrorMessage(String errorMsg) {
-		if (errorMsg == null) {
-			throw new IllegalArgumentException(
-					"Fehlermeldung hat keinen Wert (ist null).");
-		}
 		Alert exceptionAlert = new Alert(AlertType.ERROR);
 		exceptionAlert.setTitle(appName + " - Fehler");
 		exceptionAlert.setHeaderText("Ein Fehler ist aufgetreten.");
-		if ("".equals(errorMsg)) {
+		if (errorMsg == null || "".equals(errorMsg)) {
 			errorMsg = "Art und Ursprung des Fehlers sind nicht bekannt.";
 		}
 		exceptionAlert.setContentText(errorMsg);
