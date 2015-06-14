@@ -13,8 +13,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import de.uniba.kinf.projm.hylleblomst.logic.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.QueriesImpl;
+import de.uniba.kinf.projm.hylleblomst.logic.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.SourceKeys;
 
 public class Controller {
@@ -122,8 +122,9 @@ public class Controller {
 	/**
 	 * Builds an array with all input fields which are in the user interface.
 	 * 
-	 * @return the two-dimensional array with the {@link SearchFieldKeys} at position
-	 *         0 and the value from the corresponding input at position 1
+	 * @return the two-dimensional array with the {@link SearchFieldKeys} at
+	 *         position 0 and the value from the corresponding input at position
+	 *         1
 	 */
 	private Object[][] setUpArrayWithInputValues() {
 		Object[][] inputArray = new Object[inputCounter][3];
@@ -207,10 +208,12 @@ public class Controller {
 
 			for (int i = 0; i < inputCounter; i++) {
 				if (!"".equals((allInputFields[i][1]))) {
-					columns[counter] = (SearchFieldKeys) allInputFields[i][0];
-					input[counter] = allInputFields[i][1];
-					source[counter] = (int) allInputFields[i][2];
-					counter++;
+
+					// columns[counter] = (SearchFieldKeys)
+					// allInputFields[i][0];
+					// input[counter] = allInputFields[i][1];
+					// source[counter] = (int) allInputFields[i][2];
+					// counter++;
 				}
 			}
 

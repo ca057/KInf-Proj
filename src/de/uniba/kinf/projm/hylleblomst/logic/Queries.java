@@ -1,5 +1,7 @@
 package de.uniba.kinf.projm.hylleblomst.logic;
 
+import java.util.List;
+
 public interface Queries {
 
 	/**
@@ -12,7 +14,7 @@ public interface Queries {
 	 * 
 	 * @param map
 	 */
-	void extendedSearch(QueryRequest[] queryRequest);
+	void search(List<QueryRequest> queryRequest);
 
 	void setDatabase(String dbURL, String user, String password);
 
