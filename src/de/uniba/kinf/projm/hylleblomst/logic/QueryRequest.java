@@ -47,6 +47,14 @@ public class QueryRequest {
 		this.source = source;
 	}
 
+	public String getTable() {
+		return table;
+	}
+
+	public String getColumn() {
+		return column;
+	}
+
 	/**
 	 * Returns the name of the table the {@code SearchFieldKey} key belongs to.
 	 * 
@@ -57,7 +65,7 @@ public class QueryRequest {
 	// (person.vorname=?) wie Queries, dann nochmal durchgehen und fragezeichen
 	// füllen. WICHTIG: Collection muss sortiert sein!
 
-	private void searchFieldKeyToDatabaseData(SearchFieldKeys key) {
+	public void searchFieldKeyToDatabaseData(SearchFieldKeys key) {
 		switch (key) {
 		case ADELIG:
 			table = "PERSON";
@@ -209,12 +217,13 @@ public class QueryRequest {
 		String password = "password";
 		String result = "";
 		try (Connection con = DriverManager
-				.getConnection("jdbc:derby:/Users/Hannes/git/KInf-Proj/db/MyDB; user=admin; password=password");
+				.getConnection(dbURL, user, password);
 				Statement stmt = con.createStatement(
 						ResultSet.TYPE_SCROLL_INSENSITIVE,
 						ResultSet.CONCUR_READ_ONLY)) {
 
-			String querySql = String.format("SELECT * FROM %s", table);
+			String querySql = String.format("SELECT * FROM hylleblomst.%s",
+					table);
 			ResultSet rs = stmt.executeQuery(querySql);
 			ResultSetMetaData rsmd = rs.getMetaData();
 			result = rsmd.getColumnName(i);
