@@ -24,6 +24,7 @@ public class ImportDataImpl implements ImportData {
 		if (path.endsWith("csv")) {
 			addCSV(Paths.get(path));
 		} else {
+			// TODO sinnvolle Fehlermeldung
 			throw new ImportException("");
 		}
 	}

@@ -1,12 +1,12 @@
 package de.uniba.kinf.projm.hylleblomst.logic;
 
-import java.util.List;
+import java.util.Collection;
 
 public class QueriesImpl implements Queries {
 	DBAccess db;
 
 	@Override
-	public void search(List<QueryRequest> queryRequests) {
+	public void search(Collection<QueryRequest> queryRequests) {
 
 		buildQuery(queryRequests);
 	}
