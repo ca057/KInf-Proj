@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 
@@ -187,8 +186,7 @@ public class Validation {
 		String columnTwo = getColumnName(table, 2);
 		String columnThree = getColumnName(table, 3);
 
-		try (Connection con = DriverManager
-				.getConnection(dbURL, user, password);) {
+		try {
 			String sqlQuery = String.format(
 					"SELECT %2$s FROM %1$s WHERE %3$s=? AND %4$s=?", table,
 					columnOne, columnTwo, columnThree);
@@ -209,9 +207,16 @@ public class Validation {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			try {
+				stmt.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
-		return false;
+		return result;
 	}
 
 	boolean entryAlreadyInDatabase(int tradID, int quellenID, int personID,
@@ -222,17 +227,18 @@ public class Validation {
 		String columnTwo = getColumnName(table, 2);
 		String columnThree = getColumnName(table, 3);
 
-		try (Connection con = DriverManager
-				.getConnection(dbURL, user, password);
-				Statement stmt = con.createStatement(
-						ResultSet.TYPE_SCROLL_INSENSITIVE,
-						ResultSet.CONCUR_READ_ONLY)) {
-
+		try {
 			String querySql = String
-					.format("SELECT %2$s, %3$s, %4$s FROM %1$s WHERE %2$s=%5$d AND %3$s=%6$d AND %4$s=%7$d",
-							table, columnOne, columnTwo, columnThree, tradID,
-							quellenID, personID);
-			ResultSet rs = stmt.executeQuery(querySql);
+					.format("SELECT %s, %s, %s FROM %s WHERE %1$s=? AND %2$s=? AND %3$s=?",
+							columnOne, columnTwo, columnThree, table);
+			stmt = con.prepareStatement(querySql,
+					ResultSet.TYPE_SCROLL_INSENSITIVE,
+					ResultSet.CONCUR_READ_ONLY);
+			stmt.setInt(1, tradID);
+			stmt.setInt(2, quellenID);
+			stmt.setInt(3, personID);
+
+			ResultSet rs = stmt.executeQuery();
 
 			con.setAutoCommit(false);
 
@@ -245,6 +251,13 @@ public class Validation {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				stmt.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 		return result;
@@ -262,20 +275,26 @@ public class Validation {
 	private String getColumnName(String table, int i) {
 		String result = "";
 
-		try (Connection con = DriverManager
-				.getConnection(dbURL, user, password);
-				Statement stmt = con.createStatement(
-						ResultSet.TYPE_SCROLL_INSENSITIVE,
-						ResultSet.CONCUR_READ_ONLY)) {
-
+		try {
 			String querySql = String.format("SELECT * FROM %s", table);
-			ResultSet rs = stmt.executeQuery(querySql);
+			stmt = con.prepareStatement(querySql,
+					ResultSet.TYPE_SCROLL_INSENSITIVE,
+					ResultSet.CONCUR_READ_ONLY);
+
+			ResultSet rs = stmt.executeQuery();
 			ResultSetMetaData rsmd = rs.getMetaData();
 
 			result = rsmd.getColumnName(i);
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				stmt.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 		return result;
@@ -292,17 +311,15 @@ public class Validation {
 	int getMaxID(String table) {
 		int result = 0;
 
-		try (Connection con = DriverManager
-				.getConnection(dbURL, user, password);
-				Statement stmt = con.createStatement(
-						ResultSet.TYPE_SCROLL_INSENSITIVE,
-						ResultSet.CONCUR_READ_ONLY)) {
-
+		try {
 			String column = (table.replace("_", "") + "ID").replace(
 					"hylleblomst.", "");
 			String getMaxIDSQL = String.format("SELECT max(%s) FROM %s",
 					column, table);
-			ResultSet rs = stmt.executeQuery(getMaxIDSQL);
+			stmt = con.prepareStatement(getMaxIDSQL,
+					ResultSet.TYPE_SCROLL_INSENSITIVE,
+					ResultSet.CONCUR_READ_ONLY);
+			ResultSet rs = stmt.executeQuery();
 
 			con.setAutoCommit(false);
 
@@ -311,8 +328,14 @@ public class Validation {
 
 			con.setAutoCommit(true);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			try {
+				stmt.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 		return result;
@@ -331,17 +354,16 @@ public class Validation {
 	int getIDOfEntry(String entry, String table) {
 		int id = 0;
 
-		try (Connection con = DriverManager
-				.getConnection(dbURL, user, password);
-				Statement stmt = con.createStatement(
-						ResultSet.TYPE_SCROLL_INSENSITIVE,
-						ResultSet.CONCUR_READ_ONLY)) {
-
+		try {
 			String column = getColumnName(table, 2);
-			String querySql = String.format(
-					"SELECT * FROM %2$s WHERE %1$s='%3$s'", column, table,
-					entry);
-			ResultSet rs = stmt.executeQuery(querySql);
+			String querySql = String.format("SELECT * FROM %s WHERE %s=?",
+					table, column);
+			stmt = con.prepareStatement(querySql,
+					ResultSet.TYPE_SCROLL_INSENSITIVE,
+					ResultSet.CONCUR_READ_ONLY);
+			stmt.setString(1, entry);
+
+			ResultSet rs = stmt.executeQuery();
 
 			con.setAutoCommit(false);
 
@@ -358,22 +380,22 @@ public class Validation {
 	}
 
 	int getIDOfEntry(String entry, int foreignKey, String table) {
-		// TODO Auto-generated method stub
 		int id = 0;
 
 		String columnTwo = getColumnName(table, 2);
 		String columnThree = getColumnName(table, 3);
 
-		try (Connection con = DriverManager
-				.getConnection(dbURL, user, password);
-				Statement stmt = con.createStatement(
-						ResultSet.TYPE_SCROLL_INSENSITIVE,
-						ResultSet.CONCUR_READ_ONLY)) {
-
+		try {
 			String querySql = String.format(
-					"SELECT * FROM %1$s WHERE %2$s='%4$s' AND %3$s=%5$d",
-					table, columnTwo, columnThree, entry, foreignKey);
-			ResultSet rs = stmt.executeQuery(querySql);
+					"SELECT * FROM %3$s WHERE %1$s=? AND %2$s=?", columnTwo,
+					columnThree, table);
+			stmt = con.prepareStatement(querySql,
+					ResultSet.TYPE_SCROLL_INSENSITIVE,
+					ResultSet.CONCUR_READ_ONLY);
+			stmt.setString(1, entry);
+			stmt.setInt(2, foreignKey);
+
+			ResultSet rs = stmt.executeQuery();
 
 			con.setAutoCommit(false);
 
@@ -383,21 +405,19 @@ public class Validation {
 			con.setAutoCommit(true);
 
 		} catch (SQLException e) {
-			// TODO: handle exception
 			e.printStackTrace();
 		}
 		return id;
 	}
 
-	int getIDOfEntry(String entry, String anmerkung, String table) {
+	int getIDOfOrtAbweichungEntry(String entry, String anmerkung, String table) {
 		int id = 0;
 
 		String columnOne = getColumnName(table, 1);
 		String columnTwo = getColumnName(table, 2);
 		String columnThree = getColumnName(table, 3);
 
-		try (Connection con = DriverManager
-				.getConnection(dbURL, user, password);) {
+		try {
 			String sqlQuery = String.format(
 					"SELECT %2$s FROM %1$s WHERE %3$s=? AND %4$s=?", table,
 					columnOne, columnTwo, columnThree);
@@ -408,7 +428,7 @@ public class Validation {
 			stmt.setString(1, entry);
 			stmt.setString(2, anmerkung);
 
-			ResultSet rs = stmt.executeQuery(sqlQuery);
+			ResultSet rs = stmt.executeQuery();
 			con.setAutoCommit(false);
 
 			rs.next();
@@ -416,9 +436,15 @@ public class Validation {
 
 			con.setAutoCommit(true);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return 0;
+		} finally {
+			try {
+				stmt.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		return id;
 	}
