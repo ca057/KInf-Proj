@@ -21,14 +21,35 @@ import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
 import de.uniba.kinf.projm.hylleblomst.logic.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.SourceKeys;
 
+/**
+ * Controller for the graphical user interface.
+ * 
+ * @author ca
+ *
+ */
 public class Controller {
+	/**
+	 * UIHelper supports a nice user interaction.
+	 */
 	private UIHelper ui = new UIHelper();
 
+	/**
+	 * QueriesImpl executes the search.
+	 */
 	private QueriesImpl querieImpl = new QueriesImpl();
 
-	private int inputCounter = 6;
+	/**
+	 * Stores the number of input fields for usable generation of input field
+	 * arrays.
+	 */
+	private int inputFieldCounter = 6;
 
+	/**
+	 * Default constructor for a new Controller.
+	 */
 	public Controller() {
+		// Array mit allen search keys für alle input fieds anlegen, array mit
+		// inputs erst zur Laufzeit generieren
 	}
 
 	@FXML
@@ -159,7 +180,7 @@ public class Controller {
 	 *         1
 	 */
 	private Object[][] setUpArrayWithInputValues() {
-		Object[][] inputArray = new Object[inputCounter][3];
+		Object[][] inputArray = new Object[inputFieldCounter][3];
 		// TODO feste Einträge wie die Zuordnung zu Suchfeld oder Quelle in
 		// Konstruktor auslagern, da dies nur zu Beginn der Laufzeit
 		// durchgeführt werden muss
@@ -205,7 +226,7 @@ public class Controller {
 
 			List<QueryRequest> requestList = new ArrayList<QueryRequest>();
 
-			for (int i = 0; i < inputCounter; i++) {
+			for (int i = 0; i < inputFieldCounter; i++) {
 				// FIXME derzeit nur mit TextEingabe möglich, oder?
 				if (!"".equals((allInputFields[i][1]))) {
 					SearchFieldKeys sfk = (SearchFieldKeys) allInputFields[i][0];
