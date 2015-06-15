@@ -1,6 +1,5 @@
 package de.uniba.kinf.projm.hylleblomst.view;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javafx.fxml.FXML;
@@ -30,27 +29,33 @@ public class Controller {
 	/**
 	 * UIHelper supports a nice user interaction.
 	 */
-	private UIHelper ui = new UIHelper();
+	private UIHelper ui;
+
+	/**
+	 * Implements the logic of preparing the user input for passing it to the
+	 * {@link QueriesImpl}.
+	 */
+	private SearchController searchCtrl;
 
 	/**
 	 * QueriesImpl executes the search.
 	 */
-	private QueriesImpl querieImpl = new QueriesImpl();
+	private QueriesImpl querieImpl;
 
 	/**
 	 * Array stores for every input field the corresponding search field key.
 	 */
-	private SearchFieldKeys[] inputSearchFKey;
+	protected SearchFieldKeys[] inputSearchFKey;
 
 	/**
 	 * Array stores all input fields of the graphical user interface.
 	 */
-	private Control[] inputFields;
+	Control[] inputFields;
 
 	/**
 	 * Array stores for every input field the corresponding source key.
 	 */
-	private int[] inputSourceKey;
+	int[] inputSourceKey;
 
 	/**
 	 * Stores the number of input fields for usable generation of input field
@@ -64,6 +69,9 @@ public class Controller {
 	 */
 	public Controller() {
 		setUpArrayWithInputs();
+		querieImpl = new QueriesImpl();
+		searchCtrl = new SearchController(this);
+		ui = new UIHelper();
 	}
 
 	@FXML
@@ -171,11 +179,25 @@ public class Controller {
 	@FXML
 	TextArea infoArea;
 
+	SearchFieldKeys[] getInputSearchFKey() {
+		return inputSearchFKey;
+	}
+
+	Control[] getInputFields() {
+		return inputFields;
+	}
+
+	int[] getInputSourceKey() {
+		return inputSourceKey;
+	}
+
+	int getInputFieldCounter() {
+		return inputFieldCounter;
+	}
+
 	/**
 	 * Builds three arrays with all user input fields of the user interface and
 	 * their corresponding {@link SearchFieldKeys} and {@link SourceKeys}.
-	 * 
-	 * @return
 	 */
 	private void setUpArrayWithInputs() {
 		inputSearchFKey = new SearchFieldKeys[inputFieldCounter];
@@ -207,7 +229,6 @@ public class Controller {
 		inputSearchFKey[5] = SearchFieldKeys.NACHNAME_TRAD;
 		inputFields[5] = searchCategory_person_nachnameinput;
 		inputSourceKey[5] = SourceKeys.STANDARD;
-
 	}
 
 	/**
@@ -219,41 +240,16 @@ public class Controller {
 	 */
 	@FXML
 	private void startSearch() {
+		List<QueryRequest> requestList;
 		try {
-			if (inputSearchFKey == null || inputSearchFKey.length == 0
-					|| inputFields == null || inputFields.length == 0
-					|| inputSourceKey == null || inputSourceKey.length == 0) {
+			requestList = searchCtrl.prepareInputForSearch();
+			if (requestList == null || requestList.size() == 0) {
 				throw new IllegalArgumentException(
-						"Die Liste mit Eingabefeldern ist leer oder hat keinen Wert.");
+						"Liste mit Suchanfrage hat keinen Wert (= null) oder enthält keine Werte.");
 			}
-			// neue Rückgabeliste anlegen
-			List<QueryRequest> requestList = new ArrayList<QueryRequest>();
-			// über alle Eingabefelder iterieren
-			for (int i = 0; i < inputFieldCounter; i++) {
-				// checken, welcher Typ von Eingabefeld das ist und entsprechend
-				// behandeln
-				if (inputFields[i] instanceof TextField) {
-					QueryRequest tmpReg = new QueryRequest(inputSearchFKey[i],
-							((TextField) inputFields[i]).getText(),
-							inputSourceKey[i]);
-					requestList.add(tmpReg);
-				} else {
-					// Fehler werfen falls Eingabetyp nicht gefunden wurde
-					throw new RuntimeException(
-							"Die Sucheingabe konnte nicht verarbeitet werden.");
-				}
-			}
-
-			// falls eine leere Liste angelegt wurde, soll diese nicht an die
-			// eigentliche Suche übergeben werden
-			if (requestList.size() == 0) {
-				throw new IllegalArgumentException(
-						"Es wurden keine Sucheingaben gefunden, für die eine Suchanfrage gestellt werden kann.");
-			} else {
-				// FIXME setInfoText am entfernen, nur für Testzwecke
-				setInfoTextExtendedSearch(requestList);
-				querieImpl.search(requestList);
-			}
+			// FIXME setInfoText am entfernen, nur für Testzwecke
+			setInfoTextExtendedSearch(requestList);
+			querieImpl.search(requestList);
 		} catch (Exception /* | IllegalArgumentException */e) {
 			// FIXME korrekte Exceptions fangen!
 			e.printStackTrace();
