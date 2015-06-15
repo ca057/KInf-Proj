@@ -5,9 +5,6 @@ import java.util.List;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TableView;
@@ -48,18 +45,13 @@ public class Controller {
 	 * Default constructor for a new Controller.
 	 */
 	public Controller() {
-		// Array mit allen search keys für alle input fieds anlegen, array mit
+		// TODO Array mit allen search keys für alle input fieds anlegen, array
+		// mit
 		// inputs erst zur Laufzeit generieren
 	}
 
 	@FXML
 	BorderPane root;
-
-	@FXML
-	MenuBar mainMenu;
-
-	@FXML
-	Menu mainMenu_file;
 
 	@FXML
 	MenuItem mainMenu_file_save;
@@ -71,13 +63,7 @@ public class Controller {
 	MenuItem mainMenu_file_close;
 
 	@FXML
-	Menu mainMenu_edit;
-
-	@FXML
 	MenuItem mainMenu_edit_options;
-
-	@FXML
-	Menu mainMenu_help;
 
 	@FXML
 	MenuItem mainMenu_help_help;
@@ -156,9 +142,6 @@ public class Controller {
 
 	@FXML
 	TitledPane searchCategory_other;
-
-	@FXML
-	ButtonBar searchMenu;
 
 	@FXML
 	Button searchMenu_clearSearch;
