@@ -4,13 +4,11 @@ import java.util.List;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.Control;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputControl;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -29,7 +27,7 @@ public class Controller {
 	/**
 	 * UIHelper supports a nice user interaction.
 	 */
-	private UIHelper ui;
+	UIHelper ui;
 
 	/**
 	 * Implements the logic of preparing the user input for passing it to the
@@ -45,12 +43,12 @@ public class Controller {
 	/**
 	 * Array stores for every input field the corresponding search field key.
 	 */
-	protected SearchFieldKeys[] inputSearchFKey;
+	SearchFieldKeys[] inputSearchFKey;
 
 	/**
 	 * Array stores all input fields of the graphical user interface.
 	 */
-	Control[] inputFields;
+	Object[] inputFields;
 
 	/**
 	 * Array stores for every input field the corresponding source key.
@@ -68,10 +66,11 @@ public class Controller {
 	 * with input fields and keys are set.
 	 */
 	public Controller() {
-		setUpArrayWithInputs();
+		generateArraysWithInputs();
 		querieImpl = new QueriesImpl();
-		searchCtrl = new SearchController(this);
 		ui = new UIHelper();
+		searchCtrl = new SearchController(this, inputSearchFKey, inputFields,
+				inputSourceKey);
 	}
 
 	@FXML
@@ -183,7 +182,7 @@ public class Controller {
 		return inputSearchFKey;
 	}
 
-	Control[] getInputFields() {
+	Object[] getInputFields() {
 		return inputFields;
 	}
 
@@ -199,17 +198,17 @@ public class Controller {
 	 * Builds three arrays with all user input fields of the user interface and
 	 * their corresponding {@link SearchFieldKeys} and {@link SourceKeys}.
 	 */
-	private void setUpArrayWithInputs() {
+	private void generateArraysWithInputs() {
 		inputSearchFKey = new SearchFieldKeys[inputFieldCounter];
-		inputFields = new Control[inputFieldCounter];
+		inputFields = new Object[inputFieldCounter];
 		inputSourceKey = new int[inputFieldCounter];
 
 		inputSearchFKey[0] = SearchFieldKeys.ANREDE_TRAD;
-		inputFields[0] = searchCategory_person_anrede;
+		inputFields[0] = (TextField) searchCategory_person_anrede;
 		inputSourceKey[0] = SourceKeys.STANDARD;
 
 		inputSearchFKey[1] = SearchFieldKeys.ANREDE_NORM;
-		inputFields[1] = searchCategory_person_anredenorm;
+		inputFields[1] = (TextField) searchCategory_person_anredenorm;
 		inputSourceKey[1] = SourceKeys.NORM;
 
 		inputSearchFKey[2] = SearchFieldKeys.TITEL_TRAD;
@@ -267,10 +266,11 @@ public class Controller {
 					"Es konnten keine Felder gefunden werden, die geleert werden können.");
 		}
 		for (int i = 0; i < inputFields.length; i++) {
-			if (inputFields[i] instanceof TextInputControl) {
-				((TextInputControl) inputFields[i]).clear();
+			if (inputFields[i] instanceof TextField) {
+				((TextField) inputFields[i]).clear();
 			} else {
-				// TODO andere input-typen implementieren
+				// TODO andere input-typen implementieren und continue entfernen
+				continue;
 			}
 		}
 	}
