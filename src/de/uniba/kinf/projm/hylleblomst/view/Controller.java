@@ -5,11 +5,13 @@ import java.util.List;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Control;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputControl;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -36,18 +38,32 @@ public class Controller {
 	private QueriesImpl querieImpl = new QueriesImpl();
 
 	/**
+	 * Array stores for every input field the corresponding search field key.
+	 */
+	private SearchFieldKeys[] inputSearchFKey;
+
+	/**
+	 * Array stores all input fields of the graphical user interface.
+	 */
+	private Control[] inputFields;
+
+	/**
+	 * Array stores for every input field the corresponding source key.
+	 */
+	private int[] inputSourceKey;
+
+	/**
 	 * Stores the number of input fields for usable generation of input field
 	 * arrays.
 	 */
 	private int inputFieldCounter = 6;
 
 	/**
-	 * Default constructor for a new Controller.
+	 * Default constructor for a new Controller. When called, the three arrays
+	 * with input fields and keys are set.
 	 */
 	public Controller() {
-		// TODO Array mit allen search keys für alle input fieds anlegen, array
-		// mit
-		// inputs erst zur Laufzeit generieren
+		setUpArrayWithInputs();
 	}
 
 	@FXML
@@ -156,39 +172,42 @@ public class Controller {
 	TextArea infoArea;
 
 	/**
-	 * Builds an array with all input fields which are in the user interface.
+	 * Builds three arrays with all user input fields of the user interface and
+	 * their corresponding {@link SearchFieldKeys} and {@link SourceKeys}.
 	 * 
-	 * @return the two-dimensional array with the {@link SearchFieldKeys} at
-	 *         position 0 and the value from the corresponding input at position
-	 *         1
+	 * @return
 	 */
-	private Object[][] setUpArrayWithInputValues() {
-		Object[][] inputArray = new Object[inputFieldCounter][3];
-		// TODO feste Einträge wie die Zuordnung zu Suchfeld oder Quelle in
-		// Konstruktor auslagern, da dies nur zu Beginn der Laufzeit
-		// durchgeführt werden muss
-		inputArray[0][0] = SearchFieldKeys.ANREDE_TRAD;
-		inputArray[0][1] = searchCategory_person_anrede.getText();
-		inputArray[0][2] = SourceKeys.STANDARD;
-		inputArray[1][0] = SearchFieldKeys.ANREDE_NORM;
-		inputArray[1][1] = searchCategory_person_anredenorm.getText();
-		inputArray[1][2] = SourceKeys.NORM;
-		inputArray[2][0] = SearchFieldKeys.TITEL_TRAD;
-		inputArray[2][1] = searchCategory_person_titel.getText();
-		inputArray[2][2] = SourceKeys.STANDARD;
-		inputArray[3][0] = SearchFieldKeys.TITEL_NORM;
-		inputArray[3][1] = searchCategory_person_titelnorm.getText();
-		inputArray[3][2] = SourceKeys.NORM;
-		// FIXME korrekte SearchFieldKeys und SourceKeys abhängig von speichern
-		inputArray[4][0] = SearchFieldKeys.VORNAME_TRAD;
-		inputArray[4][1] = searchCategory_person_vornameinput.getText();
-		inputArray[4][2] = SourceKeys.STANDARD;
-		// FIXME korrekte SearchFieldKeys und SourceKeys speichern
-		inputArray[5][0] = SearchFieldKeys.NACHNAME_TRAD;
-		inputArray[5][1] = searchCategory_person_nachnameinput.getText();
-		inputArray[5][2] = SourceKeys.STANDARD;
+	private void setUpArrayWithInputs() {
+		inputSearchFKey = new SearchFieldKeys[inputFieldCounter];
+		inputFields = new Control[inputFieldCounter];
+		inputSourceKey = new int[inputFieldCounter];
 
-		return inputArray;
+		inputSearchFKey[0] = SearchFieldKeys.ANREDE_TRAD;
+		inputFields[0] = searchCategory_person_anrede;
+		inputSourceKey[0] = SourceKeys.STANDARD;
+
+		inputSearchFKey[1] = SearchFieldKeys.ANREDE_NORM;
+		inputFields[1] = searchCategory_person_anredenorm;
+		inputSourceKey[1] = SourceKeys.NORM;
+
+		inputSearchFKey[2] = SearchFieldKeys.TITEL_TRAD;
+		inputFields[2] = searchCategory_person_titel;
+		inputSourceKey[2] = SourceKeys.STANDARD;
+
+		inputSearchFKey[3] = SearchFieldKeys.TITEL_NORM;
+		inputFields[3] = searchCategory_person_titelnorm;
+		inputSourceKey[3] = SourceKeys.NORM;
+
+		// FIXME korrekte SearchFieldKeys und SourceKeys abhängig von speichern
+		inputSearchFKey[4] = SearchFieldKeys.VORNAME_TRAD;
+		inputFields[4] = searchCategory_person_vornameinput;
+		inputSourceKey[4] = SourceKeys.STANDARD;
+
+		// FIXME korrekte SearchFieldKeys und SourceKeys speichern
+		inputSearchFKey[5] = SearchFieldKeys.NACHNAME_TRAD;
+		inputFields[5] = searchCategory_person_nachnameinput;
+		inputSourceKey[5] = SourceKeys.STANDARD;
+
 	}
 
 	/**
@@ -201,31 +220,37 @@ public class Controller {
 	@FXML
 	private void startSearch() {
 		try {
-			Object[][] allInputFields = setUpArrayWithInputValues();
-			if (allInputFields == null || allInputFields.length == 0) {
+			if (inputSearchFKey == null || inputSearchFKey.length == 0
+					|| inputFields == null || inputFields.length == 0
+					|| inputSourceKey == null || inputSourceKey.length == 0) {
 				throw new IllegalArgumentException(
 						"Die Liste mit Eingabefeldern ist leer oder hat keinen Wert.");
 			}
-
+			// neue Rückgabeliste anlegen
 			List<QueryRequest> requestList = new ArrayList<QueryRequest>();
-
+			// über alle Eingabefelder iterieren
 			for (int i = 0; i < inputFieldCounter; i++) {
-				// FIXME derzeit nur mit TextEingabe möglich, oder?
-				if (!"".equals((allInputFields[i][1]))) {
-					SearchFieldKeys sfk = (SearchFieldKeys) allInputFields[i][0];
-					int source = (int) allInputFields[i][2];
-					QueryRequest tmpReq = new QueryRequest(sfk,
-							allInputFields[i][1], source);
-					requestList.add(tmpReq);
+				// checken, welcher Typ von Eingabefeld das ist und entsprechend
+				// behandeln
+				if (inputFields[i] instanceof TextField) {
+					QueryRequest tmpReg = new QueryRequest(inputSearchFKey[i],
+							((TextField) inputFields[i]).getText(),
+							inputSourceKey[i]);
+					requestList.add(tmpReg);
+				} else {
+					// Fehler werfen falls Eingabetyp nicht gefunden wurde
+					throw new RuntimeException(
+							"Die Sucheingabe konnte nicht verarbeitet werden.");
 				}
 			}
 
+			// falls eine leere Liste angelegt wurde, soll diese nicht an die
+			// eigentliche Suche übergeben werden
 			if (requestList.size() == 0) {
 				throw new IllegalArgumentException(
 						"Es wurden keine Sucheingaben gefunden, für die eine Suchanfrage gestellt werden kann.");
 			} else {
-				// FIXME setInfoText am Ende entfernen, zur Zeit nur für
-				// Testzwecke enthalten
+				// FIXME setInfoText am entfernen, nur für Testzwecke
 				setInfoTextExtendedSearch(requestList);
 				querieImpl.search(requestList);
 			}
@@ -241,13 +266,17 @@ public class Controller {
 	 */
 	@FXML
 	private void clearSearchInput() {
-		// TODO clear all input fields
-		searchCategory_person_anrede.clear();
-		searchCategory_person_anredenorm.clear();
-		searchCategory_person_titel.clear();
-		searchCategory_person_titelnorm.clear();
-		searchCategory_person_vornameinput.clear();
-		searchCategory_person_nachnameinput.clear();
+		if (inputFields.length == 0) {
+			throw new RuntimeException(
+					"Es konnten keine Felder gefunden werden, die geleert werden können.");
+		}
+		for (int i = 0; i < inputFields.length; i++) {
+			if (inputFields[i] instanceof TextInputControl) {
+				((TextInputControl) inputFields[i]).clear();
+			} else {
+				// TODO andere input-typen implementieren
+			}
+		}
 	}
 
 	/**
