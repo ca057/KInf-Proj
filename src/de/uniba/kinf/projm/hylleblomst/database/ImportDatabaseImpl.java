@@ -346,7 +346,6 @@ public class ImportDatabaseImpl implements ImportDatabase {
 		return false;
 	}
 
-	// TODO Erweiterung um Anmerkungen
 	private int insertIntoOrtAbweichungNorm(String entry)
 			throws ImportException {
 		String table = "hylleblomst.ort_abweichung_norm";
@@ -375,7 +374,7 @@ public class ImportDatabaseImpl implements ImportDatabase {
 						"A %s could not be inserted", entry) + e.getMessage());
 			}
 		} else {
-			id = validation.getIDOfEntry(entry, anmerkung, table);
+			id = validation.getIDOfOrtAbweichungEntry(entry, anmerkung, table);
 		}
 
 		return id;
