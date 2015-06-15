@@ -267,6 +267,102 @@ public class ImportDatabaseImpl implements ImportDatabase {
 	}
 
 	/**
+	 * Inserts an entry into a specified table of the schema
+	 * <code>HYLLEBLOMST</code>. This method is very simple and is only suited
+	 * for tables which do not have more attributes than an id and one varchar.
+	 * 
+	 * @param table
+	 *            The table in which to insert
+	 * @param entry
+	 *            The varchar to introduce into table
+	 * @return The unique ID of the entry, whether is was already in the
+	 *         database or not
+	 * @throws ImportException
+	 *             If an error occurred during writing to database
+	 */
+	private int insertIntoTableOneAttributeNoForeignKeys(String table,
+			String entry) throws ImportException {
+		table = String.format("hylleblomst.%s", table);
+		String sqlQuery = String.format("INSERT INTO %s values(?, ?)", table);
+		int id;
+	
+		if (!validation.entryAlreadyInDatabase(entry, table)) {
+			try (Connection con = DriverManager.getConnection(dbURL, user,
+					password);) {
+				PreparedStatement stmt = con.prepareStatement(sqlQuery);
+				id = validation.getMaxID(table) + 1;
+	
+				stmt.setInt(1, id);
+				stmt.setString(2, entry);
+	
+				stmt.executeUpdate();
+	
+			} catch (SQLException e) {
+				throw new ImportException(String.format(
+						"A %s could not be inserted", entry) + e.getMessage());
+			}
+		} else {
+			id = validation.getIDOfEntry(entry, table);
+		}
+		return id;
+	}
+
+	private int insertIntoTableOneAttributeOneForeignKey(String table,
+			String entry, int foreignKey) throws ImportException {
+		table = String.format("hylleblomst.%s", table);
+		String sqlQuery = String.format("INSERT INTO %s values(?,?,?)", table);
+		int id;
+	
+		if (!validation.entryAlreadyInDatabase(entry, foreignKey, table)) {
+			try (Connection con = DriverManager.getConnection(dbURL, user,
+					password);) {
+				PreparedStatement stmt = con.prepareStatement(sqlQuery);
+				id = validation.getMaxID(table) + 1;
+	
+				stmt.setInt(1, id);
+				stmt.setString(2, entry);
+				if (foreignKey == 0) {
+					stmt.setNull(3, Types.INTEGER);
+				} else {
+					stmt.setInt(3, foreignKey);
+				}
+				stmt.executeUpdate();
+	
+			} catch (SQLException e) {
+				throw new ImportException(String.format(
+						"A %s could not be inserted", entry) + e.getMessage());
+			}
+		} else {
+			id = validation.getIDOfEntry(entry, foreignKey, table);
+		}
+		return id;
+	}
+
+	private void insertIntoTableNoAttributesThreeForeignKeys(String table,
+			int tradID, int quellenID, int personID) throws ImportException {
+		table = String.format("hylleblomst.%s", table);
+		String sqlQuery = String.format("INSERT INTO %s values(?,?,?)", table);
+	
+		if (!validation.entryAlreadyInDatabase(tradID, quellenID, personID,
+				table)) {
+			try (Connection con = DriverManager.getConnection(dbURL, user,
+					password);) {
+				PreparedStatement stmt = con.prepareStatement(sqlQuery);
+	
+				stmt.setInt(1, tradID);
+				stmt.setInt(2, quellenID);
+				stmt.setInt(3, personID);
+	
+				stmt.executeUpdate();
+	
+			} catch (SQLException e) {
+				throw new ImportException("An info table could not be created"
+						+ e.getMessage());
+			}
+		}
+	}
+
+	/**
 	 * Inserts persons into the database
 	 * 
 	 * @param personID
@@ -376,101 +472,5 @@ public class ImportDatabaseImpl implements ImportDatabase {
 		}
 
 		return id;
-	}
-
-	/**
-	 * Inserts an entry into a specified table of the schema
-	 * <code>HYLLEBLOMST</code>. This method is very simple and is only suited
-	 * for tables which do not have more attributes than an id and one varchar.
-	 * 
-	 * @param table
-	 *            The table in which to insert
-	 * @param entry
-	 *            The varchar to introduce into table
-	 * @return The unique ID of the entry, whether is was already in the
-	 *         database or not
-	 * @throws ImportException
-	 *             If an error occurred during writing to database
-	 */
-	private int insertIntoTableOneAttributeNoForeignKeys(String table,
-			String entry) throws ImportException {
-		table = String.format("hylleblomst.%s", table);
-		String sqlQuery = String.format("INSERT INTO %s values(?, ?)", table);
-		int id;
-
-		if (!validation.entryAlreadyInDatabase(entry, table)) {
-			try (Connection con = DriverManager.getConnection(dbURL, user,
-					password);) {
-				PreparedStatement stmt = con.prepareStatement(sqlQuery);
-				id = validation.getMaxID(table) + 1;
-
-				stmt.setInt(1, id);
-				stmt.setString(2, entry);
-
-				stmt.executeUpdate();
-
-			} catch (SQLException e) {
-				throw new ImportException(String.format(
-						"A %s could not be inserted", entry) + e.getMessage());
-			}
-		} else {
-			id = validation.getIDOfEntry(entry, table);
-		}
-		return id;
-	}
-
-	private int insertIntoTableOneAttributeOneForeignKey(String table,
-			String entry, int foreignKey) throws ImportException {
-		table = String.format("hylleblomst.%s", table);
-		String sqlQuery = String.format("INSERT INTO %s values(?,?,?)", table);
-		int id;
-
-		if (!validation.entryAlreadyInDatabase(entry, foreignKey, table)) {
-			try (Connection con = DriverManager.getConnection(dbURL, user,
-					password);) {
-				PreparedStatement stmt = con.prepareStatement(sqlQuery);
-				id = validation.getMaxID(table) + 1;
-
-				stmt.setInt(1, id);
-				stmt.setString(2, entry);
-				if (foreignKey == 0) {
-					stmt.setNull(3, Types.INTEGER);
-				} else {
-					stmt.setInt(3, foreignKey);
-				}
-				stmt.executeUpdate();
-
-			} catch (SQLException e) {
-				throw new ImportException(String.format(
-						"A %s could not be inserted", entry) + e.getMessage());
-			}
-		} else {
-			id = validation.getIDOfEntry(entry, foreignKey, table);
-		}
-		return id;
-	}
-
-	private void insertIntoTableNoAttributesThreeForeignKeys(String table,
-			int tradID, int quellenID, int personID) throws ImportException {
-		table = String.format("hylleblomst.%s", table);
-		String sqlQuery = String.format("INSERT INTO %s values(?,?,?)", table);
-
-		if (!validation.entryAlreadyInDatabase(tradID, quellenID, personID,
-				table)) {
-			try (Connection con = DriverManager.getConnection(dbURL, user,
-					password);) {
-				PreparedStatement stmt = con.prepareStatement(sqlQuery);
-
-				stmt.setInt(1, tradID);
-				stmt.setInt(2, quellenID);
-				stmt.setInt(3, personID);
-
-				stmt.executeUpdate();
-
-			} catch (SQLException e) {
-				throw new ImportException("An info table could not be created"
-						+ e.getMessage());
-			}
-		}
 	}
 }
