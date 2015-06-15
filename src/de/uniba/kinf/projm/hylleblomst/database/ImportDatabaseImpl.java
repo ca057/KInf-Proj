@@ -26,8 +26,6 @@ public class ImportDatabaseImpl implements ImportDatabase {
 			"HS H (AEB, Rep. I, Nr. 321)", "HS I (SB Bamberg, Msc.Add.3a)",
 			"HS J (SB Bamberg, Msc.Add.3)", "AUB, V E 38" };
 
-	private String insertSql = "INSERT into ";
-
 	public ImportDatabaseImpl(String dbURL, String user, String password)
 			throws ImportException {
 		this.dbURL = dbURL;

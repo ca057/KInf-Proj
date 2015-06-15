@@ -6,7 +6,7 @@ import de.uniba.kinf.projm.hylleblomst.dataImport.ImportDataImpl;
 public class Main {
 	public static void main(String[] args) throws Exception {
 
-		String dbURL = "jdbc:derby:C:/Users/Simon/git/KInf-Projekt/db/MyDB";
+		String dbURL = "jdbc:derby:./db/MyDB";
 		String user = "admin";
 		String password = "password";
 
@@ -15,7 +15,6 @@ public class Main {
 
 		ImportData importData = new ImportDataImpl();
 
-		importData
-				.addData("C:/Users/Simon/git/KInf-Projekt/doc/example_data.csv");
+		importData.addData("./doc/example_data.csv");
 	}
 }
