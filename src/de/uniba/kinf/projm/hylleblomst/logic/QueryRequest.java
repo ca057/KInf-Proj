@@ -1,5 +1,12 @@
 package de.uniba.kinf.projm.hylleblomst.logic;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 public class QueryRequest {
 	private SearchFieldKeys searchField;
 	private Object input;
@@ -54,25 +61,25 @@ public class QueryRequest {
 		switch (key) {
 		case ADELIG:
 			table = "PERSON";
-			column = "ADLIG";
+			column = getColumnName(table, 2);
 			break;
 		case JESUIT:
 			table = "PERSON";
-			column = "JESUIT";
+			column = getColumnName(table, 2);
 			break;
 		case STUDIENJAHR:
 			table = "PERSON";
-			column = "STUDIENJAHR";
+			column = getColumnName(table, 2);
 			break;
 		case STUDJAHR_VON:
 			// TODO bei von bis wird es ein Problem geben, oder?
 			table = "PERSON";
-			column = "STUDIENJAHR";
+			column = getColumnName(table, 2);
 			break;
 		case STUDJAHR_BIS:
 			// TODO bei von bis wird es ein Problem geben, oder?
 			table = "PERSON";
-			column = "STUDIENJAHR";
+			column = getColumnName(table, 2);
 			break;
 		case EINSCHREIBEDATUM_TAGE:
 			// TODO Das muss am besten vorher in ein Datum umgewandelt werden.
@@ -106,76 +113,76 @@ public class QueryRequest {
 			break;
 		case ANREDE_TRAD:
 			table = "ANREDE_TRAD";
-			column = "NAME";
+			column = getColumnName(table, 2);
 			break;
 		case ANREDE_NORM:
 			table = "ANREDE_NORM";
-			column = "NAME";
+			column = getColumnName(table, 2);
 			break;
 		case TITEL_TRAD:
 			table = "TITEL_TRAD";
-			column = "TITEL";
+			column = getColumnName(table, 2);
 			break;
 		case TITEL_NORM:
 			table = "TITEL_NORM";
-			column = "NAME";
+			column = getColumnName(table, 2);
 			break;
 		case VORNAME_TRAD:
 			table = "VORNAME_TRAD";
-			column = "NAME";
+			column = getColumnName(table, 2);
 			break;
 		case VORNAME_NORM:
 			table = "VORNAME_NORM";
-			column = "NAME";
+			column = getColumnName(table, 2);
 			break;
 		case NACHNAME_TRAD:
 			table = "NAME_TRAD";
-			column = "NAMETRAD";
+			column = getColumnName(table, 2);
 			break;
 		case NACHNAME_NORM:
 			table = "NAME_TRAD";
-			column = "NAMETRAD";
+			column = getColumnName(table, 2);
 			break;
 		case WIRTSCHAFTSLAGE_TRAD:
 			table = "WIRTSCHAFTSLAGE_TRAD";
-			column = "NAME";
+			column = getColumnName(table, 2);
 			break;
 		case WIRTSCHAFTSLAGE_NORM:
 			table = "WIRTSCHAFTSLAGE_NORM";
-			column = "NAME";
+			column = getColumnName(table, 2);
 			break;
 		case ORT_TRAD:
 			table = "ORT_TRAD";
-			column = "SCHREIBWEISE";
+			column = getColumnName(table, 2);
 			break;
 		case ORT_NORM:
 			table = "ORT_NORM";
-			column = "ORTNORM";
+			column = getColumnName(table, 2);
 			break;
 		case ORT_ABWEICHUNG_NORM:
 			// TODO Hier muss dann auch die Anmerkung mit zurückgegeben werden.
 			table = "ORT_ABWEICHUNG_NORM";
-			column = "NAME";
+			column = getColumnName(table, 2);
 			break;
 		case FACH_TRAD:
 			table = "FACH_TRAD";
-			column = "NAME";
+			column = getColumnName(table, 2);
 			break;
 		case FACH_NORM:
 			table = "FACH_NORM";
-			column = "NAME";
+			column = getColumnName(table, 2);
 			break;
 		case FAKULTAETEN:
 			table = "FAKULTAETEN";
-			column = "NAME";
+			column = getColumnName(table, 2);
 			break;
 		case SEMINAR_TRAD:
 			table = "SEMINAR_TRAD";
-			column = "SCHREIBWEISE";
+			column = getColumnName(table, 2);
 			break;
 		case SEMINAR_NORM:
 			table = "SEMINAR_NORM";
-			column = "NAME";
+			column = getColumnName(table, 2);
 			break;
 		case GRADUIERT:
 			table = "PERSON";
@@ -183,122 +190,38 @@ public class QueryRequest {
 			break;
 		case ZUSAETZE:
 			table = "ZUSAETZE";
-			column = "INHALT";
+			column = getColumnName(table, 2);
 			break;
 		case FUNDORTE:
 			table = "FUNDORTE";
-			column = "NAME";
+			column = getColumnName(table, 2);
 			break;
 		default:
 			throw new IllegalArgumentException(
 					"Das zugehörige Tabellenelement für Suchfeld " + key.name()
 							+ " ist nicht definiert.");
 		}
-		// if (key.toString().equals("ADELIG")) {
-		// table = "PERSON";
-		// column = "ADLIG";
-		// } else if (key.toString().equals("JESUIT")) {
-		// table = "PERSON";
-		// column = "JESUIT";
-		// } else if (key.toString().equals("STUDIENJAHR")) {
-		// table = "PERSON";
-		// column = "STUDIENJAHR";
-		// // TODO bei von bis wird es ein Problem geben, oder?
-		// } else if (key.toString().equals("STUDJAHR_VON")) {
-		// table = "PERSON";
-		// column = "STUDIENJAHR";
-		// } else if (key.toString().equals("STUDJAHR_BIS")) {
-		// table = "PERSON";
-		// column = "STUDIENJAHR";
-		// } else if (key.toString().equals("EINSCHREIBEDATUM_TAGE")) {
-		// table = "PERSON";
-		// column = "";
-		// } else if (key.toString().equals("EINSCHREIBEDATUM_MONATE")) {
-		// table = "PERSON";
-		// column = "";
-		// } else if (key.toString().equals("EINSCHREIBEDATUM_JAHRE")) {
-		// table = "PERSON";
-		// column = "";
-		// } else if (key.toString().equals("ANMERKUNGEN")) {
-		// table = "PERSON";
-		// column = "ANMKERUNG";
-		// } else if (key.toString().equals("NUMMER")) {
-		// table = "PERSON";
-		// column = "PERSONID";
-		// } else if (key.toString().equals("SEITE_ORIGINALE")) {
-		// table = "PERSON";
-		// column = "SEITEORIGINAL";
-		// } else if (key.toString().equals("NUMMER_HESS")) {
-		// table = "PERSON";
-		// column = "NUMMERHESS";
-		// } else if (key.toString().equals("ANREDE_TRAD")) {
-		// table = "ANREDE_TRAD";
-		// column = "NAME";
-		// } else if (key.toString().equals("ANREDE_NORM")) {
-		// table = "ANREDE_NORM";
-		// column = "NAME";
-		// } else if (key.toString().equals("TITEL_TRAD")) {
-		// table = "TITEL_TRAD";
-		// column = "TITEL";
-		// } else if (key.toString().equals("TITEL_NORM")) {
-		// table = "TITEL_NORM";
-		// column = "NAME";
-		// } else if (key.toString().equals("VORNAME_TRAD")) {
-		// table = "VORNAME_TRAD";
-		// column = "NAME";
-		// } else if (key.toString().equals("VORNAME_NORM")) {
-		// table = "VORNAME_NORM";
-		// column = "NAME";
-		// } else if (key.toString().equals("NACHNAME_TRAD")) {
-		// table = "NAME_TRAD";
-		// column = "NAMETRAD";
-		// } else if (key.toString().equals("NACHNAME_NORM")) {
-		// table = "NAME_TRAD";
-		// column = "NAMETRAD";
-		// } else if (key.toString().equals("WIRTSCHAFTSLAGE_TRAD")) {
-		// table = "WIRTSCHAFTSLAGE_TRAD";
-		// column = "NAME";
-		// } else if (key.toString().equals("WIRTSCHAFTSLAGE_NORM")) {
-		// table = "WIRTSCHAFTSLAGE_NORM";
-		// column = "NAME";
-		// } else if (key.toString().equals("ORT_TRAD")) {
-		// table = "ORT_TRAD";
-		// column = "SCHREIBWEISE";
-		// } else if (key.toString().equals("ORT_NORM")) {
-		// table = "ORT_NORM";
-		// column = "ORTNORM";
-		// } else if (key.toString().equals("ORT_ABWEICHUNG_NORM")) {
-		// // TODO Hier muss dann auch die Anmerkung mit zurückgegeben werden.
-		// table = "ORT_ABWEICHUNG_NORM";
-		// column = "NAME";
-		// } else if (key.toString().equals("FACH_TRAD")) {
-		// table = "FACH_TRAD";
-		// column = "NAME";
-		// } else if (key.toString().equals("FACH_NORM")) {
-		// table = "FACH_NORM";
-		// column = "NAME";
-		// } else if (key.toString().equals("FAKULTAETEN")) {
-		// table = "FAKULTAETEN";
-		// column = "NAME";
-		// } else if (key.toString().equals("SEMINAR_TRAD")) {
-		// table = "SEMINAR_TRAD";
-		// column = "SCHREIBWEISE";
-		// } else if (key.toString().equals("SEMINAR_NORM")) {
-		// table = "SEMINAR_NORM";
-		// column = "NAME";
-		// } else if (key.toString().equals("GRADUIERT")) {
-		// table = "PERSON";
-		// column = "GRADUIERT";
-		// } else if (key.toString().equals("ZUSAETZE")) {
-		// table = "ZUSAETZE";
-		// column = "INHALT";
-		// } else if (key.toString().equals("FUNDORTE")) {
-		// table = "FUNDORTE";
-		// column = "NAME";
-		// } else {
-		// throw new IllegalArgumentException(
-		// "Das zugehörige Tabellenelement für Suchfeld " + key.name()
-		// + " ist nicht definiert.");
-		// }
+	}
+
+	public String getColumnName(String table, int i) {
+		String dbURL = "jdbc:derby:db/MyDB";
+		String user = "admin";
+		String password = "password";
+		String result = "";
+		try (Connection con = DriverManager
+				.getConnection("jdbc:derby:/Users/Hannes/git/KInf-Proj/db/MyDB; user=admin; password=password");
+				Statement stmt = con.createStatement(
+						ResultSet.TYPE_SCROLL_INSENSITIVE,
+						ResultSet.CONCUR_READ_ONLY)) {
+
+			String querySql = String.format("SELECT * FROM %s", table);
+			ResultSet rs = stmt.executeQuery(querySql);
+			ResultSetMetaData rsmd = rs.getMetaData();
+			result = rsmd.getColumnName(i);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return result;
 	}
 }
