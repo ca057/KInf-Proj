@@ -8,55 +8,84 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
+
+/**
+ * Provides methods to check whether entries in database are already existent or
+ * not.
+ * 
+ * @author Simon
+ *
+ */
 public class Validation {
 
 	private String dbURL;
 	private String password;
 	private String user;
 
-	public Validation(String dbURL, String user, String password) {
+	private Connection con;
+	private PreparedStatement stmt;
 
+	/**
+	 * Constructor for class validation.
+	 * 
+	 * @param dbURL
+	 *            A String that contains the directory of the database which is
+	 *            to be validated
+	 * @param user
+	 *            The username provided as String
+	 * @param password
+	 *            The password of the specified user to access database
+	 */
+	protected Validation(String dbURL, String user, String password) {
 		this.dbURL = dbURL;
 		this.user = user;
 		this.password = password;
-	}
 
-	/**
-	 * Checks if an ID is already in use in the database.
-	 * 
-	 * @return true if taken <br/>
-	 *         false if new ID is necessary
-	 */
-	public boolean personIDIsTaken(int personID) {
-		boolean result = true;
-
-		String table = "hylleblomst.person";
-
-		try (Connection con = DriverManager
-				.getConnection(dbURL, user, password);
-				Statement stmt = con.createStatement(
-						ResultSet.TYPE_SCROLL_INSENSITIVE,
-						ResultSet.CONCUR_READ_ONLY)) {
-
-			String querySql = String.format(
-					"SELECT PersonID FROM %s WHERE PersonID=%d", table,
-					personID);
-			ResultSet rs = stmt.executeQuery(querySql);
-
-			con.setAutoCommit(false);
-
-			/*
-			 * Returns true if ResultSet is not empty, false otherwise
-			 */
-			result = rs.isBeforeFirst();
-
-			con.setAutoCommit(true);
-
+		try {
+			this.con = DriverManager.getConnection(dbURL, user, password);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
 
+	/**
+	 * Checks if the ID of a person is already in use in the database.
+	 * 
+	 * @return true if taken <br/>
+	 *         false if new ID is necessary
+	 */
+	boolean personIDIsTaken(int personID) throws ImportException {
+		boolean result = true;
+
+		try {
+			stmt = con.prepareStatement(
+					"SELECT PersonID FROM hylleblomst.person WHERE PersonID=?",
+					ResultSet.TYPE_SCROLL_INSENSITIVE,
+					ResultSet.CONCUR_READ_ONLY);
+			stmt.setInt(1, personID);
+
+			ResultSet rs = stmt.executeQuery();
+
+			con.setAutoCommit(false);
+			/*
+			 * Returns true if ResultSet is not empty, false otherwise
+			 */
+			result = rs.isBeforeFirst();
+			con.setAutoCommit(true);
+
+		} catch (SQLException e) {
+			throw new ImportException("PersonID could not be validated: "
+					+ e.getSQLState());
+		} finally {
+			try {
+				stmt.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 		return result;
 	}
 
@@ -73,56 +102,61 @@ public class Validation {
 	 *            The column in which to search for entry
 	 * @return <code>True</code> if entry was found, <code>false</code>
 	 *         otherwise
+	 * @throws ImportException
 	 */
-	boolean entryAlreadyInDatabase(String entry, String table) {
+	boolean entryAlreadyInDatabase(String entry, String table)
+			throws ImportException {
 		boolean result = true;
 
 		String column = getColumnName(table, 2);
 
-		try (Connection con = DriverManager
-				.getConnection(dbURL, user, password);
-				Statement stmt = con.createStatement(
-						ResultSet.TYPE_SCROLL_INSENSITIVE,
-						ResultSet.CONCUR_READ_ONLY)) {
+		try {
+			stmt = con.prepareStatement(String.format(
+					"SELECT %s FROM %s WHERE %1$s=?", column, table),
+					ResultSet.TYPE_SCROLL_INSENSITIVE,
+					ResultSet.CONCUR_READ_ONLY);
+			stmt.setString(1, entry);
 
-			String querySql = String.format(
-					"SELECT %1$s FROM %2$s WHERE %1$s='%3$s'", column, table,
-					entry);
-			ResultSet rs = stmt.executeQuery(querySql);
+			ResultSet rs = stmt.executeQuery();
 
 			con.setAutoCommit(false);
-
 			/*
 			 * Returns true if ResultSet is not empty, false otherwise
 			 */
 			result = rs.isBeforeFirst();
-
 			con.setAutoCommit(true);
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new ImportException("PersonID could not be validated: "
+					+ e.getSQLState());
+		} finally {
+			try {
+				stmt.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
 		return result;
 	}
 
-	boolean entryAlreadyInDatabase(String entry, int foreignKey, String table) {
+	boolean entryAlreadyInDatabase(String entry, int foreignKey, String table)
+			throws ImportException {
 		boolean result = true;
 
 		String columnTwo = getColumnName(table, 2);
 		String columnThree = getColumnName(table, 3);
 
-		try (Connection con = DriverManager
-				.getConnection(dbURL, user, password);
-				Statement stmt = con.createStatement(
-						ResultSet.TYPE_SCROLL_INSENSITIVE,
-						ResultSet.CONCUR_READ_ONLY)) {
+		try {
+			stmt = con.prepareStatement(String.format(
+					"SELECT %s, %s FROM %s WHERE %1$s=? AND %2$s=?", columnTwo,
+					columnThree, table), ResultSet.TYPE_SCROLL_INSENSITIVE,
+					ResultSet.CONCUR_READ_ONLY);
+			stmt.setString(1, entry);
+			stmt.setInt(2, foreignKey);
 
-			String querySql = String
-					.format("SELECT %2$s, %3$s FROM %1$s WHERE %2$s='%4$s' AND %3$s=%5$d",
-							table, columnTwo, columnThree, entry, foreignKey);
-			ResultSet rs = stmt.executeQuery(querySql);
+			ResultSet rs = stmt.executeQuery();
 
 			con.setAutoCommit(false);
 
@@ -130,13 +164,19 @@ public class Validation {
 			 * Returns true if ResultSet is not empty, false otherwise
 			 */
 			result = rs.isBeforeFirst();
-
 			con.setAutoCommit(true);
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new ImportException("PersonID could not be validated: "
+					+ e.getSQLState());
+		} finally {
+			try {
+				stmt.close();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-
 		return result;
 	}
 
