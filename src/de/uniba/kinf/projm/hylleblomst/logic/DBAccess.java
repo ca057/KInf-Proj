@@ -17,13 +17,19 @@ class DBAccess {
 		this.password = password;
 	}
 
-	void startQuery(QueriesImpl queriesImpl, String query) throws SQLException {
+	public void setUser(String user) {
+		this.user = user;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	void startQuery(String query) throws SQLException {
 		try (Connection con = DriverManager
 				.getConnection(dbURL, user, password);
 				Statement stmt = con.createStatement();
-				ResultSet results = stmt
-						.executeQuery("SELECT *  WHERE CONTAINS (" + query
-								+ ")");) {
+				ResultSet results = stmt.executeQuery(query)) {
 			while (results.next()) {
 				System.out.printf("%s, %s, %s%n", results.getString(1),
 						results.getString(2), results.getString(3));
@@ -34,4 +40,5 @@ class DBAccess {
 
 		}
 	}
+
 }
