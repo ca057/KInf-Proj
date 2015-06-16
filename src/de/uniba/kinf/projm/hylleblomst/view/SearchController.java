@@ -46,7 +46,8 @@ public class SearchController {
 		for (int i = 0; i < inputValues.length; i++) {
 			// checken, welcher Typ von Eingabefeld das ist und entsprechend
 			// behandeln
-			if (inputValues[i] instanceof String && !"".equals(inputValues[i])) {
+			if (inputValues[i] instanceof String && !"".equals(inputValues[i])
+					&& inputValues[i] != null) {
 				QueryRequest tmpReq = new QueryRequest(inputSearchFKey[i],
 						inputValues[i], inputSourceKey[i]);
 				requestList.add(tmpReq);
