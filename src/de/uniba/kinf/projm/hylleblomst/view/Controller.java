@@ -241,13 +241,13 @@ public class Controller {
 		inputSearchFKey[0] = SearchFieldKeys.ANREDE_TRAD;
 		inputSourceKey[0] = SourceKeys.STANDARD;
 
-		inputSearchFKey[1] = SearchFieldKeys.ANREDE_NORM;
+		inputSearchFKey[1] = SearchFieldKeys.ANREDE;
 		inputSourceKey[1] = SourceKeys.NORM;
 
 		inputSearchFKey[2] = SearchFieldKeys.TITEL_TRAD;
 		inputSourceKey[2] = SourceKeys.STANDARD;
 
-		inputSearchFKey[3] = SearchFieldKeys.TITEL_NORM;
+		inputSearchFKey[3] = SearchFieldKeys.TITEL;
 		inputSourceKey[3] = SourceKeys.NORM;
 
 		// FIXME korrekte SearchFieldKeys und SourceKeys abhängig von Auswahl
@@ -257,7 +257,7 @@ public class Controller {
 
 		// FIXME korrekte SearchFieldKeys und SourceKeys abhängig von Auswahl
 		// speichern
-		inputSearchFKey[5] = SearchFieldKeys.NACHNAME_TRAD;
+		inputSearchFKey[5] = SearchFieldKeys.NACHNAME;
 		inputSourceKey[5] = SourceKeys.STANDARD;
 	}
 

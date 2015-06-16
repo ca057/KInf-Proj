@@ -74,7 +74,7 @@ public class QueryRequest {
 	// füllen. WICHTIG: Collection muss sortiert sein!
 	private void searchFieldKeyToDatabaseData(SearchFieldKeys key) {
 		switch (key) {
-		case ADELIG:
+		case ADLIG:
 			table = "PERSON";
 			column = getColumnName(table, 2);
 			break;
@@ -114,77 +114,40 @@ public class QueryRequest {
 			table = "PERSON";
 			column = "NUMMERHESS";
 			break;
-		case ANREDE_TRAD:
-			table = "ANREDE_TRAD";
-			column = getColumnName(table, 2);
-			break;
-		case ANREDE_NORM:
+		case ANREDE:
 			table = "ANREDE_NORM";
 			column = getColumnName(table, 2);
 			break;
-		case TITEL_TRAD:
-			table = "TITEL_TRAD";
-			column = getColumnName(table, 2);
-			break;
-		case TITEL_NORM:
+		case TITEL:
 			table = "TITEL_NORM";
 			column = getColumnName(table, 2);
 			break;
-		case VORNAME_TRAD:
-			table = "VORNAME_TRAD";
-			column = getColumnName(table, 2);
-			break;
-		case VORNAME_NORM:
+		case VORNAME:
 			table = "VORNAME_NORM";
 			column = getColumnName(table, 2);
 			break;
-		case NACHNAME_TRAD:
+		case NACHNAME:
 			table = "NAME_TRAD";
 			column = getColumnName(table, 2);
 			break;
-		case NACHNAME_NORM:
-			table = "NAME_TRAD";
-			column = getColumnName(table, 2);
-			break;
-		case WIRTSCHAFTSLAGE_TRAD:
+		case WIRTSCHAFTSLAGE:
 			table = "WIRTSCHAFTSLAGE_TRAD";
 			column = getColumnName(table, 2);
 			break;
-		case WIRTSCHAFTSLAGE_NORM:
-			table = "WIRTSCHAFTSLAGE_NORM";
-			column = getColumnName(table, 2);
-			break;
-		case ORT_TRAD:
+		case ORT:
 			table = "ORT_TRAD";
 			column = getColumnName(table, 2);
 			break;
-		case ORT_NORM:
-			table = "ORT_NORM";
-			column = getColumnName(table, 2);
-			break;
-		case ORT_ABWEICHUNG_NORM:
-			// TODO Hier muss dann auch die Anmerkung mit zurückgegeben werden.
-			table = "ORT_ABWEICHUNG_NORM";
-			column = getColumnName(table, 2);
-			break;
-		case FACH_TRAD:
+		case FACH:
 			table = "FACH_TRAD";
-			column = getColumnName(table, 2);
-			break;
-		case FACH_NORM:
-			table = "FACH_NORM";
 			column = getColumnName(table, 2);
 			break;
 		case FAKULTAETEN:
 			table = "FAKULTAETEN";
 			column = getColumnName(table, 2);
 			break;
-		case SEMINAR_TRAD:
+		case SEMINAR:
 			table = "SEMINAR_TRAD";
-			column = getColumnName(table, 2);
-			break;
-		case SEMINAR_NORM:
-			table = "SEMINAR_NORM";
 			column = getColumnName(table, 2);
 			break;
 		case GRADUIERT:
