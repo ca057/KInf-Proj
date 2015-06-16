@@ -184,35 +184,6 @@ public class Controller {
 		return inputFieldCounter;
 	}
 
-	/**
-	 * Builds three arrays with all user input fields of the user interface and
-	 * their corresponding {@link SearchFieldKeys} and {@link SourceKeys}.
-	 */
-	private void generateArraysWithInputs() {
-		inputSearchFKey = new SearchFieldKeys[inputFieldCounter];
-		inputSourceKey = new int[inputFieldCounter];
-
-		inputSearchFKey[0] = SearchFieldKeys.ANREDE_TRAD;
-		inputSourceKey[0] = SourceKeys.STANDARD;
-
-		inputSearchFKey[1] = SearchFieldKeys.ANREDE_NORM;
-		inputSourceKey[1] = SourceKeys.NORM;
-
-		inputSearchFKey[2] = SearchFieldKeys.TITEL_TRAD;
-		inputSourceKey[2] = SourceKeys.STANDARD;
-
-		inputSearchFKey[3] = SearchFieldKeys.TITEL_NORM;
-		inputSourceKey[3] = SourceKeys.NORM;
-
-		// FIXME korrekte SearchFieldKeys und SourceKeys abhängig von speichern
-		inputSearchFKey[4] = SearchFieldKeys.VORNAME_TRAD;
-		inputSourceKey[4] = SourceKeys.STANDARD;
-
-		// FIXME korrekte SearchFieldKeys und SourceKeys speichern
-		inputSearchFKey[5] = SearchFieldKeys.NACHNAME_TRAD;
-		inputSourceKey[5] = SourceKeys.STANDARD;
-	}
-
 	private Object[] generateArrayWithInputValues() {
 		Object[] inputFields = new Object[inputFieldCounter];
 
@@ -283,14 +254,12 @@ public class Controller {
 	 */
 	@FXML
 	private void clearSearchInput() {
-		/*
-		 * if (inputFields.length == 0) { throw new RuntimeException(
-		 * "Es konnten keine Felder gefunden werden, die geleert werden können."
-		 * ); } for (int i = 0; i < inputFields.length; i++) { if
-		 * (inputFields[i] instanceof TextField) { ((TextField)
-		 * inputFields[i]).clear(); } else { // TODO andere input-typen
-		 * implementieren und continue entfernen continue; } }
-		 */
+		searchCategory_person_anrede.clear();
+		searchCategory_person_anredenorm.clear();
+		searchCategory_person_titel.clear();
+		searchCategory_person_titelnorm.clear();
+		searchCategory_person_vornameinput.clear();
+		searchCategory_person_nachnameinput.clear();
 	}
 
 	/**
