@@ -2,8 +2,8 @@ package de.uniba.kinf.projm.hylleblomst.logic;
 
 public class SQLShred {
 
-	public String getPersonJoin(String table) {
-		if (table.endsWith("ANREDE_NORM")) {
+	String getPersonJoin(String table) {
+		if (table.equals("ANREDE_NORM")) {
 			String table2 = "Hylleblomst."
 					+ table.substring(0, table.indexOf("_"));
 			String table3 = table2 + "_TRAD";
@@ -21,5 +21,9 @@ public class SQLShred {
 					+ " CROSS JOIN Hylleblomst.PERSON";
 		}
 		return "";
+	}
+
+	String getDate(int[] input) {
+		return null;
 	}
 }

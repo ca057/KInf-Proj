@@ -85,30 +85,18 @@ public class QueryRequest {
 		case STUDIENJAHR:
 			table = "PERSON";
 			column = getColumnName(table, 2);
-			break;
-		case STUDJAHR_VON:
-			// TODO bei von bis wird es ein Problem geben, oder?
-			table = "PERSON";
-			column = getColumnName(table, 2);
-			break;
-		case STUDJAHR_BIS:
-			// TODO bei von bis wird es ein Problem geben, oder?
-			table = "PERSON";
-			column = getColumnName(table, 2);
+			if (input instanceof Integer) {
+				sqlShred.getDate((int[]) input);
+			}
 			break;
 		case EINSCHREIBEDATUM_TAGE:
 			// TODO Das muss am besten vorher in ein Datum umgewandelt werden.
 			// Oder übergibt Christian hier eh keine Einzeldaten?
 			table = "PERSON";
 			column = "";
-			break;
-		case EINSCHREIBEDATUM_MONATE:
-			table = "PERSON";
-			column = "";
-			break;
-		case EINSCHREIBEDATUM_JAHRE:
-			table = "PERSON";
-			column = "";
+			if (input instanceof Integer) {
+				sqlShred.getDate((int[]) input);
+			}
 			break;
 		case ANMERKUNGEN:
 			table = "PERSON";
@@ -216,7 +204,7 @@ public class QueryRequest {
 					"Das zugehörige Tabellenelement für Suchfeld " + key.name()
 							+ " ist nicht definiert.");
 		}
-		personJoin = new SQLShred().getPersonJoin(table);
+		personJoin = sqlShred.getPersonJoin(table);
 	}
 
 	public String getColumnName(String table, int i) {
