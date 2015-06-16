@@ -16,4 +16,7 @@ public class SourceKeys {
 	public static final Integer HSJ_3 = 10;
 	public static final Integer AUB_V_E38 = 11;
 
+	public static final Integer bottom = ORT_NORM_AB;
+	public static final Integer top = AUB_V_E38;
+
 }

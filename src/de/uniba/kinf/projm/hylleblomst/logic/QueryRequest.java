@@ -16,11 +16,11 @@ public class QueryRequest {
 	private String personJoin;
 	private SQLShred sqlShred;
 
-	public QueryRequest(SearchFieldKeys columns, Object input, int source) {
-		setSearchField(columns);
+	public QueryRequest(SearchFieldKeys searchField, Object input, int source) {
+		setSearchField(searchField);
 		setInput(input);
 		setSource(source);
-		searchFieldKeyToDatabaseData(columns);
+		searchFieldKeyToDatabaseData();
 	}
 
 	QueryRequest() {
@@ -32,7 +32,7 @@ public class QueryRequest {
 
 	public void setSearchField(SearchFieldKeys columns) {
 		this.searchField = columns;
-		searchFieldKeyToDatabaseData(columns);
+		searchFieldKeyToDatabaseData();
 	}
 
 	public Object getInput() {
@@ -72,102 +72,146 @@ public class QueryRequest {
 	// TODO Collection/ List durchgehen, PreparedStatement mit so vielen ?
 	// (person.vorname=?) wie Queries, dann nochmal durchgehen und fragezeichen
 	// füllen. WICHTIG: Collection muss sortiert sein!
-	private void searchFieldKeyToDatabaseData(SearchFieldKeys key) {
-		switch (key) {
-		case ADLIG:
-			table = "PERSON";
-			column = getColumnName(table, 2);
-			break;
-		case JESUIT:
-			table = "PERSON";
-			column = getColumnName(table, 2);
-			break;
-		case STUDIENJAHR:
-			table = "PERSON";
-			column = getColumnName(table, 2);
-			if (input instanceof Integer) {
-				sqlShred.getDate((int[]) input);
+	private void searchFieldKeyToDatabaseData() {
+		if (source == SourceKeys.ORT_NORM_AB) {
+			if (searchField.equals(SearchFieldKeys.ORT)) {
+				// TODO Hier muss dann auch die Anmerkung mit zurückgegeben
+				// werden.
+				table = "ORT_ABWEICHUNG_NORM";
 			}
-			break;
-		case EINSCHREIBEDATUM:
-			// TODO Das muss am besten vorher in ein Datum umgewandelt werden.
-			// Oder übergibt Christian hier eh keine Einzeldaten?
-			table = "PERSON";
-			column = "";
-			if (input instanceof Integer) {
-				sqlShred.getDate((int[]) input);
+			column = getColumnName(table, 2);
+			personJoin = new SQLShred().getPersonJoin(table, source);
+		} else if (source > SourceKeys.bottom && source < SourceKeys.top) {
+			switch (searchField) {
+			case ADLIG:
+				table = "PERSON";
+				column = getColumnName(table, 2);
+				break;
+			case JESUIT:
+				table = "PERSON";
+				column = getColumnName(table, 2);
+				break;
+			case STUDIENJAHR:
+				table = "PERSON";
+				column = getColumnName(table, 2);
+				if (input instanceof Integer) {
+					input = sqlShred.getDate((int[]) input);
+				}
+				break;
+			case EINSCHREIBEDATUM:
+				// TODO Das muss noch implementiert werden.
+				table = "PERSON";
+				column = "";
+				if (input instanceof Integer) {
+					input = sqlShred.getDate((int[]) input);
+				}
+				break;
+			case ANMERKUNGEN:
+				table = "PERSON";
+				column = "ANMKERUNG";
+				break;
+			case NUMMER:
+				table = "PERSON";
+				column = "PERSONID";
+				break;
+			case SEITE_ORIGINALE:
+				table = "PERSON";
+				column = "SEITEORIGINAL";
+				break;
+			case NUMMER_HESS:
+				table = "PERSON";
+				column = "NUMMERHESS";
+				break;
+			case ANREDE:
+				if (source == SourceKeys.NORM) {
+					table = "ANREDE_NORM";
+				} else {
+					table = "ANREDE_TRAD";
+				}
+				column = getColumnName(table, 2);
+				break;
+			case TITEL:
+				if (source == SourceKeys.NORM) {
+					table = "TITEL_NORM";
+				} else {
+					table = "TITEL_TRAD";
+				}
+				column = getColumnName(table, 2);
+				break;
+			case VORNAME:
+				if (source == SourceKeys.NORM) {
+					table = "VORNAME_NORM";
+				} else {
+					table = "VORNAME_TRAD";
+				}
+				column = getColumnName(table, 2);
+				break;
+			case NACHNAME:
+				if (source == SourceKeys.NORM) {
+					table = "NAME_NORM";
+				} else {
+					table = "NAME_TRAD";
+				}
+				column = getColumnName(table, 2);
+				break;
+			case WIRTSCHAFTSLAGE:
+				if (source == SourceKeys.NORM) {
+					table = "WIRTSCHAFTSLAGE_NORM";
+				} else {
+					table = "WIRTSCHAFTSLAGE_TRAD";
+				}
+				column = getColumnName(table, 2);
+				break;
+			case ORT:
+				if (source == SourceKeys.NORM) {
+					table = "ORT_NORM";
+				} else {
+					table = "ORT_TRAD";
+				}
+				break;
+			case FACH:
+				if (source == SourceKeys.NORM) {
+					table = "FACH_NORM";
+				} else {
+					table = "FACH_TRAD";
+				}
+				column = getColumnName(table, 2);
+				break;
+			case FAKULTAETEN:
+				table = "FAKULTAETEN";
+				column = getColumnName(table, 2);
+				break;
+			case SEMINAR:
+				if (source == SourceKeys.NORM) {
+					table = "SEMINAR_NORM";
+				} else {
+					table = "SEMINAR_TRAD";
+				}
+				column = getColumnName(table, 2);
+				break;
+			case GRADUIERT:
+				table = "PERSON";
+				column = "GRADUIERT";
+				break;
+			case ZUSAETZE:
+				table = "ZUSAETZE";
+				column = getColumnName(table, 2);
+				break;
+			case FUNDORTE:
+				table = "FUNDORTE";
+				column = getColumnName(table, 2);
+				break;
+			default:
+				throw new IllegalArgumentException(
+						"Das zugehörige Tabellenelement für Suchfeld "
+								+ searchField.name() + " ist nicht definiert.");
 			}
-			break;
-		case ANMERKUNGEN:
-			table = "PERSON";
-			column = "ANMKERUNG";
-			break;
-		case NUMMER:
-			table = "PERSON";
-			column = "PERSONID";
-			break;
-		case SEITE_ORIGINALE:
-			table = "PERSON";
-			column = "SEITEORIGINAL";
-			break;
-		case NUMMER_HESS:
-			table = "PERSON";
-			column = "NUMMERHESS";
-			break;
-		case ANREDE:
-			table = "ANREDE_NORM";
-			column = getColumnName(table, 2);
-			break;
-		case TITEL:
-			table = "TITEL_NORM";
-			column = getColumnName(table, 2);
-			break;
-		case VORNAME:
-			table = "VORNAME_NORM";
-			column = getColumnName(table, 2);
-			break;
-		case NACHNAME:
-			table = "NAME_TRAD";
-			column = getColumnName(table, 2);
-			break;
-		case WIRTSCHAFTSLAGE:
-			table = "WIRTSCHAFTSLAGE_TRAD";
-			column = getColumnName(table, 2);
-			break;
-		case ORT:
-			table = "ORT_TRAD";
-			column = getColumnName(table, 2);
-			break;
-		case FACH:
-			table = "FACH_TRAD";
-			column = getColumnName(table, 2);
-			break;
-		case FAKULTAETEN:
-			table = "FAKULTAETEN";
-			column = getColumnName(table, 2);
-			break;
-		case SEMINAR:
-			table = "SEMINAR_TRAD";
-			column = getColumnName(table, 2);
-			break;
-		case GRADUIERT:
-			table = "PERSON";
-			column = "GRADUIERT";
-			break;
-		case ZUSAETZE:
-			table = "ZUSAETZE";
-			column = getColumnName(table, 2);
-			break;
-		case FUNDORTE:
-			table = "FUNDORTE";
-			column = getColumnName(table, 2);
-			break;
-		default:
-			throw new IllegalArgumentException(
-					"Das zugehörige Tabellenelement für Suchfeld " + key.name()
-							+ " ist nicht definiert.");
+			personJoin = new SQLShred().getPersonJoin(table, source);
+		} else {
+			throw new IllegalArgumentException("Die Werte für Suchfeld "
+					+ searchField.toString() + " und Quelle " + source
+					+ " konnten keiner Tabelle und Spalte zugeordnet werden.");
 		}
-		personJoin = sqlShred.getPersonJoin(table);
 	}
 
 	public String getColumnName(String table, int i) {
