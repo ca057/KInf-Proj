@@ -89,7 +89,7 @@ public class QueryRequest {
 				sqlShred.getDate((int[]) input);
 			}
 			break;
-		case EINSCHREIBEDATUM_TAGE:
+		case EINSCHREIBEDATUM:
 			// TODO Das muss am besten vorher in ein Datum umgewandelt werden.
 			// Oder übergibt Christian hier eh keine Einzeldaten?
 			table = "PERSON";
