@@ -80,7 +80,7 @@ public class QueryRequest {
 				table = "ORT_ABWEICHUNG_NORM";
 			}
 			column = getColumnName(table, 2);
-			personJoin = new SQLShred().getPersonJoin(table, source);
+			personJoin = new SQLShred().getPersonJoin(table, column, source);
 		} else if (source > SourceKeys.bottom && source < SourceKeys.top) {
 			switch (searchField) {
 			case ADLIG:
@@ -206,7 +206,7 @@ public class QueryRequest {
 						"Das zugehörige Tabellenelement für Suchfeld "
 								+ searchField.name() + " ist nicht definiert.");
 			}
-			personJoin = new SQLShred().getPersonJoin(table, source);
+			personJoin = new SQLShred().getPersonJoin(table, column, source);
 		} else {
 			throw new IllegalArgumentException("Die Werte für Suchfeld "
 					+ searchField.toString() + " und Quelle " + source
