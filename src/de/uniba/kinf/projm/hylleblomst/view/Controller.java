@@ -3,6 +3,7 @@ package de.uniba.kinf.projm.hylleblomst.view;
 import java.util.List;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitMenuButton;
@@ -76,6 +77,9 @@ public class Controller {
 
 	@FXML
 	MenuItem mainMenu_help_about;
+
+	@FXML
+	Accordion searchCategories;
 
 	@FXML
 	TitledPane searchCategory_person;
@@ -162,8 +166,12 @@ public class Controller {
 	TextArea infoArea;
 
 	/**
-	 * Default constructor for a new Controller. When called, the three arrays
-	 * with input fields and keys are set.
+	 * Default constructor for a new Controller. When called, the array with
+	 * {@link SearchFieldKeys} and {@link SourceKeys} is build and set, the
+	 * instances of the {@link QueriesImpl}, {@link UIHelper} and
+	 * {@link SearchController} are instantiated.
+	 * 
+	 * Some more setup is done for a nice user interaction.
 	 */
 	public Controller() {
 		generateArraysWithSearchAndSourceKeys();
@@ -172,18 +180,43 @@ public class Controller {
 		searchCtrl = new SearchController(inputSearchFKey, inputSourceKey);
 	}
 
+	/**
+	 * Returns an array of {@link SearchFieldKeys} corresponding to all input
+	 * fields of the GUI.
+	 * 
+	 * @return the array with {@link SearchFieldKeys}
+	 */
 	SearchFieldKeys[] getInputSearchFKey() {
 		return inputSearchFKey;
 	}
 
+	/**
+	 * Returns an array of {@link SourceKeys} corresponding to all input fields
+	 * of the GUI.
+	 * 
+	 * @return the array with {@link SourceKeys}
+	 */
 	int[] getInputSourceKey() {
 		return inputSourceKey;
 	}
 
+	/**
+	 * Returns the amount of input fields as an {@code int}.
+	 * 
+	 * @return the amount of input fields as {@code int}
+	 */
 	int getInputFieldCounter() {
 		return inputFieldCounter;
 	}
 
+	/**
+	 * Builds an array of all input fields and their value at the moment of
+	 * building. The order of inputs corresponds with the order of the keys in
+	 * {@link #generateArraysWithSearchAndSourceKeys()}. The method does not
+	 * check, if a input was done or if the input field was left empty.
+	 * 
+	 * @return the array with all inputs
+	 */
 	private Object[] generateArrayWithInputValues() {
 		Object[] inputFields = new Object[inputFieldCounter];
 
@@ -197,6 +230,10 @@ public class Controller {
 		return inputFields;
 	}
 
+	/**
+	 * The two arrays with {@link SearchFieldKeys} and {@link SourceKeys} are
+	 * build.
+	 */
 	private void generateArraysWithSearchAndSourceKeys() {
 		inputSearchFKey = new SearchFieldKeys[inputFieldCounter];
 		inputSourceKey = new int[inputFieldCounter];
@@ -213,11 +250,13 @@ public class Controller {
 		inputSearchFKey[3] = SearchFieldKeys.TITEL_NORM;
 		inputSourceKey[3] = SourceKeys.NORM;
 
-		// FIXME korrekte SearchFieldKeys und SourceKeys abhängig von speichern
+		// FIXME korrekte SearchFieldKeys und SourceKeys abhängig von Auswahl
+		// speichern
 		inputSearchFKey[4] = SearchFieldKeys.VORNAME_TRAD;
 		inputSourceKey[4] = SourceKeys.STANDARD;
 
-		// FIXME korrekte SearchFieldKeys und SourceKeys speichern
+		// FIXME korrekte SearchFieldKeys und SourceKeys abhängig von Auswahl
+		// speichern
 		inputSearchFKey[5] = SearchFieldKeys.NACHNAME_TRAD;
 		inputSourceKey[5] = SourceKeys.STANDARD;
 	}
@@ -232,6 +271,7 @@ public class Controller {
 	@FXML
 	private void startSearch() {
 		List<QueryRequest> requestList;
+
 		try {
 			requestList = searchCtrl
 					.prepareInputForSearch(generateArrayWithInputValues());
@@ -239,8 +279,10 @@ public class Controller {
 				throw new IllegalArgumentException(
 						"Liste mit Suchanfrage hat keinen Wert (= null) oder enthält keine Werte.");
 			}
+
 			// FIXME setInfoText am entfernen, nur für Testzwecke
 			setInfoTextExtendedSearch(requestList);
+
 			querieImpl.search(requestList);
 		} catch (Exception /* | IllegalArgumentException */e) {
 			// FIXME korrekte Exceptions fangen!
@@ -260,6 +302,7 @@ public class Controller {
 		searchCategory_person_titelnorm.clear();
 		searchCategory_person_vornameinput.clear();
 		searchCategory_person_nachnameinput.clear();
+		infoArea.clear();
 	}
 
 	/**
