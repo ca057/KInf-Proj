@@ -46,11 +46,6 @@ public class Controller {
 	private SearchFieldKeys[] inputSearchFKey;
 
 	/**
-	 * Array stores all input fields of the graphical user interface.
-	 */
-	private Object[] inputFields;
-
-	/**
 	 * Array stores for every input field the corresponding source key.
 	 */
 	private int[] inputSourceKey;
@@ -179,10 +174,6 @@ public class Controller {
 
 	SearchFieldKeys[] getInputSearchFKey() {
 		return inputSearchFKey;
-	}
-
-	Object[] getInputFields() {
-		return inputFields;
 	}
 
 	int[] getInputSourceKey() {
