@@ -1,32 +1,45 @@
 package de.uniba.kinf.projm.hylleblomst.logic;
 
+import java.sql.SQLException;
 import java.util.Collection;
-import java.util.HashSet;
 
 public class QueriesImpl implements Queries {
 	DBAccess db;
-	public HashSet<String> set = new HashSet<String>();
 
 	@Override
-	public void search(Collection<QueryRequest> queryRequests) {
-
-		buildQuery(queryRequests);
+	public void search(Collection<QueryRequest> queryRequests)
+			throws SQLException {
+		startQuery(buildQuery(queryRequests));
 	}
 
-	private void buildQuery(Collection<QueryRequest> queryRequests) {
+	private String buildQuery(Collection<QueryRequest> queryRequests)
+			throws SQLException {
 		// In WHERE auch SELECT möglich!!
-		StringBuffer query = new StringBuffer();
+		String query = "";
+		for (QueryRequest qr : queryRequests) {
+			query = "SELECT * FROM " + qr.getPersonJoin() + " WHERE "
+					+ "Hylleblomst." + qr.getTable() + "." + qr.getColumn()
+					+ " = " + "'" + qr.getInput() + "'";
+		}
+		System.out.println(query);
+		return query;
+	}
 
-		String dbURL = "jdbc:derby:Users/Hannes/git/KInf-Proj/db/MyDB";
-		String user = "admin";
-		String password = "password";
-		db = new DBAccess(dbURL, user, password);
+	private void startQuery(String query) throws SQLException {
+		db = new DBAccess("jdbc:derby:./db/MyDB;create=true", "admin",
+				"password");
+		db.startQuery(query);
+	}
+
+	@Override
+	public void searchPerson(int id) {
+		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void setDatabase(String dbURL, String user, String password) {
-		db = new DBAccess(dbURL, user, password);
+
 	}
 
 }
