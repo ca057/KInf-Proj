@@ -13,6 +13,8 @@ public class QueryRequest {
 	private Object input;
 	private int source;
 	private String table;
+	private String personJoin;
+	private SQLShred sqlShred;
 
 	public QueryRequest(SearchFieldKeys columns, Object input, int source) {
 		setSearchField(columns);
@@ -30,6 +32,7 @@ public class QueryRequest {
 
 	public void setSearchField(SearchFieldKeys columns) {
 		this.searchField = columns;
+		searchFieldKeyToDatabaseData(columns);
 	}
 
 	public Object getInput() {
@@ -54,6 +57,10 @@ public class QueryRequest {
 
 	public String getColumn() {
 		return column;
+	}
+
+	public String getPersonJoin() {
+		return personJoin;
 	}
 
 	/**
@@ -209,6 +216,7 @@ public class QueryRequest {
 					"Das zugehörige Tabellenelement für Suchfeld " + key.name()
 							+ " ist nicht definiert.");
 		}
+		personJoin = new SQLShred().getPersonJoin(table);
 	}
 
 	public String getColumnName(String table, int i) {
