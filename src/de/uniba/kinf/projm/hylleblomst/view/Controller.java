@@ -43,35 +43,23 @@ public class Controller {
 	/**
 	 * Array stores for every input field the corresponding search field key.
 	 */
-	SearchFieldKeys[] inputSearchFKey;
+	private SearchFieldKeys[] inputSearchFKey;
 
 	/**
 	 * Array stores all input fields of the graphical user interface.
 	 */
-	Object[] inputFields;
+	private Object[] inputFields;
 
 	/**
 	 * Array stores for every input field the corresponding source key.
 	 */
-	int[] inputSourceKey;
+	private int[] inputSourceKey;
 
 	/**
 	 * Stores the number of input fields for usable generation of input field
 	 * arrays.
 	 */
 	private int inputFieldCounter = 6;
-
-	/**
-	 * Default constructor for a new Controller. When called, the three arrays
-	 * with input fields and keys are set.
-	 */
-	public Controller() {
-		generateArraysWithInputs();
-		querieImpl = new QueriesImpl();
-		ui = new UIHelper();
-		searchCtrl = new SearchController(this, inputSearchFKey, inputFields,
-				inputSourceKey);
-	}
 
 	@FXML
 	BorderPane root;
@@ -178,6 +166,17 @@ public class Controller {
 	@FXML
 	TextArea infoArea;
 
+	/**
+	 * Default constructor for a new Controller. When called, the three arrays
+	 * with input fields and keys are set.
+	 */
+	public Controller() {
+		generateArraysWithSearchAndSourceKeys();
+		querieImpl = new QueriesImpl();
+		ui = new UIHelper();
+		searchCtrl = new SearchController(inputSearchFKey, inputSourceKey);
+	}
+
 	SearchFieldKeys[] getInputSearchFKey() {
 		return inputSearchFKey;
 	}
@@ -200,33 +199,64 @@ public class Controller {
 	 */
 	private void generateArraysWithInputs() {
 		inputSearchFKey = new SearchFieldKeys[inputFieldCounter];
-		inputFields = new Object[inputFieldCounter];
 		inputSourceKey = new int[inputFieldCounter];
 
 		inputSearchFKey[0] = SearchFieldKeys.ANREDE_TRAD;
-		inputFields[0] = (TextField) searchCategory_person_anrede;
 		inputSourceKey[0] = SourceKeys.STANDARD;
 
 		inputSearchFKey[1] = SearchFieldKeys.ANREDE_NORM;
-		inputFields[1] = (TextField) searchCategory_person_anredenorm;
 		inputSourceKey[1] = SourceKeys.NORM;
 
 		inputSearchFKey[2] = SearchFieldKeys.TITEL_TRAD;
-		inputFields[2] = searchCategory_person_titel;
 		inputSourceKey[2] = SourceKeys.STANDARD;
 
 		inputSearchFKey[3] = SearchFieldKeys.TITEL_NORM;
-		inputFields[3] = searchCategory_person_titelnorm;
 		inputSourceKey[3] = SourceKeys.NORM;
 
 		// FIXME korrekte SearchFieldKeys und SourceKeys abhängig von speichern
 		inputSearchFKey[4] = SearchFieldKeys.VORNAME_TRAD;
-		inputFields[4] = searchCategory_person_vornameinput;
 		inputSourceKey[4] = SourceKeys.STANDARD;
 
 		// FIXME korrekte SearchFieldKeys und SourceKeys speichern
 		inputSearchFKey[5] = SearchFieldKeys.NACHNAME_TRAD;
-		inputFields[5] = searchCategory_person_nachnameinput;
+		inputSourceKey[5] = SourceKeys.STANDARD;
+	}
+
+	private Object[] generateArrayWithInputValues() {
+		Object[] inputFields = new Object[inputFieldCounter];
+
+		inputFields[0] = searchCategory_person_anrede.getText();
+		inputFields[1] = searchCategory_person_anredenorm.getText();
+		inputFields[2] = searchCategory_person_titel.getText();
+		inputFields[3] = searchCategory_person_titelnorm.getText();
+		inputFields[4] = searchCategory_person_vornameinput.getText();
+		inputFields[5] = searchCategory_person_nachnameinput.getText();
+
+		return inputFields;
+	}
+
+	private void generateArraysWithSearchAndSourceKeys() {
+		inputSearchFKey = new SearchFieldKeys[inputFieldCounter];
+		inputSourceKey = new int[inputFieldCounter];
+
+		inputSearchFKey[0] = SearchFieldKeys.ANREDE_TRAD;
+		inputSourceKey[0] = SourceKeys.STANDARD;
+
+		inputSearchFKey[1] = SearchFieldKeys.ANREDE_NORM;
+		inputSourceKey[1] = SourceKeys.NORM;
+
+		inputSearchFKey[2] = SearchFieldKeys.TITEL_TRAD;
+		inputSourceKey[2] = SourceKeys.STANDARD;
+
+		inputSearchFKey[3] = SearchFieldKeys.TITEL_NORM;
+		inputSourceKey[3] = SourceKeys.NORM;
+
+		// FIXME korrekte SearchFieldKeys und SourceKeys abhängig von speichern
+		inputSearchFKey[4] = SearchFieldKeys.VORNAME_TRAD;
+		inputSourceKey[4] = SourceKeys.STANDARD;
+
+		// FIXME korrekte SearchFieldKeys und SourceKeys speichern
+		inputSearchFKey[5] = SearchFieldKeys.NACHNAME_TRAD;
 		inputSourceKey[5] = SourceKeys.STANDARD;
 	}
 
@@ -241,7 +271,8 @@ public class Controller {
 	private void startSearch() {
 		List<QueryRequest> requestList;
 		try {
-			requestList = searchCtrl.prepareInputForSearch();
+			requestList = searchCtrl
+					.prepareInputForSearch(generateArrayWithInputValues());
 			if (requestList == null || requestList.size() == 0) {
 				throw new IllegalArgumentException(
 						"Liste mit Suchanfrage hat keinen Wert (= null) oder enthält keine Werte.");
@@ -261,18 +292,14 @@ public class Controller {
 	 */
 	@FXML
 	private void clearSearchInput() {
-		if (inputFields.length == 0) {
-			throw new RuntimeException(
-					"Es konnten keine Felder gefunden werden, die geleert werden können.");
-		}
-		for (int i = 0; i < inputFields.length; i++) {
-			if (inputFields[i] instanceof TextField) {
-				((TextField) inputFields[i]).clear();
-			} else {
-				// TODO andere input-typen implementieren und continue entfernen
-				continue;
-			}
-		}
+		/*
+		 * if (inputFields.length == 0) { throw new RuntimeException(
+		 * "Es konnten keine Felder gefunden werden, die geleert werden können."
+		 * ); } for (int i = 0; i < inputFields.length; i++) { if
+		 * (inputFields[i] instanceof TextField) { ((TextField)
+		 * inputFields[i]).clear(); } else { // TODO andere input-typen
+		 * implementieren und continue entfernen continue; } }
+		 */
 	}
 
 	/**
