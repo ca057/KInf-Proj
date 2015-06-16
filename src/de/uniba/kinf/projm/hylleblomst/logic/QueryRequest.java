@@ -9,15 +9,16 @@ import java.sql.Statement;
 
 public class QueryRequest {
 	private SearchFieldKeys searchField;
+	private String column;
 	private Object input;
 	private int source;
 	private String table;
-	private String column;
 
 	public QueryRequest(SearchFieldKeys columns, Object input, int source) {
 		setSearchField(columns);
 		setInput(input);
 		setSource(source);
+		searchFieldKeyToDatabaseData(columns);
 	}
 
 	QueryRequest() {
@@ -64,8 +65,7 @@ public class QueryRequest {
 	// TODO Collection/ List durchgehen, PreparedStatement mit so vielen ?
 	// (person.vorname=?) wie Queries, dann nochmal durchgehen und fragezeichen
 	// füllen. WICHTIG: Collection muss sortiert sein!
-
-	public void searchFieldKeyToDatabaseData(SearchFieldKeys key) {
+	private void searchFieldKeyToDatabaseData(SearchFieldKeys key) {
 		switch (key) {
 		case ADELIG:
 			table = "PERSON";
@@ -218,13 +218,12 @@ public class QueryRequest {
 		String result = "";
 		try (Connection con = DriverManager
 				.getConnection(dbURL, user, password);
+
 				Statement stmt = con.createStatement(
 						ResultSet.TYPE_SCROLL_INSENSITIVE,
-						ResultSet.CONCUR_READ_ONLY)) {
-
-			String querySql = String.format("SELECT * FROM hylleblomst.%s",
-					table);
-			ResultSet rs = stmt.executeQuery(querySql);
+						ResultSet.CONCUR_READ_ONLY);
+				ResultSet rs = stmt.executeQuery(String.format(
+						"SELECT * FROM hylleblomst.%s", table));) {
 			ResultSetMetaData rsmd = rs.getMetaData();
 			result = rsmd.getColumnName(i);
 		} catch (SQLException e) {
