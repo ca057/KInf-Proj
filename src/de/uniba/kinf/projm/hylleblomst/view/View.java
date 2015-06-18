@@ -24,7 +24,7 @@ import de.uniba.kinf.projm.hylleblomst.logic.SourceKeys;
  * @author ca
  *
  */
-public class Controller {
+public class View {
 	/**
 	 * UIHelper supports a nice user interaction.
 	 */
@@ -157,9 +157,9 @@ public class Controller {
 	 * {@link SearchController} are instantiated.
 	 * 
 	 */
-	public Controller() {
+	public View() {
 		ui = new UIHelper();
-		searchCtrl = new SearchController(inputFieldCounter);
+		searchCtrl = new SearchController(this, inputFieldCounter);
 	}
 
 	/**

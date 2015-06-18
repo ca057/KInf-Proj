@@ -22,12 +22,15 @@ public class SearchController {
 	 */
 	private QueriesImpl querieImpl;
 
-	public SearchController(int inputCounter) {
+	View view;
+
+	public SearchController(View view, int inputCounter) {
 		if (inputCounter <= 0) {
 			throw new IllegalArgumentException(
 					"Anzahl der Eingabefelder kann nicht 0 oder kleiner sein, ist aber: "
 							+ inputCounter);
 		}
+		this.view = view;
 		this.inputCounter = inputCounter;
 		this.inputSearchFKey = generateSearchFieldKeyArray();
 		this.querieImpl = new QueriesImpl();
