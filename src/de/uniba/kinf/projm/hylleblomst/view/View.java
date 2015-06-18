@@ -269,7 +269,7 @@ public class View {
 	 * input. Collects the user input from all input fields prints it to the
 	 * info area.
 	 */
-	private void setInfoTextExtendedSearch(List<QueryRequest> requestList) {
+	void setInfoTextExtendedSearch(List<QueryRequest> requestList) {
 		String info = "Suchanfrage\n-----------\n";
 		if (requestList == null || requestList.size() == 0) {
 			info += "Keine Sucheingaben gefunden.";

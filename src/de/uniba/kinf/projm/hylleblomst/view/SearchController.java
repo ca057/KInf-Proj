@@ -60,11 +60,12 @@ public class SearchController {
 		}
 
 		try {
+			view.setInfoTextExtendedSearch(requestList);
 			querieImpl.search(requestList);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new RuntimeException("Fehler bei der Suche\nNachricht: "
-					+ e.getMessage() + "\nSQL-Status" + e.getSQLState());
+			throw new RuntimeException("Fehler bei der Suche\n"
+					+ e.getMessage());
 		}
 	}
 
