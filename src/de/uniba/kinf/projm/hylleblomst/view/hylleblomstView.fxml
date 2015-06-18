@@ -74,22 +74,7 @@
                                                       <Insets top="15.0" />
                                                    </VBox.margin>
                                                 </Label>
-                                                <SplitMenuButton fx:id="searchCategory_person_vornameselection" mnemonicParsing="false" text="Vornamenschreibweise auswählen">
-                                                  <items>
-                                                    <MenuItem fx:id="selection_vorname" mnemonicParsing="false" text="Vorname" />
-                                                    <MenuItem fx:id="selection_vornameNorm" mnemonicParsing="false" text="Vorname (normalisiert)" />
-                                                      <MenuItem fx:id="selection_vornameHSB" mnemonicParsing="false" text="Vorname HS B (AUB, I 11)" />
-                                                      <MenuItem fx:id="selection_vornameHSC" mnemonicParsing="false" text="Vorname HS C (AUB, I 13/1)" />
-                                                      <MenuItem fx:id="selection_vornameHSD" mnemonicParsing="false" text="Vorname HS D (AUB, I 13/2)" />
-                                                      <MenuItem fx:id="selection_vornameHSE" mnemonicParsing="false" text="Vorname HS E (AUB, I 9)" />
-                                                      <MenuItem fx:id="selection_vornameHSF" mnemonicParsing="false" text="Vorname HS F (AUB, I 8)" />
-                                                      <MenuItem fx:id="selection_vornameHSG" mnemonicParsing="false" text="Vorname HS G (AUB, I 6)" />
-                                                      <MenuItem fx:id="selection_vornameHSH" mnemonicParsing="false" text="Vorname HS H (AEB, Rep. I, Nr. 321)" />
-                                                      <MenuItem fx:id="selection_vornameHSI" mnemonicParsing="false" text="Vorname HS I (SB Bamberg, Msc.Add.3a)" />
-                                                      <MenuItem fx:id="selection_vornameHSJ" mnemonicParsing="false" text="Vorname HS J (SB Bamberg, Msc.Add.3)" />
-                                                      <MenuItem fx:id="selection_vornameAUB" mnemonicParsing="false" text="Vorname AUB, V E 38" />
-                                                  </items>
-                                                </SplitMenuButton>
+                                                <ComboBox fx:id="searchCategory_person_vornameselection" prefWidth="300.0" promptText="Vornamenschreibweise auswählen" />
                                                 <TextField fx:id="searchCategory_person_vornameinput" promptText="Vorname">
                                                    <VBox.margin>
                                                       <Insets top="5.0" />
@@ -100,12 +85,7 @@
                                                       <Insets top="15.0" />
                                                    </VBox.margin>
                                                 </Label>
-                                                <SplitMenuButton fx:id="searchCategory_person_nachnameselection" mnemonicParsing="false" text="Nachnamenschreibweise auswählen">
-                                                  <items>
-                                                    <MenuItem mnemonicParsing="false" text="Nachname" />
-                                                    <MenuItem mnemonicParsing="false" text="Nachname HS B (AUB, I 11)" />
-                                                  </items>
-                                                </SplitMenuButton>
+                                                <ComboBox fx:id="searchCategory_person_nachnameselection" prefWidth="270.0" promptText="Nachnamenschreibweise auswählen" />
                                                 <TextField fx:id="searchCategory_person_nachnameinput" promptText="Nachname">
                                                    <VBox.margin>
                                                       <Insets top="5.0" />
@@ -129,7 +109,7 @@
                                                       <Insets top="15.0" />
                                                    </VBox.margin>
                                                 </Label>
-                                                <ComboBox prefWidth="150.0" />
+                                                <ComboBox prefWidth="270.0" promptText="Quelle der wirtschaftl. Lage auswählen" />
                                                 <TextField maxWidth="300.0" prefWidth="300.0" promptText="Wirtschaftliche Lage">
                                                    <VBox.margin>
                                                       <Insets top="5.0" />
@@ -140,7 +120,7 @@
                                                       <Insets top="15.0" />
                                                    </VBox.margin>
                                                 </Label>
-                                                <ComboBox prefWidth="150.0" />
+                                                <ComboBox prefWidth="270.0" promptText="Ortsquelle auswählen" />
                                                 <TextField maxWidth="300.0" prefWidth="300.0" promptText="Ort">
                                                    <VBox.margin>
                                                       <Insets top="5.0" />
@@ -160,7 +140,7 @@
                                              </padding>
                                              <children>
                                                 <Label text="Studienfach" />
-                                                <ComboBox prefWidth="150.0" />
+                                                <ComboBox prefWidth="270.0" promptText="Studienfachquelle auswählen" />
                                                 <TextField promptText="Studienfach">
                                                    <VBox.margin>
                                                       <Insets top="5.0" />
@@ -177,7 +157,7 @@
                                                       <Insets top="15.0" />
                                                    </VBox.margin>
                                                 </Label>
-                                                <ComboBox prefWidth="150.0" />
+                                                <ComboBox prefWidth="270.0" promptText="Seminarquelle auswählen" />
                                                 <TextField promptText="Seminar">
                                                    <VBox.margin>
                                                       <Insets top="5.0" />
@@ -244,7 +224,7 @@
                                              </padding>
                                              <children>
                                                 <Label text="Zusätze" />
-                                                <ComboBox prefWidth="150.0" />
+                                                <ComboBox prefWidth="270.0" promptText="Quelle der Zusätze auswählen" />
                                                 <TextField promptText="Zusätze">
                                                    <VBox.margin>
                                                       <Insets top="5.0" />

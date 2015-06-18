@@ -5,8 +5,8 @@ import java.util.List;
 import javafx.fxml.FXML;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.SplitMenuButton;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -40,16 +40,6 @@ public class Controller {
 	 * QueriesImpl executes the search.
 	 */
 	private QueriesImpl querieImpl;
-
-	/**
-	 * Array stores for every input field the corresponding search field key.
-	 */
-	private SearchFieldKeys[] inputSearchFKey;
-
-	/**
-	 * Array stores for every input field the corresponding source key.
-	 */
-	private int[] inputSourceKey;
 
 	/**
 	 * Stores the number of input fields for usable generation of input field
@@ -97,7 +87,7 @@ public class Controller {
 	TextField searchCategory_person_titelnorm;
 
 	@FXML
-	SplitMenuButton searchCategory_person_vornameselection;
+	ComboBox searchCategory_person_vornameselection;
 
 	@FXML
 	MenuItem selection_vorname;
@@ -139,7 +129,7 @@ public class Controller {
 	TextField searchCategory_person_vornameinput;
 
 	@FXML
-	SplitMenuButton searchCategory_person_nachnameselection;
+	ComboBox searchCategory_person_nachnameselection;
 
 	@FXML
 	TextField searchCategory_person_nachnameinput;
@@ -174,30 +164,9 @@ public class Controller {
 	 * Some more setup is done for a nice user interaction.
 	 */
 	public Controller() {
-		generateArraysWithSearchAndSourceKeys();
 		querieImpl = new QueriesImpl();
 		ui = new UIHelper();
-		searchCtrl = new SearchController(inputSearchFKey, inputSourceKey);
-	}
-
-	/**
-	 * Returns an array of {@link SearchFieldKeys} corresponding to all input
-	 * fields of the GUI.
-	 * 
-	 * @return the array with {@link SearchFieldKeys}
-	 */
-	SearchFieldKeys[] getInputSearchFKey() {
-		return inputSearchFKey;
-	}
-
-	/**
-	 * Returns an array of {@link SourceKeys} corresponding to all input fields
-	 * of the GUI.
-	 * 
-	 * @return the array with {@link SourceKeys}
-	 */
-	int[] getInputSourceKey() {
-		return inputSourceKey;
+		searchCtrl = new SearchController(inputFieldCounter);
 	}
 
 	/**
@@ -212,8 +181,8 @@ public class Controller {
 	/**
 	 * Builds an array of all input fields and their value at the moment of
 	 * building. The order of inputs corresponds with the order of the keys in
-	 * {@link #generateArraysWithSearchAndSourceKeys()}. The method does not
-	 * check, if a input was done or if the input field was left empty.
+	 * {@link #generateArraysWithSourceFieldKeys()}. The method does not check,
+	 * if a input was done or if the input field was left empty.
 	 * 
 	 * @return the array with all inputs
 	 */
@@ -234,31 +203,21 @@ public class Controller {
 	 * The two arrays with {@link SearchFieldKeys} and {@link SourceKeys} are
 	 * build.
 	 */
-	private void generateArraysWithSearchAndSourceKeys() {
-		inputSearchFKey = new SearchFieldKeys[inputFieldCounter];
-		inputSourceKey = new int[inputFieldCounter];
+	private int[] generateArrayWithSourceFieldKeys() {
+		int[] inputSourceKey = new int[inputFieldCounter];
 
-		inputSearchFKey[0] = SearchFieldKeys.ANREDE;
 		inputSourceKey[0] = SourceKeys.STANDARD;
-
-		inputSearchFKey[1] = SearchFieldKeys.ANREDE;
 		inputSourceKey[1] = SourceKeys.NORM;
-
-		inputSearchFKey[2] = SearchFieldKeys.TITEL;
 		inputSourceKey[2] = SourceKeys.STANDARD;
-
-		inputSearchFKey[3] = SearchFieldKeys.TITEL;
 		inputSourceKey[3] = SourceKeys.NORM;
-
 		// FIXME korrekte SearchFieldKeys und SourceKeys abhängig von Auswahl
 		// speichern
-		inputSearchFKey[4] = SearchFieldKeys.VORNAME;
 		inputSourceKey[4] = SourceKeys.STANDARD;
-
 		// FIXME korrekte SearchFieldKeys und SourceKeys abhängig von Auswahl
 		// speichern
-		inputSearchFKey[5] = SearchFieldKeys.NACHNAME;
 		inputSourceKey[5] = SourceKeys.STANDARD;
+
+		return inputSourceKey;
 	}
 
 	/**
@@ -273,8 +232,9 @@ public class Controller {
 		List<QueryRequest> requestList;
 
 		try {
-			requestList = searchCtrl
-					.prepareInputForSearch(generateArrayWithInputValues());
+			requestList = searchCtrl.prepareInputForSearch(
+					generateArrayWithInputValues(),
+					generateArrayWithSourceFieldKeys());
 			if (requestList == null || requestList.size() == 0) {
 				throw new IllegalArgumentException(
 						"Liste mit Suchanfrage hat keinen Wert (= null) oder enthält keine Werte.");

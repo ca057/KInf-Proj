@@ -13,27 +13,25 @@ public class SearchController {
 	 */
 	SearchFieldKeys[] inputSearchFKey;
 
+	int inputCounter;
+
 	/**
 	 * Array stores all input fields of the graphical user interface.
 	 */
 	Object[] inputFields;
 
-	/**
-	 * Array stores for every input field the corresponding source key.
-	 */
-	int[] inputSourceKey;
-
-	public SearchController(SearchFieldKeys[] inputSearchFKey,
-			int[] inputSourceKey) {
-		if (inputSearchFKey == null || inputSourceKey == null) {
+	public SearchController(int inputCounter) {
+		if (inputCounter <= 0) {
 			throw new IllegalArgumentException(
-					"Übergebener Controller oder Arrays mit Eingabefeldern haben keinen Wert (= null).");
+					"Anzahl der Eingabefelder kann nicht 0 oder kleiner sein, ist aber: "
+							+ inputCounter);
 		}
-		this.inputSearchFKey = inputSearchFKey;
-		this.inputSourceKey = inputSourceKey;
+		this.inputCounter = inputCounter;
+		this.inputSearchFKey = generateSearchFieldKeyArray();
 	}
 
-	List<QueryRequest> prepareInputForSearch(Object[] inputValues) {
+	List<QueryRequest> prepareInputForSearch(Object[] inputValues,
+			int[] inputSourceKey) {
 		if (inputSearchFKey == null || inputSearchFKey.length == 0
 				|| inputSourceKey == null || inputSourceKey.length == 0) {
 			throw new IllegalArgumentException(
@@ -59,5 +57,18 @@ public class SearchController {
 			}
 		}
 		return requestList;
+	}
+
+	SearchFieldKeys[] generateSearchFieldKeyArray() {
+		SearchFieldKeys[] sfkArray = new SearchFieldKeys[inputCounter];
+
+		sfkArray[0] = SearchFieldKeys.ANREDE;
+		sfkArray[1] = SearchFieldKeys.ANREDE;
+		sfkArray[2] = SearchFieldKeys.TITEL;
+		sfkArray[3] = SearchFieldKeys.TITEL;
+		sfkArray[4] = SearchFieldKeys.VORNAME;
+		sfkArray[5] = SearchFieldKeys.NACHNAME;
+
+		return sfkArray;
 	}
 }
