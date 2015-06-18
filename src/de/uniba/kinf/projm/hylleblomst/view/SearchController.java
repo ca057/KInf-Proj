@@ -1,8 +1,10 @@
 package de.uniba.kinf.projm.hylleblomst.view;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.uniba.kinf.projm.hylleblomst.logic.QueriesImpl;
 import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
 import de.uniba.kinf.projm.hylleblomst.logic.SearchFieldKeys;
 
@@ -16,9 +18,9 @@ public class SearchController {
 	int inputCounter;
 
 	/**
-	 * Array stores all input fields of the graphical user interface.
+	 * QueriesImpl executes the search.
 	 */
-	Object[] inputFields;
+	private QueriesImpl querieImpl;
 
 	public SearchController(int inputCounter) {
 		if (inputCounter <= 0) {
@@ -28,10 +30,10 @@ public class SearchController {
 		}
 		this.inputCounter = inputCounter;
 		this.inputSearchFKey = generateSearchFieldKeyArray();
+		this.querieImpl = new QueriesImpl();
 	}
 
-	List<QueryRequest> prepareInputForSearch(Object[] inputValues,
-			int[] inputSourceKey) {
+	void prepareInputForSearch(Object[] inputValues, int[] inputSourceKey) {
 		if (inputSearchFKey == null || inputSearchFKey.length == 0
 				|| inputSourceKey == null || inputSourceKey.length == 0) {
 			throw new IllegalArgumentException(
@@ -51,12 +53,16 @@ public class SearchController {
 				requestList.add(tmpReq);
 			} else {
 				continue;
-				// TODO Fehler werfen falls Eingabetyp nicht gefunden wurde
-				// throw new
-				// RuntimeException("Die Sucheingabe konnte nicht verarbeitet werden.");
 			}
 		}
-		return requestList;
+
+		try {
+			querieImpl.search(requestList);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Fehler bei der Suche\nNachricht: "
+					+ e.getMessage() + "\nSQL-Status" + e.getSQLState());
+		}
 	}
 
 	SearchFieldKeys[] generateSearchFieldKeyArray() {

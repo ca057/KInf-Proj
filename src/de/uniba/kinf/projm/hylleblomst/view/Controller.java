@@ -37,11 +37,6 @@ public class Controller {
 	private SearchController searchCtrl;
 
 	/**
-	 * QueriesImpl executes the search.
-	 */
-	private QueriesImpl querieImpl;
-
-	/**
 	 * Stores the number of input fields for usable generation of input field
 	 * arrays.
 	 */
@@ -161,10 +156,8 @@ public class Controller {
 	 * instances of the {@link QueriesImpl}, {@link UIHelper} and
 	 * {@link SearchController} are instantiated.
 	 * 
-	 * Some more setup is done for a nice user interaction.
 	 */
 	public Controller() {
-		querieImpl = new QueriesImpl();
 		ui = new UIHelper();
 		searchCtrl = new SearchController(inputFieldCounter);
 	}
@@ -229,23 +222,10 @@ public class Controller {
 	 */
 	@FXML
 	private void startSearch() {
-		List<QueryRequest> requestList;
-
 		try {
-			requestList = searchCtrl.prepareInputForSearch(
-					generateArrayWithInputValues(),
+			searchCtrl.prepareInputForSearch(generateArrayWithInputValues(),
 					generateArrayWithSourceFieldKeys());
-			if (requestList == null || requestList.size() == 0) {
-				throw new IllegalArgumentException(
-						"Liste mit Suchanfrage hat keinen Wert (= null) oder enthält keine Werte.");
-			}
-
-			// FIXME setInfoText am entfernen, nur für Testzwecke
-			setInfoTextExtendedSearch(requestList);
-
-			querieImpl.search(requestList);
-		} catch (Exception /* | IllegalArgumentException */e) {
-			// FIXME korrekte Exceptions fangen!
+		} catch (RuntimeException e) {
 			e.printStackTrace();
 			ui.showErrorMessage(e.getMessage());
 		}
