@@ -17,9 +17,9 @@ public class QueriesImpl implements Queries {
 		// In WHERE auch SELECT möglich!!
 		String query = "";
 		for (QueryRequest qr : queryRequests) {
-			query = "SELECT DISTINCT * FROM " + qr.getPersonJoin() + " WHERE "
-					+ "Hylleblomst." + qr.getTable() + "." + qr.getColumn()
-					+ " = " + "'" + qr.getInput() + "'";
+			query = "SELECT DISTINCT * FROM " + qr.getPersonJoin()
+					+ " AND Hylleblomst." + qr.getTable() + "."
+					+ qr.getColumn() + " LIKE " + "'%" + qr.getInput() + "%'";
 		}
 		System.out.println(query);
 		return query;

@@ -4,7 +4,17 @@ public class SQLShred {
 
 	String getPersonJoin(String table, String column, int source) {
 
-		String tableName;
+		// String tableName = ;
+		// if(source == SourceKeys.STANDARD) {
+		// return "Hylleblomst." vorname_norm, Hylleblomst.vorname_trad,
+		// Hylleblomst.vorname_info, Hylleblomst.quellen, Hylleblomst.person
+		// WHERE Hylleblomst.vorname_trad.VornameTradID =
+		// Hylleblomst.vorname_info.VornameTradID AND
+		// Hylleblomst.vorname_norm.VornameNormID =
+		// Hylleblomst.vorname_trad.VornameNormID AND
+		// Hylleblomst.vorname_info.QuellenID = Hylleblomst.quellen.QuellenID
+		// AND Hylleblomst.vorname_info.PersonID = Hylleblomst.person.PersonID";
+		// }
 		if (source == SourceKeys.NORM) {
 			if (table.startsWith("ANREDE")) {
 				String table2 = "Hylleblomst."
@@ -31,8 +41,7 @@ public class SQLShred {
 			return null;
 		}
 		table = "Hylleblomst." + table;
-		// FIXME ON passt nicht.
-		return "Hylleblomst.vorname_norm LEFT OUTER JOIN Hylleblomst.vorname_trad ON Hylleblomst.vorname_norm.VornameNormID = Hylleblomst.vorname_trad.VornameNormID Left OUTER JOIN Hylleblomst.vorname_info ON Hylleblomst.vorname_trad.VornameTradID = Hylleblomst.vorname_info.VornameTradID Left OUTER JOIN Hylleblomst.quellen ON Hylleblomst.vorname_info.QuellenID = Hylleblomst.quellen.QuellenID Left OUTER JOIN Hylleblomst.person ON Hylleblomst.vorname_trad.PersonID = Hylleblomst.person.PersonID";
+		return "Hylleblomst.vorname_norm, Hylleblomst.vorname_trad, Hylleblomst.vorname_info, Hylleblomst.quellen, Hylleblomst.person WHERE Hylleblomst.vorname_trad.VornameTradID = Hylleblomst.vorname_info.VornameTradID AND Hylleblomst.vorname_norm.VornameNormID = Hylleblomst.vorname_trad.VornameNormID AND Hylleblomst.vorname_info.QuellenID = Hylleblomst.quellen.QuellenID AND Hylleblomst.vorname_info.PersonID = Hylleblomst.person.PersonID";
 
 	}
 
