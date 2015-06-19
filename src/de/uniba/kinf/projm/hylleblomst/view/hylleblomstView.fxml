@@ -182,7 +182,7 @@
 																		<Insets top="15.0" />
 																	</VBox.margin>
 																</Label>
-																<ComboBox prefWidth="270.0" promptText="Ortsquelle auswählen" />
+																<ComboBox prefWidth="270.0" promptText="Ortsquelle auswählen">
 																	<items>
 																		<FXCollections fx:factory="observableArrayList">
 																			<String fx:value="Standard" />
