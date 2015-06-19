@@ -22,9 +22,9 @@ public class SearchController {
 	 */
 	private QueriesImpl querieImpl;
 
-	View view;
+	ViewController view;
 
-	public SearchController(View view, int inputCounter) {
+	public SearchController(ViewController view, int inputCounter) {
 		if (inputCounter <= 0) {
 			throw new IllegalArgumentException(
 					"Anzahl der Eingabefelder kann nicht 0 oder kleiner sein, ist aber: "
@@ -36,7 +36,7 @@ public class SearchController {
 		this.querieImpl = new QueriesImpl();
 	}
 
-	void prepareInputForSearch(Object[] inputValues, int[] inputSourceKey) {
+	void executeSearch(Object[] inputValues, int[] inputSourceKey) {
 		if (inputSearchFKey == null || inputSearchFKey.length == 0
 				|| inputSourceKey == null || inputSourceKey.length == 0) {
 			throw new IllegalArgumentException(

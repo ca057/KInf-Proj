@@ -2,7 +2,10 @@ package de.uniba.kinf.projm.hylleblomst.logic;
 
 public class SourceKeys {
 
-	public static final Integer ORT_NORM_AB = -1;
+	// TODO Johannes, hier musst du schauen ob noch alles passt, aus -1 wurde -2
+	public static final Integer ORT_NORM_AB = -2;
+	// TODO Johannes, das musst du implementierens
+	public static final Integer NO_SELECTION = -1;
 	public static final Integer NORM = 0;
 	public static final Integer STANDARD = 1;
 	public static final Integer HSB_AUB_I11 = 2;
