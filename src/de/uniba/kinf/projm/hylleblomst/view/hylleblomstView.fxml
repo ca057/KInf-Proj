@@ -170,7 +170,17 @@
 																	</VBox.margin>
 																</Label>
 																<ComboBox prefWidth="270.0"
-																	promptText="Quelle der wirtschaftl. Lage auswählen" />
+																	promptText="Quelle der wirtschaftl. Lage auswählen">
+																	<items>
+																		<FXCollections fx:factory="observableArrayList">
+																			<String fx:value="Standard" />
+																			<String fx:value="normalisiert" />
+																			<String fx:value="HS B ( AUB, I 11)" />
+																			<String fx:value="HS D (AUB, I 13/2)" />
+																			<String fx:value="HS J (SB Bamberg, Msc.Add.3)" />
+																		</FXCollections>
+																	</items>
+																</ComboBox>
 																<TextField maxWidth="300.0" prefWidth="300.0"
 																	promptText="Wirtschaftliche Lage">
 																	<VBox.margin>

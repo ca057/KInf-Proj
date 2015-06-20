@@ -203,7 +203,8 @@ public class ViewController {
 		inputSourceKey[1] = SourceKeys.NORM;
 		inputSourceKey[2] = SourceKeys.STANDARD;
 		inputSourceKey[3] = SourceKeys.NORM;
-		inputSourceKey[4] = getSourceKeyFirstName();
+		inputSourceKey[4] = getSourceKeyByValueAsString(searchCategory_person_vornameselection
+				.getValue());
 		inputSourceKey[5] = SourceKeys.STANDARD;
 
 		return inputSourceKey;
@@ -246,14 +247,17 @@ public class ViewController {
 	 * Checks the value of the selection for the source of the first name and
 	 * returns the corresponding {@link SourceKey}.
 	 * 
-	 * @return the corresponding {@link SourceKey} as {@code int}
+	 * @param value
+	 *            the user input as String
+	 * @return the corresponding {@link SourceKey} as {@code String}
 	 */
-	int getSourceKeyFirstName() {
-		String value = searchCategory_person_vornameselection.getValue();
+	private int getSourceKeyByValueAsString(String value) {
 		if ("Standard".equals(value)) {
 			return SourceKeys.STANDARD;
 		} else if ("normalisiert".equals(value)) {
 			return SourceKeys.NORM;
+		} else if ("Abweichung normalisiert".equals(value)) {
+			return SourceKeys.ORT_NORM_AB;
 		} else if ("HS B (AUB, I 11)".equals(value)) {
 			return SourceKeys.HSB_AUB_I11;
 		} else if ("HS C (AUB, I 13/1)".equals(value)) {
