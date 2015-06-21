@@ -5,6 +5,10 @@ public class SQLShred {
 	String getPersonJoin(String table, String column, int source) {
 
 		String tableName = table.substring(0, table.indexOf("_"));
+		if (table.startsWith("Person")) {
+			return "Hylleblomst." + tableName + " WHERE ";
+		}
+
 		if (table.startsWith("Ort")) {
 			return "Hylleblomst."
 					+ tableName
@@ -44,7 +48,7 @@ public class SQLShred {
 					+ "_info.QuellenID = Hylleblomst.quellen.QuellenID AND Hylleblomst."
 					+ tableName
 					+ "_info.PersonID = Hylleblomst.person.PersonID AND Hylleblomst."
-					+ tableName + "_info.QuellenID = " + source;
+					+ tableName + "_info.QuellenID = " + source + "AND ";
 		}
 		if (table.startsWith("ANREDE")) {
 			return "Hylleblomst." + tableName + "_norm, Hylleblomst."
@@ -53,7 +57,7 @@ public class SQLShred {
 					+ "NormID = Hylleblomst." + tableName + "_trad."
 					+ tableName + "normID AND Hylleblomst." + tableName
 					+ "_trad." + tableName + "tradID = Hylleblomst.Person."
-					+ tableName + "ID";
+					+ tableName + "ID" + "AND ";
 		}
 		return "Hylleblomst."
 				+ tableName
@@ -61,7 +65,8 @@ public class SQLShred {
 				+ tableName
 				+ "_trad, Hylleblomst."
 				+ tableName
-				+ "_info, Hylleblomst.quellen, Hylleblomst.person WHERE Hylleblomst."
+				+ "_info, Hylleblomst.quellen, Hylleblomst.person"
+				+ "WHERE Hylleblomst."
 				+ tableName
 				+ "_trad."
 				+ tableName
@@ -82,7 +87,7 @@ public class SQLShred {
 				+ "_info.QuellenID = Hylleblomst.quellen.QuellenID AND Hylleblomst."
 				+ tableName
 				+ "_info.PersonID = Hylleblomst.person.PersonID AND Hylleblomst."
-				+ tableName + "_info.QuellenID = " + source;
+				+ tableName + "_info.QuellenID = " + source + "AND ";
 	}
 
 	String getDate(int[] input) {

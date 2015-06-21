@@ -15,6 +15,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import de.uniba.kinf.projm.hylleblomst.logic.QueriesImpl;
 import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
+import de.uniba.kinf.projm.hylleblomst.logic.QueryRequestImpl;
 import de.uniba.kinf.projm.hylleblomst.logic.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.SourceKeys;
 
@@ -306,7 +307,7 @@ public class ViewController {
 	 * input. Collects the user input from all input fields prints it to the
 	 * info area.
 	 */
-	void setInfoTextExtendedSearch(List<QueryRequest> requestList) {
+	void setInfoTextExtendedSearch(List<QueryRequestImpl> requestList) {
 		String info = "Suchanfrage\n-----------\n";
 		if (requestList == null || requestList.size() == 0) {
 			info += "Keine Sucheingaben gefunden.";

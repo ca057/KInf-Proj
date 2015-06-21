@@ -7,26 +7,23 @@ public class QueriesImpl implements Queries {
 	DBAccess db;
 
 	@Override
-	public void search(Collection<QueryRequest> queryRequests)
+	public void search(Collection<QueryRequestImpl> queryRequests)
 			throws SQLException {
 		startQuery(buildQuery(queryRequests));
 	}
 
-	private String buildQuery(Collection<QueryRequest> queryRequests)
+	private String buildQuery(Collection<QueryRequestImpl> queryRequests)
 			throws SQLException {
-		// In WHERE auch SELECT möglich!!
 		String query = "";
 		for (QueryRequest qr : queryRequests) {
 			if ("".equals(query)) {
 				query = "SELECT DISTINCT * FROM " + qr.getPersonJoin()
-						+ " AND Hylleblomst." + qr.getTable() + "."
-						+ qr.getColumn() + " LIKE " + "'%" + qr.getInput()
-						+ "%'";
+						+ "Hylleblomst." + qr.getTable() + "." + qr.getColumn()
+						+ " LIKE " + "'%" + qr.getInput() + "%'";
 			} else {
 				query += " AND EXISTS (SELECT * FROM " + qr.getPersonJoin()
-						+ " AND Hylleblomst." + qr.getTable() + "."
-						+ qr.getColumn() + " LIKE " + "'%" + qr.getInput()
-						+ "%')";
+						+ "Hylleblomst." + qr.getTable() + "." + qr.getColumn()
+						+ " LIKE " + "'%" + qr.getInput() + "%')";
 			}
 		}
 		System.out.println(query);
