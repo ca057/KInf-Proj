@@ -24,14 +24,9 @@ public class SearchController {
 
 	ViewController view;
 
-	public SearchController(ViewController view, int inputCounter) {
-		if (inputCounter <= 0) {
-			throw new IllegalArgumentException(
-					"Anzahl der Eingabefelder kann nicht 0 oder kleiner sein, ist aber: "
-							+ inputCounter);
-		}
+	public SearchController(ViewController view) {
 		this.view = view;
-		this.inputCounter = inputCounter;
+		this.inputCounter = view.getInputFieldCounter();
 		this.inputSearchFKey = generateSearchFieldKeyArray();
 		this.querieImpl = new QueriesImpl();
 	}
@@ -54,8 +49,11 @@ public class SearchController {
 				QueryRequest tmpReq = new QueryRequest(inputSearchFKey[i],
 						inputValues[i], inputSourceKey[i]);
 				requestList.add(tmpReq);
-			} else {
-				continue;
+			} else if (inputValues[i] instanceof Boolean
+					&& (Boolean) inputValues[i] == true) {
+				QueryRequest tmpReq = new QueryRequest(inputSearchFKey[i],
+						inputValues[i], inputSourceKey[i]);
+				requestList.add(tmpReq);
 			}
 		}
 
@@ -78,6 +76,10 @@ public class SearchController {
 		sfkArray[3] = SearchFieldKeys.TITEL;
 		sfkArray[4] = SearchFieldKeys.VORNAME;
 		sfkArray[5] = SearchFieldKeys.NACHNAME;
+		sfkArray[6] = SearchFieldKeys.ADLIG;
+		sfkArray[7] = SearchFieldKeys.JESUIT;
+		sfkArray[8] = SearchFieldKeys.WIRTSCHAFTSLAGE;
+		sfkArray[9] = SearchFieldKeys.ORT;
 
 		return sfkArray;
 	}
