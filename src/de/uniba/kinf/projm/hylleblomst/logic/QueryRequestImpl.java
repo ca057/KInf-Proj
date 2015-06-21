@@ -98,15 +98,15 @@ public class QueryRequestImpl implements QueryRequest {
 			switch (searchField) {
 			case ADLIG:
 				table = "PERSON";
-				column = getColumnName(table, 2);
+				column = getColumnName(table, 5);
 				break;
 			case JESUIT:
 				table = "PERSON";
-				column = getColumnName(table, 2);
+				column = getColumnName(table, 4);
 				break;
 			case STUDIENJAHR:
 				table = "PERSON";
-				column = getColumnName(table, 2);
+				column = getColumnName(table, 7);
 				if (input instanceof Integer) {
 					input = sqlShred.getDate((int[]) input);
 				}
@@ -114,26 +114,26 @@ public class QueryRequestImpl implements QueryRequest {
 			case EINSCHREIBEDATUM:
 				// TODO Das muss noch implementiert werden.
 				table = "PERSON";
-				column = "";
+				column = getColumnName(table, 6);
 				if (input instanceof Integer) {
 					input = sqlShred.getDate((int[]) input);
 				}
 				break;
 			case ANMERKUNGEN:
 				table = "PERSON";
-				column = "ANMKERUNG";
+				column = getColumnName(table, 9);
 				break;
 			case NUMMER:
 				table = "PERSON";
-				column = "PERSONID";
+				column = getColumnName(table, 1);
 				break;
 			case SEITE_ORIGINALE:
 				table = "PERSON";
-				column = "SEITEORIGINAL";
+				column = getColumnName(table, 2);
 				break;
 			case NUMMER_HESS:
 				table = "PERSON";
-				column = "NUMMERHESS";
+				column = getColumnName(table, 3);
 				break;
 			case ANREDE:
 				if (source == SourceKeys.NORM) {

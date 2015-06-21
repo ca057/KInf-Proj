@@ -32,6 +32,11 @@ public interface QueryRequest {
 	 * Sets the input of the query. This is the original entry of a user in a
 	 * specific search field.
 	 * 
+	 * <b> Preconditions</b>
+	 * <ul>
+	 * <li>input must not be null
+	 * </ul>
+	 * 
 	 * @param input
 	 *            The input of the request.
 	 */
