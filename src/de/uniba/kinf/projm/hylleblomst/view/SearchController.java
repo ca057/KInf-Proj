@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.uniba.kinf.projm.hylleblomst.logic.QueriesImpl;
-import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
+import de.uniba.kinf.projm.hylleblomst.logic.QueryRequestImpl;
 import de.uniba.kinf.projm.hylleblomst.logic.SearchFieldKeys;
 
 public class SearchController {
@@ -39,14 +39,14 @@ public class SearchController {
 		}
 
 		// neue Rückgabeliste anlegen
-		List<QueryRequest> requestList = new ArrayList<QueryRequest>();
+		List<QueryRequestImpl> requestList = new ArrayList<QueryRequestImpl>();
 		// über alle Eingabefelder iterieren
 		for (int i = 0; i < inputValues.length; i++) {
 			// checken, welcher Typ von Eingabefeld das ist und entsprechend
 			// behandeln
 			if (inputValues[i] instanceof String && !"".equals(inputValues[i])
 					&& inputValues[i] != null) {
-				QueryRequest tmpReq = new QueryRequest(inputSearchFKey[i],
+				QueryRequestImpl tmpReq = new QueryRequestImpl(inputSearchFKey[i],
 						inputValues[i], inputSourceKey[i]);
 				requestList.add(tmpReq);
 			} else if (inputValues[i] instanceof Boolean
