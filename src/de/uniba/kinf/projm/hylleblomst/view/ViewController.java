@@ -119,6 +119,41 @@ public class ViewController {
 	@FXML
 	TitledPane searchCategory_study;
 
+	// implement from here
+	@FXML
+	ComboBox<String> searchCategory_study_studienfachselection;
+
+	@FXML
+	TextField searchCategory_study_studienfachinput;
+
+	@FXML
+	TextField searchCategory_study_fakultaet;
+
+	@FXML
+	ComboBox<String> searchCategory_study_seminarselection;
+
+	@FXML
+	TextField searchCategory_study_seminarinput;
+
+	@FXML
+	CheckBox searchCategory_study_graduiert;
+
+	@FXML
+	TextField searchCategory_study_studienjahrVon;
+
+	@FXML
+	TextField searchCategory_study_studienjahrBis;
+
+	@FXML
+	TextField searchCategory_study_einschreibeTag;
+
+	@FXML
+	TextField searchCategory_study_einschreibeMonat;
+
+	@FXML
+	TextField searchCategory_study_einschreibeJahr;
+
+	// implement upto here
 	@FXML
 	TitledPane searchCategory_other;
 

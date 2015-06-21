@@ -46,13 +46,13 @@ public class SearchController {
 			// behandeln
 			if (inputValues[i] instanceof String && !"".equals(inputValues[i])
 					&& inputValues[i] != null) {
-				QueryRequestImpl tmpReq = new QueryRequestImpl(inputSearchFKey[i],
-						inputValues[i], inputSourceKey[i]);
+				QueryRequestImpl tmpReq = new QueryRequestImpl(
+						inputSearchFKey[i], inputValues[i], inputSourceKey[i]);
 				requestList.add(tmpReq);
 			} else if (inputValues[i] instanceof Boolean
 					&& (Boolean) inputValues[i] == true) {
-				QueryRequest tmpReq = new QueryRequest(inputSearchFKey[i],
-						inputValues[i], inputSourceKey[i]);
+				QueryRequestImpl tmpReq = new QueryRequestImpl(
+						inputSearchFKey[i], inputValues[i], inputSourceKey[i]);
 				requestList.add(tmpReq);
 			}
 		}

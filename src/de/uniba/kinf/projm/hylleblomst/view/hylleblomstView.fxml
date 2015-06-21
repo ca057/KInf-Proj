@@ -77,7 +77,7 @@
 																		<Insets top="15.0" />
 																	</VBox.margin>
 																</Label>
-																<ComboBox fx:id="searchCategory_person_vornameselection" prefWidth="300.0" promptText="Vornamenschreibweise auswählen">
+																<ComboBox fx:id="searchCategory_person_vornameselection" prefWidth="300.0" promptText="Vornamenquelle auswählen">
 																	<items>
 																		<FXCollections fx:factory="observableArrayList">
 																			<String fx:value="Standard" />
@@ -105,7 +105,7 @@
 																		<Insets top="15.0" />
 																	</VBox.margin>
 																</Label>
-																<ComboBox fx:id="searchCategory_person_nachnameselection" prefWidth="270.0" promptText="Nachnamenschreibweise auswählen">
+																<ComboBox fx:id="searchCategory_person_nachnameselection" prefWidth="270.0" promptText="Nachnamenquelle auswählen">
 																	<items>
 																		<FXCollections fx:factory="observableArrayList">
 																			<String fx:value="Standard" />
@@ -206,7 +206,7 @@
 															</padding>
 															<children>
 																<Label text="Studienfach" />
-																<ComboBox prefWidth="270.0" promptText="Studienfachquelle auswählen">
+																<ComboBox fx:id="searchCategory_study_studienfachselection" prefWidth="270.0" promptText="Studienfachquelle auswählen">
 																	<items>
 																		<FXCollections fx:factory="observableArrayList">
 																			<String fx:value="Standard" />
@@ -215,7 +215,7 @@
 																		</FXCollections>
 																	</items>
 																</ComboBox>
-																<TextField promptText="Studienfach">
+																<TextField fx:id="searchCategory_study_studienfachinput" promptText="Studienfach">
 																	<VBox.margin>
 																		<Insets top="5.0" />
 																	</VBox.margin>
@@ -225,13 +225,13 @@
 																		<Insets top="15.0" />
 																	</VBox.margin>
 																</Label>
-																<TextField promptText="Fakultät" />
+																<TextField fx:id="searchCategory_study_fakultaet" promptText="Fakultät" />
 																<Label text="Seminar">
 																	<VBox.margin>
 																		<Insets top="15.0" />
 																	</VBox.margin>
 																</Label>
-																<ComboBox prefWidth="270.0" promptText="Seminarquelle auswählen">
+																<ComboBox fx:id="searchCategory_study_seminarselection" prefWidth="270.0" promptText="Seminarquelle auswählen">
 																	<items>
 																		<FXCollections fx:factory="observableArrayList">
 																			<String fx:value="Standard" />
@@ -244,12 +244,12 @@
 																		</FXCollections>
 																	</items>
 																</ComboBox>
-																<TextField promptText="Seminar">
+																<TextField fx:id="searchCategory_study_seminarinput" promptText="Seminar">
 																	<VBox.margin>
 																		<Insets top="5.0" />
 																	</VBox.margin>
 																</TextField>
-																<CheckBox mnemonicParsing="false" text="Graduiert">
+																<CheckBox fx:id="searchCategory_study_graduiert" mnemonicParsing="false" text="Graduiert">
 																	<VBox.margin>
 																		<Insets top="15.0" />
 																	</VBox.margin>
@@ -271,8 +271,8 @@
 																	<children>
 																		<Label text="von" />
 																		<Label text="bis" GridPane.rowIndex="1" />
-																		<TextField maxWidth="75.0" minWidth="50.0" prefWidth="50.0" promptText="von Jahr" GridPane.columnIndex="1" />
-																		<TextField maxWidth="75.0" minWidth="50.0" prefWidth="50.0" promptText="bis Jahr" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+																		<TextField fx:id="searchCategory_study_studienjahrVon" maxWidth="75.0" minWidth="50.0" prefWidth="50.0" promptText="von Jahr" GridPane.columnIndex="1" />
+																		<TextField fx:id="searchCategory_study_studienjahrBis" maxWidth="75.0" minWidth="50.0" prefWidth="50.0" promptText="bis Jahr" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 																	</children>
 																</GridPane>
 																<Label text="Einschreibedatum">
@@ -294,9 +294,9 @@
 																		<Label text="Tag" />
 																		<Label text="Monat" GridPane.rowIndex="1" />
 																		<Label text="Jahr" GridPane.rowIndex="2" />
-																		<TextField maxWidth="75.0" minWidth="50.0" prefWidth="50.0" promptText="von Jahr" GridPane.columnIndex="1" />
-																		<TextField maxWidth="75.0" minWidth="50.0" prefWidth="50.0" promptText="von Jahr" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-																		<TextField maxWidth="75.0" minWidth="50.0" prefWidth="50.0" promptText="von Jahr" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+																		<TextField fx:id="searchCategory_study_einschreibeTag" maxWidth="75.0" minWidth="50.0" prefWidth="50.0" promptText="Tag" GridPane.columnIndex="1" />
+																		<TextField fx:id="searchCategory_study_einschreibeMonat" maxWidth="75.0" minWidth="50.0" prefWidth="50.0" promptText="Monat" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+																		<TextField fx:id="searchCategory_study_einschreibeJahr" maxWidth="75.0" minWidth="50.0" prefWidth="50.0" promptText="Jahr" GridPane.columnIndex="1" GridPane.rowIndex="2" />
 																	</children>
 																</GridPane>
 															</children>
