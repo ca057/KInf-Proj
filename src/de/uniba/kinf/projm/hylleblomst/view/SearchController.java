@@ -80,6 +80,7 @@ public class SearchController {
 		sfkArray[7] = SearchFieldKeys.JESUIT;
 		sfkArray[8] = SearchFieldKeys.WIRTSCHAFTSLAGE;
 		sfkArray[9] = SearchFieldKeys.ORT;
+		sfkArray[10] = SearchFieldKeys.FACH;
 
 		return sfkArray;
 	}

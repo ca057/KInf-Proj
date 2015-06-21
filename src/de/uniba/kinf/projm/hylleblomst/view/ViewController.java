@@ -42,7 +42,7 @@ public class ViewController {
 	 * Stores the number of input fields for usable generation of input field
 	 * arrays.
 	 */
-	private int inputFieldCounter = 10;
+	private int inputFieldCounter = 11;
 
 	@FXML
 	BorderPane root;
@@ -119,13 +119,13 @@ public class ViewController {
 	@FXML
 	TitledPane searchCategory_study;
 
-	// implement from here
 	@FXML
 	ComboBox<String> searchCategory_study_studienfachselection;
 
 	@FXML
 	TextField searchCategory_study_studienfachinput;
 
+	// TODO implement from here
 	@FXML
 	TextField searchCategory_study_fakultaet;
 
@@ -212,6 +212,7 @@ public class ViewController {
 		inputFields[8] = searchCategory_personExtended_wirtschaftinput
 				.getText();
 		inputFields[9] = searchCategory_personExtended_ortinput.getText();
+		inputFields[10] = searchCategory_study_studienfachinput.getText();
 
 		return inputFields;
 	}
@@ -234,6 +235,8 @@ public class ViewController {
 		inputSourceKey[8] = getSourceKeyByValueAsString(searchCategory_personExtended_wirtschaftselection
 				.getValue());
 		inputSourceKey[9] = getSourceKeyByValueAsString(searchCategory_personExtended_ortselection
+				.getValue());
+		inputSourceKey[10] = getSourceKeyByValueAsString(searchCategory_study_studienfachselection
 				.getValue());
 
 		return inputSourceKey;
