@@ -81,8 +81,9 @@ public class ViewController {
 	@FXML
 	TextField searchCategory_person_titelnorm;
 
+	// TODO ggf. ändern
 	@FXML
-	ComboBox searchCategory_person_vornameselection;
+	ComboBox<String> searchCategory_person_vornameselection;
 
 	@FXML
 	MenuItem selection_vorname;
@@ -193,8 +194,7 @@ public class ViewController {
 	}
 
 	/**
-	 * The two arrays with {@link SearchFieldKeys} and {@link SourceKeys} are
-	 * build.
+	 * The array with {@link SourceKeys} is generated.
 	 */
 	private int[] generateArrayWithSourceFieldKeys() {
 		int[] inputSourceKey = new int[inputFieldCounter];
@@ -203,11 +203,8 @@ public class ViewController {
 		inputSourceKey[1] = SourceKeys.NORM;
 		inputSourceKey[2] = SourceKeys.STANDARD;
 		inputSourceKey[3] = SourceKeys.NORM;
-		// FIXME korrekte SearchFieldKeys und SourceKeys abhängig von Auswahl
-		// speichern
-		inputSourceKey[4] = SourceKeys.STANDARD;
-		// FIXME korrekte SearchFieldKeys und SourceKeys abhängig von Auswahl
-		// speichern
+		inputSourceKey[4] = getSourceKeyByValueAsString(searchCategory_person_vornameselection
+				.getValue());
 		inputSourceKey[5] = SourceKeys.STANDARD;
 
 		return inputSourceKey;
@@ -223,7 +220,7 @@ public class ViewController {
 	@FXML
 	private void startSearch() {
 		try {
-			searchCtrl.prepareInputForSearch(generateArrayWithInputValues(),
+			searchCtrl.executeSearch(generateArrayWithInputValues(),
 					generateArrayWithSourceFieldKeys());
 		} catch (RuntimeException e) {
 			e.printStackTrace();
@@ -241,8 +238,48 @@ public class ViewController {
 		searchCategory_person_titel.clear();
 		searchCategory_person_titelnorm.clear();
 		searchCategory_person_vornameinput.clear();
+		searchCategory_person_vornameselection.setValue(null);
 		searchCategory_person_nachnameinput.clear();
 		infoArea.clear();
+	}
+
+	/**
+	 * Checks the value of the selection for the source of the first name and
+	 * returns the corresponding {@link SourceKey}.
+	 * 
+	 * @param value
+	 *            the user input as String
+	 * @return the corresponding {@link SourceKey} as {@code String}
+	 */
+	private int getSourceKeyByValueAsString(String value) {
+		if ("Standard".equals(value)) {
+			return SourceKeys.STANDARD;
+		} else if ("normalisiert".equals(value)) {
+			return SourceKeys.NORM;
+		} else if ("Abweichung normalisiert".equals(value)) {
+			return SourceKeys.ORT_NORM_AB;
+		} else if ("HS B (AUB, I 11)".equals(value)) {
+			return SourceKeys.HSB_AUB_I11;
+		} else if ("HS C (AUB, I 13/1)".equals(value)) {
+			return SourceKeys.HSC_AUB_I131;
+		} else if ("HS D (AUB, I 13/2)".equals(value)) {
+			return SourceKeys.HSD_AUB_I132;
+		} else if ("HS E (AUB, I 9)".equals(value)) {
+			return SourceKeys.HSE_AUB_I9;
+		} else if ("HS F (AUB, I 8)".equals(value)) {
+			return SourceKeys.HSF_AUB_I8;
+		} else if ("HS G (AUB, I 6)".equals(value)) {
+			return SourceKeys.HSG_AUB_I6;
+		} else if ("HS H (AEB, Rep. I, Nr. 321)".equals(value)) {
+			return SourceKeys.HSH_AEB_I321;
+		} else if ("HS I (SB Bamberg, Msc.Add.3a)".equals(value)) {
+			return SourceKeys.HSI_SB_3a;
+		} else if ("HS J (SB Bamberg, Msc.Add.3)".equals(value)) {
+			return SourceKeys.HSJ_3;
+		} else if ("AUB, V E 38".equals(value)) {
+			return SourceKeys.AUB_V_E38;
+		}
+		return SourceKeys.NO_SELECTION;
 	}
 
 	/**
