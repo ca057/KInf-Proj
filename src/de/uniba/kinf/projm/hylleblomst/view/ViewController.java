@@ -5,6 +5,7 @@ import java.util.List;
 import javafx.fxml.FXML;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableView;
@@ -41,7 +42,7 @@ public class ViewController {
 	 * Stores the number of input fields for usable generation of input field
 	 * arrays.
 	 */
-	private int inputFieldCounter = 6;
+	private int inputFieldCounter = 11;
 
 	@FXML
 	BorderPane root;
@@ -82,51 +83,14 @@ public class ViewController {
 	@FXML
 	TextField searchCategory_person_titelnorm;
 
-	// TODO ggf. ändern
 	@FXML
 	ComboBox<String> searchCategory_person_vornameselection;
-
-	@FXML
-	MenuItem selection_vorname;
-
-	@FXML
-	MenuItem selection_vornameNorm;
-
-	@FXML
-	MenuItem selection_vornameHSB;
-
-	@FXML
-	MenuItem selection_vornameHSC;
-
-	@FXML
-	MenuItem selection_vornameHSD;
-
-	@FXML
-	MenuItem selection_vornameHSE;
-
-	@FXML
-	MenuItem selection_vornameHSF;
-
-	@FXML
-	MenuItem selection_vornameHSG;
-
-	@FXML
-	MenuItem selection_vornameHSH;
-
-	@FXML
-	MenuItem selection_vornameHSI;
-
-	@FXML
-	MenuItem selection_vornameHSJ;
-
-	@FXML
-	MenuItem selection_vornameAUB;
 
 	@FXML
 	TextField searchCategory_person_vornameinput;
 
 	@FXML
-	ComboBox searchCategory_person_nachnameselection;
+	ComboBox<String> searchCategory_person_nachnameselection;
 
 	@FXML
 	TextField searchCategory_person_nachnameinput;
@@ -135,8 +99,61 @@ public class ViewController {
 	TitledPane searchCategory_personExtended;
 
 	@FXML
+	CheckBox searchCategory_personExtended_adeliger;
+
+	@FXML
+	CheckBox searchCategory_personExtended_jesuit;
+
+	@FXML
+	ComboBox<String> searchCategory_personExtended_wirtschaftselection;
+
+	@FXML
+	TextField searchCategory_personExtended_wirtschaftinput;
+
+	@FXML
+	ComboBox<String> searchCategory_personExtended_ortselection;
+
+	@FXML
+	TextField searchCategory_personExtended_ortinput;
+
+	@FXML
 	TitledPane searchCategory_study;
 
+	@FXML
+	ComboBox<String> searchCategory_study_studienfachselection;
+
+	@FXML
+	TextField searchCategory_study_studienfachinput;
+
+	// TODO implement from here
+	@FXML
+	TextField searchCategory_study_fakultaet;
+
+	@FXML
+	ComboBox<String> searchCategory_study_seminarselection;
+
+	@FXML
+	TextField searchCategory_study_seminarinput;
+
+	@FXML
+	CheckBox searchCategory_study_graduiert;
+
+	@FXML
+	TextField searchCategory_study_studienjahrVon;
+
+	@FXML
+	TextField searchCategory_study_studienjahrBis;
+
+	@FXML
+	TextField searchCategory_study_einschreibeTag;
+
+	@FXML
+	TextField searchCategory_study_einschreibeMonat;
+
+	@FXML
+	TextField searchCategory_study_einschreibeJahr;
+
+	// implement upto here
 	@FXML
 	TitledPane searchCategory_other;
 
@@ -161,7 +178,7 @@ public class ViewController {
 	 */
 	public ViewController() {
 		ui = new UIHelper();
-		searchCtrl = new SearchController(this, inputFieldCounter);
+		searchCtrl = new SearchController(this);
 	}
 
 	/**
@@ -190,6 +207,12 @@ public class ViewController {
 		inputFields[3] = searchCategory_person_titelnorm.getText();
 		inputFields[4] = searchCategory_person_vornameinput.getText();
 		inputFields[5] = searchCategory_person_nachnameinput.getText();
+		inputFields[6] = searchCategory_personExtended_adeliger.isSelected();
+		inputFields[7] = searchCategory_personExtended_jesuit.isSelected();
+		inputFields[8] = searchCategory_personExtended_wirtschaftinput
+				.getText();
+		inputFields[9] = searchCategory_personExtended_ortinput.getText();
+		inputFields[10] = searchCategory_study_studienfachinput.getText();
 
 		return inputFields;
 	}
@@ -207,6 +230,14 @@ public class ViewController {
 		inputSourceKey[4] = getSourceKeyByValueAsString(searchCategory_person_vornameselection
 				.getValue());
 		inputSourceKey[5] = SourceKeys.STANDARD;
+		inputSourceKey[6] = SourceKeys.NO_SELECTION;
+		inputSourceKey[7] = SourceKeys.NO_SELECTION;
+		inputSourceKey[8] = getSourceKeyByValueAsString(searchCategory_personExtended_wirtschaftselection
+				.getValue());
+		inputSourceKey[9] = getSourceKeyByValueAsString(searchCategory_personExtended_ortselection
+				.getValue());
+		inputSourceKey[10] = getSourceKeyByValueAsString(searchCategory_study_studienfachselection
+				.getValue());
 
 		return inputSourceKey;
 	}
@@ -241,6 +272,12 @@ public class ViewController {
 		searchCategory_person_vornameinput.clear();
 		searchCategory_person_vornameselection.setValue(null);
 		searchCategory_person_nachnameinput.clear();
+		searchCategory_personExtended_adeliger.setSelected(false);
+		searchCategory_personExtended_jesuit.setSelected(false);
+		searchCategory_personExtended_wirtschaftselection.setValue(null);
+		searchCategory_personExtended_wirtschaftinput.clear();
+		searchCategory_personExtended_ortselection.setValue(null);
+		searchCategory_personExtended_ortinput.clear();
 		infoArea.clear();
 	}
 
