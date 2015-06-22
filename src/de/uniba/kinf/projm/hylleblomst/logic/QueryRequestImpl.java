@@ -13,8 +13,7 @@ public class QueryRequestImpl implements QueryRequest {
 	private Object input;
 	private int source;
 	private String table;
-	private String personJoin;
-	private SQLShred sqlShred;
+	private String sqlStatement;
 
 	public QueryRequestImpl(SearchFieldKeys searchField, Object input,
 			int source) {
@@ -48,7 +47,12 @@ public class QueryRequestImpl implements QueryRequest {
 
 	@Override
 	public void setInput(Object input) {
-		this.input = input;
+		if ("Jesuit".equals(column) || "Adelig".equals(column)) {
+			this.input = "<>\"\"";
+		} // STUDIENJAHR!
+		else {
+			this.input = input.toString();
+		}
 	}
 
 	@Override
@@ -72,8 +76,8 @@ public class QueryRequestImpl implements QueryRequest {
 	}
 
 	@Override
-	public String getPersonJoin() {
-		return personJoin;
+	public String getSQLStatement() {
+		return sqlStatement;
 	}
 
 	/**
@@ -93,7 +97,7 @@ public class QueryRequestImpl implements QueryRequest {
 				table = "ORT_ABWEICHUNG_NORM";
 			}
 			column = getColumnName(table, 2);
-			personJoin = new SQLShred().getPersonJoin(table, column, source);
+			sqlStatement = new SQLShred(table, column, input).getJoin();
 		} else if (source > SourceKeys.bottom && source < SourceKeys.top) {
 			switch (searchField) {
 			case ADLIG:
@@ -108,7 +112,8 @@ public class QueryRequestImpl implements QueryRequest {
 				table = "PERSON";
 				column = getColumnName(table, 7);
 				if (input instanceof Integer) {
-					input = sqlShred.getDate((int[]) input);
+					input = new SQLShred(table, column, input)
+							.getDate((int[]) input);
 				}
 				break;
 			case EINSCHREIBEDATUM:
@@ -116,7 +121,8 @@ public class QueryRequestImpl implements QueryRequest {
 				table = "PERSON";
 				column = getColumnName(table, 6);
 				if (input instanceof Integer) {
-					input = sqlShred.getDate((int[]) input);
+					input = new SQLShred(table, column, input)
+							.getDate((int[]) input);
 				}
 				break;
 			case ANMERKUNGEN:
@@ -219,7 +225,7 @@ public class QueryRequestImpl implements QueryRequest {
 						"Das zugehörige Tabellenelement für Suchfeld "
 								+ searchField.name() + " ist nicht definiert.");
 			}
-			personJoin = new SQLShred().getPersonJoin(table, column, source);
+			sqlStatement = new SQLShred(table, column, input).getJoin();
 		} else {
 			throw new IllegalArgumentException("Die Werte für Suchfeld "
 					+ searchField.toString() + " und Quelle " + source

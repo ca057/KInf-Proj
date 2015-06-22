@@ -17,13 +17,10 @@ public class QueriesImpl implements Queries {
 		String query = "";
 		for (QueryRequest qr : queryRequests) {
 			if ("".equals(query)) {
-				query = "SELECT DISTINCT * FROM " + qr.getPersonJoin()
-						+ "Hylleblomst." + qr.getTable() + "." + qr.getColumn()
-						+ " LIKE " + "'%" + qr.getInput() + "%'";
+				query = "SELECT DISTINCT * FROM " + qr.getSQLStatement();
 			} else {
-				query += " AND EXISTS (SELECT * FROM " + qr.getPersonJoin()
-						+ "Hylleblomst." + qr.getTable() + "." + qr.getColumn()
-						+ " LIKE " + "'%" + qr.getInput() + "%')";
+				query += " AND EXISTS (SELECT * FROM " + qr.getSQLStatement()
+						+ ")";
 			}
 		}
 		System.out.println(query);

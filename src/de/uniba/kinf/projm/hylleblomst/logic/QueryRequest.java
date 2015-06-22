@@ -65,7 +65,7 @@ public interface QueryRequest {
 	/**
 	 * @return
 	 */
-	public abstract String getPersonJoin();
+	public abstract String getSQLStatement();
 
 	/**
 	 * @param table
