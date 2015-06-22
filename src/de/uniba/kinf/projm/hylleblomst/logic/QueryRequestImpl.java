@@ -263,15 +263,21 @@ public class QueryRequestImpl implements QueryRequest {
 
 	String getFrom() {
 		if (tableName.toUpperCase().startsWith("PERSON")) {
-			return String.format("%s.%s", dbName, tableName);
+			// return String.format("%s.%s", dbName, tableName);
+			return "";
 		}
 		if (tableName.toUpperCase().startsWith("FAKUL")
 				|| tableName.startsWith("FUND")) {
-			return String.format("%s.%s, %1$s.%s", dbName, tableName, "PERSON");
+			return String.format("%s.%s"
+			// , %1$s.%s
+					, dbName, tableName // , "PERSON"
+					);
 		}
 		if (tableName.toUpperCase().startsWith("ZUSAE")) {
-			return String.format("%s.%s, %1$s.%2$s%s, %1$s.%s", dbName,
-					tableName, "_info", "PERSON");
+			return String.format("%s.%s, %1$s.%2$s%s"
+			// + ", %1$s.%s"
+					, dbName, tableName, "_info"// , "PERSON"
+			);
 		}
 		String result = "";
 		if (tableName.toUpperCase().startsWith("ORT")) {
@@ -283,7 +289,6 @@ public class QueryRequestImpl implements QueryRequest {
 		if (!tableName.toUpperCase().startsWith("ANREDE")) {
 			result += String.format(", %s.%s", dbName, "Quellen");
 		}
-
 		return result;
 	}
 
