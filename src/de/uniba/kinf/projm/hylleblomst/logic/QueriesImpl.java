@@ -30,7 +30,9 @@ public class QueriesImpl implements Queries {
 			}
 
 		}
-		sqlQuery += "FROM " + sqlFrom + " WHERE " + sqlWhere;
+		sqlQuery += " FROM " + sqlFrom
+				+ String.format(", %s.%s", "Hylleblomst", "Person") + " WHERE "
+				+ sqlWhere;
 		System.out.println(sqlQuery);
 		return sqlQuery;
 	}

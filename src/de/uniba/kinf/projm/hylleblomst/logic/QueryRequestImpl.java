@@ -280,15 +280,17 @@ public class QueryRequestImpl implements QueryRequest {
 		}
 		result += String.format("%s.%s%s, %1$s.%2$s%s", dbName, tableName,
 				"_norm", "_trad");
-		if (tableName.toUpperCase().startsWith("ANREDE")) {
-			return result;
+		if (!tableName.toUpperCase().startsWith("ANREDE")) {
+			result += String.format(", %s.%s", dbName, "Quellen");
 		}
-		result += String
-				.format(", %s.%s, %1$s.%s", dbName, "Quellen", "Person");
+
 		return result;
 	}
 
 	String getWhere() {
+		if ("JESUIT".equals(column) || "ADLIG".equals(column)) {
+			return String.format("%s.%s.%s %s", dbName, table, column, input);
+		}
 		if (tableName.toUpperCase().startsWith("FAKUL")
 				|| tableName.startsWith("FUND")) {
 			return String.format("%s.%s.%sID == %1$s.%s.%3$sID", dbName,
@@ -309,24 +311,26 @@ public class QueryRequestImpl implements QueryRequest {
 		result += String.format(
 				"%s.%s_norm.%2$sNormID = %1$s.%2$s_trad.%2$sNormID ", dbName,
 				tableName);
-		if (!tableName.toUpperCase().startsWith("ANREDE")) {
-			result += String.format(
-					"%s.%s_trad.%2$sTradID = %1$s.%2$s_info.%2$sTradID ",
-					dbName, tableName);
+		if (tableName.toUpperCase().startsWith("ANREDE")) {
+			return result
+					+ String.format(
+							" AND %s.%s_trad.%2$sTradID = %1$s.%s.%2$sID",
+							dbName, tableName, "Person");
+		}
+		result += String.format(
+				"%s.%s_trad.%2$sTradID = %1$s.%2$s_info.%2$sTradID ", dbName,
+				tableName);
 
-			if (source != SourceKeys.NO_SELECTION) {
-				result += String.format(
-						" AND %s.%s%s.QuellenID = %1$s.Quellen.QuellenID",
-						dbName, tableName, "_info");
-			}
+		if (source != SourceKeys.NO_SELECTION) {
+			result += String.format(
+					" AND %s.%s%s.QuellenID = %1$s.Quellen.QuellenID", dbName,
+					tableName, "_info");
 		}
-		if ("JESUIT".equals(column) || "ADLIG".equals(column)) {
-			result += String.format(" AND %s.%s.%s = %s", dbName, table,
-					column, input);
-		} else {
-			result += String.format("AND %s.%s.%s LIKE '%s%s%4$s'", dbName,
-					table, column, "%", input);
-		}
+		result += String.format(" AND %s.%s.%2$sID = %1$s.%s_info.%2$sID",
+				dbName, "Person", tableName);
+		result += String.format(" AND %s.%s.%s LIKE '%s%s%4$s'", dbName, table,
+				column, "%", input);
+
 		return result;
 	}
 
