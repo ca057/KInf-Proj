@@ -385,7 +385,7 @@ public class ViewController {
 		} else {
 			for (QueryRequest qr : requestList) {
 				info += qr.getSearchField().toString() + ": ";
-				info += (String) qr.getInput() + "; ";
+				info += qr.getInput() + "; ";
 				info += "Quellen#: " + qr.getSource() + "\n";
 			}
 		}

@@ -52,7 +52,7 @@ public class SearchController {
 			} else if (inputValues[i] instanceof Boolean
 					&& (Boolean) inputValues[i] == true) {
 				QueryRequestImpl tmpReq = new QueryRequestImpl(
-						inputSearchFKey[i], true, inputSourceKey[i]);
+						inputSearchFKey[i], inputValues[i], inputSourceKey[i]);
 				requestList.add(tmpReq);
 			} else if (inputValues[i] instanceof int[]) {
 
