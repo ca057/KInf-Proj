@@ -8,7 +8,11 @@ public class SQLShred extends QueryRequestImpl {
 
 	public SQLShred(String table, String column, Object input) {
 		this.table = table;
-		this.tableName = table.substring(0, table.indexOf("_"));
+		if (table.contains("_")) {
+			this.tableName = table.substring(0, table.indexOf("_"));
+		} else {
+			this.tableName = table;
+		}
 		this.column = column;
 		this.input = input;
 	}
