@@ -59,7 +59,6 @@ public class ImportDatabaseImpl implements ImportDatabase {
 			int fundortID = 0;
 			int titelNormID = 0;
 			int titelTradID = 0;
-
 			int vornameNormID = 0;
 			int nameNormID = 0;
 			int fachNormID = 0;
@@ -150,8 +149,8 @@ public class ImportDatabaseImpl implements ImportDatabase {
 						"name_norm", strings[18]);
 			}
 			// Insert all different variations of name
-			current = 1;
-			for (int i = 19; i <= 28; i++) {
+			current = 0;
+			for (int i = 18; i <= 28; i++) {
 				if (!strings[i].equals("")) {
 					nameTradID = insertIntoTableOneAttributeOneForeignKey(
 							"name_trad", strings[i], nameNormID);
