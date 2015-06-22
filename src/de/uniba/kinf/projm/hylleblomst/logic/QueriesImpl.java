@@ -14,17 +14,27 @@ public class QueriesImpl implements Queries {
 
 	private String buildQuery(Collection<QueryRequestImpl> queryRequests)
 			throws SQLException {
-		String query = "";
-		for (QueryRequest qr : queryRequests) {
-			if ("".equals(query)) {
-				query = "SELECT DISTINCT * FROM " + qr.getSQLStatement();
+		String sqlQuery = "SELECT DISTINCT * ";
+		StringBuilder sqlFrom = new StringBuilder();
+		StringBuilder sqlWhere = new StringBuilder();
+		for (QueryRequestImpl qr : queryRequests) {
+			if (sqlFrom.length() == 0) {
+				sqlFrom.append(qr.getFrom());
 			} else {
-				query += " AND EXISTS (SELECT * FROM " + qr.getSQLStatement()
-						+ ")";
+				sqlFrom.append(", " + qr.getFrom());
 			}
+			if (sqlWhere.length() == 0) {
+				sqlWhere.append(qr.getWhere());
+			} else {
+				sqlWhere.append(" AND " + qr.getWhere());
+			}
+
 		}
-		System.out.println(query);
-		return query;
+		sqlQuery += " FROM " + sqlFrom
+				+ String.format("%s.%s", "Hylleblomst", "Person") + " WHERE "
+				+ sqlWhere;
+		System.out.println(sqlQuery);
+		return sqlQuery;
 	}
 
 	private void startQuery(String query) throws SQLException {

@@ -13,7 +13,10 @@ public class QueryRequestImpl implements QueryRequest {
 	private Object input;
 	private int source;
 	private String table;
-	private String sqlStatement;
+	private String sqlFrom;
+	private String sqlWhere;
+	private String dbName = "Hylleblomst";
+	private String tableName;
 
 	public QueryRequestImpl(SearchFieldKeys searchField, Object input,
 			int source) {
@@ -21,6 +24,7 @@ public class QueryRequestImpl implements QueryRequest {
 		setInput(input);
 		setSource(source);
 		searchFieldKeyToDatabaseData();
+		this.dbName = dbName;
 	}
 
 	QueryRequestImpl() {
@@ -39,19 +43,40 @@ public class QueryRequestImpl implements QueryRequest {
 
 	@Override
 	public Object getInput() {
-		if ("Jesuit".equals(column) || "Adelig".equals(column)) {
-			return "<>\"\"";
-		}
 		return input;
+	}
+
+	public String getSqlFrom() {
+		return sqlFrom;
+	}
+
+	public void setSqlFrom(String sqlFrom) {
+		this.sqlFrom = sqlFrom;
+	}
+
+	public String getSqlWhere() {
+		return sqlWhere;
+	}
+
+	public void setSqlWhere(String sqlWhere) {
+		this.sqlWhere = sqlWhere;
+	}
+
+	public String getDbName() {
+		return dbName;
+	}
+
+	public void setDbName(String dbName) {
+		this.dbName = dbName;
 	}
 
 	@Override
 	public void setInput(Object input) {
-		if ("Jesuit".equals(column) || "Adelig".equals(column)) {
-			this.input = "<>\"\"";
+		if ("JESUIT".equals(column) || "ADLIG".equals(column)) {
+			this.input = "<> ''";
 		} // STUDIENJAHR!
 		else {
-			this.input = input.toString();
+			this.input = input;
 		}
 	}
 
@@ -77,7 +102,7 @@ public class QueryRequestImpl implements QueryRequest {
 
 	@Override
 	public String getSQLStatement() {
-		return sqlStatement;
+		return sqlFrom;
 	}
 
 	/**
@@ -97,7 +122,6 @@ public class QueryRequestImpl implements QueryRequest {
 				table = "ORT_ABWEICHUNG_NORM";
 			}
 			column = getColumnName(table, 2);
-			sqlStatement = new SQLShred(table, column, input).getJoin();
 		} else if (source > SourceKeys.bottom && source < SourceKeys.top) {
 			switch (searchField) {
 			case ADLIG:
@@ -112,8 +136,7 @@ public class QueryRequestImpl implements QueryRequest {
 				table = "PERSON";
 				column = getColumnName(table, 7);
 				if (input instanceof Integer) {
-					input = new SQLShred(table, column, input)
-							.getDate((int[]) input);
+					input = getDate((int[]) input);
 				}
 				break;
 			case EINSCHREIBEDATUM:
@@ -121,8 +144,7 @@ public class QueryRequestImpl implements QueryRequest {
 				table = "PERSON";
 				column = getColumnName(table, 6);
 				if (input instanceof Integer) {
-					input = new SQLShred(table, column, input)
-							.getDate((int[]) input);
+					input = getDate((int[]) input);
 				}
 				break;
 			case ANMERKUNGEN:
@@ -225,12 +247,100 @@ public class QueryRequestImpl implements QueryRequest {
 						"Das zugehörige Tabellenelement für Suchfeld "
 								+ searchField.name() + " ist nicht definiert.");
 			}
-			sqlStatement = new SQLShred(table, column, input).getJoin();
+			if (table.contains("_")) {
+				this.tableName = table.substring(0, table.indexOf("_"));
+			} else {
+				this.tableName = table;
+			}
+			sqlFrom = getFrom();
+			sqlWhere = getWhere();
 		} else {
 			throw new IllegalArgumentException("Die Werte für Suchfeld "
 					+ searchField.toString() + " und Quelle " + source
 					+ " konnten keiner Tabelle und Spalte zugeordnet werden.");
 		}
+	}
+
+	String getFrom() {
+		if (tableName.toUpperCase().startsWith("PERSON")) {
+			// return String.format("%s.%s", dbName, tableName);
+			return "";
+		}
+		if (tableName.toUpperCase().startsWith("FAKUL")
+				|| tableName.startsWith("FUND")) {
+			return String.format("%s.%s"
+			// , %1$s.%s
+					, dbName, tableName // , "PERSON"
+					);
+		}
+		if (tableName.toUpperCase().startsWith("ZUSAE")) {
+			return String.format("%s.%s, %1$s.%2$s%s"
+			// + ", %1$s.%s"
+					, dbName, tableName, "_info"// , "PERSON"
+			);
+		}
+		String result = "";
+		if (tableName.toUpperCase().startsWith("ORT")) {
+			result += String.format("%s.%s%s", dbName, tableName,
+					"_abweichung_norm, ");
+		}
+		result += String.format("%s.%s%s, %1$s.%2$s%s", dbName, tableName,
+				"_norm", "_trad");
+		if (!tableName.toUpperCase().startsWith("ANREDE")) {
+			result += String.format(", %s.%s", dbName, "Quellen");
+		}
+		return result;
+	}
+
+	String getWhere() {
+		if ("JESUIT".equals(column) || "ADLIG".equals(column)) {
+			return String.format("%s.%s.%s %s", dbName, table, column, input);
+		}
+		if (tableName.toUpperCase().startsWith("FAKUL")
+				|| tableName.startsWith("FUND")) {
+			return String.format("%s.%s.%sID == %1$s.%s.%3$sID", dbName,
+					tableName, tableName, "PERSON");
+		}
+		if (tableName.toUpperCase().startsWith("ZUSAE")) {
+			return String
+					.format("%s.%s_info.%2$sInfoID = %1$s.%2$s_trad.%2$sInfoID AND %1$s.%2$s_info.%sID = %1$s.%3$s.%3$sID",
+							dbName, tableName, "Person");
+		}
+
+		String result = "";
+		if (tableName.toUpperCase().startsWith("ORT")) {
+			result += String
+					.format("%s.%s_abweichung_norm.%2$sAbweichungNormID = %1$s.%2$s_norm.AbweichungNormID AND ",
+							dbName, tableName);
+		}
+		result += String.format(
+				"%s.%s_norm.%2$sNormID = %1$s.%2$s_trad.%2$sNormID ", dbName,
+				tableName);
+		if (tableName.toUpperCase().startsWith("ANREDE")) {
+			return result
+					+ String.format(
+							" AND %s.%s_trad.%2$sTradID = %1$s.%s.%2$sID",
+							dbName, tableName, "Person");
+		}
+		result += String.format(
+				"%s.%s_trad.%2$sTradID = %1$s.%2$s_info.%2$sTradID ", dbName,
+				tableName);
+
+		if (source != SourceKeys.NO_SELECTION) {
+			result += String.format(
+					" AND %s.%s%s.QuellenID = %1$s.Quellen.QuellenID", dbName,
+					tableName, "_info");
+		}
+		result += String.format(" AND %s.%s.%2$sID = %1$s.%s_info.%2$sID",
+				dbName, "Person", tableName);
+		result += String.format(" AND %s.%s.%s LIKE '%s%s%4$s'", dbName, table,
+				column, "%", input);
+
+		return result;
+	}
+
+	private String getDate(int[] input) {
+		return null;
 	}
 
 	/*
