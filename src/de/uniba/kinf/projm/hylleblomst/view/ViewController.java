@@ -214,6 +214,7 @@ public class ViewController {
 		inputFields[11] = searchCategory_study_fakultaet.getText();
 		inputFields[12] = searchCategory_study_seminarinput.getText();
 		inputFields[13] = searchCategory_study_graduiert.isSelected();
+
 		int[] studienjahr = new int[2];
 		// TODO hier muss ich sachen machen
 		inputFields[14] = studienjahr;
@@ -221,6 +222,10 @@ public class ViewController {
 		inputFields[15] = einschreibung;
 
 		return inputFields;
+	}
+
+	private int[] getStudienjahr() {
+		return null;
 	}
 
 	/**
