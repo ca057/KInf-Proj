@@ -80,6 +80,7 @@
 																<ComboBox fx:id="searchCategory_person_vornameselection" prefWidth="300.0" promptText="Vornamenquelle auswählen">
 																	<items>
 																		<FXCollections fx:factory="observableArrayList">
+																			<String fx:value="keine Quelle auswählen" />
 																			<String fx:value="Standard" />
 																			<String fx:value="normalisiert" />
 																			<String fx:value="HS B (AUB, I 11)" />
@@ -108,6 +109,7 @@
 																<ComboBox fx:id="searchCategory_person_nachnameselection" prefWidth="270.0" promptText="Nachnamenquelle auswählen">
 																	<items>
 																		<FXCollections fx:factory="observableArrayList">
+																			<String fx:value="keine Quelle auswählen" />
 																			<String fx:value="Standard" />
 																			<String fx:value="HS B ( AUB, I 11)" />
 																			<String fx:value="HS C (AUB, I 13/1)" />
@@ -149,9 +151,10 @@
 																<ComboBox fx:id="searchCategory_personExtended_wirtschaftselection" prefWidth="270.0" promptText="Quelle der wirtschaftl. Lage auswählen">
 																	<items>
 																		<FXCollections fx:factory="observableArrayList">
+																			<String fx:value="keine Quelle auswählen" />
 																			<String fx:value="Standard" />
 																			<String fx:value="normalisiert" />
-																			<String fx:value="HS B ( AUB, I 11)" />
+																			<String fx:value="HS B (AUB, I 11)" />
 																			<String fx:value="HS D (AUB, I 13/2)" />
 																			<String fx:value="HS J (SB Bamberg, Msc.Add.3)" />
 																		</FXCollections>
@@ -170,6 +173,7 @@
 																<ComboBox fx:id="searchCategory_personExtended_ortselection" prefWidth="270.0" promptText="Ortsquelle auswählen">
 																	<items>
 																		<FXCollections fx:factory="observableArrayList">
+																			<String fx:value="keine Quelle auswählen" />
 																			<String fx:value="Standard" />
 																			<String fx:value="normalisiert" />
 																			<String fx:value="Abweichung normalisiert" />
@@ -209,6 +213,7 @@
 																<ComboBox fx:id="searchCategory_study_studienfachselection" prefWidth="270.0" promptText="Studienfachquelle auswählen">
 																	<items>
 																		<FXCollections fx:factory="observableArrayList">
+																			<String fx:value="keine Quelle auswählen" />
 																			<String fx:value="Standard" />
 																			<String fx:value="normalisiert" />
 																			<String fx:value="HS B ( AUB, I 11)" />
@@ -234,6 +239,7 @@
 																<ComboBox fx:id="searchCategory_study_seminarselection" prefWidth="270.0" promptText="Seminarquelle auswählen">
 																	<items>
 																		<FXCollections fx:factory="observableArrayList">
+																			<String fx:value="keine Quelle auswählen" />
 																			<String fx:value="Standard" />
 																			<String fx:value="normalisiert" />
 																			<String fx:value="HS B ( AUB, I 11)" />
@@ -314,6 +320,7 @@
 																<ComboBox prefWidth="270.0" promptText="Quelle der Zusätze auswählen">
 																	<items>
 																		<FXCollections fx:factory="observableArrayList">
+																			<String fx:value="keine Quelle auswählen" />
 																			<String fx:value="Standard" />
 																			<String fx:value="HS B ( AUB, I 11)" />
 																			<String fx:value="HS C (AUB, I 13/1)" />
