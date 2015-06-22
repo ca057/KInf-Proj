@@ -39,16 +39,13 @@ public class QueryRequestImpl implements QueryRequest {
 
 	@Override
 	public Object getInput() {
-		if ("Jesuit".equals(column) || "Adelig".equals(column)) {
-			return "<>\"\"";
-		}
 		return input;
 	}
 
 	@Override
 	public void setInput(Object input) {
-		if ("Jesuit".equals(column) || "Adelig".equals(column)) {
-			this.input = "<>\"\"";
+		if ("JESUIT".equals(column) || "ADLIG".equals(column)) {
+			this.input = "<> ''";
 		} // STUDIENJAHR!
 		else {
 			this.input = input.toString();

@@ -18,7 +18,7 @@ public class SQLShred extends QueryRequestImpl {
 	}
 
 	String getJoin() {
-		if (tableName.startsWith("Person")) {
+		if (tableName.startsWith("PERSON")) {
 			return "Hylleblomst." + tableName + " WHERE " + getInputToQuery();
 		} else if (tableName.startsWith("Ort")) {
 			return "Hylleblomst." + tableName
@@ -28,6 +28,8 @@ public class SQLShred extends QueryRequestImpl {
 					+ "AbweichungNormID = Hylleblomst." + tableName + "_norm."
 					+ tableName + "AbweichungNormID + AND " + getInputToQuery();
 		} else if (tableName.startsWith("ANREDE")) {
+			// return String.format("irgendwas.%s.%s.%1$s", tableName, "_trad");
+
 			return "Hylleblomst." + tableName + "_norm, Hylleblomst."
 					+ tableName + "_trad, Hylleblomst.Person"
 					+ " WHERE Hylleblomst." + tableName + "_norm." + tableName
@@ -42,7 +44,7 @@ public class SQLShred extends QueryRequestImpl {
 					+ "ID = Hylleblomst.Person." + tableName + "ID AND "
 					+ getInputToQuery();
 		} else {
-			return getStandardFromJoin() + getStandardWhereJoin()
+			return getStandardFromJoin() + getStandardWhereJoin() + " AND "
 					+ getInputToQuery();
 		}
 	}
@@ -79,6 +81,9 @@ public class SQLShred extends QueryRequestImpl {
 	}
 
 	String getInputToQuery() {
+		if ("JESUIT".equals(column) || "ADLIG".equals(column)) {
+			return "Hylleblomst." + table + "." + column + " " + input;
+		}
 		return "Hylleblomst." + table + "." + column + " LIKE " + "'%" + input
 				+ "%'";
 	}
