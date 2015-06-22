@@ -14,7 +14,7 @@ public class QueriesImpl implements Queries {
 
 	private String buildQuery(Collection<QueryRequestImpl> queryRequests)
 			throws SQLException {
-		String sqlQuery = "SELECT DISTINCT * ";
+		String sqlQuery = "SELECT DISTINCT *";
 		StringBuilder sqlFrom = new StringBuilder();
 		StringBuilder sqlWhere = new StringBuilder();
 		for (QueryRequestImpl qr : queryRequests) {

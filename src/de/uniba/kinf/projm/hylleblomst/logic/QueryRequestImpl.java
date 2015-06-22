@@ -268,26 +268,27 @@ public class QueryRequestImpl implements QueryRequest {
 		}
 		if (tableName.toUpperCase().startsWith("FAKUL")
 				|| tableName.startsWith("FUND")) {
-			return String.format("%s.%s"
+			return String.format("%s.%s, "
 			// , %1$s.%s
 					, dbName, tableName // , "PERSON"
 					);
 		}
 		if (tableName.toUpperCase().startsWith("ZUSAE")) {
-			return String.format("%s.%s, %1$s.%2$s%s"
+			return String.format("%s.%s, %1$s.%2$s%s, "
 			// + ", %1$s.%s"
 					, dbName, tableName, "_info"// , "PERSON"
 			);
 		}
 		String result = "";
 		if (tableName.toUpperCase().startsWith("ORT")) {
-			result += String.format("%s.%s%s", dbName, tableName,
-					"_abweichung_norm, ");
+			result += String.format("%s.%s%s, ", dbName, tableName,
+					"_abweichung_norm");
 		}
-		result += String.format("%s.%s%s, %1$s.%2$s%s", dbName, tableName,
+		result += String.format("%s.%s%s, %1$s.%2$s%s,", dbName, tableName,
 				"_norm", "_trad");
 		if (!tableName.toUpperCase().startsWith("ANREDE")) {
-			result += String.format(", %s.%s", dbName, "Quellen");
+			result += String.format("%s.%s_info, %1$s.%s, ", dbName, tableName,
+					"Quellen");
 		}
 		return result;
 	}
@@ -296,10 +297,14 @@ public class QueryRequestImpl implements QueryRequest {
 		if ("JESUIT".equals(column) || "ADLIG".equals(column)) {
 			return String.format("%s.%s.%s %s", dbName, table, column, input);
 		}
+		if (tableName.toUpperCase().startsWith("PERSON")) {
+			return String.format(" %s.%s.%s LIKE '%s%s%4$s'", dbName, table,
+					column, "%", input);
+		}
 		if (tableName.toUpperCase().startsWith("FAKUL")
 				|| tableName.startsWith("FUND")) {
-			return String.format("%s.%s.%sID == %1$s.%s.%3$sID", dbName,
-					tableName, tableName, "PERSON");
+			return String.format("%s.%s.%2$sID = %1$s.%s.%2$sID", dbName,
+					tableName, "PERSON");
 		}
 		if (tableName.toUpperCase().startsWith("ZUSAE")) {
 			return String
@@ -310,7 +315,7 @@ public class QueryRequestImpl implements QueryRequest {
 		String result = "";
 		if (tableName.toUpperCase().startsWith("ORT")) {
 			result += String
-					.format("%s.%s_abweichung_norm.%2$sAbweichungNormID = %1$s.%2$s_norm.AbweichungNormID AND ",
+					.format("%s.%s_abweichung_norm.%2$sAbweichungNormID = %1$s.%2$s_norm.AbweichungNormID AND",
 							dbName, tableName);
 		}
 		result += String.format(
@@ -323,13 +328,13 @@ public class QueryRequestImpl implements QueryRequest {
 							dbName, tableName, "Person");
 		}
 		result += String.format(
-				"%s.%s_trad.%2$sTradID = %1$s.%2$s_info.%2$sTradID ", dbName,
-				tableName);
+				" AND %s.%s_trad.%2$sTradID = %1$s.%2$s_info.%2$sTradID",
+				dbName, tableName);
 
 		if (source != SourceKeys.NO_SELECTION) {
-			result += String.format(
-					" AND %s.%s%s.QuellenID = %1$s.Quellen.QuellenID", dbName,
-					tableName, "_info");
+			result += String
+					.format(" AND %s.%s_info.QuellenID = %1$s.Quellen.QuellenID AND %1$s.%2$s_info.QuellenID = %s",
+							dbName, tableName, source);
 		}
 		result += String.format(" AND %s.%s.%2$sID = %1$s.%s_info.%2$sID",
 				dbName, "Person", tableName);
