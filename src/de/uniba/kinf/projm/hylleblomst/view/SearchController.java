@@ -1,6 +1,5 @@
 package de.uniba.kinf.projm.hylleblomst.view;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,16 +50,19 @@ public class SearchController {
 				requestList.add(tmpReq);
 			} else if (inputValues[i] instanceof Boolean
 					&& (Boolean) inputValues[i] == true) {
+				// QueryRequestImpl tmpReq = new
+				// QueryRequestImpl(inputSearchFKey[i], inputValues[i],
+				// inputSourceKey[i]);
 				QueryRequestImpl tmpReq = new QueryRequestImpl(
-						inputSearchFKey[i], inputValues[i], inputSourceKey[i]);
+						inputSearchFKey[i], true, inputSourceKey[i]);
 				requestList.add(tmpReq);
 			}
 		}
 
 		try {
 			view.setInfoTextExtendedSearch(requestList);
-			querieImpl.search(requestList);
-		} catch (SQLException e) {
+			// querieImpl.search(requestList);
+		} catch (/* SQL */Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException("Fehler bei der Suche\n"
 					+ e.getMessage());
@@ -81,6 +83,11 @@ public class SearchController {
 		sfkArray[8] = SearchFieldKeys.WIRTSCHAFTSLAGE;
 		sfkArray[9] = SearchFieldKeys.ORT;
 		sfkArray[10] = SearchFieldKeys.FACH;
+		sfkArray[11] = SearchFieldKeys.FAKULTAETEN;
+		sfkArray[12] = SearchFieldKeys.SEMINAR;
+		sfkArray[13] = SearchFieldKeys.GRADUIERT;
+		sfkArray[14] = SearchFieldKeys.STUDIENJAHR;
+		sfkArray[15] = SearchFieldKeys.EINSCHREIBEDATUM;
 
 		return sfkArray;
 	}

@@ -42,7 +42,7 @@ public class ViewController {
 	 * Stores the number of input fields for usable generation of input field
 	 * arrays.
 	 */
-	private int inputFieldCounter = 11;
+	private int inputFieldCounter = 16;
 
 	@FXML
 	BorderPane root;
@@ -125,7 +125,6 @@ public class ViewController {
 	@FXML
 	TextField searchCategory_study_studienfachinput;
 
-	// TODO implement from here
 	@FXML
 	TextField searchCategory_study_fakultaet;
 
@@ -153,7 +152,6 @@ public class ViewController {
 	@FXML
 	TextField searchCategory_study_einschreibeJahr;
 
-	// implement upto here
 	@FXML
 	TitledPane searchCategory_other;
 
@@ -213,6 +211,14 @@ public class ViewController {
 				.getText();
 		inputFields[9] = searchCategory_personExtended_ortinput.getText();
 		inputFields[10] = searchCategory_study_studienfachinput.getText();
+		inputFields[11] = searchCategory_study_fakultaet.getText();
+		inputFields[12] = searchCategory_study_seminarinput.getText();
+		inputFields[13] = searchCategory_study_graduiert.isSelected();
+		int[] studienjahr = new int[2];
+		// TODO hier muss ich sachen machen
+		inputFields[14] = studienjahr;
+		int[] einschreibung = new int[3];
+		inputFields[15] = einschreibung;
 
 		return inputFields;
 	}
@@ -230,14 +236,20 @@ public class ViewController {
 		inputSourceKey[4] = getSourceKeyByValueAsString(searchCategory_person_vornameselection
 				.getValue());
 		inputSourceKey[5] = SourceKeys.STANDARD;
-		inputSourceKey[6] = SourceKeys.NO_SELECTION;
-		inputSourceKey[7] = SourceKeys.NO_SELECTION;
+		inputSourceKey[6] = SourceKeys.STANDARD;
+		inputSourceKey[7] = SourceKeys.STANDARD;
 		inputSourceKey[8] = getSourceKeyByValueAsString(searchCategory_personExtended_wirtschaftselection
 				.getValue());
 		inputSourceKey[9] = getSourceKeyByValueAsString(searchCategory_personExtended_ortselection
 				.getValue());
 		inputSourceKey[10] = getSourceKeyByValueAsString(searchCategory_study_studienfachselection
 				.getValue());
+		inputSourceKey[11] = SourceKeys.STANDARD;
+		inputSourceKey[12] = getSourceKeyByValueAsString(searchCategory_study_seminarselection
+				.getValue());
+		inputSourceKey[13] = SourceKeys.STANDARD;
+		inputSourceKey[14] = SourceKeys.STANDARD;
+		inputSourceKey[15] = SourceKeys.STANDARD;
 
 		return inputSourceKey;
 	}
@@ -278,6 +290,17 @@ public class ViewController {
 		searchCategory_personExtended_wirtschaftinput.clear();
 		searchCategory_personExtended_ortselection.setValue(null);
 		searchCategory_personExtended_ortinput.clear();
+		searchCategory_study_studienfachselection.setValue(null);
+		searchCategory_study_studienfachinput.clear();
+		searchCategory_study_fakultaet.clear();
+		searchCategory_study_seminarselection.setValue(null);
+		searchCategory_study_seminarinput.clear();
+		searchCategory_study_graduiert.setSelected(false);
+		searchCategory_study_studienjahrVon.clear();
+		searchCategory_study_studienjahrBis.clear();
+		searchCategory_study_einschreibeTag.clear();
+		searchCategory_study_einschreibeMonat.clear();
+		searchCategory_study_einschreibeJahr.clear();
 		infoArea.clear();
 	}
 
