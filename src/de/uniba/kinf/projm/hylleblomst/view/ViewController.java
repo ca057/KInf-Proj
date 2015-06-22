@@ -214,17 +214,23 @@ public class ViewController {
 		inputFields[11] = searchCategory_study_fakultaet.getText();
 		inputFields[12] = searchCategory_study_seminarinput.getText();
 		inputFields[13] = searchCategory_study_graduiert.isSelected();
-
-		int[] studienjahr = new int[2];
-		// TODO hier muss ich sachen machen
-		inputFields[14] = studienjahr;
-		int[] einschreibung = new int[3];
-		inputFields[15] = einschreibung;
+		inputFields[14] = getStudienjahr();
+		inputFields[15] = getEinschreibung();
 
 		return inputFields;
 	}
 
 	private int[] getStudienjahr() {
+		int[] studienjahr = new int[2];
+		if (!"".equals(searchCategory_study_studienjahrVon.getText())) {
+			// studienjahr[0] = searchCategory_study_studienjahrVon.getText();
+		}
+		return null;
+	}
+
+	private int[] getEinschreibung() {
+		int[] einschreibung = new int[3];
+
 		return null;
 	}
 
@@ -385,5 +391,12 @@ public class ViewController {
 		}
 
 		infoArea.setText(info);
+	}
+
+	int parseNumericalInput(String input) {
+		String tmp = input.trim();
+		int result = Integer.parseInt(tmp);
+
+		return result;
 	}
 }
