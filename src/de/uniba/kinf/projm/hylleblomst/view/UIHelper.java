@@ -96,4 +96,29 @@ public class UIHelper {
 
 		alertInformation.showAndWait();
 	}
+
+	/**
+	 * Shows an alert window with an error message. If an empty String as error
+	 * message is passed, a default error text is shown.
+	 * 
+	 * <p>
+	 * <b>Precondition</b>
+	 * </p>
+	 * <ul>
+	 * <li> {@code errorMsg} must not be null
+	 * </ul>
+	 * 
+	 * @param errorMsg
+	 *            The error message as String
+	 */
+	protected void showErrorMessage(String errorMsg) {
+		Alert exceptionAlert = new Alert(AlertType.ERROR);
+		exceptionAlert.setTitle(appName + " - Fehler");
+		exceptionAlert.setHeaderText("Ein Fehler ist aufgetreten.");
+		if (errorMsg == null || "".equals(errorMsg)) {
+			errorMsg = "Art und Ursprung des Fehlers sind nicht bekannt.";
+		}
+		exceptionAlert.setContentText(errorMsg);
+		exceptionAlert.showAndWait();
+	}
 }
