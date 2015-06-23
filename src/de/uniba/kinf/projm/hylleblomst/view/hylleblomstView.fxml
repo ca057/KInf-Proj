@@ -317,7 +317,7 @@
 															</padding>
 															<children>
 																<Label text="Zusätze" />
-																<ComboBox prefWidth="270.0" promptText="Quelle der Zusätze auswählen">
+																<ComboBox fx:id="searchCategory_other_zusaetzeselection" prefWidth="270.0" promptText="Quelle der Zusätze auswählen">
 																	<items>
 																		<FXCollections fx:factory="observableArrayList">
 																			<String fx:value="keine Quelle auswählen" />
@@ -335,7 +335,7 @@
 																		</FXCollections>
 																	</items>
 																</ComboBox>
-																<TextField promptText="Zusätze">
+																<TextField fx:id="searchCategory_other_zusaetzeinput" promptText="Zusätze">
 																	<VBox.margin>
 																		<Insets top="5.0" />
 																	</VBox.margin>
@@ -345,25 +345,25 @@
 																		<Insets top="15.0" />
 																	</VBox.margin>
 																</Label>
-																<TextField promptText="Fundort" />
+																<TextField fx:id="searchCategory_other_fundort" promptText="Fundort" />
 																<Label text="Anmerkungen">
 																	<VBox.margin>
 																		<Insets top="15.0" />
 																	</VBox.margin>
 																</Label>
-																<TextField promptText="Anmerkungen" />
+																<TextField fx:id="searchCategory_other_anmerkungen" promptText="Anmerkungen" />
 																<Label text="Nummer">
 																	<VBox.margin>
 																		<Insets top="15.0" />
 																	</VBox.margin>
 																</Label>
-																<TextField maxWidth="100.0" minWidth="100.0" prefWidth="100.0" promptText="Nummer" />
+																<TextField fx:id="searchCategory_other_nummer" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" promptText="Nummer" />
 																<Label text="Seite Original">
 																	<VBox.margin>
 																		<Insets top="15.0" />
 																	</VBox.margin>
 																</Label>
-																<TextField maxWidth="100.0" minWidth="100.0" prefWidth="100.0" promptText="Seite Original">
+																<TextField fx:id="searchCategory_other_seite" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" promptText="Seite Original">
 																	<VBox.margin>
 																		<Insets top="5.0" />
 																	</VBox.margin>
@@ -373,7 +373,7 @@
 																		<Insets top="15.0" />
 																	</VBox.margin>
 																</Label>
-																<TextField maxWidth="100.0" minWidth="100.0" prefWidth="100.0" promptText="Nummer Hess">
+																<TextField fx:id="searchCategory_other_nummerhess" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" promptText="Nummer Hess">
 																	<VBox.margin>
 																		<Insets top="5.0" />
 																	</VBox.margin>

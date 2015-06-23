@@ -61,6 +61,7 @@ public class SearchController {
 
 		try {
 			view.setInfoTextExtendedSearch(requestList);
+			// TODO nicht bei leerer Liste machen
 			querieImpl.search(requestList);
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -88,6 +89,12 @@ public class SearchController {
 		sfkArray[13] = SearchFieldKeys.GRADUIERT;
 		sfkArray[14] = SearchFieldKeys.STUDIENJAHR;
 		sfkArray[15] = SearchFieldKeys.EINSCHREIBEDATUM;
+		sfkArray[16] = SearchFieldKeys.ZUSAETZE;
+		sfkArray[17] = SearchFieldKeys.FUNDORTE;
+		sfkArray[18] = SearchFieldKeys.ANMERKUNGEN;
+		sfkArray[19] = SearchFieldKeys.NUMMER;
+		sfkArray[20] = SearchFieldKeys.SEITE_ORIGINALE;
+		sfkArray[21] = SearchFieldKeys.NUMMER_HESS;
 
 		return sfkArray;
 	}
