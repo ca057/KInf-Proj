@@ -1,10 +1,12 @@
 package de.uniba.kinf.projm.hylleblomst.logic;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class QueriesImpl implements Queries {
 	DBAccess db;
+	ArrayList<Object> inputs = new ArrayList<Object>();
 
 	@Override
 	public void search(Collection<QueryRequestImpl> queryRequests)
@@ -14,6 +16,7 @@ public class QueriesImpl implements Queries {
 
 	private String buildQuery(Collection<QueryRequestImpl> queryRequests)
 			throws SQLException {
+		inputs.clear();
 		String sqlQuery = "SELECT DISTINCT *";
 		StringBuilder sqlFrom = new StringBuilder();
 		StringBuilder sqlWhere = new StringBuilder();
@@ -28,10 +31,12 @@ public class QueriesImpl implements Queries {
 			} else {
 				sqlWhere.append(" AND " + qr.getWhere());
 			}
-
+			if (!(qr.getInput() instanceof Boolean)) {
+				inputs.add(qr.getInput());
+			}
 		}
 		sqlQuery += " FROM " + sqlFrom
-				+ String.format("%s.%s", "Hylleblomst", "Person") + " WHERE "
+				+ String.format(", %s.%s", "Hylleblomst", "Person") + " WHERE "
 				+ sqlWhere;
 		System.out.println(sqlQuery);
 		return sqlQuery;
@@ -40,7 +45,7 @@ public class QueriesImpl implements Queries {
 	private void startQuery(String query) throws SQLException {
 		db = new DBAccess("jdbc:derby:./db/MyDB;create=true", "admin",
 				"password");
-		db.startQuery(query);
+		db.startQuery(query, inputs);
 	}
 
 	@Override

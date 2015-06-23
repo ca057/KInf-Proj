@@ -263,13 +263,13 @@ public class QueryRequestImpl implements QueryRequest {
 		}
 		if (tableName.toUpperCase().startsWith("FAKUL")
 				|| tableName.startsWith("FUND")) {
-			return String.format("%s.%s, "
+			return String.format("%s.%s"
 			// , %1$s.%s
 					, dbName, tableName // , "PERSON"
 					);
 		}
 		if (tableName.toUpperCase().startsWith("ZUSAE")) {
-			return String.format("%s.%s, %1$s.%2$s%s, "
+			return String.format("%s.%s, %1$s.%2$s%s"
 			// + ", %1$s.%s"
 					, dbName, tableName, "_info"// , "PERSON"
 			);
@@ -279,12 +279,13 @@ public class QueryRequestImpl implements QueryRequest {
 			result += String.format("%s.%s%s, ", dbName, tableName,
 					"_abweichung_norm");
 		}
-		result += String.format("%s.%s%s, %1$s.%2$s%s,", dbName, tableName,
+		result += String.format("%s.%s%s, %1$s.%2$s%s", dbName, tableName,
 				"_norm", "_trad");
-		if (!tableName.toUpperCase().startsWith("ANREDE")) {
-			result += String.format("%s.%s_info, ", dbName, tableName);
+		if (!tableName.toUpperCase().startsWith("ANREDE")
+				&& !(tableName.toUpperCase().startsWith("TITEL"))) {
+			result += String.format(", %s.%s_info", dbName, tableName);
 			if (!(source == SourceKeys.NO_SOURCE)) {
-				result += String.format("%s.%s, ", dbName, "Quellen");
+				result += String.format(", %s.%s", dbName, "Quellen");
 			}
 		}
 		return result;
@@ -295,8 +296,7 @@ public class QueryRequestImpl implements QueryRequest {
 			return String.format("%s.%s.%s %s", dbName, table, column, "<> ''");
 		}
 		if (tableName.toUpperCase().startsWith("PERSON")) {
-			return String.format(" %s.%s.%s LIKE '%s%s%4$s'", dbName, table,
-					column, "%", input);
+			return String.format(" %s.%s.%s LIKE ?", dbName, table, column);
 		}
 		if (tableName.toUpperCase().startsWith("FAKUL")
 				|| tableName.startsWith("FUND")) {
@@ -318,20 +318,22 @@ public class QueryRequestImpl implements QueryRequest {
 		result += String.format(
 				"%s.%s_norm.%2$sNormID = %1$s.%2$s_trad.%2$sNormID ", dbName,
 				tableName);
-		if (tableName.toUpperCase().startsWith("ANREDE")) {
+		if (tableName.toUpperCase().startsWith("ANREDE")
+				|| tableName.toUpperCase().startsWith("TITEL")) {
 			return result
 					+ String.format(
-							" AND %s.%s_trad.%2$sTradID = %1$s.%s.%2$sID",
-							dbName, tableName, "Person");
+							" AND %s.%s_trad.%2$sTradID = %1$s.Person.%2$sID AND %1$s.%s.%s LIKE ?",
+							dbName, tableName, table, column);
 		}
-		result += String.format(
-				" AND %s.%s_trad.%2$sTradID = %1$s.%2$s_info.%2$sTradID",
-				dbName, tableName);
 		if (source != SourceKeys.NO_SOURCE) {
+			result += String.format(
+					" AND %s.%s_trad.%2$sTradID = %1$s.%2$s_info.%2$sTradID",
+					dbName, tableName);
 			result += String.format(
 					" AND %s.%s_info.QuellenID = %1$s.Quellen.QuellenID",
 					dbName, tableName);
-			if (source != SourceKeys.NO_SELECTION) {
+			if (source != SourceKeys.NO_SELECTION
+					&& !(tableName.toUpperCase().startsWith("TITEL"))) {
 				result += String.format(" AND %s.%s_info.QuellenID = %s",
 						dbName, tableName, source);
 			}
@@ -339,13 +341,12 @@ public class QueryRequestImpl implements QueryRequest {
 		}
 		result += String.format(" AND %s.%s.%2$sID = %1$s.%s_info.%2$sID",
 				dbName, "Person", tableName);
-		result += String.format(" AND %s.%s.%s LIKE '%s%s%4$s'", dbName, table,
-				column, "%", input);
-
+		result += String.format(" AND %s.%s.%s LIKE ?", dbName, table, column);
 		return result;
 	}
 
 	private String getDate(int[] input) {
+		// TODO implement this
 		return null;
 	}
 
