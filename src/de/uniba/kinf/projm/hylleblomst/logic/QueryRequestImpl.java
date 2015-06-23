@@ -72,9 +72,7 @@ public class QueryRequestImpl implements QueryRequest {
 
 	@Override
 	public void setInput(Object input) {
-		if (input instanceof Boolean) {
-			this.input = "<> ''";
-		}
+		this.input = input;
 	}
 
 	@Override
@@ -293,8 +291,8 @@ public class QueryRequestImpl implements QueryRequest {
 	}
 
 	String getWhere() {
-		if ("JESUIT".equals(column) || "ADLIG".equals(column)) {
-			return String.format("%s.%s.%s %s", dbName, table, column, input);
+		if (input instanceof Boolean) {
+			return String.format("%s.%s.%s %s", dbName, table, column, "<> ''");
 		}
 		if (tableName.toUpperCase().startsWith("PERSON")) {
 			return String.format(" %s.%s.%s LIKE '%s%s%4$s'", dbName, table,
