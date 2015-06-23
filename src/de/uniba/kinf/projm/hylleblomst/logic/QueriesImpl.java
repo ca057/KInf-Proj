@@ -21,10 +21,8 @@ public class QueriesImpl implements Queries {
 		StringBuilder sqlFrom = new StringBuilder();
 		StringBuilder sqlWhere = new StringBuilder();
 		for (QueryRequestImpl qr : queryRequests) {
-			if (sqlFrom.length() == 0) {
-				sqlFrom.append(qr.getFrom());
-			} else {
-				sqlFrom.append(", " + qr.getFrom());
+			if (!(qr.getTable().toUpperCase().startsWith("PERSON"))) {
+				sqlFrom.append(qr.getFrom() + ", ");
 			}
 			if (sqlWhere.length() == 0) {
 				sqlWhere.append(qr.getWhere());
@@ -36,8 +34,9 @@ public class QueriesImpl implements Queries {
 			}
 		}
 		sqlQuery += " FROM " + sqlFrom
-				+ String.format(", %s.%s", "Hylleblomst", "Person") + " WHERE "
+				+ String.format("%s.%s", "Hylleblomst", "Person") + " WHERE "
 				+ sqlWhere;
+
 		System.out.println(sqlQuery);
 		return sqlQuery;
 	}
