@@ -312,7 +312,7 @@ public class QueryRequestImpl implements QueryRequest {
 		String result = "";
 		if (tableName.toUpperCase().startsWith("ORT")) {
 			result += String
-					.format("%s.%s_abweichung_norm.%2$sAbweichungNormID = %1$s.%2$s_norm.AbweichungNormID AND",
+					.format("%s.%s_abweichung_norm.%2$sAbweichungNormID = %1$s.%2$s_norm.AbweichungNormID AND ",
 							dbName, tableName);
 		}
 		result += String.format(

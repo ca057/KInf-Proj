@@ -41,10 +41,10 @@ public class QueriesImpl implements Queries {
 		return sqlQuery;
 	}
 
-	private void startQuery(String query) throws SQLException {
+	private void startQuery(String sqlQuery) throws SQLException {
 		db = new DBAccess("jdbc:derby:./db/MyDB;create=true", "admin",
 				"password");
-		db.startQuery(query, inputs);
+		db.startQuery(sqlQuery, inputs);
 	}
 
 	@Override

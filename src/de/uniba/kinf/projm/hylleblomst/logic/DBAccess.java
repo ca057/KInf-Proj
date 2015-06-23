@@ -55,10 +55,6 @@ class DBAccess {
 						results.getString(9), results.getString(10));
 			}
 			results.close();
-		} catch (SQLException e) {
-			throw new SQLException(e.getMessage());
-		} finally {
-
 		}
 	}
 }
