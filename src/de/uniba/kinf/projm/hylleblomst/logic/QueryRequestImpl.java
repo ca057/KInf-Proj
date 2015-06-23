@@ -300,8 +300,9 @@ public class QueryRequestImpl implements QueryRequest {
 		}
 		if (tableName.toUpperCase().startsWith("FAKUL")
 				|| tableName.startsWith("FUND")) {
-			return String.format("%s.%s.%2$sID = %1$s.%s.%2$sID", dbName,
-					tableName, "PERSON");
+			return String.format(
+					"%s.%s.%2$sID = %1$s.%s.%2$sID AND %1$s.%s.%s LIKE ?",
+					dbName, tableName, "PERSON", table, column);
 		}
 		if (tableName.toUpperCase().startsWith("ZUSAE")) {
 			return String
