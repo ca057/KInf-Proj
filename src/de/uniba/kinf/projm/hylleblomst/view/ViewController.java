@@ -1,5 +1,6 @@
 package de.uniba.kinf.projm.hylleblomst.view;
 
+import java.util.InputMismatchException;
 import java.util.List;
 
 import javafx.fxml.FXML;
@@ -219,31 +220,49 @@ public class ViewController {
 	 */
 	private Object[] generateArrayWithInputValues() {
 		Object[] inputFields = new Object[inputFieldCounter];
-
-		inputFields[0] = searchCategory_person_anrede.getText();
-		inputFields[1] = searchCategory_person_anredenorm.getText();
-		inputFields[2] = searchCategory_person_titel.getText();
-		inputFields[3] = searchCategory_person_titelnorm.getText();
-		inputFields[4] = searchCategory_person_vornameinput.getText();
-		inputFields[5] = searchCategory_person_nachnameinput.getText();
-		inputFields[6] = searchCategory_personExtended_adeliger.isSelected();
-		inputFields[7] = searchCategory_personExtended_jesuit.isSelected();
-		inputFields[8] = searchCategory_personExtended_wirtschaftinput
-				.getText();
-		inputFields[9] = searchCategory_personExtended_ortinput.getText();
-		inputFields[10] = searchCategory_study_studienfachinput.getText();
-		inputFields[11] = searchCategory_study_fakultaet.getText();
-		inputFields[12] = searchCategory_study_seminarinput.getText();
-		inputFields[13] = searchCategory_study_graduiert.isSelected();
-		inputFields[14] = getStudienjahr();
-		inputFields[15] = getEinschreibung();
-		inputFields[16] = searchCategory_other_zusaetzeinput.getText();
-		inputFields[17] = searchCategory_other_fundort.getText();
-		inputFields[18] = searchCategory_other_anmerkungen.getText();
-		inputFields[19] = getNummer();
-		inputFields[20] = getSeiteOriginal();
-		inputFields[21] = getNummerHess();
-
+		try {
+			inputFields[0] = searchCategory_person_anrede.getText();
+			inputFields[1] = searchCategory_person_anredenorm.getText();
+			inputFields[2] = searchCategory_person_titel.getText();
+			inputFields[3] = searchCategory_person_titelnorm.getText();
+			inputFields[4] = searchCategory_person_vornameinput.getText();
+			inputFields[5] = searchCategory_person_nachnameinput.getText();
+			inputFields[6] = searchCategory_personExtended_adeliger
+					.isSelected();
+			inputFields[7] = searchCategory_personExtended_jesuit.isSelected();
+			inputFields[8] = searchCategory_personExtended_wirtschaftinput
+					.getText();
+			inputFields[9] = searchCategory_personExtended_ortinput.getText();
+			inputFields[10] = searchCategory_study_studienfachinput.getText();
+			inputFields[11] = searchCategory_study_fakultaet.getText();
+			inputFields[12] = searchCategory_study_seminarinput.getText();
+			inputFields[13] = searchCategory_study_graduiert.isSelected();
+			inputFields[14] = getStudienjahr();
+			inputFields[15] = getEinschreibung();
+			inputFields[16] = searchCategory_other_zusaetzeinput.getText();
+			inputFields[17] = searchCategory_other_fundort.getText();
+			inputFields[18] = searchCategory_other_anmerkungen.getText();
+			if (!"".equals(searchCategory_other_nummer.getText())) {
+				inputFields[19] = getParsedInt(searchCategory_other_nummer
+						.getText());
+			} else {
+				inputFields[19] = null;
+			}
+			if (!"".equals(searchCategory_other_seite.getText())) {
+				inputFields[20] = getParsedInt(searchCategory_other_seite
+						.getText());
+			} else {
+				inputFields[20] = null;
+			}
+			if (!"".equals(searchCategory_other_nummerhess.getText())) {
+				inputFields[21] = getParsedInt(searchCategory_other_nummerhess
+						.getText());
+			} else {
+				inputFields[21] = null;
+			}
+		} catch (InputMismatchException | NumberFormatException e) {
+			ui.showErrorMessage(e.getMessage());
+		}
 		return inputFields;
 	}
 
@@ -261,16 +280,19 @@ public class ViewController {
 		return null;
 	}
 
-	private int getNummer() {
-		return Integer.MAX_VALUE;
-	}
-
-	private int getSeiteOriginal() {
-		return Integer.MAX_VALUE;
-	}
-
-	private int getNummerHess() {
-		return Integer.MAX_VALUE;
+	private int getParsedInt(String input) {
+		if ("".equals(input) || input == null) {
+			throw new InputMismatchException(
+					"Ein Fehler bei der Verarbeitung der Zahleingabe ist aufgetreten.");
+		}
+		int result;
+		try {
+			result = Integer.parseInt(input);
+		} catch (NumberFormatException e) {
+			throw new NumberFormatException("Die Eingabe von \"" + input
+					+ "\" in einem Zahlenfeld ist nicht gültig.");
+		}
+		return result;
 	}
 
 	/**
@@ -444,12 +466,5 @@ public class ViewController {
 		}
 
 		infoArea.setText(info);
-	}
-
-	int parseNumericalInput(String input) {
-		String tmp = input.trim();
-		int result = Integer.parseInt(tmp);
-
-		return result;
 	}
 }
