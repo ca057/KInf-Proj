@@ -130,17 +130,14 @@ public class QueryRequestImpl implements QueryRequest {
 			case STUDIENJAHR:
 				table = "PERSON";
 				column = getColumnName(table, 7);
-				if (input instanceof Integer) {
-					input = getDate((int[]) input);
-				}
+				int[] jahr = (int[]) input;
+				// TODO Implement input here.
 				break;
 			case EINSCHREIBEDATUM:
-				// TODO Das muss noch implementiert werden.
 				table = "PERSON";
 				column = getColumnName(table, 6);
-				if (input instanceof Integer) {
-					input = getDate((int[]) input);
-				}
+				int[] tmp = (int[]) input;
+				input = tmp[0] + "-" + tmp[1] + "-" + tmp[2];
 				break;
 			case ANMERKUNGEN:
 				table = "PERSON";
@@ -294,6 +291,9 @@ public class QueryRequestImpl implements QueryRequest {
 	String getWhere() {
 		if (input instanceof Boolean) {
 			return String.format("%s.%s.%s %s", dbName, table, column, "<> ''");
+		}
+		if (column.toUpperCase().startsWith("DATUM")) {
+			return String.format(" %s.%s.%s = ?", dbName, table, column);
 		}
 		if (tableName.toUpperCase().startsWith("PERSON")) {
 			return String.format(" %s.%s.%s LIKE ?", dbName, table, column);
