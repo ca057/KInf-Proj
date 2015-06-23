@@ -42,7 +42,7 @@ public class ViewController {
 	 * Stores the number of input fields for usable generation of input field
 	 * arrays.
 	 */
-	private int inputFieldCounter = 16;
+	private int inputFieldCounter = 22;
 
 	@FXML
 	BorderPane root;
@@ -156,6 +156,27 @@ public class ViewController {
 	TitledPane searchCategory_other;
 
 	@FXML
+	ComboBox<String> searchCategory_other_zusaetzeselection;
+
+	@FXML
+	TextField searchCategory_other_zusaetzeinput;
+
+	@FXML
+	TextField searchCategory_other_fundort;
+
+	@FXML
+	TextField searchCategory_other_anmerkungen;
+
+	@FXML
+	TextField searchCategory_other_nummer;
+
+	@FXML
+	TextField searchCategory_other_seite;
+
+	@FXML
+	TextField searchCategory_other_nummerhess;
+
+	@FXML
 	Button searchMenu_clearSearch;
 
 	@FXML
@@ -216,6 +237,12 @@ public class ViewController {
 		inputFields[13] = searchCategory_study_graduiert.isSelected();
 		inputFields[14] = getStudienjahr();
 		inputFields[15] = getEinschreibung();
+		inputFields[16] = searchCategory_other_zusaetzeinput.getText();
+		inputFields[17] = searchCategory_other_fundort.getText();
+		inputFields[18] = searchCategory_other_anmerkungen.getText();
+		inputFields[19] = getNummer();
+		inputFields[20] = getSeiteOriginal();
+		inputFields[21] = getNummerHess();
 
 		return inputFields;
 	}
@@ -232,6 +259,18 @@ public class ViewController {
 		int[] einschreibung = new int[3];
 
 		return null;
+	}
+
+	private int getNummer() {
+		return Integer.MAX_VALUE;
+	}
+
+	private int getSeiteOriginal() {
+		return Integer.MAX_VALUE;
+	}
+
+	private int getNummerHess() {
+		return Integer.MAX_VALUE;
 	}
 
 	/**
@@ -261,6 +300,13 @@ public class ViewController {
 		inputSourceKey[13] = SourceKeys.NO_SOURCE;
 		inputSourceKey[14] = SourceKeys.NO_SOURCE;
 		inputSourceKey[15] = SourceKeys.NO_SOURCE;
+		inputSourceKey[16] = getSourceKeyByValueAsString(searchCategory_other_zusaetzeselection
+				.getValue());
+		inputSourceKey[17] = SourceKeys.NO_SOURCE;
+		inputSourceKey[18] = SourceKeys.NO_SOURCE;
+		inputSourceKey[19] = SourceKeys.NO_SOURCE;
+		inputSourceKey[20] = SourceKeys.NO_SOURCE;
+		inputSourceKey[21] = SourceKeys.NO_SOURCE;
 
 		return inputSourceKey;
 	}
@@ -312,6 +358,13 @@ public class ViewController {
 		searchCategory_study_einschreibeTag.clear();
 		searchCategory_study_einschreibeMonat.clear();
 		searchCategory_study_einschreibeJahr.clear();
+		searchCategory_other_zusaetzeselection.setValue(null);
+		searchCategory_other_zusaetzeinput.clear();
+		searchCategory_other_fundort.clear();
+		searchCategory_other_anmerkungen.clear();
+		searchCategory_other_nummer.clear();
+		searchCategory_other_seite.clear();
+		searchCategory_other_nummerhess.clear();
 		infoArea.clear();
 	}
 
