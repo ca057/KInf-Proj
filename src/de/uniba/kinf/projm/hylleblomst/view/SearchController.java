@@ -1,6 +1,5 @@
 package de.uniba.kinf.projm.hylleblomst.view;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +53,10 @@ public class SearchController {
 				QueryRequestImpl tmpReq = new QueryRequestImpl(
 						inputSearchFKey[i], inputValues[i], inputSourceKey[i]);
 				requestList.add(tmpReq);
+			} else if (inputValues[i] instanceof Integer) {
+				QueryRequestImpl tmpReq = new QueryRequestImpl(
+						inputSearchFKey[i], inputValues[i], inputSourceKey[i]);
+				requestList.add(tmpReq);
 			} else if (inputValues[i] instanceof int[]) {
 
 			}
@@ -62,8 +65,8 @@ public class SearchController {
 		try {
 			view.setInfoTextExtendedSearch(requestList);
 			// TODO nicht bei leerer Liste machen
-			querieImpl.search(requestList);
-		} catch (SQLException e) {
+			// querieImpl.search(requestList);
+		} catch (/* SQL */Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException("Fehler bei der Suche\n"
 					+ e.getMessage());
