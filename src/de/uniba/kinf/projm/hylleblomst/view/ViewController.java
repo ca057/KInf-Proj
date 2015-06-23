@@ -247,20 +247,20 @@ public class ViewController {
 		inputSourceKey[4] = getSourceKeyByValueAsString(searchCategory_person_vornameselection
 				.getValue());
 		inputSourceKey[5] = SourceKeys.STANDARD;
-		inputSourceKey[6] = SourceKeys.NO_SELECTION;
-		inputSourceKey[7] = SourceKeys.NO_SELECTION;
+		inputSourceKey[6] = SourceKeys.NO_SOURCE;
+		inputSourceKey[7] = SourceKeys.NO_SOURCE;
 		inputSourceKey[8] = getSourceKeyByValueAsString(searchCategory_personExtended_wirtschaftselection
 				.getValue());
 		inputSourceKey[9] = getSourceKeyByValueAsString(searchCategory_personExtended_ortselection
 				.getValue());
 		inputSourceKey[10] = getSourceKeyByValueAsString(searchCategory_study_studienfachselection
 				.getValue());
-		inputSourceKey[11] = SourceKeys.NO_SELECTION;
+		inputSourceKey[11] = SourceKeys.NO_SOURCE;
 		inputSourceKey[12] = getSourceKeyByValueAsString(searchCategory_study_seminarselection
 				.getValue());
-		inputSourceKey[13] = SourceKeys.NO_SELECTION;
-		inputSourceKey[14] = SourceKeys.NO_SELECTION;
-		inputSourceKey[15] = SourceKeys.NO_SELECTION;
+		inputSourceKey[13] = SourceKeys.NO_SOURCE;
+		inputSourceKey[14] = SourceKeys.NO_SOURCE;
+		inputSourceKey[15] = SourceKeys.NO_SOURCE;
 
 		return inputSourceKey;
 	}
