@@ -287,8 +287,10 @@ public class QueryRequestImpl implements QueryRequest {
 		result += String.format("%s.%s%s, %1$s.%2$s%s,", dbName, tableName,
 				"_norm", "_trad");
 		if (!tableName.toUpperCase().startsWith("ANREDE")) {
-			result += String.format("%s.%s_info, %1$s.%s, ", dbName, tableName,
-					"Quellen");
+			result += String.format("%s.%s_info, ", dbName, tableName);
+			if (!(source == SourceKeys.NO_SOURCE)) {
+				result += String.format("%s.%s, ", dbName, "Quellen");
+			}
 		}
 		return result;
 	}
@@ -330,11 +332,15 @@ public class QueryRequestImpl implements QueryRequest {
 		result += String.format(
 				" AND %s.%s_trad.%2$sTradID = %1$s.%2$s_info.%2$sTradID",
 				dbName, tableName);
+		if (source != SourceKeys.NO_SOURCE) {
+			result += String.format(
+					" AND %s.%s_info.QuellenID = %1$s.Quellen.QuellenID",
+					dbName, tableName);
+			if (source != SourceKeys.NO_SELECTION) {
+				result += String.format(" AND %s.%s_info.QuellenID = %s",
+						dbName, tableName, source);
+			}
 
-		if (source != SourceKeys.NO_SELECTION) {
-			result += String
-					.format(" AND %s.%s_info.QuellenID = %1$s.Quellen.QuellenID AND %1$s.%2$s_info.QuellenID = %s",
-							dbName, tableName, source);
 		}
 		result += String.format(" AND %s.%s.%2$sID = %1$s.%s_info.%2$sID",
 				dbName, "Person", tableName);
