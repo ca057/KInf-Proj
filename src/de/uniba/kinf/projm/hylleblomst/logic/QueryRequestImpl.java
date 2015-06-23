@@ -72,11 +72,8 @@ public class QueryRequestImpl implements QueryRequest {
 
 	@Override
 	public void setInput(Object input) {
-		if ("JESUIT".equals(column) || "ADLIG".equals(column)) {
+		if (input instanceof Boolean) {
 			this.input = "<> ''";
-		} // STUDIENJAHR!
-		else {
-			this.input = input;
 		}
 	}
 
