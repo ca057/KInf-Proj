@@ -218,18 +218,18 @@ public class QueryRequestImpl implements QueryRequest {
 	}
 
 	String getWhere() {
-		// TODO Ort-Abweichung-Norm: Hier muss dann auch die Anmerkung mit
-		// zurückgegeben
-		// werden.
 		if (source == SourceKeys.NO_SOURCE) {
 			if (input instanceof Boolean) {
 				return String.format("Hylleblomst.%s.%s <> ''", table, column);
 			}
 			if (column.toUpperCase().startsWith("DATUM")) {
+				// TODO Jahr / Datum?
 				return String.format("Hylleblomst.%s.%s = ?", table, column);
 			}
-		} else {
-			// TODO implement this
+		} else if (!(source == SourceKeys.NO_SELECTION)) {
+			return String
+					.format("Hylleblomst.%s.%s LIKE ? AND Hylleblomst.Quellen.QuellenID = %s",
+							table, column, source);
 		}
 		return String.format("Hylleblomst.%s.%s LIKE ?", table, column);
 	}
