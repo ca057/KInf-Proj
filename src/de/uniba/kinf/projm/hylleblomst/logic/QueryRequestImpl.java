@@ -254,35 +254,27 @@ public class QueryRequestImpl implements QueryRequest {
 	}
 
 	String getFrom() {
-		if (tableName.toUpperCase().startsWith("PERSON")) {
-			// return String.format("%s.%s", dbName, tableName);
-			return "";
-		}
-		if (tableName.toUpperCase().startsWith("FAKUL")
-				|| tableName.startsWith("FUND")) {
-			return String.format("%s.%s"
-			// , %1$s.%s
-					, dbName, tableName // , "PERSON"
-					);
-		}
-		if (tableName.toUpperCase().startsWith("ZUSAE")) {
-			return String.format("%s.%s, %1$s.%2$s%s"
-			// + ", %1$s.%s"
-					, dbName, tableName, "_info"// , "PERSON"
-			);
-		}
 		String result = "";
-		if (tableName.toUpperCase().startsWith("ORT")) {
-			result += String.format("%s.%s%s, ", dbName, tableName,
-					"_abweichung_norm");
-		}
-		result += String.format("%s.%s%s, %1$s.%2$s%s", dbName, tableName,
-				"_norm", "_trad");
-		if (!tableName.toUpperCase().startsWith("ANREDE")
-				&& !(tableName.toUpperCase().startsWith("TITEL"))) {
-			result += String.format(", %s.%s_info", dbName, tableName);
-			if (!(source == SourceKeys.NO_SOURCE)) {
-				result += String.format(", %s.%s", dbName, "Quellen");
+		if (!(tableName.toUpperCase().startsWith("FACH")
+				|| tableName.toUpperCase().startsWith("ORT")
+				|| tableName.toUpperCase().contains("NAME") || tableName
+				.toUpperCase().startsWith("PERSON"))) {
+			if (tableName.toUpperCase().startsWith("FAKUL")
+					|| tableName.startsWith("FUND")) {
+				result = String.format("%s.%s", dbName, tableName);
+			} else if (tableName.toUpperCase().startsWith("ZUSAE")) {
+				result = String.format("%s.%s, %1$s.%2$s_info", dbName,
+						tableName);
+			} else {
+				result += String.format("%s.%s%s, %1$s.%2$s%s", dbName,
+						tableName, "_norm", "_trad");
+				if (!tableName.toUpperCase().startsWith("ANREDE")
+						&& !(tableName.toUpperCase().startsWith("TITEL"))) {
+					result += String.format(", %s.%s_info", dbName, tableName);
+					if (!(source == SourceKeys.NO_SOURCE)) {
+						result += String.format(", %s.QUELLEN", dbName);
+					}
+				}
 			}
 		}
 		return result;
@@ -295,55 +287,7 @@ public class QueryRequestImpl implements QueryRequest {
 		if (column.toUpperCase().startsWith("DATUM")) {
 			return String.format(" %s.%s.%s = ?", dbName, table, column);
 		}
-		if (tableName.toUpperCase().startsWith("PERSON")) {
-			return String.format(" %s.%s.%s LIKE ?", dbName, table, column);
-		}
-		if (tableName.toUpperCase().startsWith("FAKUL")
-				|| tableName.startsWith("FUND")) {
-			return String.format(
-					"%s.%s.%2$sID = %1$s.%s.%2$sID AND %1$s.%s.%s LIKE ?",
-					dbName, tableName, "PERSON", table, column);
-		}
-		if (tableName.toUpperCase().startsWith("ZUSAE")) {
-			return String
-					.format("%s.%s_info.%2$sInfoID = %1$s.%2$s_trad.%2$sInfoID AND %1$s.%2$s_info.%sID = %1$s.%3$s.%3$sID",
-							dbName, tableName, "Person");
-		}
-
-		String result = "";
-		if (tableName.toUpperCase().startsWith("ORT")) {
-			result += String
-					.format("%s.%s_abweichung_norm.%2$sAbweichungNormID = %1$s.%2$s_norm.AbweichungNormID AND ",
-							dbName, tableName);
-		}
-		result += String.format(
-				"%s.%s_norm.%2$sNormID = %1$s.%2$s_trad.%2$sNormID ", dbName,
-				tableName);
-		if (tableName.toUpperCase().startsWith("ANREDE")
-				|| tableName.toUpperCase().startsWith("TITEL")) {
-			return result
-					+ String.format(
-							" AND %s.%s_trad.%2$sTradID = %1$s.Person.%2$sID AND %1$s.%s.%s LIKE ?",
-							dbName, tableName, table, column);
-		}
-		if (source != SourceKeys.NO_SOURCE) {
-			result += String.format(
-					" AND %s.%s_trad.%2$sTradID = %1$s.%2$s_info.%2$sTradID",
-					dbName, tableName);
-			result += String.format(
-					" AND %s.%s_info.QuellenID = %1$s.Quellen.QuellenID",
-					dbName, tableName);
-			if (source != SourceKeys.NO_SELECTION
-					&& !(tableName.toUpperCase().startsWith("TITEL"))) {
-				result += String.format(" AND %s.%s_info.QuellenID = %s",
-						dbName, tableName, source);
-			}
-
-		}
-		result += String.format(" AND %s.%s.%2$sID = %1$s.%s_info.%2$sID",
-				dbName, "Person", tableName);
-		result += String.format(" AND %s.%s.%s LIKE ?", dbName, table, column);
-		return result;
+		return String.format("%s.%s.%s LIKE ?", dbName, table, column);
 	}
 
 	private String getDate(int[] input) {

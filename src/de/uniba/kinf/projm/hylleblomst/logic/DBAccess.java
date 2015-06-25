@@ -47,12 +47,9 @@ class DBAccess {
 			}
 			ResultSet results = stmt.executeQuery();
 			while (results.next()) {
-				System.out.printf("%s, %s, %s, %s, %s, %s, %s, %s, %s %s%n",
-						results.getString(1), results.getString(2),
-						results.getString(3), results.getString(4),
-						results.getString(5), results.getString(6),
-						results.getString(7), results.getString(8),
-						results.getString(9), results.getString(10));
+				System.out.printf("%s, %s, %s, %s%n", results.getString(1),
+						results.getString(2), results.getString(3),
+						results.getString(4));
 			}
 			results.close();
 		}
