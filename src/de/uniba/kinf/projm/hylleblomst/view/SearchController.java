@@ -13,16 +13,16 @@ public class SearchController {
 	/**
 	 * Array stores for every input field the corresponding search field key.
 	 */
-	SearchFieldKeys[] inputSearchFKey;
+	private SearchFieldKeys[] inputSearchFKey;
 
-	int inputCounter;
+	private int inputCounter;
 
 	/**
 	 * QueriesImpl executes the search.
 	 */
 	private QueriesImpl querieImpl;
 
-	ViewController view;
+	private ViewController view;
 
 	public SearchController(ViewController view) {
 		this.view = view;
@@ -38,12 +38,8 @@ public class SearchController {
 					"Die Liste mit Eingabefeldern ist leer oder hat keinen Wert.");
 		}
 
-		// neue Rückgabeliste anlegen
 		List<QueryRequestImpl> requestList = new ArrayList<QueryRequestImpl>();
-		// über alle Eingabefelder iterieren
 		for (int i = 0; i < inputValues.length; i++) {
-			// checken, welcher Typ von Eingabefeld das ist und entsprechend
-			// behandeln
 			if (inputValues[i] instanceof String && !"".equals(inputValues[i])
 					&& inputValues[i] != null) {
 				QueryRequestImpl tmpReq = new QueryRequestImpl(
@@ -78,7 +74,7 @@ public class SearchController {
 		}
 	}
 
-	SearchFieldKeys[] generateSearchFieldKeyArray() {
+	private SearchFieldKeys[] generateSearchFieldKeyArray() {
 		SearchFieldKeys[] sfkArray = new SearchFieldKeys[inputCounter];
 
 		sfkArray[0] = SearchFieldKeys.ANREDE;

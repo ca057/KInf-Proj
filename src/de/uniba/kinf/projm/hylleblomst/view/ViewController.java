@@ -199,6 +199,7 @@ public class ViewController {
 	public ViewController() {
 		ui = new UIHelper();
 		searchCtrl = new SearchController(this);
+		setEventHandlers();
 	}
 
 	/**
@@ -208,6 +209,10 @@ public class ViewController {
 	 */
 	int getInputFieldCounter() {
 		return inputFieldCounter;
+	}
+
+	private void setEventHandlers() {
+
 	}
 
 	/**
