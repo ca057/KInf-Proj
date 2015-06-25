@@ -201,6 +201,7 @@ public class QueryRequestImpl implements QueryRequest {
 				} else {
 					table = "ORT_TRAD";
 				}
+				column = getColumnName(table, 2);
 				break;
 			case FACH:
 				if (source == SourceKeys.NORM) {
