@@ -13,7 +13,10 @@ public class QueryRequestImpl implements QueryRequest {
 	private Object input;
 	private int source;
 	private String table;
-	private String sqlStatement;
+	private String sqlFrom;
+	private String sqlWhere;
+	private String dbName = "Hylleblomst";
+	private String tableName;
 
 	public QueryRequestImpl(SearchFieldKeys searchField, Object input,
 			int source) {
@@ -21,6 +24,7 @@ public class QueryRequestImpl implements QueryRequest {
 		setInput(input);
 		setSource(source);
 		searchFieldKeyToDatabaseData();
+		this.dbName = dbName;
 	}
 
 	QueryRequestImpl() {
@@ -39,20 +43,36 @@ public class QueryRequestImpl implements QueryRequest {
 
 	@Override
 	public Object getInput() {
-		if ("Jesuit".equals(column) || "Adelig".equals(column)) {
-			return "<>\"\"";
-		}
 		return input;
+	}
+
+	public String getSqlFrom() {
+		return sqlFrom;
+	}
+
+	public void setSqlFrom(String sqlFrom) {
+		this.sqlFrom = sqlFrom;
+	}
+
+	public String getSqlWhere() {
+		return sqlWhere;
+	}
+
+	public void setSqlWhere(String sqlWhere) {
+		this.sqlWhere = sqlWhere;
+	}
+
+	public String getDbName() {
+		return dbName;
+	}
+
+	public void setDbName(String dbName) {
+		this.dbName = dbName;
 	}
 
 	@Override
 	public void setInput(Object input) {
-		if ("Jesuit".equals(column) || "Adelig".equals(column)) {
-			this.input = "<>\"\"";
-		} // STUDIENJAHR!
-		else {
-			this.input = input.toString();
-		}
+		this.input = input;
 	}
 
 	@Override
@@ -77,7 +97,7 @@ public class QueryRequestImpl implements QueryRequest {
 
 	@Override
 	public String getSQLStatement() {
-		return sqlStatement;
+		return sqlFrom;
 	}
 
 	/**
@@ -97,7 +117,6 @@ public class QueryRequestImpl implements QueryRequest {
 				table = "ORT_ABWEICHUNG_NORM";
 			}
 			column = getColumnName(table, 2);
-			sqlStatement = new SQLShred(table, column, input).getJoin();
 		} else if (source > SourceKeys.bottom && source < SourceKeys.top) {
 			switch (searchField) {
 			case ADLIG:
@@ -111,19 +130,14 @@ public class QueryRequestImpl implements QueryRequest {
 			case STUDIENJAHR:
 				table = "PERSON";
 				column = getColumnName(table, 7);
-				if (input instanceof Integer) {
-					input = new SQLShred(table, column, input)
-							.getDate((int[]) input);
-				}
+				int[] jahr = (int[]) input;
+				// TODO Implement input here.
 				break;
 			case EINSCHREIBEDATUM:
-				// TODO Das muss noch implementiert werden.
 				table = "PERSON";
 				column = getColumnName(table, 6);
-				if (input instanceof Integer) {
-					input = new SQLShred(table, column, input)
-							.getDate((int[]) input);
-				}
+				int[] tmp = (int[]) input;
+				input = tmp[0] + "-" + tmp[1] + "-" + tmp[2];
 				break;
 			case ANMERKUNGEN:
 				table = "PERSON";
@@ -225,12 +239,60 @@ public class QueryRequestImpl implements QueryRequest {
 						"Das zugehörige Tabellenelement für Suchfeld "
 								+ searchField.name() + " ist nicht definiert.");
 			}
-			sqlStatement = new SQLShred(table, column, input).getJoin();
+			if (table.contains("_")) {
+				this.tableName = table.substring(0, table.indexOf("_"));
+			} else {
+				this.tableName = table;
+			}
+			sqlFrom = getFrom();
+			sqlWhere = getWhere();
 		} else {
 			throw new IllegalArgumentException("Die Werte für Suchfeld "
 					+ searchField.toString() + " und Quelle " + source
 					+ " konnten keiner Tabelle und Spalte zugeordnet werden.");
 		}
+	}
+
+	String getFrom() {
+		String result = "";
+		if (!(tableName.toUpperCase().startsWith("FACH")
+				|| tableName.toUpperCase().startsWith("ORT")
+				|| tableName.toUpperCase().contains("NAME") || tableName
+				.toUpperCase().startsWith("PERSON"))) {
+			if (tableName.toUpperCase().startsWith("FAKUL")
+					|| tableName.startsWith("FUND")) {
+				result = String.format("%s.%s", dbName, tableName);
+			} else if (tableName.toUpperCase().startsWith("ZUSAE")) {
+				result = String.format("%s.%s, %1$s.%2$s_info", dbName,
+						tableName);
+			} else {
+				result += String.format("%s.%s%s, %1$s.%2$s%s", dbName,
+						tableName, "_norm", "_trad");
+				if (!tableName.toUpperCase().startsWith("ANREDE")
+						&& !(tableName.toUpperCase().startsWith("TITEL"))) {
+					result += String.format(", %s.%s_info", dbName, tableName);
+					if (!(source == SourceKeys.NO_SOURCE)) {
+						result += String.format(", %s.QUELLEN", dbName);
+					}
+				}
+			}
+		}
+		return result;
+	}
+
+	String getWhere() {
+		if (input instanceof Boolean) {
+			return String.format("%s.%s.%s %s", dbName, table, column, "<> ''");
+		}
+		if (column.toUpperCase().startsWith("DATUM")) {
+			return String.format(" %s.%s.%s = ?", dbName, table, column);
+		}
+		return String.format("%s.%s.%s LIKE ?", dbName, table, column);
+	}
+
+	private String getDate(int[] input) {
+		// TODO implement this
+		return null;
 	}
 
 	/*

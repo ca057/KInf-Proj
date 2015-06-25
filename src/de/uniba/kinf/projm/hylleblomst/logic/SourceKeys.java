@@ -3,8 +3,8 @@ package de.uniba.kinf.projm.hylleblomst.logic;
 public class SourceKeys {
 
 	// TODO Johannes, hier musst du schauen ob noch alles passt, aus -1 wurde -2
-	public static final Integer ORT_NORM_AB = -2;
-	// TODO Johannes, das musst du implementierens
+	public static final Integer ORT_NORM_AB = -3;
+	public static final Integer NO_SOURCE = -2;
 	public static final Integer NO_SELECTION = -1;
 	public static final Integer NORM = 0;
 	public static final Integer STANDARD = 1;

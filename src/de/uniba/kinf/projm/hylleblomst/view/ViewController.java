@@ -1,5 +1,6 @@
 package de.uniba.kinf.projm.hylleblomst.view;
 
+import java.util.InputMismatchException;
 import java.util.List;
 
 import javafx.fxml.FXML;
@@ -42,7 +43,7 @@ public class ViewController {
 	 * Stores the number of input fields for usable generation of input field
 	 * arrays.
 	 */
-	private int inputFieldCounter = 16;
+	private int inputFieldCounter = 22;
 
 	@FXML
 	BorderPane root;
@@ -156,6 +157,27 @@ public class ViewController {
 	TitledPane searchCategory_other;
 
 	@FXML
+	ComboBox<String> searchCategory_other_zusaetzeselection;
+
+	@FXML
+	TextField searchCategory_other_zusaetzeinput;
+
+	@FXML
+	TextField searchCategory_other_fundort;
+
+	@FXML
+	TextField searchCategory_other_anmerkungen;
+
+	@FXML
+	TextField searchCategory_other_nummer;
+
+	@FXML
+	TextField searchCategory_other_seite;
+
+	@FXML
+	TextField searchCategory_other_nummerhess;
+
+	@FXML
 	Button searchMenu_clearSearch;
 
 	@FXML
@@ -198,34 +220,79 @@ public class ViewController {
 	 */
 	private Object[] generateArrayWithInputValues() {
 		Object[] inputFields = new Object[inputFieldCounter];
-
-		inputFields[0] = searchCategory_person_anrede.getText();
-		inputFields[1] = searchCategory_person_anredenorm.getText();
-		inputFields[2] = searchCategory_person_titel.getText();
-		inputFields[3] = searchCategory_person_titelnorm.getText();
-		inputFields[4] = searchCategory_person_vornameinput.getText();
-		inputFields[5] = searchCategory_person_nachnameinput.getText();
-		inputFields[6] = searchCategory_personExtended_adeliger.isSelected();
-		inputFields[7] = searchCategory_personExtended_jesuit.isSelected();
-		inputFields[8] = searchCategory_personExtended_wirtschaftinput
-				.getText();
-		inputFields[9] = searchCategory_personExtended_ortinput.getText();
-		inputFields[10] = searchCategory_study_studienfachinput.getText();
-		inputFields[11] = searchCategory_study_fakultaet.getText();
-		inputFields[12] = searchCategory_study_seminarinput.getText();
-		inputFields[13] = searchCategory_study_graduiert.isSelected();
-
-		int[] studienjahr = new int[2];
-		// TODO hier muss ich sachen machen
-		inputFields[14] = studienjahr;
-		int[] einschreibung = new int[3];
-		inputFields[15] = einschreibung;
-
+		try {
+			inputFields[0] = searchCategory_person_anrede.getText();
+			inputFields[1] = searchCategory_person_anredenorm.getText();
+			inputFields[2] = searchCategory_person_titel.getText();
+			inputFields[3] = searchCategory_person_titelnorm.getText();
+			inputFields[4] = searchCategory_person_vornameinput.getText();
+			inputFields[5] = searchCategory_person_nachnameinput.getText();
+			inputFields[6] = searchCategory_personExtended_adeliger
+					.isSelected();
+			inputFields[7] = searchCategory_personExtended_jesuit.isSelected();
+			inputFields[8] = searchCategory_personExtended_wirtschaftinput
+					.getText();
+			inputFields[9] = searchCategory_personExtended_ortinput.getText();
+			inputFields[10] = searchCategory_study_studienfachinput.getText();
+			inputFields[11] = searchCategory_study_fakultaet.getText();
+			inputFields[12] = searchCategory_study_seminarinput.getText();
+			inputFields[13] = searchCategory_study_graduiert.isSelected();
+			inputFields[14] = getStudienjahr();
+			inputFields[15] = getEinschreibung();
+			inputFields[16] = searchCategory_other_zusaetzeinput.getText();
+			inputFields[17] = searchCategory_other_fundort.getText();
+			inputFields[18] = searchCategory_other_anmerkungen.getText();
+			if (!"".equals(searchCategory_other_nummer.getText())) {
+				inputFields[19] = getParsedInt(searchCategory_other_nummer
+						.getText());
+			} else {
+				inputFields[19] = null;
+			}
+			if (!"".equals(searchCategory_other_seite.getText())) {
+				inputFields[20] = getParsedInt(searchCategory_other_seite
+						.getText());
+			} else {
+				inputFields[20] = null;
+			}
+			if (!"".equals(searchCategory_other_nummerhess.getText())) {
+				inputFields[21] = getParsedInt(searchCategory_other_nummerhess
+						.getText());
+			} else {
+				inputFields[21] = null;
+			}
+		} catch (InputMismatchException | NumberFormatException e) {
+			ui.showErrorMessage(e.getMessage());
+		}
 		return inputFields;
 	}
 
 	private int[] getStudienjahr() {
+		int[] studienjahr = new int[2];
+		if (!"".equals(searchCategory_study_studienjahrVon.getText())) {
+			// studienjahr[0] = searchCategory_study_studienjahrVon.getText();
+		}
 		return null;
+	}
+
+	private int[] getEinschreibung() {
+		int[] einschreibung = new int[3];
+
+		return null;
+	}
+
+	private int getParsedInt(String input) {
+		if ("".equals(input) || input == null) {
+			throw new InputMismatchException(
+					"Ein Fehler bei der Verarbeitung der Zahleingabe ist aufgetreten.");
+		}
+		int result;
+		try {
+			result = Integer.parseInt(input);
+		} catch (NumberFormatException e) {
+			throw new NumberFormatException("Die Eingabe von \"" + input
+					+ "\" in einem Zahlenfeld ist nicht gültig.");
+		}
+		return result;
 	}
 
 	/**
@@ -241,20 +308,27 @@ public class ViewController {
 		inputSourceKey[4] = getSourceKeyByValueAsString(searchCategory_person_vornameselection
 				.getValue());
 		inputSourceKey[5] = SourceKeys.STANDARD;
-		inputSourceKey[6] = SourceKeys.NO_SELECTION;
-		inputSourceKey[7] = SourceKeys.NO_SELECTION;
+		inputSourceKey[6] = SourceKeys.NO_SOURCE;
+		inputSourceKey[7] = SourceKeys.NO_SOURCE;
 		inputSourceKey[8] = getSourceKeyByValueAsString(searchCategory_personExtended_wirtschaftselection
 				.getValue());
 		inputSourceKey[9] = getSourceKeyByValueAsString(searchCategory_personExtended_ortselection
 				.getValue());
 		inputSourceKey[10] = getSourceKeyByValueAsString(searchCategory_study_studienfachselection
 				.getValue());
-		inputSourceKey[11] = SourceKeys.NO_SELECTION;
+		inputSourceKey[11] = SourceKeys.NO_SOURCE;
 		inputSourceKey[12] = getSourceKeyByValueAsString(searchCategory_study_seminarselection
 				.getValue());
-		inputSourceKey[13] = SourceKeys.NO_SELECTION;
-		inputSourceKey[14] = SourceKeys.NO_SELECTION;
-		inputSourceKey[15] = SourceKeys.NO_SELECTION;
+		inputSourceKey[13] = SourceKeys.NO_SOURCE;
+		inputSourceKey[14] = SourceKeys.NO_SOURCE;
+		inputSourceKey[15] = SourceKeys.NO_SOURCE;
+		inputSourceKey[16] = getSourceKeyByValueAsString(searchCategory_other_zusaetzeselection
+				.getValue());
+		inputSourceKey[17] = SourceKeys.NO_SOURCE;
+		inputSourceKey[18] = SourceKeys.NO_SOURCE;
+		inputSourceKey[19] = SourceKeys.NO_SOURCE;
+		inputSourceKey[20] = SourceKeys.NO_SOURCE;
+		inputSourceKey[21] = SourceKeys.NO_SOURCE;
 
 		return inputSourceKey;
 	}
@@ -306,6 +380,13 @@ public class ViewController {
 		searchCategory_study_einschreibeTag.clear();
 		searchCategory_study_einschreibeMonat.clear();
 		searchCategory_study_einschreibeJahr.clear();
+		searchCategory_other_zusaetzeselection.setValue(null);
+		searchCategory_other_zusaetzeinput.clear();
+		searchCategory_other_fundort.clear();
+		searchCategory_other_anmerkungen.clear();
+		searchCategory_other_nummer.clear();
+		searchCategory_other_seite.clear();
+		searchCategory_other_nummerhess.clear();
 		infoArea.clear();
 	}
 
@@ -379,7 +460,7 @@ public class ViewController {
 		} else {
 			for (QueryRequest qr : requestList) {
 				info += qr.getSearchField().toString() + ": ";
-				info += (String) qr.getInput() + "; ";
+				info += qr.getInput() + "; ";
 				info += "Quellen#: " + qr.getSource() + "\n";
 			}
 		}
