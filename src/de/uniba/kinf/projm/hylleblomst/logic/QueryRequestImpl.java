@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Optional;
 
 public class QueryRequestImpl implements QueryRequest {
 	private SearchFieldKeys searchField;
@@ -204,17 +203,6 @@ public class QueryRequestImpl implements QueryRequest {
 					+ searchField.toString() + " und Quelle " + source
 					+ " konnten keiner Tabelle und Spalte zugeordnet werden.");
 		}
-	}
-
-	Optional<String> getFrom() {
-		Optional<String> optional = null;
-		if (!(source == SourceKeys.NO_SOURCE)) {
-			optional = Optional
-					.of(" LEFT OUTER JOIN Hylleblomst.Quellen ON Hylleblomst."
-							+ table.substring(0, table.indexOf("_"))
-							+ "_info.quellenID = Hylleblomst.quellen.quellenID ");
-		}
-		return optional;
 	}
 
 	String getWhere() {

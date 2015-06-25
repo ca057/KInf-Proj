@@ -16,14 +16,15 @@ public class QueriesImpl implements Queries {
 
 	private String buildQuery(Collection<QueryRequestImpl> queryRequests)
 			throws SQLException {
+		Boolean hasSource = false;
 		inputs.clear();
 		String sqlQuery = "SELECT " + getSelect();
+		StringBuilder sqlWhere = new StringBuilder();
 		StringBuilder sqlFrom = new StringBuilder();
 		sqlFrom.append(getFrom());
-		StringBuilder sqlWhere = new StringBuilder();
 		for (QueryRequestImpl qr : queryRequests) {
-			if (qr.getFrom().isPresent()) {
-				sqlFrom.append(qr.getFrom().get());
+			if (qr.getSource() != SourceKeys.NO_SOURCE) {
+				hasSource = true;
 			}
 			if (sqlWhere.length() == 0) {
 				sqlWhere.append(qr.getWhere());
@@ -33,6 +34,9 @@ public class QueriesImpl implements Queries {
 			if (!(qr.getInput() instanceof Boolean)) {
 				inputs.add(qr.getInput());
 			}
+		}
+		if (hasSource) {
+			sqlFrom.append(", Hylleblomst.Quellen");
 		}
 		sqlQuery += " FROM " + sqlFrom + " WHERE " + sqlWhere;
 		System.out.println(sqlQuery);
