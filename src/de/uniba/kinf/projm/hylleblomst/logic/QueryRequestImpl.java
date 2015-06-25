@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Optional;
 
 public class QueryRequestImpl implements QueryRequest {
 	private SearchFieldKeys searchField;
@@ -13,7 +14,6 @@ public class QueryRequestImpl implements QueryRequest {
 	private Object input;
 	private int source;
 	private String table;
-	private String sqlWhere;
 
 	public QueryRequestImpl(SearchFieldKeys searchField, Object input,
 			int source) {
@@ -40,14 +40,6 @@ public class QueryRequestImpl implements QueryRequest {
 	@Override
 	public Object getInput() {
 		return input;
-	}
-
-	public String getSqlWhere() {
-		return sqlWhere;
-	}
-
-	public void setSqlWhere(String sqlWhere) {
-		this.sqlWhere = sqlWhere;
 	}
 
 	@Override
@@ -82,14 +74,7 @@ public class QueryRequestImpl implements QueryRequest {
 	 * @return
 	 */
 	private void searchFieldKeyToDatabaseData() {
-		if (source == SourceKeys.ORT_NORM_AB) {
-			if (searchField.equals(SearchFieldKeys.ORT)) {
-				// TODO Hier muss dann auch die Anmerkung mit zurückgegeben
-				// werden.
-				table = "ORT_ABWEICHUNG_NORM";
-			}
-			column = getColumnName(table, 2);
-		} else if (source > SourceKeys.bottom && source < SourceKeys.top) {
+		if (source > SourceKeys.bottom && source < SourceKeys.top) {
 			switch (searchField) {
 			case ADLIG:
 				table = "PERSON";
@@ -170,6 +155,8 @@ public class QueryRequestImpl implements QueryRequest {
 			case ORT:
 				if (source == SourceKeys.NORM) {
 					table = "ORT_NORM";
+				} else if (source == SourceKeys.ORT_NORM_AB) {
+					table = "ORT_ABWEICHUNG_NORM";
 				} else {
 					table = "ORT_TRAD";
 				}
@@ -212,7 +199,6 @@ public class QueryRequestImpl implements QueryRequest {
 						"Das zugehörige Tabellenelement für Suchfeld "
 								+ searchField.name() + " ist nicht definiert.");
 			}
-			sqlWhere = getWhere();
 		} else {
 			throw new IllegalArgumentException("Die Werte für Suchfeld "
 					+ searchField.toString() + " und Quelle " + source
@@ -220,12 +206,30 @@ public class QueryRequestImpl implements QueryRequest {
 		}
 	}
 
-	String getWhere() {
-		if (input instanceof Boolean) {
-			return String.format("Hylleblomst.%s.%s <> ''", table, column);
+	Optional<String> getFrom() {
+		Optional<String> optional = null;
+		if (!(source == SourceKeys.NO_SOURCE)) {
+			optional = Optional
+					.of(" LEFT OUTER JOIN Hylleblomst.Quellen ON Hylleblomst."
+							+ table.substring(0, table.indexOf("_"))
+							+ "_info.quellenID = Hylleblomst.quellen.quellenID ");
 		}
-		if (column.toUpperCase().startsWith("DATUM")) {
-			return String.format("Hylleblomst.%s.%s = ?", table, column);
+		return optional;
+	}
+
+	String getWhere() {
+		// TODO Ort-Abweichung-Norm: Hier muss dann auch die Anmerkung mit
+		// zurückgegeben
+		// werden.
+		if (source == SourceKeys.NO_SOURCE) {
+			if (input instanceof Boolean) {
+				return String.format("Hylleblomst.%s.%s <> ''", table, column);
+			}
+			if (column.toUpperCase().startsWith("DATUM")) {
+				return String.format("Hylleblomst.%s.%s = ?", table, column);
+			}
+		} else {
+			// TODO implement this
 		}
 		return String.format("Hylleblomst.%s.%s LIKE ?", table, column);
 	}

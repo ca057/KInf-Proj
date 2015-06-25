@@ -18,9 +18,13 @@ public class QueriesImpl implements Queries {
 			throws SQLException {
 		inputs.clear();
 		String sqlQuery = "SELECT " + getSelect();
+		StringBuilder sqlFrom = new StringBuilder();
+		sqlFrom.append(getFrom());
 		StringBuilder sqlWhere = new StringBuilder();
 		for (QueryRequestImpl qr : queryRequests) {
-
+			if (qr.getFrom().isPresent()) {
+				sqlFrom.append(qr.getFrom().get());
+			}
 			if (sqlWhere.length() == 0) {
 				sqlWhere.append(qr.getWhere());
 			} else {
@@ -30,7 +34,7 @@ public class QueriesImpl implements Queries {
 				inputs.add(qr.getInput());
 			}
 		}
-		sqlQuery += " FROM " + getFrom() + " WHERE " + sqlWhere;
+		sqlQuery += " FROM " + sqlFrom + " WHERE " + sqlWhere;
 		System.out.println(sqlQuery);
 		return sqlQuery;
 	}
