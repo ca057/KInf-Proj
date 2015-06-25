@@ -9,16 +9,15 @@ public class QueriesImpl implements Queries {
 	ArrayList<Object> inputs = new ArrayList<Object>();
 
 	@Override
-	public void search(Collection<QueryRequestImpl> queryRequests)
-			throws SQLException {
+	public void search(Collection<QueryRequestImpl> queryRequests) throws SQLException {
 		startQuery(buildQuery(queryRequests));
 	}
 
-	private String buildQuery(Collection<QueryRequestImpl> queryRequests)
-			throws SQLException {
+	private String buildQuery(Collection<QueryRequestImpl> queryRequests) throws SQLException {
 		Boolean hasSource = false;
 		inputs.clear();
-		String sqlQuery = "SELECT " + getSelect();
+		StringBuilder sqlQuery = new StringBuilder();
+		sqlQuery.append("SELECT ").append(getSelect());
 		StringBuilder sqlWhere = new StringBuilder();
 		StringBuilder sqlFrom = new StringBuilder();
 		sqlFrom.append(getFrom());
@@ -34,18 +33,18 @@ public class QueriesImpl implements Queries {
 			if (!(qr.getInput() instanceof Boolean)) {
 				inputs.add(qr.getInput());
 			}
+			sqlQuery.append(", Hylleblomst." + qr.getTable() + "." + qr.getColumn() + " AS " + qr.getTable());
 		}
 		if (hasSource) {
 			sqlFrom.append(", Hylleblomst.Quellen");
 		}
-		sqlQuery += " FROM " + sqlFrom + " WHERE " + sqlWhere;
+		sqlQuery.append(" FROM ").append(sqlFrom).append(" WHERE ").append(sqlWhere);
 		System.out.println(sqlQuery);
-		return sqlQuery;
+		return sqlQuery.toString();
 	}
 
 	private void startQuery(String sqlQuery) throws SQLException {
-		db = new DBAccess("jdbc:derby:./db/MyDB;create=true", "admin",
-				"password");
+		db = new DBAccess("jdbc:derby:./db/MyDB;create=true", "admin", "password");
 		db.startQuery(sqlQuery, inputs);
 	}
 
@@ -73,12 +72,10 @@ public class QueriesImpl implements Queries {
 		String titel = "Hylleblomst.titel_trad ON Hylleblomst.person.titelID = Hylleblomst.titel_trad.titelTradID LEFT OUTER JOIN Hylleblomst.titel_Norm ON Hylleblomst.titel_Norm.titelNormID = Hylleblomst.titel_Trad.titelNormID";
 		String fakultaeten = "Hylleblomst.Fakultaeten ON Hylleblomst.person.fakultaetenID = Hylleblomst.fakultaeten.fakultaetenID";
 		String fundorte = "Hylleblomst.Fundorte ON Hylleblomst.person.fundortID = Hylleblomst.fundorte.fundorteID";
-		return vorname + " LEFT OUTER JOIN " + name + " LEFT OUTER JOIN " + ort
-				+ " LEFT OUTER JOIN " + seminar + " LEFT OUTER JOIN "
-				+ wirtschaftslage + " LEFT OUTER JOIN " + zusaetze
-				+ " LEFT OUTER JOIN " + fach + " LEFT OUTER JOIN " + anrede
-				+ " LEFT OUTER JOIN " + titel + " LEFT OUTER JOIN "
-				+ fakultaeten + " LEFT OUTER JOIN " + fundorte;
+		return vorname + " LEFT OUTER JOIN " + name + " LEFT OUTER JOIN " + ort + " LEFT OUTER JOIN " + seminar
+				+ " LEFT OUTER JOIN " + wirtschaftslage + " LEFT OUTER JOIN " + zusaetze + " LEFT OUTER JOIN " + fach
+				+ " LEFT OUTER JOIN " + anrede + " LEFT OUTER JOIN " + titel + " LEFT OUTER JOIN " + fakultaeten
+				+ " LEFT OUTER JOIN " + fundorte;
 	}
 
 	private String getSelect() {
