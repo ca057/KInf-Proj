@@ -214,10 +214,14 @@ public class QueryRequestImpl implements QueryRequest {
 				// TODO Jahr / Datum?
 				return String.format("Hylleblomst.%s.%s = ?", table, column);
 			}
-		} else if (!(source == SourceKeys.NO_SELECTION)) {
+		} else if (source == SourceKeys.NORM) {
+			return String.format("Hylleblomst.%s_norm.%s LIKE ?",
+					table.substring(0, table.indexOf("_")), column);
+		} else if (!(source == SourceKeys.NO_SELECTION || searchField == SearchFieldKeys.ANREDE)) {
 			return String
-					.format("Hylleblomst.%s.%s LIKE ? AND Hylleblomst.Quellen.QuellenID = %s",
-							table, column, source);
+					.format("Hylleblomst.%s.%s LIKE ? AND Hylleblomst.%s_info.QuellenID = %s",
+							table, column,
+							table.substring(0, table.indexOf("_")), source);
 		}
 		return String.format("Hylleblomst.%s.%s LIKE ?", table, column);
 	}
