@@ -63,11 +63,6 @@ public interface QueryRequest {
 	public abstract String getColumn();
 
 	/**
-	 * @return
-	 */
-	public abstract String getSQLStatement();
-
-	/**
 	 * @param table
 	 * @param i
 	 * @return

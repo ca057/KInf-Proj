@@ -8,9 +8,9 @@ import java.sql.SQLException;
 import java.util.List;
 
 class DBAccess {
-	public String dbURL;
-	public String user;
-	public String password;
+	private String dbURL;
+	private String user;
+	private String password;
 
 	DBAccess(String dbURL, String user, String password) {
 		this.dbURL = dbURL;
@@ -18,11 +18,11 @@ class DBAccess {
 		this.password = password;
 	}
 
-	public void setUser(String user) {
+	void setUser(String user) {
 		this.user = user;
 	}
 
-	public void setPassword(String password) {
+	void setPassword(String password) {
 		this.password = password;
 	}
 
@@ -31,15 +31,7 @@ class DBAccess {
 				.getConnection(dbURL, user, password);
 				PreparedStatement stmt = con.prepareStatement(query,
 						ResultSet.TYPE_SCROLL_INSENSITIVE,
-						ResultSet.CONCUR_READ_ONLY);
-		/*
-		 * Bringt das hier was?!
-		 */
-		// ResultSet results = null; //stmt.executeQuery();
-		/*
-		 * möp.
-		 */
-		) {
+						ResultSet.CONCUR_READ_ONLY);) {
 			int parameterIndex = 1;
 			for (Object input : inputs) {
 				stmt.setString(parameterIndex, "%" + (String) input + "%");
@@ -51,6 +43,7 @@ class DBAccess {
 						results.getString(2), results.getString(3),
 						results.getString(4));
 			}
+			new TableViewImpl().fillTable(results);
 			results.close();
 		}
 	}

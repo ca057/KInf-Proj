@@ -13,10 +13,7 @@ public class QueryRequestImpl implements QueryRequest {
 	private Object input;
 	private int source;
 	private String table;
-	private String sqlFrom;
 	private String sqlWhere;
-	private String dbName = "Hylleblomst";
-	private String tableName;
 
 	public QueryRequestImpl(SearchFieldKeys searchField, Object input,
 			int source) {
@@ -24,7 +21,6 @@ public class QueryRequestImpl implements QueryRequest {
 		setInput(input);
 		setSource(source);
 		searchFieldKeyToDatabaseData();
-		this.dbName = dbName;
 	}
 
 	QueryRequestImpl() {
@@ -46,28 +42,12 @@ public class QueryRequestImpl implements QueryRequest {
 		return input;
 	}
 
-	public String getSqlFrom() {
-		return sqlFrom;
-	}
-
-	public void setSqlFrom(String sqlFrom) {
-		this.sqlFrom = sqlFrom;
-	}
-
 	public String getSqlWhere() {
 		return sqlWhere;
 	}
 
 	public void setSqlWhere(String sqlWhere) {
 		this.sqlWhere = sqlWhere;
-	}
-
-	public String getDbName() {
-		return dbName;
-	}
-
-	public void setDbName(String dbName) {
-		this.dbName = dbName;
 	}
 
 	@Override
@@ -95,20 +75,12 @@ public class QueryRequestImpl implements QueryRequest {
 		return column;
 	}
 
-	@Override
-	public String getSQLStatement() {
-		return sqlFrom;
-	}
-
 	/**
 	 * Returns the name of the table the {@code SearchFieldKey} key belongs to.
 	 * 
 	 * @param key
 	 * @return
 	 */
-	// TODO Collection/ List durchgehen, PreparedStatement mit so vielen ?
-	// (person.vorname=?) wie Queries, dann nochmal durchgehen und fragezeichen
-	// füllen. WICHTIG: Collection muss sortiert sein!
 	private void searchFieldKeyToDatabaseData() {
 		if (source == SourceKeys.ORT_NORM_AB) {
 			if (searchField.equals(SearchFieldKeys.ORT)) {
@@ -240,12 +212,6 @@ public class QueryRequestImpl implements QueryRequest {
 						"Das zugehörige Tabellenelement für Suchfeld "
 								+ searchField.name() + " ist nicht definiert.");
 			}
-			if (table.contains("_")) {
-				this.tableName = table.substring(0, table.indexOf("_"));
-			} else {
-				this.tableName = table;
-			}
-			sqlFrom = getFrom();
 			sqlWhere = getWhere();
 		} else {
 			throw new IllegalArgumentException("Die Werte für Suchfeld "
@@ -254,41 +220,14 @@ public class QueryRequestImpl implements QueryRequest {
 		}
 	}
 
-	String getFrom() {
-		String result = "";
-		if (!(tableName.toUpperCase().startsWith("FACH")
-				|| tableName.toUpperCase().startsWith("ORT")
-				|| tableName.toUpperCase().contains("NAME") || tableName
-				.toUpperCase().startsWith("PERSON"))) {
-			if (tableName.toUpperCase().startsWith("FAKUL")
-					|| tableName.startsWith("FUND")) {
-				result = String.format("%s.%s", dbName, tableName);
-			} else if (tableName.toUpperCase().startsWith("ZUSAE")) {
-				result = String.format("%s.%s, %1$s.%2$s_info", dbName,
-						tableName);
-			} else {
-				result += String.format("%s.%s%s, %1$s.%2$s%s", dbName,
-						tableName, "_norm", "_trad");
-				if (!tableName.toUpperCase().startsWith("ANREDE")
-						&& !(tableName.toUpperCase().startsWith("TITEL"))) {
-					result += String.format(", %s.%s_info", dbName, tableName);
-					if (!(source == SourceKeys.NO_SOURCE)) {
-						result += String.format(", %s.QUELLEN", dbName);
-					}
-				}
-			}
-		}
-		return result;
-	}
-
 	String getWhere() {
 		if (input instanceof Boolean) {
-			return String.format("%s.%s.%s %s", dbName, table, column, "<> ''");
+			return String.format("Hylleblomst.%s.%s <> ''", table, column);
 		}
 		if (column.toUpperCase().startsWith("DATUM")) {
-			return String.format(" %s.%s.%s = ?", dbName, table, column);
+			return String.format("Hylleblomst.%s.%s = ?", table, column);
 		}
-		return String.format("%s.%s.%s LIKE ?", dbName, table, column);
+		return String.format("Hylleblomst.%s.%s LIKE ?", table, column);
 	}
 
 	private String getDate(int[] input) {
