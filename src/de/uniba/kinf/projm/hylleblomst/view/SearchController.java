@@ -59,13 +59,14 @@ public class SearchController {
 						inputSearchFKey[i], inputValues[i], inputSourceKey[i]);
 				requestList.add(tmpReq);
 			} else if (inputValues[i] instanceof int[]) {
-
+				QueryRequestImpl tmpReq = new QueryRequestImpl(
+						inputSearchFKey[i], inputValues[i], inputSourceKey[i]);
+				requestList.add(tmpReq);
 			}
 		}
 
 		try {
 			view.setInfoTextExtendedSearch(requestList);
-			// TODO nicht bei leerer Liste machen
 			if (requestList.size() != 0) {
 				querieImpl.search(requestList);
 			}
