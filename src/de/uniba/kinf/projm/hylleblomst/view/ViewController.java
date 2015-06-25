@@ -268,9 +268,25 @@ public class ViewController {
 
 	private int[] getStudienjahr() {
 		int[] studienjahr = new int[2];
-		if (!"".equals(searchCategory_study_studienjahrVon.getText())) {
-			// studienjahr[0] = searchCategory_study_studienjahrVon.getText();
+		if (!searchCategory_study_studienjahrVon.getText().isEmpty()
+				&& !searchCategory_study_studienjahrBis.getText().isEmpty()) {
+			studienjahr[0] = getParsedInt(searchCategory_study_studienjahrVon
+					.getText());
+			studienjahr[1] = getParsedInt(searchCategory_study_studienjahrBis
+					.getText());
+			return studienjahr;
+		} else if (!searchCategory_study_studienjahrVon.getText().isEmpty()) {
+			studienjahr[0] = getParsedInt(searchCategory_study_studienjahrVon
+					.getText());
+			studienjahr[1] = Integer.MAX_VALUE;
+			return studienjahr;
+		} else if (!searchCategory_study_studienjahrBis.getText().isEmpty()) {
+			studienjahr[0] = Integer.MIN_VALUE;
+			studienjahr[1] = getParsedInt(searchCategory_study_studienjahrBis
+					.getText());
+			return studienjahr;
 		}
+		// FIXME das muss anders gehen!
 		return null;
 	}
 
@@ -343,11 +359,13 @@ public class ViewController {
 	@FXML
 	private void startSearch() {
 		try {
-			searchCtrl.executeSearch(generateArrayWithInputValues(),
-					generateArrayWithSourceFieldKeys());
-		} catch (RuntimeException e) {
+			Object[] input = generateArrayWithInputValues();
+			int[] sources = generateArrayWithSourceFieldKeys();
+			searchCtrl.executeSearch(input, sources);
+		} catch (Exception e) {
 			e.printStackTrace();
-			ui.showErrorMessage(e.getMessage());
+			ui.showErrorMessage("Die Suche konnte nicht gestartet werden.\n"
+					+ e.getMessage());
 		}
 	}
 

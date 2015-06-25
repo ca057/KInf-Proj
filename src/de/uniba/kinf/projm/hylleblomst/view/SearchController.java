@@ -66,11 +66,14 @@ public class SearchController {
 		try {
 			view.setInfoTextExtendedSearch(requestList);
 			// TODO nicht bei leerer Liste machen
-			querieImpl.search(requestList);
+			if (requestList.size() != 0) {
+				querieImpl.search(requestList);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new RuntimeException("Fehler bei der Suche\n"
-					+ e.getMessage());
+			throw new RuntimeException(
+					"Ein Fehler bei der Suche ist aufgetreten:\n"
+							+ e.getMessage());
 		}
 	}
 
