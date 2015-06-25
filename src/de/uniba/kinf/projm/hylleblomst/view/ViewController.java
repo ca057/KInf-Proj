@@ -286,14 +286,40 @@ public class ViewController {
 					.getText());
 			return studienjahr;
 		}
-		// FIXME das muss anders gehen!
+		// FIXME das muss besser gehen!
 		return null;
 	}
 
 	private int[] getEinschreibung() {
 		int[] einschreibung = new int[3];
-
-		return null;
+		boolean inputDone = false;
+		if (!searchCategory_study_einschreibeJahr.getText().isEmpty()) {
+			einschreibung[0] = getParsedInt(searchCategory_study_einschreibeJahr
+					.getText());
+			inputDone = true;
+		} else {
+			einschreibung[0] = 0;
+		}
+		if (!searchCategory_study_einschreibeMonat.getText().isEmpty()) {
+			einschreibung[1] = getParsedInt(searchCategory_study_einschreibeMonat
+					.getText());
+			inputDone = true;
+		} else {
+			einschreibung[1] = 0;
+		}
+		if (!searchCategory_study_einschreibeTag.getText().isEmpty()) {
+			einschreibung[2] = getParsedInt(searchCategory_study_einschreibeTag
+					.getText());
+			inputDone = true;
+		} else {
+			einschreibung[2] = 0;
+		}
+		if (inputDone) {
+			return einschreibung;
+		} else {
+			// FIXME das muss besser gehen!
+			return null;
+		}
 	}
 
 	private int getParsedInt(String input) {
