@@ -211,9 +211,14 @@ public class ViewController {
 		return inputFieldCounter;
 	}
 
+	/**
+	 * 
+	 */
 	private void setEventHandlers() {
 
 	}
+	
+	public TableView getResultTable()
 
 	/**
 	 * Builds an array of all input fields and their value at the moment of
