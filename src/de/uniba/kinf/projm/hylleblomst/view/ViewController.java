@@ -1,18 +1,26 @@
 package de.uniba.kinf.projm.hylleblomst.view;
 
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.ResourceBundle;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import de.uniba.kinf.projm.hylleblomst.logic.QueriesImpl;
@@ -27,7 +35,7 @@ import de.uniba.kinf.projm.hylleblomst.logic.SourceKeys;
  * @author ca
  *
  */
-public class ViewController {
+public class ViewController implements Initializable {
 	/**
 	 * UIHelper supports a nice user interaction.
 	 */
@@ -184,13 +192,13 @@ public class ViewController {
 	Button searchMenu_search;
 
 	@FXML
-	TableView resultTable;
+	TableView<String> resultTable;
 
 	@FXML
 	TextArea infoArea;
 
 	/**
-	 * Default constructor for a new Controller. When called, the array with
+	 * Default constructor for a new Co ntroller. When called, the array with
 	 * {@link SearchFieldKeys} and {@link SourceKeys} is build and set, the
 	 * instances of the {@link QueriesImpl}, {@link UIHelper} and
 	 * {@link SearchController} are instantiated.
@@ -199,7 +207,17 @@ public class ViewController {
 	public ViewController() {
 		ui = new UIHelper();
 		searchCtrl = new SearchController(this);
+	}
+
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		clearResultTable();
 		setEventHandlers();
+	}
+
+	private void clearResultTable() {
+		resultTable.getColumns().clear();
+		resultTable.getItems().clear();
 	}
 
 	/**
@@ -485,7 +503,21 @@ public class ViewController {
 		return SourceKeys.NO_SELECTION;
 	}
 
-	private void fillResultTable() {
+	void fillResultTable() {
+		resultTable.getColumns().clear();
+		ArrayList<String> test = new ArrayList<>();
+		test.add("fancy");
+		test.add("shit");
+		ObservableList<String> row = FXCollections.observableArrayList(test);
+
+		resultTable.setItems(row);
+
+		TableColumn testColumn = new TableColumn("test");
+		PropertyValueFactory firstColFactory = new PropertyValueFactory<String, String>(
+				"firstCol");
+		testColumn.setCellValueFactory(firstColFactory);
+
+		resultTable.getColumns().add(testColumn);
 
 	}
 
