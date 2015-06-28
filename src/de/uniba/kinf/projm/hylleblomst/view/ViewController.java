@@ -49,7 +49,7 @@ public class ViewController implements Initializable {
 	 * Stores the number of input fields for usable generation of input field
 	 * arrays.
 	 */
-	private int inputFieldCounter = 22;
+	private int inputFieldCounter = 23;
 
 	@FXML
 	BorderPane root;
@@ -344,8 +344,8 @@ public class ViewController implements Initializable {
 	 * 
 	 * @return the array with all inputs
 	 */
-	private Object[] generateArrayWithInputValues() {
-		Object[] inputFields = new Object[inputFieldCounter];
+	private String[] generateArrayWithInputValues() {
+		String[] inputFields = new String[inputFieldCounter];
 		try {
 			inputFields[0] = searchCategory_person_anrede.getText();
 			inputFields[1] = searchCategory_person_anredenorm.getText();
@@ -353,99 +353,54 @@ public class ViewController implements Initializable {
 			inputFields[3] = searchCategory_person_titelnorm.getText();
 			inputFields[4] = searchCategory_person_vornameinput.getText();
 			inputFields[5] = searchCategory_person_nachnameinput.getText();
-			inputFields[6] = searchCategory_personExtended_adeliger
-					.isSelected();
-			inputFields[7] = searchCategory_personExtended_jesuit.isSelected();
+			inputFields[6] = String
+					.valueOf(searchCategory_personExtended_adeliger
+							.isSelected());
+			inputFields[7] = String
+					.valueOf(searchCategory_personExtended_jesuit.isSelected());
 			inputFields[8] = searchCategory_personExtended_wirtschaftinput
 					.getText();
 			inputFields[9] = searchCategory_personExtended_ortinput.getText();
 			inputFields[10] = searchCategory_study_studienfachinput.getText();
 			inputFields[11] = searchCategory_study_fakultaet.getText();
 			inputFields[12] = searchCategory_study_seminarinput.getText();
-			inputFields[13] = searchCategory_study_graduiert.isSelected();
-			inputFields[14] = getStudienjahr();
-			inputFields[15] = getEinschreibung();
-			inputFields[16] = searchCategory_other_zusaetzeinput.getText();
-			inputFields[17] = searchCategory_other_fundort.getText();
-			inputFields[18] = searchCategory_other_anmerkungen.getText();
-			if (!"".equals(searchCategory_other_nummer.getText())) {
-				inputFields[19] = getParsedInt(searchCategory_other_nummer
-						.getText());
-			} else {
-				inputFields[19] = null;
-			}
-			if (!"".equals(searchCategory_other_seite.getText())) {
-				inputFields[20] = getParsedInt(searchCategory_other_seite
-						.getText());
-			} else {
-				inputFields[20] = null;
-			}
-			if (!"".equals(searchCategory_other_nummerhess.getText())) {
-				inputFields[21] = getParsedInt(searchCategory_other_nummerhess
-						.getText());
-			} else {
-				inputFields[21] = null;
-			}
+			inputFields[13] = String.valueOf(searchCategory_study_graduiert
+					.isSelected());
+			inputFields[14] = searchCategory_study_studienjahrVon.getText();
+			inputFields[15] = searchCategory_study_studienjahrBis.getText();
+			inputFields[16] = getEinschreibungVon();
+			inputFields[17] = searchCategory_other_zusaetzeinput.getText();
+			inputFields[18] = searchCategory_other_fundort.getText();
+			inputFields[19] = searchCategory_other_anmerkungen.getText();
+			inputFields[20] = searchCategory_other_nummer.getText();
+			inputFields[21] = searchCategory_other_seite.getText();
+			inputFields[22] = searchCategory_other_nummerhess.getText();
 		} catch (InputMismatchException | NumberFormatException e) {
 			ui.showErrorMessage(e.getMessage());
 		}
 		return inputFields;
 	}
 
-	private int[] getStudienjahr() {
-		int[] studienjahr = new int[2];
-		if (!searchCategory_study_studienjahrVon.getText().isEmpty()
-				&& !searchCategory_study_studienjahrBis.getText().isEmpty()) {
-			studienjahr[0] = getParsedInt(searchCategory_study_studienjahrVon
-					.getText());
-			studienjahr[1] = getParsedInt(searchCategory_study_studienjahrBis
-					.getText());
-			return studienjahr;
-		} else if (!searchCategory_study_studienjahrVon.getText().isEmpty()) {
-			studienjahr[0] = getParsedInt(searchCategory_study_studienjahrVon
-					.getText());
-			studienjahr[1] = Integer.MAX_VALUE;
-			return studienjahr;
-		} else if (!searchCategory_study_studienjahrBis.getText().isEmpty()) {
-			studienjahr[0] = Integer.MIN_VALUE;
-			studienjahr[1] = getParsedInt(searchCategory_study_studienjahrBis
-					.getText());
-			return studienjahr;
-		}
-		// FIXME das muss besser gehen!
-		return null;
-	}
+	/**
+	 * 
+	 * @return
+	 */
+	private String getEinschreibungVon() {
+		String jahr = "yyyy";
+		String monat = "mm";
+		String tag = "dd";
 
-	private int[] getEinschreibung() {
-		int[] einschreibung = new int[3];
-		boolean inputDone = false;
 		if (!searchCategory_study_einschreibeJahr.getText().isEmpty()) {
-			einschreibung[0] = getParsedInt(searchCategory_study_einschreibeJahr
-					.getText());
-			inputDone = true;
-		} else {
-			einschreibung[0] = 0;
+			jahr = searchCategory_study_einschreibeJahr.getText();
 		}
 		if (!searchCategory_study_einschreibeMonat.getText().isEmpty()) {
-			einschreibung[1] = getParsedInt(searchCategory_study_einschreibeMonat
-					.getText());
-			inputDone = true;
-		} else {
-			einschreibung[1] = 0;
+			monat = searchCategory_study_einschreibeMonat.getText();
 		}
 		if (!searchCategory_study_einschreibeTag.getText().isEmpty()) {
-			einschreibung[2] = getParsedInt(searchCategory_study_einschreibeTag
-					.getText());
-			inputDone = true;
-		} else {
-			einschreibung[2] = 0;
+			tag = searchCategory_study_einschreibeTag.getText();
 		}
-		if (inputDone) {
-			return einschreibung;
-		} else {
-			// FIXME das muss besser gehen!
-			return null;
-		}
+
+		return jahr + "-" + monat + "-" + tag;
 	}
 
 	private int getParsedInt(String input) {
@@ -490,13 +445,14 @@ public class ViewController implements Initializable {
 		inputSourceKey[13] = SourceKeys.NO_SOURCE;
 		inputSourceKey[14] = SourceKeys.NO_SOURCE;
 		inputSourceKey[15] = SourceKeys.NO_SOURCE;
-		inputSourceKey[16] = getSourceKeyByValueAsString(searchCategory_other_zusaetzeselection
+		inputSourceKey[16] = SourceKeys.NO_SOURCE;
+		inputSourceKey[17] = getSourceKeyByValueAsString(searchCategory_other_zusaetzeselection
 				.getValue());
-		inputSourceKey[17] = SourceKeys.NO_SOURCE;
 		inputSourceKey[18] = SourceKeys.NO_SOURCE;
 		inputSourceKey[19] = SourceKeys.NO_SOURCE;
 		inputSourceKey[20] = SourceKeys.NO_SOURCE;
 		inputSourceKey[21] = SourceKeys.NO_SOURCE;
+		inputSourceKey[22] = SourceKeys.NO_SOURCE;
 
 		return inputSourceKey;
 	}
@@ -511,7 +467,7 @@ public class ViewController implements Initializable {
 	@FXML
 	private void startSearch() {
 		try {
-			Object[] input = generateArrayWithInputValues();
+			String[] input = generateArrayWithInputValues();
 			int[] sources = generateArrayWithSourceFieldKeys();
 			searchCtrl.executeSearch(input, sources);
 		} catch (Exception e) {
@@ -640,16 +596,17 @@ public class ViewController implements Initializable {
 	 */
 	void setInfoTextExtendedSearch(List<QueryRequestImpl> requestList) {
 		String info = "Suchanfrage\n-----------\n";
+		StringBuffer buffer = new StringBuffer();
 		if (requestList == null || requestList.size() == 0) {
 			info += "Keine Sucheingaben gefunden.";
 		} else {
 			for (QueryRequest qr : requestList) {
-				info += qr.getSearchField().toString() + ": ";
-				info += qr.getInput() + "; ";
-				info += "Quellen#: " + qr.getSource() + "\n";
+				buffer.append(qr.getSearchField().toString() + ": ");
+				buffer.append(qr.getInput() + "; ");
+				buffer.append("Quellen#: " + qr.getSource() + "\n");
 			}
 		}
-
+		info += buffer.toString();
 		infoArea.setText(info);
 	}
 }

@@ -32,7 +32,7 @@ public class SearchController {
 		this.querieImpl = new QueriesImpl();
 	}
 
-	void executeSearch(Object[] inputValues, int[] inputSourceKey) {
+	void executeSearch(String[] inputValues, int[] inputSourceKey) {
 		if (inputSearchFKey == null || inputSearchFKey.length == 0
 				|| inputSourceKey == null || inputSourceKey.length == 0) {
 			throw new IllegalArgumentException(
@@ -41,24 +41,9 @@ public class SearchController {
 
 		List<QueryRequestImpl> requestList = new ArrayList<QueryRequestImpl>();
 		for (int i = 0; i < inputValues.length; i++) {
-			if (inputValues[i] instanceof String && !"".equals(inputValues[i])
-					&& inputValues[i] != null) {
+			if (!inputValues[i].isEmpty()) {
 				QueryRequestImpl tmpReq = new QueryRequestImpl(
 						inputSearchFKey[i], inputValues[i], inputSourceKey[i]);
-				requestList.add(tmpReq);
-			} else if (inputValues[i] instanceof Boolean
-					&& (Boolean) inputValues[i] == true) {
-				QueryRequestImpl tmpReq = new QueryRequestImpl(
-						inputSearchFKey[i], inputValues[i], inputSourceKey[i]);
-				requestList.add(tmpReq);
-			} else if (inputValues[i] instanceof Integer) {
-				QueryRequestImpl tmpReq = new QueryRequestImpl(
-						inputSearchFKey[i], inputValues[i], inputSourceKey[i]);
-				requestList.add(tmpReq);
-			} else if (inputValues[i] instanceof int[]) {
-				QueryRequestImpl tmpReq = new QueryRequestImpl(
-						inputSearchFKey[i], (int[]) inputValues[i],
-						inputSourceKey[i]);
 				requestList.add(tmpReq);
 			}
 		}
@@ -94,14 +79,15 @@ public class SearchController {
 		sfkArray[11] = SearchFieldKeys.FAKULTAETEN;
 		sfkArray[12] = SearchFieldKeys.SEMINAR;
 		sfkArray[13] = SearchFieldKeys.GRADUIERT;
-		sfkArray[14] = SearchFieldKeys.STUDIENJAHR;
-		sfkArray[15] = SearchFieldKeys.EINSCHREIBEDATUM;
-		sfkArray[16] = SearchFieldKeys.ZUSAETZE;
-		sfkArray[17] = SearchFieldKeys.FUNDORTE;
-		sfkArray[18] = SearchFieldKeys.ANMERKUNGEN;
-		sfkArray[19] = SearchFieldKeys.NUMMER;
-		sfkArray[20] = SearchFieldKeys.SEITE_ORIGINALE;
-		sfkArray[21] = SearchFieldKeys.NUMMER_HESS;
+		sfkArray[14] = SearchFieldKeys.STUDIENJAHR_VON;
+		sfkArray[15] = SearchFieldKeys.STUDIENJAHR_BIS;
+		sfkArray[16] = SearchFieldKeys.EINSCHREIBEDATUM_VON;
+		sfkArray[17] = SearchFieldKeys.ZUSAETZE;
+		sfkArray[18] = SearchFieldKeys.FUNDORTE;
+		sfkArray[19] = SearchFieldKeys.ANMERKUNGEN;
+		sfkArray[20] = SearchFieldKeys.NUMMER;
+		sfkArray[21] = SearchFieldKeys.SEITE_ORIGINALE;
+		sfkArray[22] = SearchFieldKeys.NUMMER_HESS;
 
 		return sfkArray;
 	}
