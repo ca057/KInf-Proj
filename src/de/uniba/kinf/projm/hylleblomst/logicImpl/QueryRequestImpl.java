@@ -1,4 +1,4 @@
-package de.uniba.kinf.projm.hylleblomst.logic;
+package de.uniba.kinf.projm.hylleblomst.logicImpl;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -6,6 +6,10 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
+import de.uniba.kinf.projm.hylleblomst.logic.SearchFieldKeys;
+import de.uniba.kinf.projm.hylleblomst.logic.SourceKeys;
 
 public class QueryRequestImpl implements QueryRequest {
 	private SearchFieldKeys searchField;

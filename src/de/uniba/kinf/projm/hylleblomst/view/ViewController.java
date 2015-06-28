@@ -6,6 +6,11 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
+import de.uniba.kinf.projm.hylleblomst.logic.SearchFieldKeys;
+import de.uniba.kinf.projm.hylleblomst.logic.SourceKeys;
+import de.uniba.kinf.projm.hylleblomst.logicImpl.QueriesImpl;
+import de.uniba.kinf.projm.hylleblomst.logicImpl.QueryRequestImpl;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -23,11 +28,6 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import de.uniba.kinf.projm.hylleblomst.logic.QueriesImpl;
-import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
-import de.uniba.kinf.projm.hylleblomst.logic.QueryRequestImpl;
-import de.uniba.kinf.projm.hylleblomst.logic.SearchFieldKeys;
-import de.uniba.kinf.projm.hylleblomst.logic.SourceKeys;
 
 /**
  * Controller for the graphical user interface.

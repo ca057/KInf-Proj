@@ -1,6 +1,8 @@
-package de.uniba.kinf.projm.hylleblomst.logic;
+package de.uniba.kinf.projm.hylleblomst.logicImpl;
 
 import java.sql.ResultSet;
+
+import de.uniba.kinf.projm.hylleblomst.logic.ResultTable;
 
 public class ResultTableImpl implements ResultTable {
 

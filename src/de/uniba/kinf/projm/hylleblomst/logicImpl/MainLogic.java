@@ -1,7 +1,9 @@
-package de.uniba.kinf.projm.hylleblomst.logic;
+package de.uniba.kinf.projm.hylleblomst.logicImpl;
 
 import java.sql.SQLException;
 import java.util.LinkedList;
+
+import de.uniba.kinf.projm.hylleblomst.logic.SearchFieldKeys;
 
 public class MainLogic {
 	public static void main(String[] args) throws SQLException {

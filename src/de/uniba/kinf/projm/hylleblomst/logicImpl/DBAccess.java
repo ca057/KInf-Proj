@@ -1,4 +1,4 @@
-package de.uniba.kinf.projm.hylleblomst.logic;
+package de.uniba.kinf.projm.hylleblomst.logicImpl;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

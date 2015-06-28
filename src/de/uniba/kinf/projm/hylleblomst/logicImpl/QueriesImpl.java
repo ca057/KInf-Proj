@@ -1,9 +1,13 @@
-package de.uniba.kinf.projm.hylleblomst.logic;
+package de.uniba.kinf.projm.hylleblomst.logicImpl;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+
+import de.uniba.kinf.projm.hylleblomst.logic.Queries;
+import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
+import de.uniba.kinf.projm.hylleblomst.logic.SourceKeys;
 
 public class QueriesImpl implements Queries {
 	DBAccess db;

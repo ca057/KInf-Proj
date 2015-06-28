@@ -4,9 +4,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.uniba.kinf.projm.hylleblomst.logic.QueriesImpl;
-import de.uniba.kinf.projm.hylleblomst.logic.QueryRequestImpl;
 import de.uniba.kinf.projm.hylleblomst.logic.SearchFieldKeys;
+import de.uniba.kinf.projm.hylleblomst.logicImpl.QueriesImpl;
+import de.uniba.kinf.projm.hylleblomst.logicImpl.QueryRequestImpl;
 
 public class SearchController {
 
