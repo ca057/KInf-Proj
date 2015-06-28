@@ -1,5 +1,6 @@
 package de.uniba.kinf.projm.hylleblomst.logic;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,11 +10,11 @@ public class QueriesImpl implements Queries {
 	ArrayList<Object> inputs = new ArrayList<Object>();
 
 	@Override
-	public void search(Collection<QueryRequestImpl> queryRequests) throws SQLException {
-		startQuery(buildQuery(queryRequests));
+	public ResultSet search(Collection<QueryRequestImpl> queryRequests) throws SQLException {
+		return startQuery(queryRequests);
 	}
 
-	private String buildQuery(Collection<QueryRequestImpl> queryRequests) throws SQLException {
+	private ResultSet startQuery(Collection<QueryRequestImpl> queryRequests) throws SQLException {
 		Boolean hasSource = false;
 		inputs.clear();
 		StringBuilder sqlQuery = new StringBuilder();
@@ -22,6 +23,7 @@ public class QueriesImpl implements Queries {
 		StringBuilder sqlFrom = new StringBuilder();
 		sqlFrom.append(getFrom());
 		for (QueryRequestImpl qr : queryRequests) {
+			sqlQuery.append(", Hylleblomst." + qr.getTable() + "." + qr.getColumn() + " AS " + qr.getTable());
 			if (qr.getSource() != SourceKeys.NO_SOURCE) {
 				hasSource = true;
 			}
@@ -33,19 +35,14 @@ public class QueriesImpl implements Queries {
 			if (!(qr.getInput() instanceof Boolean)) {
 				inputs.add(qr.getInput());
 			}
-			sqlQuery.append(", Hylleblomst." + qr.getTable() + "." + qr.getColumn() + " AS " + qr.getTable());
 		}
 		if (hasSource) {
 			sqlFrom.append(", Hylleblomst.Quellen");
 		}
 		sqlQuery.append(" FROM ").append(sqlFrom).append(" WHERE ").append(sqlWhere);
 		System.out.println(sqlQuery);
-		return sqlQuery.toString();
-	}
-
-	private void startQuery(String sqlQuery) throws SQLException {
 		db = new DBAccess("jdbc:derby:./db/MyDB;create=true", "admin", "password");
-		db.startQuery(sqlQuery, inputs);
+		return db.startQuery(sqlQuery.toString(), inputs);
 	}
 
 	@Override
@@ -82,6 +79,7 @@ public class QueriesImpl implements Queries {
 		// TODO Ort-Abweichung-Norm: Hier muss dann auch die Anmerkung mit
 		// zurückgegeben
 		// werden.
-		return "DISTINCT Hylleblomst.vorname_norm.name AS vorname_norm, Hylleblomst.name_norm.name AS nachname_norm, Hylleblomst.ort_norm.ortNorm AS ort_norm, Hylleblomst.fakultaeten.name AS fakultaet";
+		return "DISTINCT Hylleblomst.vorname_norm.name AS " + SearchFieldKeys.VORNAME
+				+ " Hylleblomst.name_norm.name AS nachname_norm, Hylleblomst.ort_norm.ortNorm AS ort_norm, Hylleblomst.fakultaeten.name AS fakultaet";
 	}
 }
