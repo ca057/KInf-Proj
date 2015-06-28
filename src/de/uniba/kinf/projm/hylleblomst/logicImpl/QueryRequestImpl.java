@@ -14,11 +14,11 @@ import de.uniba.kinf.projm.hylleblomst.logic.SourceKeys;
 public class QueryRequestImpl implements QueryRequest {
 	private SearchFieldKeys searchField;
 	private String column;
-	private Object input;
+	private String input;
 	private int source;
 	private String table;
 
-	public QueryRequestImpl(SearchFieldKeys searchField, Object input, int source) {
+	public QueryRequestImpl(SearchFieldKeys searchField, String input, int source) {
 		setInput(input);
 		setSource(source);
 		setSearchField(searchField);
@@ -36,11 +36,11 @@ public class QueryRequestImpl implements QueryRequest {
 	}
 
 	@Override
-	public Object getInput() {
+	public String getInput() {
 		return input;
 	}
 
-	public void setInput(Object input) {
+	public void setInput(String input) {
 		this.input = input;
 	}
 
@@ -80,17 +80,18 @@ public class QueryRequestImpl implements QueryRequest {
 				table = "PERSON";
 				column = getColumnName(table, 4);
 				break;
-			case STUDIENJAHR:
+			case STUDIENJAHR_VON:
+			case STUDIENJAHR_BIS:
 				table = "PERSON";
 				column = getColumnName(table, 7);
-				int[] jahr = (int[]) input;
-				input = "" + jahr[0] + "-" + jahr[1];
 				break;
-			case EINSCHREIBEDATUM:
+			case EINSCHREIBEDATUM_VON:
+			case EINSCHREIBEDATUM_BIS:
 				table = "PERSON";
 				column = getColumnName(table, 6);
-				int[] tmp = (int[]) input;
-				input = tmp[0] + "-" + tmp[1] + "-" + tmp[2];
+				// TODO Impelemnt this
+				// int[] tmp = (int[]) input;
+				// input = tmp[0] + "-" + tmp[1] + "-" + tmp[2];
 				break;
 			case ANMERKUNGEN:
 				table = "PERSON";
@@ -203,13 +204,17 @@ public class QueryRequestImpl implements QueryRequest {
 	@Override
 	public String getWhere() {
 		if (source == SourceKeys.NO_SOURCE) {
-			if (input instanceof Boolean) {
+			if (searchField == SearchFieldKeys.ADLIG || searchField == SearchFieldKeys.JESUIT
+					|| searchField == SearchFieldKeys.GRADUIERT) {
 				return String.format("Hylleblomst.%s.%s <> ''", table, column);
 			}
-			if (column.toUpperCase().startsWith("DATUM")) {
-				// TODO Jahr / Datum?
-				return String.format("Hylleblomst.%s.%s = ?", table, column);
+			if (searchField == SearchFieldKeys.EINSCHREIBEDATUM_VON) {
+				return String.format("Hylleblomst.%s.%s > ?", table, column);
 			}
+			if (searchField == SearchFieldKeys.EINSCHREIBEDATUM_BIS) {
+				return String.format("Hylleblomst.%s.%s < ?", table, column);
+			}
+			// TODO Jahr
 		} else if (source == SourceKeys.NORM) {
 			return String.format("Hylleblomst.%s_norm.%s LIKE ?", table.substring(0, table.indexOf("_")), column);
 		} else if (!(source == SourceKeys.NO_SELECTION || searchField == SearchFieldKeys.ANREDE)) {

@@ -36,6 +36,9 @@ public class QueriesImpl implements Queries {
 				sqlWhere.append(" AND " + qr.getWhere());
 			}
 			if (!(qr.getInput() instanceof Boolean)) {
+				if (qr.getInput() instanceof int[]) {
+					inputs.add(qr.getInput());
+				}
 				inputs.add(qr.getInput());
 			}
 			sqlQuery.append(", Hylleblomst." + qr.getTable() + "." + qr.getColumn() + " AS " + qr.getSearchField());
