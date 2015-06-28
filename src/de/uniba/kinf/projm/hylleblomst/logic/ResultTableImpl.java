@@ -2,11 +2,11 @@ package de.uniba.kinf.projm.hylleblomst.logic;
 
 import java.sql.ResultSet;
 
-public class TableViewImpl implements TableView {
+public class ResultTableImpl implements ResultTable {
 
-	private TableView resultTable;
+	private ResultTable resultTable;
 
-	public void setResultTable(TableView table) {
+	public void setResultTable(ResultTable table) {
 		if (table == null) {
 			throw new IllegalArgumentException(
 					"Tabelle ist null und kann nicht befüllt werden.");

@@ -217,8 +217,10 @@ public class ViewController {
 	private void setEventHandlers() {
 
 	}
-	
-	public TableView getResultTable()
+
+	public TableView getResultTable() {
+		return resultTable;
+	}
 
 	/**
 	 * Builds an array of all input fields and their value at the moment of
@@ -481,6 +483,10 @@ public class ViewController {
 			return SourceKeys.AUB_V_E38;
 		}
 		return SourceKeys.NO_SELECTION;
+	}
+
+	private void fillResultTable() {
+
 	}
 
 	/**
