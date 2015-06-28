@@ -63,6 +63,7 @@ public class SearchController {
 
 		try {
 			view.setInfoTextExtendedSearch(requestList);
+			view.fillResultTable();
 			if (requestList.size() != 0) {
 				querieImpl.search(requestList);
 			}
