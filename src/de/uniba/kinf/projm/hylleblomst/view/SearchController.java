@@ -67,7 +67,7 @@ public class SearchController {
 			view.setInfoTextExtendedSearch(requestList);
 			if (requestList.size() != 0) {
 				ResultSet result = querieImpl.search(requestList);
-				view.fillResultTable(result);
+				view.fillResultTable();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
