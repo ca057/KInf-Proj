@@ -19,9 +19,9 @@ public class QueryRequestImpl implements QueryRequest {
 	private String table;
 
 	public QueryRequestImpl(SearchFieldKeys searchField, Object input, int source) {
-		setSearchField(searchField);
 		setInput(input);
 		setSource(source);
+		setSearchField(searchField);
 		searchFieldKeyToDatabaseData();
 	}
 
@@ -84,7 +84,7 @@ public class QueryRequestImpl implements QueryRequest {
 				table = "PERSON";
 				column = getColumnName(table, 7);
 				int[] jahr = (int[]) input;
-				// TODO Implement input here.
+				input = "" + jahr[0] + "-" + jahr[1];
 				break;
 			case EINSCHREIBEDATUM:
 				table = "PERSON";
