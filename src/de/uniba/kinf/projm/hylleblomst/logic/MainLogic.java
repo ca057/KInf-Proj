@@ -8,8 +8,7 @@ public class MainLogic {
 		QueriesImpl test = new QueriesImpl();
 		// ArrayList<QueryRequest> qr = new ArrayList<>();
 		// test.setDatabase("jdbc:derby:db/MyDB", "admin", "password");
-		QueryRequestImpl qr = new QueryRequestImpl(SearchFieldKeys.VORNAME,
-				"Johammes", 1);
+		QueryRequestImpl qr = new QueryRequestImpl(SearchFieldKeys.VORNAME, "Johammes", 1);
 		LinkedList<QueryRequestImpl> col = new LinkedList<QueryRequestImpl>();
 		col.add(qr);
 		// qr.setSearchField(SearchFieldKeys.ADELIG);

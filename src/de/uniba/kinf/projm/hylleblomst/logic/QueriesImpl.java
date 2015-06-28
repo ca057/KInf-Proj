@@ -10,11 +10,11 @@ public class QueriesImpl implements Queries {
 	ArrayList<Object> inputs = new ArrayList<Object>();
 
 	@Override
-	public ResultSet search(Collection<QueryRequestImpl> queryRequests) throws SQLException {
+	public ResultSet search(Collection<? extends QueryRequest> queryRequests) throws SQLException {
 		return startQuery(queryRequests);
 	}
 
-	private ResultSet startQuery(Collection<QueryRequestImpl> queryRequests) throws SQLException {
+	private ResultSet startQuery(Collection<? extends QueryRequest> queryRequests) throws SQLException {
 		Boolean hasSource = false;
 		inputs.clear();
 		StringBuilder sqlQuery = new StringBuilder();
@@ -22,7 +22,7 @@ public class QueriesImpl implements Queries {
 		StringBuilder sqlWhere = new StringBuilder();
 		StringBuilder sqlFrom = new StringBuilder();
 		sqlFrom.append(getFrom());
-		for (QueryRequestImpl qr : queryRequests) {
+		for (QueryRequest qr : queryRequests) {
 			if (qr.getSource() != SourceKeys.NO_SOURCE) {
 				hasSource = true;
 			}
@@ -34,7 +34,10 @@ public class QueriesImpl implements Queries {
 			if (!(qr.getInput() instanceof Boolean)) {
 				inputs.add(qr.getInput());
 			}
-			sqlQuery.append(", Hylleblomst." + qr.getTable() + "." + qr.getColumn() + " AS " + qr.getTable());
+			sqlQuery.append(", Hylleblomst." + qr.getTable() + "." + qr.getColumn() + " AS " + qr.getSearchField());
+			if (qr.getSource() == SourceKeys.ORT_NORM_AB) {
+				sqlQuery.append(", Hylleblomst." + qr.getTable() + "." + "Anmerkung");
+			}
 		}
 		if (hasSource) {
 			sqlFrom.append(", Hylleblomst.Quellen");
@@ -76,9 +79,6 @@ public class QueriesImpl implements Queries {
 	}
 
 	private String getSelect() {
-		// TODO Ort-Abweichung-Norm: Hier muss dann auch die Anmerkung mit
-		// zurückgegeben
-		// werden.
-		return "DISTINCT Hylleblomst.vorname_norm.name AS vorname_norm, Hylleblomst.name_norm.name AS nachname_norm, Hylleblomst.ort_norm.ortNorm AS ort_norm, Hylleblomst.fakultaeten.name AS fakultaet";
+		return "DISTINCT Hylleblomst.vorname_norm.name AS vorname_norm, Hylleblomst.name_norm.name AS nachname_norm, Hylleblomst.ort_norm.ortNorm AS ort_norm, Hylleblomst.fakultaeten.name AS fakultaet_norm";
 	}
 }

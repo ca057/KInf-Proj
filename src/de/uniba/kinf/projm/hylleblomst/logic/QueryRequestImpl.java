@@ -14,15 +14,11 @@ public class QueryRequestImpl implements QueryRequest {
 	private int source;
 	private String table;
 
-	public QueryRequestImpl(SearchFieldKeys searchField, Object input,
-			int source) {
+	public QueryRequestImpl(SearchFieldKeys searchField, Object input, int source) {
 		setSearchField(searchField);
 		setInput(input);
 		setSource(source);
 		searchFieldKeyToDatabaseData();
-	}
-
-	QueryRequestImpl() {
 	}
 
 	@Override
@@ -30,7 +26,6 @@ public class QueryRequestImpl implements QueryRequest {
 		return searchField;
 	}
 
-	@Override
 	public void setSearchField(SearchFieldKeys searchField) {
 		this.searchField = searchField;
 		searchFieldKeyToDatabaseData();
@@ -41,7 +36,6 @@ public class QueryRequestImpl implements QueryRequest {
 		return input;
 	}
 
-	@Override
 	public void setInput(Object input) {
 		this.input = input;
 	}
@@ -51,7 +45,6 @@ public class QueryRequestImpl implements QueryRequest {
 		return source;
 	}
 
-	@Override
 	public void setSource(int source) {
 		this.source = source;
 	}
@@ -195,17 +188,16 @@ public class QueryRequestImpl implements QueryRequest {
 				break;
 			default:
 				throw new IllegalArgumentException(
-						"Das zugehörige Tabellenelement für Suchfeld "
-								+ searchField.name() + " ist nicht definiert.");
+						"Das zugehörige Tabellenelement für Suchfeld " + searchField.name() + " ist nicht definiert.");
 			}
 		} else {
-			throw new IllegalArgumentException("Die Werte für Suchfeld "
-					+ searchField.toString() + " und Quelle " + source
-					+ " konnten keiner Tabelle und Spalte zugeordnet werden.");
+			throw new IllegalArgumentException("Die Werte für Suchfeld " + searchField.toString() + " und Quelle "
+					+ source + " konnten keiner Tabelle und Spalte zugeordnet werden.");
 		}
 	}
 
-	String getWhere() {
+	@Override
+	public String getWhere() {
 		if (source == SourceKeys.NO_SOURCE) {
 			if (input instanceof Boolean) {
 				return String.format("Hylleblomst.%s.%s <> ''", table, column);
@@ -215,13 +207,10 @@ public class QueryRequestImpl implements QueryRequest {
 				return String.format("Hylleblomst.%s.%s = ?", table, column);
 			}
 		} else if (source == SourceKeys.NORM) {
-			return String.format("Hylleblomst.%s_norm.%s LIKE ?",
-					table.substring(0, table.indexOf("_")), column);
+			return String.format("Hylleblomst.%s_norm.%s LIKE ?", table.substring(0, table.indexOf("_")), column);
 		} else if (!(source == SourceKeys.NO_SELECTION || searchField == SearchFieldKeys.ANREDE)) {
-			return String
-					.format("Hylleblomst.%s.%s LIKE ? AND Hylleblomst.%s_info.QuellenID = %s",
-							table, column,
-							table.substring(0, table.indexOf("_")), source);
+			return String.format("Hylleblomst.%s.%s LIKE ? AND Hylleblomst.%s_info.QuellenID = %s", table, column,
+					table.substring(0, table.indexOf("_")), source);
 		}
 		return String.format("Hylleblomst.%s.%s LIKE ?", table, column);
 	}
@@ -231,27 +220,15 @@ public class QueryRequestImpl implements QueryRequest {
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * de.uniba.kinf.projm.hylleblomst.logic.QueryRequest#getColumnName(java
-	 * .lang.String, int)
-	 */
-	@Override
 	public String getColumnName(String table, int i) {
 		String dbURL = "jdbc:derby:db/MyDB";
 		String user = "admin";
 		String password = "password";
 		String result = "";
-		try (Connection con = DriverManager
-				.getConnection(dbURL, user, password);
+		try (Connection con = DriverManager.getConnection(dbURL, user, password);
 
-				Statement stmt = con.createStatement(
-						ResultSet.TYPE_SCROLL_INSENSITIVE,
-						ResultSet.CONCUR_READ_ONLY);
-				ResultSet rs = stmt.executeQuery(String.format(
-						"SELECT * FROM hylleblomst.%s", table));) {
+				Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+				ResultSet rs = stmt.executeQuery(String.format("SELECT * FROM hylleblomst.%s", table));) {
 			ResultSetMetaData rsmd = rs.getMetaData();
 			result = rsmd.getColumnName(i);
 		} catch (SQLException e) {
