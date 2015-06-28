@@ -1,16 +1,11 @@
 package de.uniba.kinf.projm.hylleblomst.view;
 
 import java.net.URL;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Accordion;
@@ -23,9 +18,9 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
 import de.uniba.kinf.projm.hylleblomst.logic.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.SourceKeys;
@@ -216,6 +211,7 @@ public class ViewController implements Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		clearResultTable();
 		setEventHandlers();
+		searchCategories.setExpandedPane(searchCategory_person);
 	}
 
 	private void clearResultTable() {
@@ -236,11 +232,108 @@ public class ViewController implements Initializable {
 	 * 
 	 */
 	private void setEventHandlers() {
-
+		setNumericalInputEventHandlers();
 	}
 
-	public TableView<?> getResultTable() {
-		return resultTable;
+	/**
+	 * 
+	 */
+	private void setNumericalInputEventHandlers() {
+		searchCategory_study_studienjahrVon
+				.setOnKeyReleased(new EventHandler<KeyEvent>() {
+
+					@Override
+					public void handle(KeyEvent ke) {
+						try {
+							if (getParsedInt(searchCategory_study_studienjahrVon
+									.getText()) < 0
+									|| getParsedInt(searchCategory_study_studienjahrVon
+											.getText()) > 2015) {
+								ke.consume();
+								throw new NumberFormatException();
+							}
+						} catch (NumberFormatException e) {
+							ui.showErrorMessage("Studienjahr muss eine Zahl zwischen 0 und 2015 sein.");
+							searchCategory_study_studienjahrVon.clear();
+						}
+					}
+				});
+		searchCategory_study_studienjahrBis
+				.setOnKeyReleased(new EventHandler<KeyEvent>() {
+
+					@Override
+					public void handle(KeyEvent ke) {
+						try {
+							if (getParsedInt(searchCategory_study_studienjahrBis
+									.getText()) < 0
+									|| getParsedInt(searchCategory_study_studienjahrBis
+											.getText()) > 2015) {
+								ke.consume();
+								throw new NumberFormatException();
+							}
+						} catch (NumberFormatException e) {
+							ui.showErrorMessage("Studienjahr muss eine Zahl zwischen 0 und 2015 sein.");
+							searchCategory_study_studienjahrBis.clear();
+						}
+					}
+				});
+		searchCategory_study_einschreibeJahr
+				.setOnKeyReleased(new EventHandler<KeyEvent>() {
+
+					@Override
+					public void handle(KeyEvent ke) {
+						try {
+							if (getParsedInt(searchCategory_study_einschreibeJahr
+									.getText()) < 0
+									|| getParsedInt(searchCategory_study_einschreibeJahr
+											.getText()) > 2015) {
+								ke.consume();
+								throw new NumberFormatException();
+							}
+						} catch (NumberFormatException e) {
+							ui.showErrorMessage("Einschreibejahr muss eine Zahl zwischen 0 und 2015 sein.");
+							searchCategory_study_einschreibeJahr.clear();
+						}
+					}
+				});
+		searchCategory_study_einschreibeMonat
+				.setOnKeyReleased(new EventHandler<KeyEvent>() {
+
+					@Override
+					public void handle(KeyEvent ke) {
+						try {
+							if (getParsedInt(searchCategory_study_einschreibeMonat
+									.getText()) < 1
+									|| getParsedInt(searchCategory_study_einschreibeMonat
+											.getText()) > 12) {
+								ke.consume();
+								throw new NumberFormatException();
+							}
+						} catch (NumberFormatException e) {
+							ui.showErrorMessage("Einschreibemonat muss eine Zahl von 1 bis 12 sein.");
+							searchCategory_study_einschreibeMonat.clear();
+						}
+					}
+				});
+		searchCategory_study_einschreibeTag
+				.setOnKeyReleased(new EventHandler<KeyEvent>() {
+
+					@Override
+					public void handle(KeyEvent ke) {
+						try {
+							if (getParsedInt(searchCategory_study_einschreibeTag
+									.getText()) < 1
+									|| getParsedInt(searchCategory_study_einschreibeTag
+											.getText()) > 31) {
+								ke.consume();
+								throw new NumberFormatException();
+							}
+						} catch (NumberFormatException e) {
+							ui.showErrorMessage("Einschreibetag muss eine Zahl von 1 bis 31 sein.");
+							searchCategory_study_einschreibeTag.clear();
+						}
+					}
+				});
 	}
 
 	/**
@@ -506,45 +599,16 @@ public class ViewController implements Initializable {
 		return SourceKeys.NO_SELECTION;
 	}
 
-	void fillResultTable(ResultSet result) {
+	void fillResultTable() {
+		//
 		resultTable.getColumns().clear();
 
-		ObservableList<ObservableList> data = FXCollections
-				.observableArrayList();
-
-		try {
-			while (result.next()) {
-				ObservableList<String> row = FXCollections
-						.observableArrayList();
-				for (int i = 1; i <= result.getMetaData().getColumnCount(); i++) {
-					row.add(result.getString(i));
-				}
-				data.add(row);
-			}
-			resultTable.setItems(data);
-			result.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		// vorname_norm
 		// nachname_norm
 		// ort_norm
 		// fakultaet_norm
 
 		TableColumn col = new TableColumn("vorname_norm");
-
-		col.setCellValueFactory(
-		// Callback <CellDataFeatures, Observable Value>
-		new Callback<TableColumn.CellDataFeatures<ObservableList, String>, ObservableValue<String>>() {
-			// Methode die Wert f�r Zelle zur�ckliefert
-			public ObservableValue<String> call(
-					TableColumn.CellDataFeatures<ObservableList, String> param) {
-				//
-				return new SimpleStringProperty(param.getValue().get(0)
-						.toString());
-			}
-		});
 
 		resultTable.getColumns().add(col);
 
