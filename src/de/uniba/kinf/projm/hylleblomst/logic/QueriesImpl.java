@@ -23,7 +23,6 @@ public class QueriesImpl implements Queries {
 		StringBuilder sqlFrom = new StringBuilder();
 		sqlFrom.append(getFrom());
 		for (QueryRequestImpl qr : queryRequests) {
-			sqlQuery.append(", Hylleblomst." + qr.getTable() + "." + qr.getColumn() + " AS " + qr.getTable());
 			if (qr.getSource() != SourceKeys.NO_SOURCE) {
 				hasSource = true;
 			}
@@ -35,6 +34,7 @@ public class QueriesImpl implements Queries {
 			if (!(qr.getInput() instanceof Boolean)) {
 				inputs.add(qr.getInput());
 			}
+			sqlQuery.append(", Hylleblomst." + qr.getTable() + "." + qr.getColumn() + " AS " + qr.getTable());
 		}
 		if (hasSource) {
 			sqlFrom.append(", Hylleblomst.Quellen");
@@ -79,7 +79,6 @@ public class QueriesImpl implements Queries {
 		// TODO Ort-Abweichung-Norm: Hier muss dann auch die Anmerkung mit
 		// zurückgegeben
 		// werden.
-		return "DISTINCT Hylleblomst.vorname_norm.name AS " + SearchFieldKeys.VORNAME
-				+ " Hylleblomst.name_norm.name AS nachname_norm, Hylleblomst.ort_norm.ortNorm AS ort_norm, Hylleblomst.fakultaeten.name AS fakultaet";
+		return "DISTINCT Hylleblomst.vorname_norm.name AS vorname_norm, Hylleblomst.name_norm.name AS nachname_norm, Hylleblomst.ort_norm.ortNorm AS ort_norm, Hylleblomst.fakultaeten.name AS fakultaet";
 	}
 }

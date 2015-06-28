@@ -37,7 +37,7 @@ class DBAccess {
 				parameterIndex++;
 			}
 			ResultSet results = stmt.executeQuery();
-			results.close();
+
 			ResultSetMetaData rsmd = stmt.getMetaData();
 			int columnsNumber = rsmd.getColumnCount();
 
