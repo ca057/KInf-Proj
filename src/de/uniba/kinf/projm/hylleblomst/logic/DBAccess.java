@@ -28,8 +28,10 @@ class DBAccess {
 	}
 
 	ResultSet startQuery(String query, List<Object> inputs) throws SQLException {
-		try (Connection con = DriverManager.getConnection(dbURL, user, password);
-				PreparedStatement stmt = con.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE,
+		try (Connection con = DriverManager
+				.getConnection(dbURL, user, password);
+				PreparedStatement stmt = con.prepareStatement(query,
+						ResultSet.TYPE_SCROLL_INSENSITIVE,
 						ResultSet.CONCUR_READ_ONLY);) {
 			int parameterIndex = 1;
 			for (Object input : inputs) {
@@ -46,9 +48,10 @@ class DBAccess {
 				for (int x = 0; x < columnsNumber; x++) {
 					string2.append(results.getString((x + 1)) + ", ");
 				}
-				System.out.println(string2.substring(0, string2.length() - 2).toString());
+				System.out.println(string2.substring(0, string2.length() - 2)
+						.toString());
 			}
-			new TableViewImpl().fillTable(results);
+			new ResultTableImpl().fillTable(results);
 			return results;
 		}
 	}

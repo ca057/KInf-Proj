@@ -211,8 +211,15 @@ public class ViewController {
 		return inputFieldCounter;
 	}
 
+	/**
+	 * 
+	 */
 	private void setEventHandlers() {
 
+	}
+
+	public TableView getResultTable() {
+		return resultTable;
 	}
 
 	/**
@@ -476,6 +483,10 @@ public class ViewController {
 			return SourceKeys.AUB_V_E38;
 		}
 		return SourceKeys.NO_SELECTION;
+	}
+
+	private void fillResultTable() {
+
 	}
 
 	/**
