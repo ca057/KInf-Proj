@@ -84,6 +84,7 @@ public class QueryRequestImpl implements QueryRequest {
 				table = "PERSON";
 				column = getColumnName(table, 7);
 				int[] jahr = (int[]) input;
+				input = jahr[0] + "-" + jahr[1] + "-" + jahr[2];
 				// TODO Implement input here.
 				break;
 			case EINSCHREIBEDATUM:
