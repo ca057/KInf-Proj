@@ -4,7 +4,7 @@ package de.uniba.kinf.projm.hylleblomst.logic;
  * @author Hannes
  *
  */
-public interface QueryRequest<T> {
+public interface QueryRequest {
 
 	SearchFieldKeys getSearchField();
 
