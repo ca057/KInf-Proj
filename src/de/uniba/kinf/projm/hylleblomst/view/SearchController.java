@@ -1,5 +1,6 @@
 package de.uniba.kinf.projm.hylleblomst.view;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,7 +66,8 @@ public class SearchController {
 			view.setInfoTextExtendedSearch(requestList);
 			view.fillResultTable();
 			if (requestList.size() != 0) {
-				querieImpl.search(requestList);
+				ResultSet result = querieImpl.search(requestList);
+				view.fillResultTable(result);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
