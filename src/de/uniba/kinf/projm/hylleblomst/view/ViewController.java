@@ -2,11 +2,13 @@ package de.uniba.kinf.projm.hylleblomst.view;
 
 import java.net.URL;
 import java.sql.ResultSet;
-import java.util.ArrayList;
+import java.sql.SQLException;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -23,6 +25,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
 import de.uniba.kinf.projm.hylleblomst.logic.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.SourceKeys;
@@ -192,7 +195,7 @@ public class ViewController implements Initializable {
 	Button searchMenu_search;
 
 	@FXML
-	TableView<String> resultTable;
+	TableView resultTable;
 
 	@FXML
 	TextArea infoArea;
@@ -505,21 +508,45 @@ public class ViewController implements Initializable {
 
 	void fillResultTable(ResultSet result) {
 		resultTable.getColumns().clear();
-		ArrayList<String> test = new ArrayList<>();
-		test.add("fancy");
-		test.add("shit");
-		ObservableList<String> row = FXCollections.observableArrayList(test);
 
-		resultTable.setItems(row);
+		ObservableList<ObservableList> data = FXCollections
+				.observableArrayList();
 
-		TableColumn<Object, String> testColumn = new TableColumn<Object, String>(
-				"test");
-
-		for (int i = 0; i < test.size(); i++) {
-			final int fi = i;
+		try {
+			while (result.next()) {
+				ObservableList<String> row = FXCollections
+						.observableArrayList();
+				for (int i = 1; i <= result.getMetaData().getColumnCount(); i++) {
+					row.add(result.getString(i));
+				}
+				data.add(row);
+			}
+			resultTable.setItems(data);
+			result.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		// vorname_norm
+		// nachname_norm
+		// ort_norm
+		// fakultaet_norm
 
-		// resultTable.getColumns().add(testColumn);
+		TableColumn col = new TableColumn("vorname_norm");
+
+		col.setCellValueFactory(
+		// Callback <CellDataFeatures, Observable Value>
+		new Callback<TableColumn.CellDataFeatures<ObservableList, String>, ObservableValue<String>>() {
+			// Methode die Wert f�r Zelle zur�ckliefert
+			public ObservableValue<String> call(
+					TableColumn.CellDataFeatures<ObservableList, String> param) {
+				//
+				return new SimpleStringProperty(param.getValue().get(0)
+						.toString());
+			}
+		});
+
+		resultTable.getColumns().add(col);
 
 	}
 
