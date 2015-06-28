@@ -1,5 +1,6 @@
 package de.uniba.kinf.projm.hylleblomst.logic;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 
@@ -18,9 +19,10 @@ public interface Queries {
 	 * </ul>
 	 * 
 	 * @param queryRequest
+	 * @return
 	 * @throws SQLException
 	 */
-	void search(Collection<QueryRequestImpl> queryRequest) throws SQLException;
+	ResultSet search(Collection<QueryRequestImpl> queryRequest) throws SQLException;
 
 	/**
 	 * Gets all information of a person.

@@ -27,7 +27,7 @@ class DBAccess {
 		this.password = password;
 	}
 
-	void startQuery(String query, List<Object> inputs) throws SQLException {
+	ResultSet startQuery(String query, List<Object> inputs) throws SQLException {
 		try (Connection con = DriverManager.getConnection(dbURL, user, password);
 				PreparedStatement stmt = con.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE,
 						ResultSet.CONCUR_READ_ONLY);) {
@@ -37,6 +37,7 @@ class DBAccess {
 				parameterIndex++;
 			}
 			ResultSet results = stmt.executeQuery();
+			results.close();
 			ResultSetMetaData rsmd = stmt.getMetaData();
 			int columnsNumber = rsmd.getColumnCount();
 
@@ -48,7 +49,7 @@ class DBAccess {
 				System.out.println(string2.substring(0, string2.length() - 2).toString());
 			}
 			new TableViewImpl().fillTable(results);
-			results.close();
+			return results;
 		}
 	}
 }
