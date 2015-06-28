@@ -1,5 +1,6 @@
 package de.uniba.kinf.projm.hylleblomst.view;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,16 +57,17 @@ public class SearchController {
 				requestList.add(tmpReq);
 			} else if (inputValues[i] instanceof int[]) {
 				QueryRequestImpl tmpReq = new QueryRequestImpl(
-						inputSearchFKey[i], inputValues[i], inputSourceKey[i]);
+						inputSearchFKey[i], (int[]) inputValues[i],
+						inputSourceKey[i]);
 				requestList.add(tmpReq);
 			}
 		}
 
 		try {
 			view.setInfoTextExtendedSearch(requestList);
-			view.fillResultTable();
 			if (requestList.size() != 0) {
-				querieImpl.search(requestList);
+				ResultSet result = querieImpl.search(requestList);
+				view.fillResultTable(result);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

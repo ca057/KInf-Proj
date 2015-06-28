@@ -1,16 +1,12 @@
 package de.uniba.kinf.projm.hylleblomst.view;
 
 import java.net.URL;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
-import de.uniba.kinf.projm.hylleblomst.logic.SearchFieldKeys;
-import de.uniba.kinf.projm.hylleblomst.logic.SourceKeys;
-import de.uniba.kinf.projm.hylleblomst.logicImpl.QueriesImpl;
-import de.uniba.kinf.projm.hylleblomst.logicImpl.QueryRequestImpl;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -25,9 +21,13 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
+import de.uniba.kinf.projm.hylleblomst.logic.SearchFieldKeys;
+import de.uniba.kinf.projm.hylleblomst.logic.SourceKeys;
+import de.uniba.kinf.projm.hylleblomst.logicImpl.QueriesImpl;
+import de.uniba.kinf.projm.hylleblomst.logicImpl.QueryRequestImpl;
 
 /**
  * Controller for the graphical user interface.
@@ -198,7 +198,7 @@ public class ViewController implements Initializable {
 	TextArea infoArea;
 
 	/**
-	 * Default constructor for a new Co ntroller. When called, the array with
+	 * Constructor for a new Controller. When called, the array with
 	 * {@link SearchFieldKeys} and {@link SourceKeys} is build and set, the
 	 * instances of the {@link QueriesImpl}, {@link UIHelper} and
 	 * {@link SearchController} are instantiated.
@@ -236,7 +236,7 @@ public class ViewController implements Initializable {
 
 	}
 
-	public TableView getResultTable() {
+	public TableView<?> getResultTable() {
 		return resultTable;
 	}
 
@@ -503,7 +503,7 @@ public class ViewController implements Initializable {
 		return SourceKeys.NO_SELECTION;
 	}
 
-	void fillResultTable() {
+	void fillResultTable(ResultSet result) {
 		resultTable.getColumns().clear();
 		ArrayList<String> test = new ArrayList<>();
 		test.add("fancy");
@@ -512,12 +512,14 @@ public class ViewController implements Initializable {
 
 		resultTable.setItems(row);
 
-		TableColumn testColumn = new TableColumn("test");
-		PropertyValueFactory firstColFactory = new PropertyValueFactory<String, String>(
-				"firstCol");
-		testColumn.setCellValueFactory(firstColFactory);
+		TableColumn<Object, String> testColumn = new TableColumn<Object, String>(
+				"test");
 
-		resultTable.getColumns().add(testColumn);
+		for (int i = 0; i < test.size(); i++) {
+			final int fi = i;
+		}
+
+		// resultTable.getColumns().add(testColumn);
 
 	}
 
