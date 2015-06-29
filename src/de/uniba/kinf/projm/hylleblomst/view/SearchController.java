@@ -6,10 +6,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.uniba.kinf.projm.hylleblomst.logic.PersonItem;
+import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
 import de.uniba.kinf.projm.hylleblomst.logic.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.QueriesImpl;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.QueryRequestImpl;
-import de.uniba.kinf.projm.hylleblomst.logicImpl.ResultItem;
 
 /**
  * Controller for executing the search.
@@ -29,7 +30,7 @@ public class SearchController {
 	/**
 	 * QueriesImpl executes the search.
 	 */
-	private QueriesImpl querieImpl;
+	private QueriesImpl queriesImpl;
 
 	/**
 	 * 
@@ -44,7 +45,7 @@ public class SearchController {
 		this.view = view;
 		this.inputCounter = view.getInputFieldCounter();
 		this.inputSearchFKey = generateSearchFieldKeyArray();
-		this.querieImpl = new QueriesImpl();
+		this.queriesImpl = new QueriesImpl();
 	}
 
 	/**
@@ -59,7 +60,7 @@ public class SearchController {
 					"Die Liste mit Eingabefeldern ist leer oder hat keinen Wert.");
 		}
 
-		List<QueryRequestImpl> requestList = new ArrayList<QueryRequestImpl>();
+		List<QueryRequest> requestList = new ArrayList<QueryRequest>();
 		for (int i = 0; i < inputValues.length; i++) {
 			if (!inputValues[i].isEmpty() && !"false".equals(inputValues[i])
 					&& !"yyyy-mm-dd".equals(inputValues[i])) {
@@ -70,17 +71,15 @@ public class SearchController {
 		}
 
 		try {
-			view.setInfoTextExtendedSearch(requestList);
+			// view.setInfoTextExtendedSearch(requestList);
 			if (requestList.size() != 0) {
-				ResultSet result = querieImpl.search(requestList);
-				processResultSetAndFillTable(result);
+				ArrayList<PersonItem> result = queriesImpl.search(requestList);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new RuntimeException(
 					"Ein Fehler bei der Suche ist aufgetreten:\n"
 							+ e.getMessage());
-		} finally {
 		}
 	}
 
@@ -111,7 +110,6 @@ public class SearchController {
 			e.printStackTrace();
 		}
 
-		List<ResultItem> results = new ArrayList<ResultItem>();
 		// view.fillResultTable(results);
 	}
 

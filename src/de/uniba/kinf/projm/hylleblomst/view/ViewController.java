@@ -18,15 +18,16 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import de.uniba.kinf.projm.hylleblomst.logic.PersonItem;
 import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
 import de.uniba.kinf.projm.hylleblomst.logic.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.SourceKeys;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.QueriesImpl;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.QueryRequestImpl;
-import de.uniba.kinf.projm.hylleblomst.logicImpl.ResultItem;
 
 /**
  * Controller for the graphical user interface.
@@ -191,7 +192,7 @@ public class ViewController implements Initializable {
 	Button searchMenu_search;
 
 	@FXML
-	TableView resultTable;
+	TableView<PersonItem> resultTable;
 
 	@FXML
 	TextArea infoArea;
@@ -556,18 +557,23 @@ public class ViewController implements Initializable {
 		return SourceKeys.NO_SELECTION;
 	}
 
-	void fillResultTable(List<ResultItem> results) {
-		// clear old table content first
-		resultTable.getColumns().clear();
-
+	void fillResultTable(List<PersonItem> results) {
 		// vorname_norm
 		// nachname_norm
 		// ort_norm
 		// fakultaet_norm
 
-		TableColumn col = new TableColumn("vorname_norm");
+		// clear old table content first
+		resultTable.getColumns().clear();
+		TableColumn<PersonItem, String> vorname_norm = new TableColumn<PersonItem, String>(
+				"Vorname (NORM)");
+		resultTable.getColumns().add(vorname_norm);
 
-		resultTable.getColumns().add(col);
+		PropertyValueFactory vornameFactory = new PropertyValueFactory<PersonItem, String>(
+				"vorname_norm");
+
+		vorname_norm.setCellValueFactory(vornameFactory);
+
 	}
 
 	/**
