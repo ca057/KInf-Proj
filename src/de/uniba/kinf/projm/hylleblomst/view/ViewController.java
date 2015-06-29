@@ -26,6 +26,7 @@ import de.uniba.kinf.projm.hylleblomst.logic.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.SourceKeys;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.QueriesImpl;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.QueryRequestImpl;
+import de.uniba.kinf.projm.hylleblomst.logicImpl.ResultItem;
 
 /**
  * Controller for the graphical user interface.
@@ -555,8 +556,7 @@ public class ViewController implements Initializable {
 		return SourceKeys.NO_SELECTION;
 	}
 
-	void fillResultTable() {
-		//
+	void fillResultTable(List<ResultItem> results) {
 		resultTable.getColumns().clear();
 
 		// vorname_norm
@@ -567,7 +567,6 @@ public class ViewController implements Initializable {
 		TableColumn col = new TableColumn("vorname_norm");
 
 		resultTable.getColumns().add(col);
-
 	}
 
 	/**
