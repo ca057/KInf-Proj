@@ -557,6 +557,7 @@ public class ViewController implements Initializable {
 	}
 
 	void fillResultTable(List<ResultItem> results) {
+		// clear old table content first
 		resultTable.getColumns().clear();
 
 		// vorname_norm
