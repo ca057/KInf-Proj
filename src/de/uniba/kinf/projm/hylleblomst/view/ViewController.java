@@ -1,6 +1,7 @@
 package de.uniba.kinf.projm.hylleblomst.view;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -561,6 +562,9 @@ public class ViewController implements Initializable {
 		// nachname_norm
 		// ort_norm
 		// fakultaet_norm
+
+		// List with person items for testing purposes
+		List<PersonItem> testList = new ArrayList<PersonItem>();
 
 		// clear old table content first
 		resultTable.getColumns().clear();
