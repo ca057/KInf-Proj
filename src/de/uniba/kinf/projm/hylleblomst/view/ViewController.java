@@ -23,6 +23,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
@@ -237,6 +238,7 @@ public class ViewController implements Initializable {
 	 */
 	private void setEventHandlers() {
 		setNumericalInputEventHandlers();
+		setTableViewEventHandlers();
 	}
 
 	/**
@@ -338,6 +340,21 @@ public class ViewController implements Initializable {
 						}
 					}
 				});
+	}
+
+	private void setTableViewEventHandlers() {
+		resultTable.setOnMousePressed(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				if (event.isPrimaryButtonDown()) {
+					startSearchForSinglePerson(resultTable.getSelectionModel()
+							.getSelectedItem().getId());
+					// FIXME remove syso, just for testing purposes
+					System.out.println(resultTable.getSelectionModel()
+							.getSelectedItem().getId());
+				}
+			}
+		});
 	}
 
 	/**
@@ -482,6 +499,20 @@ public class ViewController implements Initializable {
 	}
 
 	/**
+	 * 
+	 * @param id
+	 */
+	private void startSearchForSinglePerson(int id) {
+		try {
+			searchCtrl.startSinglePersonSearch(id);
+		} catch (Exception e) {
+			e.printStackTrace();
+			ui.showErrorMessage("Es können keine Detailinformationen für diese Person angezeigt werden.\n"
+					+ e.getMessage());
+		}
+	}
+
+	/**
 	 * Clears all input fields of the search.
 	 */
 	@FXML
@@ -569,7 +600,7 @@ public class ViewController implements Initializable {
 		// ort_norm
 		// fakultaet_norm
 
-		// List with person items for testing purposes
+		// generate list with person items for testing purposes
 		List<PersonItem> testList = new ArrayList<PersonItem>();
 		for (int i = 0; i < 10; i++) {
 			PersonItem person = new PersonItem();
@@ -599,7 +630,6 @@ public class ViewController implements Initializable {
 				.observableArrayList(testList);
 
 		resultTable.setItems(data);
-
 	}
 
 	/**
