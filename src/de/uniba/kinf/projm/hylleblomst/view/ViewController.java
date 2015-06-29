@@ -22,10 +22,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import keys.SearchFieldKeys;
+import keys.SourceKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.PersonItem;
 import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
-import de.uniba.kinf.projm.hylleblomst.logic.SearchFieldKeys;
-import de.uniba.kinf.projm.hylleblomst.logic.SourceKeys;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.QueriesImpl;
 
 /**

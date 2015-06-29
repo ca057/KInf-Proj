@@ -8,9 +8,9 @@ import java.util.List;
 
 import de.uniba.kinf.projm.hylleblomst.logic.PersonItem;
 import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
-import de.uniba.kinf.projm.hylleblomst.logic.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.QueriesImpl;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.QueryRequestImpl;
+import keys.SearchFieldKeys;
 
 /**
  * Controller for executing the search.

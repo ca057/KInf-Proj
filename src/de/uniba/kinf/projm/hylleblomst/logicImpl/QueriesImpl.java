@@ -9,7 +9,7 @@ import de.uniba.kinf.projm.hylleblomst.logic.DBAccess;
 import de.uniba.kinf.projm.hylleblomst.logic.PersonItem;
 import de.uniba.kinf.projm.hylleblomst.logic.Queries;
 import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
-import de.uniba.kinf.projm.hylleblomst.logic.SourceKeys;
+import keys.SourceKeys;
 
 public class QueriesImpl implements Queries {
 	DBAccess db = new DBAccess("jdbc:derby:./db/MyDB;create=true", "admin", "password");;

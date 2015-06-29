@@ -8,8 +8,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
-import de.uniba.kinf.projm.hylleblomst.logic.SearchFieldKeys;
-import de.uniba.kinf.projm.hylleblomst.logic.SourceKeys;
+import keys.SearchFieldKeys;
+import keys.SourceKeys;
 
 public class QueryRequestImpl implements QueryRequest {
 	private SearchFieldKeys searchField;
