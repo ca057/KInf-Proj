@@ -71,6 +71,7 @@ public class QueryRequestImpl implements QueryRequest {
 	 */
 	private void searchFieldKeyToDatabaseData() {
 		if (source > SourceKeys.bottom && source < SourceKeys.top) {
+			// TODO Spaltentitel statt getColumnName()
 			switch (searchField) {
 			case ADLIG:
 				table = "PERSON";
@@ -89,9 +90,6 @@ public class QueryRequestImpl implements QueryRequest {
 			case EINSCHREIBEDATUM_BIS:
 				table = "PERSON";
 				column = getColumnName(table, 6);
-				// TODO Impelemnt this
-				// int[] tmp = (int[]) input;
-				// input = tmp[0] + "-" + tmp[1] + "-" + tmp[2];
 				break;
 			case ANMERKUNGEN:
 				table = "PERSON";

@@ -55,7 +55,7 @@ public class QueriesImpl implements Queries {
 		ArrayList<String> inputs = new ArrayList<String>();
 		inputs.add("" + id);
 		StringBuilder sqlQuery = new StringBuilder();
-		sqlQuery.append(getSelect()).append(getFrom()).append(" WHERE Person.PersonID = ?");
+		sqlQuery.append(getSelectAll()).append(getFrom()).append(" WHERE Person.PersonID = ?");
 		db = new DBAccess("jdbc:derby:./db/MyDB;create=true", "admin", "password");
 		return db.startQuery(sqlQuery.toString(), inputs);
 	}
@@ -85,6 +85,10 @@ public class QueriesImpl implements Queries {
 	}
 
 	private String getSelect() {
+		return "DISTINCT Hylleblomst.Person.PersonID AS PersonID Hylleblomst.vorname_norm.name AS vorname_norm, Hylleblomst.name_norm.name AS nachname_norm, Hylleblomst.ort_norm.ortNorm AS ort_norm, Hylleblomst.fakultaeten.name AS fakultaet_norm";
+	}
+
+	private Object getSelectAll() {
 		return "DISTINCT Hylleblomst.Person.PersonID AS PersonID Hylleblomst.vorname_norm.name AS vorname_norm, Hylleblomst.name_norm.name AS nachname_norm, Hylleblomst.ort_norm.ortNorm AS ort_norm, Hylleblomst.fakultaeten.name AS fakultaet_norm";
 	}
 }
