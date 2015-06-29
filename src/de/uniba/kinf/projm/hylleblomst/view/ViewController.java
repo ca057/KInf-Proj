@@ -22,6 +22,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import de.uniba.kinf.projm.hylleblomst.logic.PersonItem;
 import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
 import de.uniba.kinf.projm.hylleblomst.logic.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.SourceKeys;
@@ -568,11 +569,11 @@ public class ViewController implements Initializable {
 				"Vorname (NORM)");
 		resultTable.getColumns().add(vorname_norm);
 
-		PropertyValueFactory vornameFactory = new PropertyValueFactory<S, T>("");
+		PropertyValueFactory vornameFactory = new PropertyValueFactory<PersonItem, String>(
+				"vorname_norm");
 
-		TableColumn col = new TableColumn("vorname_norm");
+		vorname_norm.setCellValueFactory(vornameFactory);
 
-		resultTable.getColumns().add(col);
 	}
 
 	/**
