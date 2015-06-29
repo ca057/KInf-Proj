@@ -61,7 +61,7 @@ public class UIHelper {
 
 		Optional<ButtonType> result = alert.showAndWait();
 
-		if (result.get() == btnJa) {
+		if (result.isPresent() && result.get() == btnJa) {
 			alert.close();
 			return true;
 		} else {

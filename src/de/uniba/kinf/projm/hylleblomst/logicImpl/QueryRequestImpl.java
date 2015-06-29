@@ -1,4 +1,4 @@
-package de.uniba.kinf.projm.hylleblomst.logic;
+package de.uniba.kinf.projm.hylleblomst.logicImpl;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -7,27 +7,22 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
+import de.uniba.kinf.projm.hylleblomst.logic.SearchFieldKeys;
+import de.uniba.kinf.projm.hylleblomst.logic.SourceKeys;
+
 public class QueryRequestImpl implements QueryRequest {
 	private SearchFieldKeys searchField;
 	private String column;
-	private Object input;
+	private String input;
 	private int source;
 	private String table;
-	private String sqlFrom;
-	private String sqlWhere;
-	private String dbName = "Hylleblomst";
-	private String tableName;
 
-	public QueryRequestImpl(SearchFieldKeys searchField, Object input,
-			int source) {
-		setSearchField(searchField);
+	public QueryRequestImpl(SearchFieldKeys searchField, String input, int source) {
 		setInput(input);
 		setSource(source);
+		setSearchField(searchField);
 		searchFieldKeyToDatabaseData();
-		this.dbName = dbName;
-	}
-
-	QueryRequestImpl() {
 	}
 
 	@Override
@@ -35,43 +30,17 @@ public class QueryRequestImpl implements QueryRequest {
 		return searchField;
 	}
 
-	@Override
 	public void setSearchField(SearchFieldKeys searchField) {
 		this.searchField = searchField;
 		searchFieldKeyToDatabaseData();
 	}
 
 	@Override
-	public Object getInput() {
+	public String getInput() {
 		return input;
 	}
 
-	public String getSqlFrom() {
-		return sqlFrom;
-	}
-
-	public void setSqlFrom(String sqlFrom) {
-		this.sqlFrom = sqlFrom;
-	}
-
-	public String getSqlWhere() {
-		return sqlWhere;
-	}
-
-	public void setSqlWhere(String sqlWhere) {
-		this.sqlWhere = sqlWhere;
-	}
-
-	public String getDbName() {
-		return dbName;
-	}
-
-	public void setDbName(String dbName) {
-		this.dbName = dbName;
-	}
-
-	@Override
-	public void setInput(Object input) {
+	public void setInput(String input) {
 		this.input = input;
 	}
 
@@ -80,7 +49,6 @@ public class QueryRequestImpl implements QueryRequest {
 		return source;
 	}
 
-	@Override
 	public void setSource(int source) {
 		this.source = source;
 	}
@@ -95,29 +63,15 @@ public class QueryRequestImpl implements QueryRequest {
 		return column;
 	}
 
-	@Override
-	public String getSQLStatement() {
-		return sqlFrom;
-	}
-
 	/**
 	 * Returns the name of the table the {@code SearchFieldKey} key belongs to.
 	 * 
 	 * @param key
 	 * @return
 	 */
-	// TODO Collection/ List durchgehen, PreparedStatement mit so vielen ?
-	// (person.vorname=?) wie Queries, dann nochmal durchgehen und fragezeichen
-	// füllen. WICHTIG: Collection muss sortiert sein!
 	private void searchFieldKeyToDatabaseData() {
-		if (source == SourceKeys.ORT_NORM_AB) {
-			if (searchField.equals(SearchFieldKeys.ORT)) {
-				// TODO Hier muss dann auch die Anmerkung mit zurückgegeben
-				// werden.
-				table = "ORT_ABWEICHUNG_NORM";
-			}
-			column = getColumnName(table, 2);
-		} else if (source > SourceKeys.bottom && source < SourceKeys.top) {
+		if (source > SourceKeys.bottom && source < SourceKeys.top) {
+			// TODO Spaltentitel statt getColumnName()
 			switch (searchField) {
 			case ADLIG:
 				table = "PERSON";
@@ -127,17 +81,15 @@ public class QueryRequestImpl implements QueryRequest {
 				table = "PERSON";
 				column = getColumnName(table, 4);
 				break;
-			case STUDIENJAHR:
+			case STUDIENJAHR_VON:
+			case STUDIENJAHR_BIS:
 				table = "PERSON";
 				column = getColumnName(table, 7);
-				int[] jahr = (int[]) input;
-				// TODO Implement input here.
 				break;
-			case EINSCHREIBEDATUM:
+			case EINSCHREIBEDATUM_VON:
+			case EINSCHREIBEDATUM_BIS:
 				table = "PERSON";
 				column = getColumnName(table, 6);
-				int[] tmp = (int[]) input;
-				input = tmp[0] + "-" + tmp[1] + "-" + tmp[2];
 				break;
 			case ANMERKUNGEN:
 				table = "PERSON";
@@ -198,9 +150,12 @@ public class QueryRequestImpl implements QueryRequest {
 			case ORT:
 				if (source == SourceKeys.NORM) {
 					table = "ORT_NORM";
+				} else if (source == SourceKeys.ORT_NORM_AB) {
+					table = "ORT_ABWEICHUNG_NORM";
 				} else {
 					table = "ORT_TRAD";
 				}
+				column = getColumnName(table, 2);
 				break;
 			case FACH:
 				if (source == SourceKeys.NORM) {
@@ -236,86 +191,45 @@ public class QueryRequestImpl implements QueryRequest {
 				break;
 			default:
 				throw new IllegalArgumentException(
-						"Das zugehörige Tabellenelement für Suchfeld "
-								+ searchField.name() + " ist nicht definiert.");
+						"Das zugehörige Tabellenelement für Suchfeld " + searchField.name() + " ist nicht definiert.");
 			}
-			if (table.contains("_")) {
-				this.tableName = table.substring(0, table.indexOf("_"));
-			} else {
-				this.tableName = table;
-			}
-			sqlFrom = getFrom();
-			sqlWhere = getWhere();
 		} else {
-			throw new IllegalArgumentException("Die Werte für Suchfeld "
-					+ searchField.toString() + " und Quelle " + source
-					+ " konnten keiner Tabelle und Spalte zugeordnet werden.");
+			throw new IllegalArgumentException("Die Werte für Suchfeld " + searchField.toString() + " und Quelle "
+					+ source + " konnten keiner Tabelle und Spalte zugeordnet werden.");
 		}
 	}
 
-	String getFrom() {
-		String result = "";
-		if (!(tableName.toUpperCase().startsWith("FACH")
-				|| tableName.toUpperCase().startsWith("ORT")
-				|| tableName.toUpperCase().contains("NAME") || tableName
-				.toUpperCase().startsWith("PERSON"))) {
-			if (tableName.toUpperCase().startsWith("FAKUL")
-					|| tableName.startsWith("FUND")) {
-				result = String.format("%s.%s", dbName, tableName);
-			} else if (tableName.toUpperCase().startsWith("ZUSAE")) {
-				result = String.format("%s.%s, %1$s.%2$s_info", dbName,
-						tableName);
-			} else {
-				result += String.format("%s.%s%s, %1$s.%2$s%s", dbName,
-						tableName, "_norm", "_trad");
-				if (!tableName.toUpperCase().startsWith("ANREDE")
-						&& !(tableName.toUpperCase().startsWith("TITEL"))) {
-					result += String.format(", %s.%s_info", dbName, tableName);
-					if (!(source == SourceKeys.NO_SOURCE)) {
-						result += String.format(", %s.QUELLEN", dbName);
-					}
-				}
-			}
-		}
-		return result;
-	}
-
-	String getWhere() {
-		if (input instanceof Boolean) {
-			return String.format("%s.%s.%s %s", dbName, table, column, "<> ''");
-		}
-		if (column.toUpperCase().startsWith("DATUM")) {
-			return String.format(" %s.%s.%s = ?", dbName, table, column);
-		}
-		return String.format("%s.%s.%s LIKE ?", dbName, table, column);
-	}
-
-	private String getDate(int[] input) {
-		// TODO implement this
-		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * de.uniba.kinf.projm.hylleblomst.logic.QueryRequest#getColumnName(java
-	 * .lang.String, int)
-	 */
 	@Override
+	public String getWhere() {
+		if (source == SourceKeys.NO_SOURCE) {
+			if (searchField == SearchFieldKeys.ADLIG || searchField == SearchFieldKeys.JESUIT
+					|| searchField == SearchFieldKeys.GRADUIERT) {
+				return String.format("Hylleblomst.%s.%s <> ''", table, column);
+			}
+			if (searchField == SearchFieldKeys.EINSCHREIBEDATUM_VON) {
+				return String.format("Hylleblomst.%s.%s > ?", table, column);
+			}
+			if (searchField == SearchFieldKeys.EINSCHREIBEDATUM_BIS) {
+				return String.format("Hylleblomst.%s.%s < ?", table, column);
+			}
+			// TODO Jahr
+		} else if (source == SourceKeys.NORM) {
+			return String.format("Hylleblomst.%s_norm.%s LIKE ?", table.substring(0, table.indexOf("_")), column);
+		} else if (!(source == SourceKeys.NO_SELECTION || searchField == SearchFieldKeys.ANREDE)) {
+			return String.format("Hylleblomst.%s.%s LIKE ? AND Hylleblomst.%s_info.QuellenID = %s", table, column,
+					table.substring(0, table.indexOf("_")), source);
+		}
+		return String.format("Hylleblomst.%s.%s LIKE ?", table, column);
+	}
+
 	public String getColumnName(String table, int i) {
 		String dbURL = "jdbc:derby:db/MyDB";
 		String user = "admin";
 		String password = "password";
 		String result = "";
-		try (Connection con = DriverManager
-				.getConnection(dbURL, user, password);
-
-				Statement stmt = con.createStatement(
-						ResultSet.TYPE_SCROLL_INSENSITIVE,
-						ResultSet.CONCUR_READ_ONLY);
-				ResultSet rs = stmt.executeQuery(String.format(
-						"SELECT * FROM hylleblomst.%s", table));) {
+		try (Connection con = DriverManager.getConnection(dbURL, user, password);
+				Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+				ResultSet rs = stmt.executeQuery(String.format("SELECT * FROM hylleblomst.%s", table));) {
 			ResultSetMetaData rsmd = rs.getMetaData();
 			result = rsmd.getColumnName(i);
 		} catch (SQLException e) {

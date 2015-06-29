@@ -1,51 +1,67 @@
-package de.uniba.kinf.projm.hylleblomst.logic;
+package de.uniba.kinf.projm.hylleblomst.logicImpl;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import de.uniba.kinf.projm.hylleblomst.logic.DBAccess;
+import de.uniba.kinf.projm.hylleblomst.logic.PersonItem;
+import de.uniba.kinf.projm.hylleblomst.logic.Queries;
+import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
+import de.uniba.kinf.projm.hylleblomst.logic.SourceKeys;
+
 public class QueriesImpl implements Queries {
-	DBAccess db;
-	ArrayList<Object> inputs = new ArrayList<Object>();
+	DBAccess db = new DBAccess("jdbc:derby:./db/MyDB;create=true", "admin", "password");;
 
 	@Override
-	public void search(Collection<QueryRequestImpl> queryRequests)
-			throws SQLException {
-		startQuery(buildQuery(queryRequests));
+	public ArrayList<PersonItem> search(Collection<QueryRequest> queryRequests) throws SQLException {
+
+		ResultSet test = startQuery(queryRequests);
+		return new ArrayList<PersonItem>();
 	}
 
-	private String buildQuery(Collection<QueryRequestImpl> queryRequests)
-			throws SQLException {
-		inputs.clear();
-		String sqlQuery = "SELECT " + getSelect();
+	private ResultSet startQuery(Collection<QueryRequest> queryRequests) throws SQLException {
+		Boolean hasSource = false;
+		ArrayList<String> inputs = new ArrayList<String>();
+		StringBuilder sqlQuery = new StringBuilder();
+		sqlQuery.append("SELECT ").append(getSelect());
 		StringBuilder sqlWhere = new StringBuilder();
-		for (QueryRequestImpl qr : queryRequests) {
-
+		StringBuilder sqlFrom = new StringBuilder();
+		sqlFrom.append(getFrom());
+		for (QueryRequest qr : queryRequests) {
+			if (qr.getSource() != SourceKeys.NO_SOURCE) {
+				hasSource = true;
+			}
 			if (sqlWhere.length() == 0) {
 				sqlWhere.append(qr.getWhere());
 			} else {
 				sqlWhere.append(" AND " + qr.getWhere());
 			}
-			if (!(qr.getInput() instanceof Boolean)) {
+			if (!("true".equals(qr.getInput()))) {
 				inputs.add(qr.getInput());
 			}
+			sqlQuery.append(", Hylleblomst." + qr.getTable() + "." + qr.getColumn() + " AS " + qr.getSearchField());
+			if (qr.getSource() == SourceKeys.ORT_NORM_AB) {
+				sqlQuery.append(", Hylleblomst." + qr.getTable() + "." + "Anmerkung");
+			}
 		}
-		sqlQuery += " FROM " + getFrom() + " WHERE " + sqlWhere;
-
+		if (hasSource) {
+			sqlFrom.append(", Hylleblomst.Quellen");
+		}
+		sqlQuery.append(" FROM ").append(sqlFrom).append(" WHERE ").append(sqlWhere);
 		System.out.println(sqlQuery);
-		return sqlQuery;
-	}
-
-	private void startQuery(String sqlQuery) throws SQLException {
-		db = new DBAccess("jdbc:derby:./db/MyDB;create=true", "admin",
-				"password");
-		db.startQuery(sqlQuery, inputs);
+		return db.startQuery(sqlQuery.toString(), inputs);
 	}
 
 	@Override
-	public void searchPerson(int id) {
-		// TODO Auto-generated method stub
-
+	public ResultSet searchPerson(int id) throws SQLException {
+		ArrayList<String> inputs = new ArrayList<String>();
+		inputs.add("" + id);
+		StringBuilder sqlQuery = new StringBuilder();
+		sqlQuery.append(getSelectAll()).append(getFrom()).append(" WHERE Person.PersonID = ?");
+		db = new DBAccess("jdbc:derby:./db/MyDB;create=true", "admin", "password");
+		return db.startQuery(sqlQuery.toString(), inputs);
 	}
 
 	@Override
@@ -66,15 +82,17 @@ public class QueriesImpl implements Queries {
 		String titel = "Hylleblomst.titel_trad ON Hylleblomst.person.titelID = Hylleblomst.titel_trad.titelTradID LEFT OUTER JOIN Hylleblomst.titel_Norm ON Hylleblomst.titel_Norm.titelNormID = Hylleblomst.titel_Trad.titelNormID";
 		String fakultaeten = "Hylleblomst.Fakultaeten ON Hylleblomst.person.fakultaetenID = Hylleblomst.fakultaeten.fakultaetenID";
 		String fundorte = "Hylleblomst.Fundorte ON Hylleblomst.person.fundortID = Hylleblomst.fundorte.fundorteID";
-		return vorname + " LEFT OUTER JOIN " + name + " LEFT OUTER JOIN " + ort
-				+ " LEFT OUTER JOIN " + seminar + " LEFT OUTER JOIN "
-				+ wirtschaftslage + " LEFT OUTER JOIN " + zusaetze
-				+ " LEFT OUTER JOIN " + fach + " LEFT OUTER JOIN " + anrede
-				+ " LEFT OUTER JOIN " + titel + " LEFT OUTER JOIN "
-				+ fakultaeten + " LEFT OUTER JOIN " + fundorte;
+		return vorname + " LEFT OUTER JOIN " + name + " LEFT OUTER JOIN " + ort + " LEFT OUTER JOIN " + seminar
+				+ " LEFT OUTER JOIN " + wirtschaftslage + " LEFT OUTER JOIN " + zusaetze + " LEFT OUTER JOIN " + fach
+				+ " LEFT OUTER JOIN " + anrede + " LEFT OUTER JOIN " + titel + " LEFT OUTER JOIN " + fakultaeten
+				+ " LEFT OUTER JOIN " + fundorte;
 	}
 
 	private String getSelect() {
-		return "DISTINCT Hylleblomst.vorname_norm.name AS vorname_norm, Hylleblomst.name_norm.name AS nachname_norm, Hylleblomst.ort_norm.ortNorm AS ort_norm, Hylleblomst.fakultaeten.name AS fakultaet";
+		return "DISTINCT Hylleblomst.Person.PersonID AS PersonID Hylleblomst.vorname_norm.name AS vorname_norm, Hylleblomst.name_norm.name AS nachname_norm, Hylleblomst.ort_norm.ortNorm AS ort_norm, Hylleblomst.fakultaeten.name AS fakultaet_norm";
+	}
+
+	private Object getSelectAll() {
+		return "DISTINCT Hylleblomst.Person.PersonID AS PersonID Hylleblomst.vorname_norm.name AS vorname_norm, Hylleblomst.name_norm.name AS nachname_norm, Hylleblomst.ort_norm.ortNorm AS ort_norm, Hylleblomst.fakultaeten.name AS fakultaet_norm";
 	}
 }
