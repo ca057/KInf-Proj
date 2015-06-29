@@ -72,7 +72,7 @@ public class SearchController {
 		try {
 			view.setInfoTextExtendedSearch(requestList);
 			if (requestList.size() != 0) {
-				ResultSet result = querieImpl.search(requestList);
+				ResultSet result = querieImpl.search();
 				processResultSetAndFillTable(result);
 			}
 		} catch (SQLException e) {
@@ -80,7 +80,6 @@ public class SearchController {
 			throw new RuntimeException(
 					"Ein Fehler bei der Suche ist aufgetreten:\n"
 							+ e.getMessage());
-		} finally {
 		}
 	}
 
