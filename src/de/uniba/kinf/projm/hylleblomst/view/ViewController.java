@@ -27,7 +27,6 @@ import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
 import de.uniba.kinf.projm.hylleblomst.logic.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.SourceKeys;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.QueriesImpl;
-import de.uniba.kinf.projm.hylleblomst.logicImpl.QueryRequestImpl;
 
 /**
  * Controller for the graphical user interface.
@@ -600,7 +599,7 @@ public class ViewController implements Initializable {
 	 * input. Collects the user input from all input fields prints it to the
 	 * info area.
 	 */
-	void setInfoTextExtendedSearch(List<QueryRequestImpl> requestList) {
+	void setInfoTextExtendedSearch(List<QueryRequest> requestList) {
 		String info = "Suchanfrage\n-----------\n";
 		StringBuffer buffer = new StringBuffer();
 		if (requestList == null || requestList.size() == 0) {

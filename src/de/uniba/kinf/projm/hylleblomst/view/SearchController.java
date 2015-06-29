@@ -71,7 +71,7 @@ public class SearchController {
 		}
 
 		try {
-			// view.setInfoTextExtendedSearch(requestList);
+			view.setInfoTextExtendedSearch(requestList);
 			if (requestList.size() != 0) {
 				ArrayList<PersonItem> result = queriesImpl.search(requestList);
 			}
