@@ -8,6 +8,7 @@ import java.util.List;
 import de.uniba.kinf.projm.hylleblomst.logic.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.QueriesImpl;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.QueryRequestImpl;
+import de.uniba.kinf.projm.hylleblomst.logicImpl.ResultItem;
 
 /**
  * Controller for executing the search.
@@ -71,14 +72,29 @@ public class SearchController {
 			view.setInfoTextExtendedSearch(requestList);
 			if (requestList.size() != 0) {
 				ResultSet result = querieImpl.search(requestList);
-				view.fillResultTable();
+				processResultSetAndFillTable(result);
+				// TODO Ressource korrekt geschlossen?
+				result.close();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new RuntimeException(
 					"Ein Fehler bei der Suche ist aufgetreten:\n"
 							+ e.getMessage());
+		} finally {
 		}
+	}
+
+	/**
+	 * Builds PersonItems out of the given ResultSet and starts filling the
+	 * TableView.
+	 * 
+	 * @param result
+	 */
+	private void processResultSetAndFillTable(ResultSet result) {
+
+		List<ResultItem> results = new ArrayList<ResultItem>();
+		view.fillResultTable(results);
 	}
 
 	/**
