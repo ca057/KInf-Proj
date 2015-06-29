@@ -10,17 +10,16 @@ import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
 import de.uniba.kinf.projm.hylleblomst.logic.SourceKeys;
 
 public class QueriesImpl implements Queries {
-	DBAccess db;
-	ArrayList<Object> inputs = new ArrayList<Object>();
+	DBAccess db = new DBAccess("jdbc:derby:./db/MyDB;create=true", "admin", "password");;
 
 	@Override
-	public ResultSet search(Collection<? extends QueryRequest> queryRequests) throws SQLException {
+	public ResultSet search(Collection<QueryRequest> queryRequests) throws SQLException {
 		return startQuery(queryRequests);
 	}
 
-	private ResultSet startQuery(Collection<? extends QueryRequest> queryRequests) throws SQLException {
+	private ResultSet startQuery(Collection<QueryRequest> queryRequests) throws SQLException {
 		Boolean hasSource = false;
-		inputs.clear();
+		ArrayList<String> inputs = new ArrayList<String>();
 		StringBuilder sqlQuery = new StringBuilder();
 		sqlQuery.append("SELECT ").append(getSelect());
 		StringBuilder sqlWhere = new StringBuilder();
@@ -35,10 +34,7 @@ public class QueriesImpl implements Queries {
 			} else {
 				sqlWhere.append(" AND " + qr.getWhere());
 			}
-			if (!(qr.getInput() instanceof Boolean)) {
-				if (qr.getInput() instanceof int[]) {
-					inputs.add(qr.getInput());
-				}
+			if (!("true".equals(qr.getInput()))) {
 				inputs.add(qr.getInput());
 			}
 			sqlQuery.append(", Hylleblomst." + qr.getTable() + "." + qr.getColumn() + " AS " + qr.getSearchField());
@@ -51,14 +47,17 @@ public class QueriesImpl implements Queries {
 		}
 		sqlQuery.append(" FROM ").append(sqlFrom).append(" WHERE ").append(sqlWhere);
 		System.out.println(sqlQuery);
-		db = new DBAccess("jdbc:derby:./db/MyDB;create=true", "admin", "password");
 		return db.startQuery(sqlQuery.toString(), inputs);
 	}
 
 	@Override
-	public void searchPerson(int id) {
-		// TODO Auto-generated method stub
-
+	public ResultSet searchPerson(int id) throws SQLException {
+		ArrayList<String> inputs = new ArrayList<String>();
+		inputs.add("" + id);
+		StringBuilder sqlQuery = new StringBuilder();
+		sqlQuery.append(getSelectAll()).append(getFrom()).append(" WHERE Person.PersonID = ?");
+		db = new DBAccess("jdbc:derby:./db/MyDB;create=true", "admin", "password");
+		return db.startQuery(sqlQuery.toString(), inputs);
 	}
 
 	@Override
@@ -86,6 +85,10 @@ public class QueriesImpl implements Queries {
 	}
 
 	private String getSelect() {
-		return "DISTINCT Hylleblomst.vorname_norm.name AS vorname_norm, Hylleblomst.name_norm.name AS nachname_norm, Hylleblomst.ort_norm.ortNorm AS ort_norm, Hylleblomst.fakultaeten.name AS fakultaet_norm";
+		return "DISTINCT Hylleblomst.Person.PersonID AS PersonID Hylleblomst.vorname_norm.name AS vorname_norm, Hylleblomst.name_norm.name AS nachname_norm, Hylleblomst.ort_norm.ortNorm AS ort_norm, Hylleblomst.fakultaeten.name AS fakultaet_norm";
+	}
+
+	private Object getSelectAll() {
+		return "DISTINCT Hylleblomst.Person.PersonID AS PersonID Hylleblomst.vorname_norm.name AS vorname_norm, Hylleblomst.name_norm.name AS nachname_norm, Hylleblomst.ort_norm.ortNorm AS ort_norm, Hylleblomst.fakultaeten.name AS fakultaet_norm";
 	}
 }
