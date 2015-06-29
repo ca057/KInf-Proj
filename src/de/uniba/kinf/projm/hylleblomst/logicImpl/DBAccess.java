@@ -6,7 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.ArrayList;
 
 class DBAccess {
 	private String dbURL;
@@ -27,11 +27,9 @@ class DBAccess {
 		this.password = password;
 	}
 
-	ResultSet startQuery(String query, List<Object> inputs) throws SQLException {
-		try (Connection con = DriverManager
-				.getConnection(dbURL, user, password);
-				PreparedStatement stmt = con.prepareStatement(query,
-						ResultSet.TYPE_SCROLL_INSENSITIVE,
+	ResultSet startQuery(String query, ArrayList<String> inputs) throws SQLException {
+		try (Connection con = DriverManager.getConnection(dbURL, user, password);
+				PreparedStatement stmt = con.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE,
 						ResultSet.CONCUR_READ_ONLY);) {
 			int parameterIndex = 1;
 			for (Object input : inputs) {
@@ -48,8 +46,7 @@ class DBAccess {
 				for (int x = 0; x < columnsNumber; x++) {
 					string2.append(results.getString((x + 1)) + ", ");
 				}
-				System.out.println(string2.substring(0, string2.length() - 2)
-						.toString());
+				System.out.println(string2.substring(0, string2.length() - 2).toString());
 			}
 			new ResultTableImpl().fillTable(results);
 			return results;

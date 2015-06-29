@@ -224,18 +224,12 @@ public class QueryRequestImpl implements QueryRequest {
 		return String.format("Hylleblomst.%s.%s LIKE ?", table, column);
 	}
 
-	private String getDate(int[] input) {
-		// TODO implement this
-		return null;
-	}
-
 	public String getColumnName(String table, int i) {
 		String dbURL = "jdbc:derby:db/MyDB";
 		String user = "admin";
 		String password = "password";
 		String result = "";
 		try (Connection con = DriverManager.getConnection(dbURL, user, password);
-
 				Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 				ResultSet rs = stmt.executeQuery(String.format("SELECT * FROM hylleblomst.%s", table));) {
 			ResultSetMetaData rsmd = rs.getMetaData();

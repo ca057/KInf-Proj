@@ -4,11 +4,11 @@ package de.uniba.kinf.projm.hylleblomst.logic;
  * @author Hannes
  *
  */
-public interface QueryRequest<T> {
+public interface QueryRequest {
 
 	SearchFieldKeys getSearchField();
 
-	Object getInput();
+	String getInput();
 
 	int getSource();
 
