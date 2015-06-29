@@ -72,9 +72,11 @@ public class SearchController {
 
 		try {
 			view.setInfoTextExtendedSearch(requestList);
+			view.fillResultTable();
 			if (requestList.size() != 0) {
 				ArrayList<PersonItem> result = queriesImpl.search(requestList);
-				view.fillResultTable(result);
+				// TODO remove comment for later implementation
+				// view.fillResultTable(result);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

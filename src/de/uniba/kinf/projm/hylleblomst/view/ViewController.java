@@ -6,6 +6,8 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -557,7 +559,11 @@ public class ViewController implements Initializable {
 		return SourceKeys.NO_SELECTION;
 	}
 
-	void fillResultTable(List<PersonItem> results) {
+	/**
+	 * 
+	 */
+	// FIXME remove comments from parameter
+	void fillResultTable(/* List<PersonItem> results */) {
 		// vorname_norm
 		// nachname_norm
 		// ort_norm
@@ -565,17 +571,34 @@ public class ViewController implements Initializable {
 
 		// List with person items for testing purposes
 		List<PersonItem> testList = new ArrayList<PersonItem>();
+		for (int i = 0; i < 10; i++) {
+			PersonItem person = new PersonItem();
+			person.setVorname_norm("person_nummer" + i);
+			person.setId(i);
+			person.setOrt_norm("Bamberg" + i);
+			testList.add(person);
+		}
 
 		// clear old table content first
 		resultTable.getColumns().clear();
+
 		TableColumn<PersonItem, String> vorname_norm = new TableColumn<PersonItem, String>(
 				"Vorname (NORM)");
-		resultTable.getColumns().add(vorname_norm);
-
 		PropertyValueFactory vornameFactory = new PropertyValueFactory<PersonItem, String>(
 				"vorname_norm");
-
 		vorname_norm.setCellValueFactory(vornameFactory);
+
+		TableColumn<PersonItem, String> ort_norm = new TableColumn<PersonItem, String>(
+				"Ort (NORM)");
+		PropertyValueFactory ortFactory = new PropertyValueFactory<PersonItem, String>(
+				"ort_norm");
+		ort_norm.setCellValueFactory(ortFactory);
+
+		resultTable.getColumns().addAll(ort_norm, vorname_norm);
+		ObservableList<PersonItem> data = FXCollections
+				.observableArrayList(testList);
+
+		resultTable.setItems(data);
 
 	}
 
