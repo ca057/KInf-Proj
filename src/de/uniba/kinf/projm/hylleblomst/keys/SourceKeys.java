@@ -1,4 +1,4 @@
-package keys;
+package de.uniba.kinf.projm.hylleblomst.keys;
 
 public class SourceKeys {
 

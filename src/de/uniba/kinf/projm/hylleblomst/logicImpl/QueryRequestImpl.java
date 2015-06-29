@@ -7,9 +7,9 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
+import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
-import keys.SearchFieldKeys;
-import keys.SourceKeys;
 
 public class QueryRequestImpl implements QueryRequest {
 	private SearchFieldKeys searchField;

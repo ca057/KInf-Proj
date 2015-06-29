@@ -1,6 +1,6 @@
 package de.uniba.kinf.projm.hylleblomst.logic;
 
-import keys.SearchFieldKeys;
+import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
 
 /**
  * @author Hannes
