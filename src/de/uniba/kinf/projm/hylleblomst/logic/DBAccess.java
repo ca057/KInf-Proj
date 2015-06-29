@@ -1,4 +1,4 @@
-package de.uniba.kinf.projm.hylleblomst.logicImpl;
+package de.uniba.kinf.projm.hylleblomst.logic;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,12 +8,12 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-class DBAccess {
+public class DBAccess {
 	private String dbURL;
 	private String user;
 	private String password;
 
-	DBAccess(String dbURL, String user, String password) {
+	public DBAccess(String dbURL, String user, String password) {
 		this.dbURL = dbURL;
 		this.user = user;
 		this.password = password;
@@ -27,7 +27,7 @@ class DBAccess {
 		this.password = password;
 	}
 
-	ResultSet startQuery(String query, ArrayList<String> inputs) throws SQLException {
+	public ResultSet startQuery(String query, ArrayList<String> inputs) throws SQLException {
 		try (Connection con = DriverManager.getConnection(dbURL, user, password);
 				PreparedStatement stmt = con.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE,
 						ResultSet.CONCUR_READ_ONLY);) {
@@ -48,7 +48,6 @@ class DBAccess {
 				}
 				System.out.println(string2.substring(0, string2.length() - 2).toString());
 			}
-			new ResultTableImpl().fillTable(results);
 			return results;
 		}
 	}

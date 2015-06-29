@@ -2,6 +2,7 @@ package de.uniba.kinf.projm.hylleblomst.logic;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -38,7 +39,7 @@ public interface Queries {
 	 * @return A {@Code ResultSet} with the outcome ot the search
 	 * @throws SQLException
 	 */
-	ResultSet search(Collection<QueryRequest> queryRequest) throws SQLException;
+	ArrayList<PersonItem> search(Collection<QueryRequest> queryRequest) throws SQLException;
 
 	/**
 	 * Gets all information of a person.

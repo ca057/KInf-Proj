@@ -5,6 +5,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import de.uniba.kinf.projm.hylleblomst.logic.DBAccess;
+import de.uniba.kinf.projm.hylleblomst.logic.PersonItem;
 import de.uniba.kinf.projm.hylleblomst.logic.Queries;
 import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
 import de.uniba.kinf.projm.hylleblomst.logic.SourceKeys;
@@ -13,8 +15,10 @@ public class QueriesImpl implements Queries {
 	DBAccess db = new DBAccess("jdbc:derby:./db/MyDB;create=true", "admin", "password");;
 
 	@Override
-	public ResultSet search(Collection<QueryRequest> queryRequests) throws SQLException {
-		return startQuery(queryRequests);
+	public ArrayList<PersonItem> search(Collection<QueryRequest> queryRequests) throws SQLException {
+
+		ResultSet test = startQuery(queryRequests);
+		return new ArrayList<PersonItem>();
 	}
 
 	private ResultSet startQuery(Collection<QueryRequest> queryRequests) throws SQLException {
