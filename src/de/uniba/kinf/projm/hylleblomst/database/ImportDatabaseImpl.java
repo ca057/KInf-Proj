@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -97,22 +98,42 @@ public class ImportDatabaseImpl implements ImportDatabase {
 			}
 
 			// Preparatory statements for inserting persons
-			int tag = -1;
-			int monat = -1;
-			int jahr = -1;
-			if (!strings[43].equals("")) {
-				tag = Integer.parseInt(strings[43]);
+			Calendar tmpCalendar = new GregorianCalendar();
+			tmpCalendar.clear();
+
+			String calendarFieldsSet = "";
+
+			if (!strings[45].isEmpty()) {
+				tmpCalendar.set(Calendar.YEAR, Integer.parseInt(strings[45]));
+				calendarFieldsSet = calendarFieldsSet + "0";
+			} else {
+				calendarFieldsSet = calendarFieldsSet + "1";
 			}
-			if (!strings[44].equals("")) {
+			if (!strings[44].isEmpty()) {
 				// Minus one as month is 0-based (0 is January)
-				monat = Integer.parseInt(strings[44]) - 1;
+				tmpCalendar.set(Calendar.MONTH,
+						Integer.parseInt(strings[44]) - 1);
+				calendarFieldsSet = calendarFieldsSet + "0";
+			} else {
+				calendarFieldsSet = calendarFieldsSet + "1";
 			}
-			if (!strings[45].equals("")) {
-				jahr = Integer.parseInt(strings[45]);
+			if (!strings[43].isEmpty()) {
+				tmpCalendar.set(Calendar.DAY_OF_MONTH,
+						Integer.parseInt(strings[43]));
+				calendarFieldsSet = calendarFieldsSet + "0";
+			} else {
+				calendarFieldsSet = calendarFieldsSet + "1";
 			}
 
-			java.sql.Date datum = new Date(new GregorianCalendar(jahr, monat,
-					tag).getTimeInMillis());
+			java.sql.Date datum;
+			if (tmpCalendar.isSet(Calendar.YEAR)
+					|| tmpCalendar.isSet(Calendar.MONTH)
+					|| tmpCalendar.isSet(Calendar.DAY_OF_MONTH)) {
+				datum = new Date(tmpCalendar.getTimeInMillis());
+			} else {
+				datum = null;
+			}
+
 			int nummerHess;
 			try {
 				nummerHess = Integer.parseInt(strings[2]);
@@ -121,9 +142,9 @@ public class ImportDatabaseImpl implements ImportDatabase {
 			}
 
 			insertPerson(personID, Integer.parseInt(strings[1]), nummerHess,
-					strings[29], strings[17], datum, strings[46], strings[63],
-					strings[78], anredeTradID, fakultaetenID, fundortID,
-					titelTradID);
+					strings[29], strings[17], datum, calendarFieldsSet,
+					strings[46], strings[63], strings[78], anredeTradID,
+					fakultaetenID, fundortID, titelTradID);
 
 			if (!strings[6].equals("")) {
 				vornameNormID = insertIntoTableOneAttributeNoForeignKeys(
@@ -186,18 +207,20 @@ public class ImportDatabaseImpl implements ImportDatabase {
 						"fach_norm", strings[49]);
 			}
 
-			if (!strings[48].equals("")) {
-				fachTradID = insertIntoTableOneAttributeOneForeignKey(
-						"fach_trad", strings[48], fachNormID);
-				insertIntoTableNoAttributesThreeForeignKeys("fach_info",
-						fachTradID, quellenID[0], personID);
+			int[] tmpStudienfach = { 48, 50 };
+			current = 0;
+			for (int i : tmpStudienfach) {
+				if (!strings[i].isEmpty()) {
+					fachTradID = insertIntoTableOneAttributeOneForeignKey(
+							"fach_trad", strings[i], fachNormID);
+					insertIntoTableNoAttributesThreeForeignKeys("fach_info",
+							fachTradID, quellenID[current], personID);
+				}
+				if (i == 48) {
+					current++;
+				}
 			}
-			if (!strings[50].equals("")) {
-				fachTradID = insertIntoTableOneAttributeOneForeignKey(
-						"fach_trad", strings[50], fachNormID);
-				insertIntoTableNoAttributesThreeForeignKeys("fach_info",
-						fachTradID, quellenID[1], personID);
-			}
+
 			if (!strings[52].equals("")) {
 				wirtschaftslageNormID = insertIntoTableOneAttributeNoForeignKeys(
 						"wirtschaftslage_norm", strings[52]);
@@ -210,7 +233,6 @@ public class ImportDatabaseImpl implements ImportDatabase {
 					wirtschaftslageTradID = insertIntoTableOneAttributeOneForeignKey(
 							"wirtschaftslage_trad", strings[i],
 							wirtschaftslageNormID);
-
 					insertIntoTableNoAttributesThreeForeignKeys(
 							"wirtschaftslage_info", wirtschaftslageTradID,
 							quellenID[current], personID);
@@ -284,18 +306,18 @@ public class ImportDatabaseImpl implements ImportDatabase {
 		table = String.format("hylleblomst.%s", table);
 		String sqlQuery = String.format("INSERT INTO %s values(?, ?)", table);
 		int id;
-	
+
 		if (!validation.entryAlreadyInDatabase(entry, table)) {
 			try (Connection con = DriverManager.getConnection(dbURL, user,
 					password);) {
 				PreparedStatement stmt = con.prepareStatement(sqlQuery);
 				id = validation.getMaxID(table) + 1;
-	
+
 				stmt.setInt(1, id);
 				stmt.setString(2, entry);
-	
+
 				stmt.executeUpdate();
-	
+
 			} catch (SQLException e) {
 				throw new ImportException(String.format(
 						"A %s could not be inserted", entry) + e.getMessage());
@@ -311,13 +333,13 @@ public class ImportDatabaseImpl implements ImportDatabase {
 		table = String.format("hylleblomst.%s", table);
 		String sqlQuery = String.format("INSERT INTO %s values(?,?,?)", table);
 		int id;
-	
+
 		if (!validation.entryAlreadyInDatabase(entry, foreignKey, table)) {
 			try (Connection con = DriverManager.getConnection(dbURL, user,
 					password);) {
 				PreparedStatement stmt = con.prepareStatement(sqlQuery);
 				id = validation.getMaxID(table) + 1;
-	
+
 				stmt.setInt(1, id);
 				stmt.setString(2, entry);
 				if (foreignKey == 0) {
@@ -326,7 +348,7 @@ public class ImportDatabaseImpl implements ImportDatabase {
 					stmt.setInt(3, foreignKey);
 				}
 				stmt.executeUpdate();
-	
+
 			} catch (SQLException e) {
 				throw new ImportException(String.format(
 						"A %s could not be inserted", entry) + e.getMessage());
@@ -341,19 +363,19 @@ public class ImportDatabaseImpl implements ImportDatabase {
 			int tradID, int quellenID, int personID) throws ImportException {
 		table = String.format("hylleblomst.%s", table);
 		String sqlQuery = String.format("INSERT INTO %s values(?,?,?)", table);
-	
+
 		if (!validation.entryAlreadyInDatabase(tradID, quellenID, personID,
 				table)) {
 			try (Connection con = DriverManager.getConnection(dbURL, user,
 					password);) {
 				PreparedStatement stmt = con.prepareStatement(sqlQuery);
-	
+
 				stmt.setInt(1, tradID);
 				stmt.setInt(2, quellenID);
 				stmt.setInt(3, personID);
-	
+
 				stmt.executeUpdate();
-	
+
 			} catch (SQLException e) {
 				throw new ImportException("An info table could not be created"
 						+ e.getMessage());
@@ -381,12 +403,23 @@ public class ImportDatabaseImpl implements ImportDatabase {
 	 * @throws ImportException
 	 */
 	private boolean insertPerson(int personID, int seite, int nummerHess,
-			String jesuit, String adlig, Date datum, String studienjahr,
-			String graduiert, String anmerkung, int anredeTradID,
-			int fakultaetenID, int fundortID, int titelTradID)
+			String jesuit, String adlig, Date datum, String calendarFieldsSet,
+			String studienjahr, String graduiert, String anmerkung,
+			int anredeTradID, int fakultaetenID, int fundortID, int titelTradID)
 			throws ImportException {
 
-		String sqlQuery = "INSERT INTO hylleblomst.person values(?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String sqlQuery = "INSERT INTO hylleblomst.person values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
+		int indexOf1Or2InStudienjahr;
+		if (studienjahr.indexOf("2") != -1) {
+			indexOf1Or2InStudienjahr = Math.min(studienjahr.indexOf("1"),
+					studienjahr.indexOf("2"));
+		} else {
+			indexOf1Or2InStudienjahr = studienjahr.indexOf("1");
+		}
+
+		int studienjahrInt = Integer.parseInt(studienjahr.substring(
+				indexOf1Or2InStudienjahr, indexOf1Or2InStudienjahr + 4));
 
 		if (!validation.personIDIsTaken(personID)) {
 			try (Connection con = DriverManager.getConnection(dbURL, user,
@@ -404,28 +437,30 @@ public class ImportDatabaseImpl implements ImportDatabase {
 				stmt.setString(4, jesuit);
 				stmt.setString(5, adlig);
 				stmt.setDate(6, datum);
-				stmt.setString(7, studienjahr);
-				stmt.setString(8, graduiert);
-				stmt.setString(9, anmerkung);
+				stmt.setString(7, calendarFieldsSet);
+				stmt.setString(8, studienjahr);
+				stmt.setInt(9, studienjahrInt);
+				stmt.setString(10, graduiert);
+				stmt.setString(11, anmerkung);
 				if (anredeTradID == 0) {
-					stmt.setNull(10, Types.INTEGER);
-				} else {
-					stmt.setInt(10, anredeTradID);
-				}
-				if (fakultaetenID == 0) {
-					stmt.setNull(11, Types.INTEGER);
-				} else {
-					stmt.setInt(11, fakultaetenID);
-				}
-				if (fundortID == 0) {
 					stmt.setNull(12, Types.INTEGER);
 				} else {
-					stmt.setInt(12, fundortID);
+					stmt.setInt(12, anredeTradID);
 				}
-				if (titelTradID == 0) {
+				if (fakultaetenID == 0) {
 					stmt.setNull(13, Types.INTEGER);
 				} else {
-					stmt.setInt(13, titelTradID);
+					stmt.setInt(13, fakultaetenID);
+				}
+				if (fundortID == 0) {
+					stmt.setNull(14, Types.INTEGER);
+				} else {
+					stmt.setInt(14, fundortID);
+				}
+				if (titelTradID == 0) {
+					stmt.setNull(15, Types.INTEGER);
+				} else {
+					stmt.setInt(15, titelTradID);
 				}
 
 				stmt.executeUpdate();
