@@ -1,6 +1,7 @@
 package de.uniba.kinf.projm.hylleblomst.view;
 
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -73,8 +74,6 @@ public class SearchController {
 			if (requestList.size() != 0) {
 				ResultSet result = querieImpl.search(requestList);
 				processResultSetAndFillTable(result);
-				// TODO Ressource korrekt geschlossen?
-				result.close();
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -92,9 +91,28 @@ public class SearchController {
 	 * @param result
 	 */
 	private void processResultSetAndFillTable(ResultSet result) {
+		// take the ResultSet and get all columns
+
+		// except of the following columns, all other column names can found by
+		// using the searchfieldkeys
+		// vorname_norm
+		// nachname_norm
+		// ort_norm
+		// fakultaet_norm
+		//
+		try {
+			ResultSetMetaData metaData = result.getMetaData();
+			System.out.println(metaData.getColumnCount());
+			for (int i = 0; i < metaData.getColumnCount(); i++) {
+				System.out.println(metaData.getColumnName(i));
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		List<ResultItem> results = new ArrayList<ResultItem>();
-		view.fillResultTable(results);
+		// view.fillResultTable(results);
 	}
 
 	/**
