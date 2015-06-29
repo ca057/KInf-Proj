@@ -1,4 +1,4 @@
-package de.uniba.kinf.projm.hylleblomst.view;
+package de.uniba.kinf.projm.hylleblomst.logic;
 
 /**
  * PersonItem represents a person for displaying it in the TableView. Is filled
@@ -7,7 +7,7 @@ package de.uniba.kinf.projm.hylleblomst.view;
  * @author ca
  *
  */
-class PersonItem {
+public class PersonItem {
 
 	// TODO ist das wirklich ein int
 	private int id;
