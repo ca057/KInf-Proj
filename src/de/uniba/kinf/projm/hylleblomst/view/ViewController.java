@@ -1,10 +1,13 @@
 package de.uniba.kinf.projm.hylleblomst.view;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.ResourceBundle;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -20,6 +23,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
@@ -234,6 +238,7 @@ public class ViewController implements Initializable {
 	 */
 	private void setEventHandlers() {
 		setNumericalInputEventHandlers();
+		setTableViewEventHandlers();
 	}
 
 	/**
@@ -335,6 +340,22 @@ public class ViewController implements Initializable {
 						}
 					}
 				});
+	}
+
+	private void setTableViewEventHandlers() {
+		resultTable.setOnMousePressed(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				if (event.isPrimaryButtonDown()) {
+					startSearchForSinglePerson(resultTable.getSelectionModel()
+							.getSelectedItem().getId());
+					// FIXME remove syso, just for testing purposes
+					System.out.println(resultTable.getSelectionModel()
+							.getSelectedItem().getId());
+				}
+				event.consume();
+			}
+		});
 	}
 
 	/**
@@ -479,6 +500,20 @@ public class ViewController implements Initializable {
 	}
 
 	/**
+	 * 
+	 * @param id
+	 */
+	private void startSearchForSinglePerson(int id) {
+		try {
+			searchCtrl.startSinglePersonSearch(id);
+		} catch (Exception e) {
+			e.printStackTrace();
+			ui.showErrorMessage("Es können keine Detailinformationen für diese Person angezeigt werden.\n"
+					+ e.getMessage());
+		}
+	}
+
+	/**
 	 * Clears all input fields of the search.
 	 */
 	@FXML
@@ -556,23 +591,71 @@ public class ViewController implements Initializable {
 		return SourceKeys.NO_SELECTION;
 	}
 
-	void fillResultTable(List<PersonItem> results) {
+	/**
+	 * 
+	 */
+	// FIXME remove comments from parameter
+	void fillResultTable(/* List<PersonItem> results */) {
+		// clear old table content first
+		resultTable.getColumns().clear();
+
 		// vorname_norm
 		// nachname_norm
 		// ort_norm
 		// fakultaet_norm
 
-		// clear old table content first
-		resultTable.getColumns().clear();
+		// generate list with person items for testing purposes
+		List<PersonItem> testList = new ArrayList<PersonItem>();
+		for (int i = 0; i < 10; i++) {
+			PersonItem person = new PersonItem();
+			person.setVorname_norm("person_vorname" + i);
+			person.setNachname_norm("person_nachname" + i);
+			person.setAdlig("person_adlig" + i);
+			person.setAnmerkungen("Anmerkungen" + i);
+			person.setFach("fach" + i);
+			person.setId(i);
+			person.setOrt_norm("Bamberg" + i);
+			testList.add(person);
+		}
+
+		// these columns are default columns
+		TableColumn<PersonItem, String> id = new TableColumn<PersonItem, String>(
+				"ID");
+		PropertyValueFactory<PersonItem, String> idFactory = new PropertyValueFactory<PersonItem, String>(
+				"id");
+		id.setCellValueFactory(idFactory);
+
 		TableColumn<PersonItem, String> vorname_norm = new TableColumn<PersonItem, String>(
 				"Vorname (NORM)");
-		resultTable.getColumns().add(vorname_norm);
-
 		PropertyValueFactory vornameFactory = new PropertyValueFactory<PersonItem, String>(
 				"vorname_norm");
-
 		vorname_norm.setCellValueFactory(vornameFactory);
 
+		TableColumn<PersonItem, String> nachname_norm = new TableColumn<PersonItem, String>(
+				"Nachname (NORM)");
+		PropertyValueFactory nachnameFactory = new PropertyValueFactory<PersonItem, String>(
+				"nachname_norm");
+		nachname_norm.setCellValueFactory(nachnameFactory);
+
+		TableColumn<PersonItem, String> ort_norm = new TableColumn<PersonItem, String>(
+				"Ort (NORM)");
+		PropertyValueFactory ortFactory = new PropertyValueFactory<PersonItem, String>(
+				"ort_norm");
+		ort_norm.setCellValueFactory(ortFactory);
+
+		TableColumn<PersonItem, String> fakultaet_norm = new TableColumn<PersonItem, String>(
+				"Fakultät (NORM)");
+		PropertyValueFactory fakultaetFactory = new PropertyValueFactory<PersonItem, String>(
+				"fakultaet_norm");
+		fakultaet_norm.setCellValueFactory(fakultaetFactory);
+
+		resultTable.getColumns().addAll(id, vorname_norm, nachname_norm,
+				ort_norm, fakultaet_norm);
+
+		ObservableList<PersonItem> data = FXCollections
+				.observableArrayList(testList);
+
+		resultTable.setItems(data);
 	}
 
 	/**

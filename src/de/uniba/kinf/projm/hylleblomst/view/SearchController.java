@@ -72,8 +72,11 @@ public class SearchController {
 
 		try {
 			view.setInfoTextExtendedSearch(requestList);
+			view.fillResultTable();
 			if (requestList.size() != 0) {
 				ArrayList<PersonItem> result = queriesImpl.search(requestList);
+				// TODO remove comment for later implementation
+				// view.fillResultTable(result);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -90,6 +93,7 @@ public class SearchController {
 	 * @param result
 	 */
 	private void processResultSetAndFillTable(ResultSet result) {
+		// FIXME still used?
 		// take the ResultSet and get all columns
 
 		// except of the following columns, all other column names can found by
@@ -111,6 +115,21 @@ public class SearchController {
 		}
 
 		// view.fillResultTable(results);
+	}
+
+	/**
+	 * 
+	 * @param id
+	 */
+	public void startSinglePersonSearch(int id) {
+		try {
+			queriesImpl.searchPerson(id);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new RuntimeException(
+					"Ein Fehler bei der Suche nach Person mit ID " + id
+							+ " ist aufgetreten.");
+		}
 	}
 
 	/**
