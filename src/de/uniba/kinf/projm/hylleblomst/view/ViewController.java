@@ -353,6 +353,7 @@ public class ViewController implements Initializable {
 					System.out.println(resultTable.getSelectionModel()
 							.getSelectedItem().getId());
 				}
+				event.consume();
 			}
 		});
 	}
