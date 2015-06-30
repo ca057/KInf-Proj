@@ -595,6 +595,9 @@ public class ViewController implements Initializable {
 	 */
 	// FIXME remove comments from parameter
 	void fillResultTable(/* List<PersonItem> results */) {
+		// clear old table content first
+		resultTable.getColumns().clear();
+
 		// vorname_norm
 		// nachname_norm
 		// ort_norm
@@ -604,14 +607,22 @@ public class ViewController implements Initializable {
 		List<PersonItem> testList = new ArrayList<PersonItem>();
 		for (int i = 0; i < 10; i++) {
 			PersonItem person = new PersonItem();
-			person.setVorname_norm("person_nummer" + i);
+			person.setVorname_norm("person_vorname" + i);
+			person.setNachname_norm("person_nachname" + i);
+			person.setAdlig("person_adlig" + i);
+			person.setAnmerkungen("Anmerkungen" + i);
+			person.setFach("fach" + i);
 			person.setId(i);
 			person.setOrt_norm("Bamberg" + i);
 			testList.add(person);
 		}
 
-		// clear old table content first
-		resultTable.getColumns().clear();
+		// these columns are default columns
+		TableColumn<PersonItem, String> id = new TableColumn<PersonItem, String>(
+				"ID");
+		PropertyValueFactory<PersonItem, String> idFactory = new PropertyValueFactory<PersonItem, String>(
+				"id");
+		id.setCellValueFactory(idFactory);
 
 		TableColumn<PersonItem, String> vorname_norm = new TableColumn<PersonItem, String>(
 				"Vorname (NORM)");
@@ -619,13 +630,27 @@ public class ViewController implements Initializable {
 				"vorname_norm");
 		vorname_norm.setCellValueFactory(vornameFactory);
 
+		TableColumn<PersonItem, String> nachname_norm = new TableColumn<PersonItem, String>(
+				"Nachname (NORM)");
+		PropertyValueFactory nachnameFactory = new PropertyValueFactory<PersonItem, String>(
+				"nachname_norm");
+		nachname_norm.setCellValueFactory(nachnameFactory);
+
 		TableColumn<PersonItem, String> ort_norm = new TableColumn<PersonItem, String>(
 				"Ort (NORM)");
 		PropertyValueFactory ortFactory = new PropertyValueFactory<PersonItem, String>(
 				"ort_norm");
 		ort_norm.setCellValueFactory(ortFactory);
 
-		resultTable.getColumns().addAll(ort_norm, vorname_norm);
+		TableColumn<PersonItem, String> fakultaet_norm = new TableColumn<PersonItem, String>(
+				"Fakultät (NORM)");
+		PropertyValueFactory fakultaetFactory = new PropertyValueFactory<PersonItem, String>(
+				"fakultaet_norm");
+		fakultaet_norm.setCellValueFactory(fakultaetFactory);
+
+		resultTable.getColumns().addAll(id, vorname_norm, nachname_norm,
+				ort_norm, fakultaet_norm);
+
 		ObservableList<PersonItem> data = FXCollections
 				.observableArrayList(testList);
 
