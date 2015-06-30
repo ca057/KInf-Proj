@@ -8,7 +8,7 @@ public class TableNameKeys {
 	public static final String quellen = schemaName + ".quellen";
 	public static final String fundorte = schemaName + ".fundorte";
 	public static final String fakultaeten = schemaName + ".fakultaeten";
-	public static final String titelNorm = schemaName + ".tiel_norm";
+	public static final String titelNorm = schemaName + ".titel_norm";
 	public static final String titelTrad = schemaName + ".titel_trad";
 	public static final String person = schemaName + ".person";
 	public static final String fachNorm = schemaName + ".fach_norm";
