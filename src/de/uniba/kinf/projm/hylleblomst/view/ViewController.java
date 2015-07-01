@@ -609,11 +609,6 @@ public class ViewController implements Initializable, Observer {
 		// clear old table content first
 		resultTable.getColumns().clear();
 
-		// vorname_norm
-		// nachname_norm
-		// ort_norm
-		// fakultaet_norm
-
 		// FIXME generate list with person items for testing purposes, delete
 		// this setup in the end
 		List<PersonItem> testList = new ArrayList<PersonItem>();
@@ -624,13 +619,39 @@ public class ViewController implements Initializable, Observer {
 			person.setAdlig("person_adlig" + i);
 			person.setAnmerkungen("Anmerkungen" + i);
 			person.setFach("fach" + i);
+			person.setSeminar("Seminar" + i);
 			person.setId(i);
 			person.setOrt_norm("Bamberg" + i);
 			testList.add(person);
 		}
 
+		// create all default columns
+		createDefaultColumns();
+		// create additional table columns depending on the list of input fields
+		// the user searched for
+		createColumnsOfSearchResult();
+
+		// FIXME this list must be the result list
+		ObservableList<PersonItem> data = FXCollections
+				.observableArrayList(testList);
+
+		resultTable.setItems(data);
+	}
+
+	/**
+	 * 
+	 */
+	@SuppressWarnings("unchecked")
+	private void createDefaultColumns() {
 		// these columns are default columns and will be displayed for all
 		// search requests
+
+		// id
+		// vorname_norm
+		// nachname_norm
+		// ort_norm
+		// fakultaet_norm
+
 		TableColumn<PersonItem, String> id = new TableColumn<PersonItem, String>(
 				"ID");
 		PropertyValueFactory<PersonItem, String> idFactory = new PropertyValueFactory<PersonItem, String>(
@@ -639,36 +660,48 @@ public class ViewController implements Initializable, Observer {
 
 		TableColumn<PersonItem, String> vorname_norm = new TableColumn<PersonItem, String>(
 				"Vorname (NORM)");
-		PropertyValueFactory vornameFactory = new PropertyValueFactory<PersonItem, String>(
+		PropertyValueFactory<PersonItem, String> vornameFactory = new PropertyValueFactory<PersonItem, String>(
 				"vorname_norm");
 		vorname_norm.setCellValueFactory(vornameFactory);
 
 		TableColumn<PersonItem, String> nachname_norm = new TableColumn<PersonItem, String>(
 				"Nachname (NORM)");
-		PropertyValueFactory nachnameFactory = new PropertyValueFactory<PersonItem, String>(
+		PropertyValueFactory<PersonItem, String> nachnameFactory = new PropertyValueFactory<PersonItem, String>(
 				"nachname_norm");
 		nachname_norm.setCellValueFactory(nachnameFactory);
 
 		TableColumn<PersonItem, String> ort_norm = new TableColumn<PersonItem, String>(
 				"Ort (NORM)");
-		PropertyValueFactory ortFactory = new PropertyValueFactory<PersonItem, String>(
+		PropertyValueFactory<PersonItem, String> ortFactory = new PropertyValueFactory<PersonItem, String>(
 				"ort_norm");
 		ort_norm.setCellValueFactory(ortFactory);
 
 		TableColumn<PersonItem, String> fakultaet_norm = new TableColumn<PersonItem, String>(
 				"Fakultät (NORM)");
-		PropertyValueFactory fakultaetFactory = new PropertyValueFactory<PersonItem, String>(
+		PropertyValueFactory<PersonItem, String> fakultaetFactory = new PropertyValueFactory<PersonItem, String>(
 				"fakultaet_norm");
 		fakultaet_norm.setCellValueFactory(fakultaetFactory);
 
 		resultTable.getColumns().addAll(id, vorname_norm, nachname_norm,
 				ort_norm, fakultaet_norm);
+	}
 
-		// FIXME this list must be the result list
-		ObservableList<PersonItem> data = FXCollections
-				.observableArrayList(testList);
-
-		resultTable.setItems(data);
+	/**
+	 * Creates all columns for the {@code resultTable}, which are no default
+	 * column. Uses the list {@code usedSearchFieldKeys} to create the columns
+	 * which need to be displayed. If a column is part of the default column, it
+	 * will not be created.
+	 */
+	private void createColumnsOfSearchResult() {
+		for (int i = 0; i < usedSearchFieldKeys.size(); i++) {
+			String columnName = usedSearchFieldKeys.get(i).toString();
+			TableColumn<PersonItem, String> column = new TableColumn<PersonItem, String>(
+					columnName);
+			PropertyValueFactory<PersonItem, String> columnFactory = new PropertyValueFactory<PersonItem, String>(
+					columnName);
+			column.setCellValueFactory(columnFactory);
+			resultTable.getColumns().add(column);
+		}
 	}
 
 	/**
