@@ -19,7 +19,8 @@ public class QueryRequestImpl implements QueryRequest {
 	private int source;
 	private String table;
 
-	public QueryRequestImpl(SearchFieldKeys searchField, String input, int source) {
+	public QueryRequestImpl(SearchFieldKeys searchField, String input,
+			int source) {
 		setInput(input);
 		setSource(source);
 		setSearchField(searchField);
@@ -76,27 +77,27 @@ public class QueryRequestImpl implements QueryRequest {
 			switch (searchField) {
 			case ADLIG:
 				table = "PERSON";
-				column = ColumnNameKeys.Adlig;
+				column = ColumnNameKeys.ADLIG;
 				break;
 			case JESUIT:
 				table = "PERSON";
-				column = ColumnNameKeys.Jesuit;
+				column = ColumnNameKeys.JESUIT;
 				break;
 			case STUDIENJAHR_VON:
 			case STUDIENJAHR_BIS:
 				// TODO Int-Wert!?
 				table = "PERSON";
-				column = ColumnNameKeys.Studienjahr;
+				column = ColumnNameKeys.STUDIENJAHR;
 				break;
 			case EINSCHREIBEDATUM_VON:
 			case EINSCHREIBEDATUM_BIS:
 				// TODO Felder gesetzt?!
 				table = "PERSON";
-				column = ColumnNameKeys.Datum;
+				column = ColumnNameKeys.DATUM;
 				break;
 			case ANMERKUNGEN:
 				table = "PERSON";
-				column = ColumnNameKeys.Anmerkung;
+				column = ColumnNameKeys.ANMERKUNG;
 				break;
 			case NUMMER:
 				table = "PERSON";
@@ -104,11 +105,11 @@ public class QueryRequestImpl implements QueryRequest {
 				break;
 			case SEITE_ORIGINALE:
 				table = "PERSON";
-				column = ColumnNameKeys.SeiteOriginal;
+				column = ColumnNameKeys.SEITE_ORIGINAL;
 				break;
 			case NUMMER_HESS:
 				table = "PERSON";
-				column = ColumnNameKeys.NummerHess;
+				column = ColumnNameKeys.NUMMER_HESS;
 				break;
 			case ANREDE:
 				if (source == SourceKeys.NORM) {
@@ -194,18 +195,21 @@ public class QueryRequestImpl implements QueryRequest {
 				break;
 			default:
 				throw new IllegalArgumentException(
-						"Das zugehörige Tabellenelement für Suchfeld " + searchField.name() + " ist nicht definiert.");
+						"Das zugehörige Tabellenelement für Suchfeld "
+								+ searchField.name() + " ist nicht definiert.");
 			}
 		} else {
-			throw new IllegalArgumentException("Die Werte für Suchfeld " + searchField.toString() + " und Quelle "
-					+ source + " konnten keiner Tabelle und Spalte zugeordnet werden.");
+			throw new IllegalArgumentException("Die Werte für Suchfeld "
+					+ searchField.toString() + " und Quelle " + source
+					+ " konnten keiner Tabelle und Spalte zugeordnet werden.");
 		}
 	}
 
 	@Override
 	public String getWhere() {
 		if (source == SourceKeys.NO_SOURCE) {
-			if (searchField == SearchFieldKeys.ADLIG || searchField == SearchFieldKeys.JESUIT
+			if (searchField == SearchFieldKeys.ADLIG
+					|| searchField == SearchFieldKeys.JESUIT
 					|| searchField == SearchFieldKeys.GRADUIERT) {
 				return String.format("Hylleblomst.%s.%s <> ''", table, column);
 			}
@@ -217,10 +221,13 @@ public class QueryRequestImpl implements QueryRequest {
 			}
 			// TODO Jahr
 		} else if (source == SourceKeys.NORM) {
-			return String.format("Hylleblomst.%s_norm.%s LIKE ?", table.substring(0, table.indexOf("_")), column);
+			return String.format("Hylleblomst.%s_norm.%s LIKE ?",
+					table.substring(0, table.indexOf("_")), column);
 		} else if (!(source == SourceKeys.NO_SELECTION || searchField == SearchFieldKeys.ANREDE)) {
-			return String.format("Hylleblomst.%s.%s LIKE ? AND Hylleblomst.%s_info.QuellenID = %s", table, column,
-					table.substring(0, table.indexOf("_")), source);
+			return String
+					.format("Hylleblomst.%s.%s LIKE ? AND Hylleblomst.%s_info.QuellenID = %s",
+							table, column,
+							table.substring(0, table.indexOf("_")), source);
 		}
 		return String.format("Hylleblomst.%s.%s LIKE ?", table, column);
 	}
@@ -230,9 +237,13 @@ public class QueryRequestImpl implements QueryRequest {
 		String user = "admin";
 		String password = "password";
 		String result = "";
-		try (Connection con = DriverManager.getConnection(dbURL, user, password);
-				Statement stmt = con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-				ResultSet rs = stmt.executeQuery(String.format("SELECT * FROM hylleblomst.%s", table));) {
+		try (Connection con = DriverManager
+				.getConnection(dbURL, user, password);
+				Statement stmt = con.createStatement(
+						ResultSet.TYPE_SCROLL_INSENSITIVE,
+						ResultSet.CONCUR_READ_ONLY);
+				ResultSet rs = stmt.executeQuery(String.format(
+						"SELECT * FROM hylleblomst.%s", table));) {
 			ResultSetMetaData rsmd = rs.getMetaData();
 			result = rsmd.getColumnName(i);
 		} catch (SQLException e) {
