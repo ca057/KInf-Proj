@@ -2,7 +2,6 @@ package de.uniba.kinf.projm.hylleblomst.keys;
 
 public class SourceKeys {
 
-	// TODO Johannes, hier musst du schauen ob noch alles passt, aus -1 wurde -2
 	public static final Integer ORT_NORM_AB = -3;
 	public static final Integer NO_SOURCE = -2;
 	public static final Integer NO_SELECTION = -1;
