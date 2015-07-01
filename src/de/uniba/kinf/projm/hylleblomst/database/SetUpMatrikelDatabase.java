@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import de.uniba.kinf.projm.hylleblomst.keys.ColumnNameKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.TableNameKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.UserKeys;
 
@@ -40,12 +41,49 @@ public class SetUpMatrikelDatabase {
 						ResultSet.CONCUR_READ_ONLY);) {
 			while (!allTablesExist()) {
 				// TODO insert all tables
+				String[][] normTableInfo = getNormTables();
+				for (int i = 0; i < normTableInfo.length; i++) {
+					stmt.addBatch("CREATE TABLE" + normTableInfo[i][0] + " ("
+							+ normTableInfo[i][1]
+							+ " integer PRIMARY KEY NOT NULL, "
+							+ normTableInfo[i][2] + " varchar(255)");
+				}
+				stmt.executeBatch();
+				stmt.clearBatch();
+
 			}
 		} catch (SQLException e) {
 			throw new SQLException("Database could not be build: ", e);
 		}
 
 		return false;
+	}
+
+	private String[][] getNormTables() {
+		String[][] result = {
+				{ TableNameKeys.ANREDE_NORM, ColumnNameKeys.ANREDE_NORM_ID,
+						ColumnNameKeys.ANREDE_NORM },
+				{ TableNameKeys.FACH_NORM, ColumnNameKeys.FACH_NORM_ID,
+						ColumnNameKeys.FACH_NORM },
+				{ TableNameKeys.FAKULTAETEN, ColumnNameKeys.FAKULTAETEN_ID,
+						ColumnNameKeys.FAKULTAETEN_NORM },
+				{ TableNameKeys.FUNDORTE, ColumnNameKeys.FUNDORTE_ID,
+						ColumnNameKeys.FUNDORTE_NORM },
+				{ TableNameKeys.VORNAME_NORM, ColumnNameKeys.VORNAME_NORM_ID,
+						ColumnNameKeys.VORNAME_NORM },
+				{ TableNameKeys.NAME_NORM, ColumnNameKeys.NAME_NORM_ID,
+						ColumnNameKeys.NAME_NORM },
+				{ TableNameKeys.QUELLEN, ColumnNameKeys.QUELLEN_ID,
+						ColumnNameKeys.QUELLEN_NAME },
+				{ TableNameKeys.SEMINAR_NORM, ColumnNameKeys.SEMINAR_NORM_ID,
+						ColumnNameKeys.SEMINAR_NORM },
+				{ TableNameKeys.TITEL_NORM, ColumnNameKeys.TITEL_NORM_ID,
+						ColumnNameKeys.TITEL_NORM },
+				{ TableNameKeys.WIRTSCHAFTSLAGE_NORM,
+						ColumnNameKeys.WIRTSCHAFTSLAGE_NORM_ID,
+						ColumnNameKeys.WIRTSCHAFTSLAGE_NORM } };
+
+		return result;
 	}
 
 	/**
