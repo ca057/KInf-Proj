@@ -5,7 +5,10 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.PersonItem;
 import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
@@ -18,14 +21,21 @@ import de.uniba.kinf.projm.hylleblomst.logicImpl.QueryRequestImpl;
  * @author ca
  *
  */
-public class SearchController {
+public class SearchController extends Observable {
 
 	/**
 	 * Array stores for every input field the corresponding search field key.
 	 */
 	private SearchFieldKeys[] inputSearchFKey;
 
+	/**
+	 * Stores the number of input fields for setting up the
+	 * {@code inputSearchFKey} with a correct length
+	 */
 	private int inputCounter;
+
+	private ObservableList<SearchFieldKeys> usedSearchFields = FXCollections
+			.observableArrayList();
 
 	/**
 	 * QueriesImpl executes the search.
@@ -59,7 +69,8 @@ public class SearchController {
 			throw new IllegalArgumentException(
 					"Die Liste mit Eingabefeldern ist leer oder hat keinen Wert.");
 		}
-
+		// clear list of used SearchFieldKeys first
+		usedSearchFields.clear();
 		List<QueryRequest> requestList = new ArrayList<QueryRequest>();
 		for (int i = 0; i < inputValues.length; i++) {
 			if (!inputValues[i].isEmpty() && !"false".equals(inputValues[i])
@@ -67,6 +78,10 @@ public class SearchController {
 				QueryRequestImpl tmpReq = new QueryRequestImpl(
 						inputSearchFKey[i], inputValues[i], inputSourceKey[i]);
 				requestList.add(tmpReq);
+				// update observable list with the used SFK, so view can work
+				// with the correct table columns
+				usedSearchFields.add(inputSearchFKey[i]);
+				notifyObservers(usedSearchFields);
 			}
 		}
 

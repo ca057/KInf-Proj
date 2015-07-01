@@ -4,6 +4,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
@@ -38,7 +40,7 @@ import de.uniba.kinf.projm.hylleblomst.logicImpl.QueriesImpl;
  * @author ca
  *
  */
-public class ViewController implements Initializable {
+public class ViewController implements Initializable, Observer {
 	/**
 	 * UIHelper supports a nice user interaction.
 	 */
@@ -55,6 +57,11 @@ public class ViewController implements Initializable {
 	 * arrays.
 	 */
 	private int inputFieldCounter = 23;
+
+	/**
+	 * 
+	 */
+	private ArrayList<SearchFieldKeys> usedSearchFieldKeys = new ArrayList<SearchFieldKeys>();
 
 	@FXML
 	BorderPane root;
@@ -210,6 +217,7 @@ public class ViewController implements Initializable {
 	public ViewController() {
 		ui = new UIHelper();
 		searchCtrl = new SearchController(this);
+		searchCtrl.addObserver(this);
 	}
 
 	@Override
@@ -488,6 +496,8 @@ public class ViewController implements Initializable {
 	 */
 	@FXML
 	private void startSearch() {
+		// Clear list of used SearchFieldKeys first
+		usedSearchFieldKeys.clear();
 		try {
 			String[] input = generateArrayWithInputValues();
 			int[] sources = generateArrayWithSourceFieldKeys();
@@ -604,7 +614,8 @@ public class ViewController implements Initializable {
 		// ort_norm
 		// fakultaet_norm
 
-		// generate list with person items for testing purposes
+		// FIXME generate list with person items for testing purposes, delete
+		// this setup in the end
 		List<PersonItem> testList = new ArrayList<PersonItem>();
 		for (int i = 0; i < 10; i++) {
 			PersonItem person = new PersonItem();
@@ -618,7 +629,8 @@ public class ViewController implements Initializable {
 			testList.add(person);
 		}
 
-		// these columns are default columns
+		// these columns are default columns and will be displayed for all
+		// search requests
 		TableColumn<PersonItem, String> id = new TableColumn<PersonItem, String>(
 				"ID");
 		PropertyValueFactory<PersonItem, String> idFactory = new PropertyValueFactory<PersonItem, String>(
@@ -652,6 +664,7 @@ public class ViewController implements Initializable {
 		resultTable.getColumns().addAll(id, vorname_norm, nachname_norm,
 				ort_norm, fakultaet_norm);
 
+		// FIXME this list must be the result list
 		ObservableList<PersonItem> data = FXCollections
 				.observableArrayList(testList);
 
@@ -696,5 +709,16 @@ public class ViewController implements Initializable {
 		}
 		info += buffer.toString();
 		infoArea.setText(info);
+	}
+
+	/**
+	 * 
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public void update(Observable observable, Object updatedSearchFieldKeyList) {
+		if (observable instanceof SearchController) {
+			usedSearchFieldKeys = (ArrayList<SearchFieldKeys>) updatedSearchFieldKeyList;
+		}
 	}
 }
