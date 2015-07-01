@@ -44,7 +44,7 @@ public class TearDownDatabase {
 					stmt.executeUpdate(String.format("DROP TABLE %s", table));
 				}
 				stmt.executeUpdate(String.format("DROP SCHEMA %s RESTRICT",
-						TableNameKeys.schemaName));
+						TableNameKeys.SCHEMA_NAME));
 			}
 			return true;
 		} catch (SQLException e) {
@@ -75,7 +75,7 @@ public class TearDownDatabase {
 					"SELECT * FROM sys.schemas WHERE name=?",
 					ResultSet.TYPE_SCROLL_INSENSITIVE,
 					ResultSet.CONCUR_READ_ONLY);
-			stmt.setString(1, TableNameKeys.schemaName);
+			stmt.setString(1, TableNameKeys.SCHEMA_NAME);
 			ResultSet rs = stmt.executeQuery();
 
 			con.setAutoCommit(false);
