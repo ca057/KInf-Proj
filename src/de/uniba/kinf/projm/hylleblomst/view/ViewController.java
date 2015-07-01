@@ -709,8 +709,9 @@ public class ViewController implements Initializable, Observer {
 	 */
 	@FXML
 	protected void closeWindow() {
+		// FIXME check if this is correct
 		Stage stage = (Stage) root.getScene().getWindow();
-		if (ui.askForClosingWindow(stage)) {
+		if (ui.askForClosingWindow()) {
 			stage.close();
 		}
 	}

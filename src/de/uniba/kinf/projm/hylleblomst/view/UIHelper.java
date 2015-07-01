@@ -6,7 +6,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
 import javafx.scene.image.ImageView;
-import javafx.stage.Stage;
 
 /**
  * Supports the creation of a lovely user interface <3.
@@ -43,12 +42,7 @@ public class UIHelper {
 	 * @return <code>true</code> if stage should be closed, <code>false</code>
 	 *         otherwise
 	 */
-	public boolean askForClosingWindow(Stage stage) {
-		if (stage == null) {
-			throw new RuntimeException(
-					"Stage which should be closed is null (has no value).");
-		}
-
+	public boolean askForClosingWindow() {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle(appName + " - Programm beenden");
 		alert.setHeaderText("Programm beenden");
