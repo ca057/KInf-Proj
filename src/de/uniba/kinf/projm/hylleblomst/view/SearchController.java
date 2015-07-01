@@ -1,7 +1,5 @@
 package de.uniba.kinf.projm.hylleblomst.view;
 
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -99,37 +97,6 @@ public class SearchController extends Observable {
 					"Ein Fehler bei der Suche ist aufgetreten:\n"
 							+ e.getMessage());
 		}
-	}
-
-	/**
-	 * Builds PersonItems out of the given ResultSet and starts filling the
-	 * TableView.
-	 * 
-	 * @param result
-	 */
-	private void processResultSetAndFillTable(ResultSet result) {
-		// FIXME still used?
-		// take the ResultSet and get all columns
-
-		// except of the following columns, all other column names can found by
-		// using the searchfieldkeys
-		// vorname_norm
-		// nachname_norm
-		// ort_norm
-		// fakultaet_norm
-		//
-		try {
-			ResultSetMetaData metaData = result.getMetaData();
-			System.out.println(metaData.getColumnCount());
-			for (int i = 0; i < metaData.getColumnCount(); i++) {
-				System.out.println(metaData.getColumnName(i));
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		// view.fillResultTable(results);
 	}
 
 	/**
