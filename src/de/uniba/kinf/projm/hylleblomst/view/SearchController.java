@@ -1,11 +1,12 @@
 package de.uniba.kinf.projm.hylleblomst.view;
 
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.PersonItem;
 import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
@@ -18,14 +19,21 @@ import de.uniba.kinf.projm.hylleblomst.logicImpl.QueryRequestImpl;
  * @author ca
  *
  */
-public class SearchController {
+public class SearchController extends Observable {
 
 	/**
 	 * Array stores for every input field the corresponding search field key.
 	 */
 	private SearchFieldKeys[] inputSearchFKey;
 
+	/**
+	 * Stores the number of input fields for setting up the
+	 * {@code inputSearchFKey} with a correct length
+	 */
 	private int inputCounter;
+
+	private ObservableList<SearchFieldKeys> usedSearchFields = FXCollections
+			.observableArrayList();
 
 	/**
 	 * QueriesImpl executes the search.
@@ -59,7 +67,8 @@ public class SearchController {
 			throw new IllegalArgumentException(
 					"Die Liste mit Eingabefeldern ist leer oder hat keinen Wert.");
 		}
-
+		// clear list of used SearchFieldKeys first
+		usedSearchFields.clear();
 		List<QueryRequest> requestList = new ArrayList<QueryRequest>();
 		for (int i = 0; i < inputValues.length; i++) {
 			if (!inputValues[i].isEmpty() && !"false".equals(inputValues[i])
@@ -67,6 +76,10 @@ public class SearchController {
 				QueryRequestImpl tmpReq = new QueryRequestImpl(
 						inputSearchFKey[i], inputValues[i], inputSourceKey[i]);
 				requestList.add(tmpReq);
+				// update observable list with the used SFK, so view can work
+				// with the correct table columns
+				usedSearchFields.add(inputSearchFKey[i]);
+				notifyObservers(usedSearchFields);
 			}
 		}
 
@@ -84,37 +97,6 @@ public class SearchController {
 					"Ein Fehler bei der Suche ist aufgetreten:\n"
 							+ e.getMessage());
 		}
-	}
-
-	/**
-	 * Builds PersonItems out of the given ResultSet and starts filling the
-	 * TableView.
-	 * 
-	 * @param result
-	 */
-	private void processResultSetAndFillTable(ResultSet result) {
-		// FIXME still used?
-		// take the ResultSet and get all columns
-
-		// except of the following columns, all other column names can found by
-		// using the searchfieldkeys
-		// vorname_norm
-		// nachname_norm
-		// ort_norm
-		// fakultaet_norm
-		//
-		try {
-			ResultSetMetaData metaData = result.getMetaData();
-			System.out.println(metaData.getColumnCount());
-			for (int i = 0; i < metaData.getColumnCount(); i++) {
-				System.out.println(metaData.getColumnName(i));
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		// view.fillResultTable(results);
 	}
 
 	/**

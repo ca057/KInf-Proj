@@ -9,6 +9,14 @@ package de.uniba.kinf.projm.hylleblomst.logic;
  */
 public class PersonItem {
 
+	// TODO ggf müssen wir das alles umbenennen damit die Felder wie die
+	// SearchFieldKeys heißen, weil sonst die Tabelle nicht funktioniert. Ich
+	// arbeite auf Basis der SearchFieldKeys und muss diese als Ausgangspunkt
+	// nutzen, um die Tabellenspalten zu befüllen. Soweit ich das richtig
+	// verstehe, benötigen die PropertyValueFactories die identischen Namen bei
+	// der Eingabe und den Variablen, worauf sie sich beziehen. Verständlich?
+	// Nein? Für weitere Fragen bin ich per Brieftaube gerne erreichbar!
+
 	// TODO ist das wirklich ein int
 	private int id;
 	private String anrede;

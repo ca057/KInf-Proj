@@ -1,6 +1,6 @@
 package de.uniba.kinf.projm.hylleblomst.keys;
 
-public class ColumnNameKeys {
+public interface ColumnNameKeys {
 
 	public static final String ANREDE_NORM_ID = "AnredeNormID";
 	public static final String ANREDE_TRAD_ID = "AnredeTradID";

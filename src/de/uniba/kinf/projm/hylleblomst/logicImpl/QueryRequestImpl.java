@@ -7,6 +7,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import de.uniba.kinf.projm.hylleblomst.keys.ColumnNameKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
@@ -75,25 +76,27 @@ public class QueryRequestImpl implements QueryRequest {
 			switch (searchField) {
 			case ADLIG:
 				table = "PERSON";
-				column = getColumnName(table, 5);
+				column = ColumnNameKeys.Adlig;
 				break;
 			case JESUIT:
 				table = "PERSON";
-				column = getColumnName(table, 4);
+				column = ColumnNameKeys.Jesuit;
 				break;
 			case STUDIENJAHR_VON:
 			case STUDIENJAHR_BIS:
+				// TODO Int-Wert!?
 				table = "PERSON";
-				column = getColumnName(table, 7);
+				column = ColumnNameKeys.Studienjahr;
 				break;
 			case EINSCHREIBEDATUM_VON:
 			case EINSCHREIBEDATUM_BIS:
+				// TODO Felder gesetzt?!
 				table = "PERSON";
-				column = getColumnName(table, 6);
+				column = ColumnNameKeys.Datum;
 				break;
 			case ANMERKUNGEN:
 				table = "PERSON";
-				column = getColumnName(table, 9);
+				column = ColumnNameKeys.Anmerkung;
 				break;
 			case NUMMER:
 				table = "PERSON";
@@ -101,11 +104,11 @@ public class QueryRequestImpl implements QueryRequest {
 				break;
 			case SEITE_ORIGINALE:
 				table = "PERSON";
-				column = getColumnName(table, 2);
+				column = ColumnNameKeys.SeiteOriginal;
 				break;
 			case NUMMER_HESS:
 				table = "PERSON";
-				column = getColumnName(table, 3);
+				column = ColumnNameKeys.NummerHess;
 				break;
 			case ANREDE:
 				if (source == SourceKeys.NORM) {
