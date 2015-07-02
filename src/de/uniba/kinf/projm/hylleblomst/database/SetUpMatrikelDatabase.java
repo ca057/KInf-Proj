@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import de.uniba.kinf.projm.hylleblomst.exceptions.SetUpException;
 import de.uniba.kinf.projm.hylleblomst.keys.ColumnNameKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.TableNameKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.UserKeys;
@@ -24,7 +25,7 @@ public class SetUpMatrikelDatabase {
 
 		try {
 			new SetUpMatrikelDatabase().run();
-		} catch (SQLException e) {
+		} catch (SetUpException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -33,12 +34,13 @@ public class SetUpMatrikelDatabase {
 	public SetUpMatrikelDatabase() {
 	}
 
-	public boolean run() throws SQLException {
+	public boolean run() throws SetUpException {
 		try (Connection con = DriverManager.getConnection(UserKeys.dbURL,
 				UserKeys.adminUser, UserKeys.adminPassword);
 				Statement stmt = con.createStatement(
 						ResultSet.TYPE_SCROLL_INSENSITIVE,
 						ResultSet.CONCUR_READ_ONLY);) {
+			int interrupt = 0;
 			while (!allTablesExist()) {
 				// TODO insert all tables
 				String[][] normTableInfo = getNormTables();
@@ -51,12 +53,73 @@ public class SetUpMatrikelDatabase {
 				stmt.executeBatch();
 				stmt.clearBatch();
 
+				String[][] tradTableInfo = getTradTables();
+				for (int i = 0; i < tradTableInfo.length; i++) {
+					String tableName = tradTableInfo[i][0];
+					String tableID = tradTableInfo[i][1];
+					String tableAttribute = tradTableInfo[i][2];
+					String tableFK = tradTableInfo[i][3];
+					String tableRef = tradTableInfo[i][4];
+
+					String sql = "CREAT TABLE" + tableName + " (" + tableID
+							+ " integer PRIMARY KEY NOT NULL, "
+							+ tableAttribute + " varchar(255), " + tableFK
+							+ " integer NOT NULL, " + "FOREIGN KEY (" + tableFK
+							+ ") REFERENCES " + tableRef + "(" + tableFK
+							+ ") ON DELETE RESTRICT ON UPDATE RESTRICT";
+
+					stmt.addBatch(sql);
+				}
+				stmt.executeBatch();
+				stmt.clearBatch();
+
+				String[][] infoTableInfo = getInfoTables();
+
+				interrupt++;
+				if (interrupt >= 10) {
+					throw new SetUpException(
+							"Database could not be build, maybe some necessary information for setup is missing");
+				}
 			}
 		} catch (SQLException e) {
-			throw new SQLException("Database could not be build: ", e);
+			throw new SetUpException("Database could not be build: ", e);
 		}
 
 		return false;
+	}
+
+	private String[][] getInfoTables() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private String[][] getTradTables() {
+		// TODO Auto-generated method stub
+		String[] anrede = { TableNameKeys.ANREDE_TRAD,
+				ColumnNameKeys.ANREDE_TRAD_ID, ColumnNameKeys.ANREDE_TRAD,
+				ColumnNameKeys.ANREDE_NORM_ID, TableNameKeys.ANREDE_NORM };
+		String[] titel = { TableNameKeys.TITEL_TRAD,
+				ColumnNameKeys.TITEL_TRAD_ID, ColumnNameKeys.TITEL_TRAD,
+				ColumnNameKeys.TITEL_NORM_ID, TableNameKeys.TITEL_NORM };
+		String[] name = { TableNameKeys.NAME_TRAD, ColumnNameKeys.NAME_TRAD_ID,
+				ColumnNameKeys.NAME_TRAD, ColumnNameKeys.NAME_NORM_ID,
+				TableNameKeys.NAME_NORM };
+		String[] vorname = { TableNameKeys.VORNAME_TRAD,
+				ColumnNameKeys.VORNAME_TRAD_ID, ColumnNameKeys.VORNAME_TRAD,
+				ColumnNameKeys.VORNAME_NORM_ID, TableNameKeys.VORNAME_NORM };
+		String[] seminar = { TableNameKeys.SEMINAR_TRAD,
+				ColumnNameKeys.SEMINAR_TRAD_ID, ColumnNameKeys.SEMINAR_TRAD,
+				ColumnNameKeys.SEMINAR_NORM_ID, TableNameKeys.SEMINAR_NORM };
+		String[] wirtschaftslage = { TableNameKeys.WIRTSCHAFTSLAGE_TRAD,
+				ColumnNameKeys.WIRTSCHAFTSLAGE_TRAD_ID,
+				ColumnNameKeys.WIRTSCHAFTSLAGE_TRAD,
+				ColumnNameKeys.WIRTSCHAFTSLAGE_NORM_ID,
+				TableNameKeys.WIRTSCHAFTSLAGE_NORM };
+
+		String[][] result = { anrede, titel, name, vorname, seminar,
+				wirtschaftslage };
+
+		return result;
 	}
 
 	private String[][] getNormTables() {
@@ -81,7 +144,9 @@ public class SetUpMatrikelDatabase {
 						ColumnNameKeys.TITEL_NORM },
 				{ TableNameKeys.WIRTSCHAFTSLAGE_NORM,
 						ColumnNameKeys.WIRTSCHAFTSLAGE_NORM_ID,
-						ColumnNameKeys.WIRTSCHAFTSLAGE_NORM } };
+						ColumnNameKeys.WIRTSCHAFTSLAGE_NORM },
+				{ TableNameKeys.ZUSAETZE, ColumnNameKeys.ZUSAETZE_ID,
+						ColumnNameKeys.ZUSAETZE } };
 
 		return result;
 	}
