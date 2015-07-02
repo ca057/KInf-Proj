@@ -19,6 +19,8 @@ public interface ColumnNameKeys {
 	public static final String NAME_TRAD_ID = "NameTradID";
 	public static final String NAME_TRAD = "NameTrad";
 	public static final String ORT_ABWEICHUNG_NORM_ID = "OrtAbweichungNormID";
+	public static final String ORT_ABWEICHUNG_NORM = "OrtAbweichungNorm";
+	public static final String ORT_ABWEICHUNG_NORM_ANMERKUNG = "Anweichung";
 	public static final String ORT_NORM_ID = "OrtNormID";
 	public static final String ORT_NORM = "OrtNorm";
 	public static final String ORT_TRAD_ID = "OrtTradID";
@@ -54,6 +56,7 @@ public interface ColumnNameKeys {
 	public static final String STUDIENJAHR = "Studienjahr";
 	public static final String STUDIENJAHR_INT = "StudienjahrInt";
 	public static final String GRADUIERT = "Graduiert";
+	// TODO umbenennen wegen Verwechslungsgefahr
 	public static final String ANMERKUNG = "Anmerkung";
 
 	public static String[][] getNormTableColumnNames() {

@@ -42,7 +42,6 @@ public class SetUpMatrikelDatabase {
 						ResultSet.CONCUR_READ_ONLY);) {
 			int interrupt = 0;
 			while (!allTablesExist()) {
-				// TODO insert all tables
 				String[][] normTableInfo = getNormTables();
 				for (int i = 0; i < normTableInfo.length; i++) {
 					stmt.addBatch("CREATE TABLE" + normTableInfo[i][0] + " ("
@@ -72,6 +71,18 @@ public class SetUpMatrikelDatabase {
 				}
 				stmt.executeBatch();
 				stmt.clearBatch();
+
+				String sqlOrtAbweichungNorm = "CREATE TABLE "
+						+ TableNameKeys.ORT_ABWEICHUNG_NORM + "("
+						+ ColumnNameKeys.ORT_ABWEICHUNG_NORM_ID
+						+ " integer PRIMARY KEY NOT NULL, "
+						+ ColumnNameKeys.ORT_ABWEICHUNG_NORM
+						+ " varchar(255), "
+						+ ColumnNameKeys.ORT_ABWEICHUNG_NORM_ANMERKUNG
+						+ " varchar(255))";
+
+				stmt.executeUpdate(sqlOrtAbweichungNorm);
+				stmt.close();
 
 				String[][] infoTableInfo = getInfoTables();
 				for (int i = 0; i < infoTableInfo.length; i++) {
@@ -174,9 +185,13 @@ public class SetUpMatrikelDatabase {
 				ColumnNameKeys.WIRTSCHAFTSLAGE_TRAD,
 				ColumnNameKeys.WIRTSCHAFTSLAGE_NORM_ID,
 				TableNameKeys.WIRTSCHAFTSLAGE_NORM };
+		String[] ortNorm = { TableNameKeys.ORT_NORM,
+				ColumnNameKeys.ORT_NORM_ID, ColumnNameKeys.ORT_NORM,
+				ColumnNameKeys.ORT_ABWEICHUNG_NORM_ID,
+				TableNameKeys.ORT_ABWEICHUNG_NORM };
 
 		String[][] result = { anrede, titel, name, ort, vorname, seminar,
-				wirtschaftslage };
+				wirtschaftslage, ortNorm };
 
 		return result;
 	}
