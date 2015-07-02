@@ -6,7 +6,6 @@ import de.uniba.kinf.projm.hylleblomst.keys.TableNameKeys;
 public class SQLBuilder {
 
 	String getFrom() {
-
 		String vorname = TableNameKeys.PERSON + " LEFT OUTER JOIN " + TableNameKeys.VORNAME_INFO + " ON "
 				+ TableNameKeys.PERSON + "." + ColumnNameKeys.PERSON_ID + " = " + TableNameKeys.VORNAME_INFO + "."
 				+ ColumnNameKeys.PERSON_ID + " LEFT OUTER JOIN " + TableNameKeys.VORNAME_TRAD + " ON "
@@ -65,6 +64,7 @@ public class SQLBuilder {
 				+ ColumnNameKeys.FAKULTAETEN_ID;
 		String fundorte = TableNameKeys.FUNDORTE + " ON " + TableNameKeys.PERSON + "." + ColumnNameKeys.FUNDORTE_ID
 				+ " = " + TableNameKeys.FUNDORTE + "." + ColumnNameKeys.FUNDORTE_ID;
+
 		return vorname + " LEFT OUTER JOIN " + name + " LEFT OUTER JOIN " + ort + " LEFT OUTER JOIN " + seminar
 				+ " LEFT OUTER JOIN " + wirtschaftslage + " LEFT OUTER JOIN " + zusaetze + " LEFT OUTER JOIN " + fach
 				+ " LEFT OUTER JOIN " + anrede + " LEFT OUTER JOIN " + titel + " LEFT OUTER JOIN " + fakultaeten
@@ -80,6 +80,11 @@ public class SQLBuilder {
 	}
 
 	String getSelectAll() {
-		return "DISTINCT Hylleblomst.Person.PersonID AS PersonID, Hylleblomst.vorname_norm.name AS vorname_norm, Hylleblomst.name_norm.name AS nachname_norm, Hylleblomst.ort_norm.ortNorm AS ort_norm, Hylleblomst.fakultaeten.name AS fakultaet_norm";
+		// TODO Implement this.
+		return "DISTINCT " + TableNameKeys.PERSON + "." + ColumnNameKeys.PERSON_ID + " AS PersonID, "
+				+ TableNameKeys.VORNAME_NORM + "." + ColumnNameKeys.VORNAME_NORM + " AS vorname_norm, "
+				+ TableNameKeys.NAME_NORM + "." + ColumnNameKeys.NAME_NORM + " AS nachname_norm, "
+				+ TableNameKeys.ORT_NORM + "." + ColumnNameKeys.ORT_NORM + " AS ort_norm, " + TableNameKeys.FAKULTAETEN
+				+ "." + ColumnNameKeys.FAKULTAETEN_NORM + " AS fakultaet_norm";
 	}
 }
