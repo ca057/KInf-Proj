@@ -66,7 +66,6 @@ public class QueryRequestImpl implements QueryRequest {
 	 */
 	private void searchFieldKeyToDatabaseData() {
 		if (source > SourceKeys.bottom && source < SourceKeys.top) {
-			// TODO Spaltentitel statt getColumnName()
 			switch (searchField) {
 			case ADLIG:
 				table = TableNameKeys.PERSON;
@@ -78,13 +77,11 @@ public class QueryRequestImpl implements QueryRequest {
 				break;
 			case STUDIENJAHR_VON:
 			case STUDIENJAHR_BIS:
-				// TODO Int-Wert!?
 				table = TableNameKeys.PERSON;
-				column = ColumnNameKeys.STUDIENJAHR;
+				column = ColumnNameKeys.STUDIENJAHR_INT;
 				break;
 			case EINSCHREIBEDATUM_VON:
 			case EINSCHREIBEDATUM_BIS:
-				// TODO Felder gesetzt?!
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.DATUM;
 				break;
@@ -212,18 +209,17 @@ public class QueryRequestImpl implements QueryRequest {
 					|| searchField == SearchFieldKeys.GRADUIERT) {
 				return String.format("%s.%s <> ''", table, column);
 			}
-			if (searchField == SearchFieldKeys.EINSCHREIBEDATUM_VON) {
+			if (searchField == SearchFieldKeys.EINSCHREIBEDATUM_VON || searchField == SearchFieldKeys.STUDIENJAHR_VON) {
 				return String.format("%s.%s > ?", table, column);
 			}
-			if (searchField == SearchFieldKeys.EINSCHREIBEDATUM_BIS) {
+			if (searchField == SearchFieldKeys.EINSCHREIBEDATUM_BIS || searchField == SearchFieldKeys.STUDIENJAHR_BIS) {
 				return String.format("%s.%s < ?", table, column);
 			}
-			// TODO Jahr
 		} else if (source == SourceKeys.NORM) {
 			return String.format("%s_norm.%s LIKE ?", table.substring(0, table.indexOf("_")), column);
 		} else if (!(source == SourceKeys.NO_SELECTION || searchField == SearchFieldKeys.ANREDE)) {
-			return String.format("%s.%s LIKE ? AND %s_info.QuellenID = %s", table, column,
-					table.substring(0, table.indexOf("_")), source);
+			return String.format("%s.%s LIKE ? AND %s_info.%s = %s", table, column,
+					table.substring(0, table.indexOf("_")), ColumnNameKeys.QUELLEN_ID, source);
 		}
 		return String.format("%s.%s LIKE ?", table, column);
 	}

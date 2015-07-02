@@ -32,9 +32,11 @@ public class DBAccess {
 				PreparedStatement stmt = con.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE,
 						ResultSet.CONCUR_READ_ONLY);) {
 			int parameterIndex = 1;
-			for (Object input : inputs) {
-				stmt.setString(parameterIndex, "%" + (String) input + "%");
-				parameterIndex++;
+			if (inputs != null) {
+				for (Object input : inputs) {
+					stmt.setString(parameterIndex, "%" + (String) input + "%");
+					parameterIndex++;
+				}
 			}
 			ResultSet results = stmt.executeQuery();
 

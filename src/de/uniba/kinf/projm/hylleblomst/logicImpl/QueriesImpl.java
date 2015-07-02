@@ -15,7 +15,7 @@ import de.uniba.kinf.projm.hylleblomst.logic.Queries;
 import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
 
 public class QueriesImpl implements Queries {
-	DBAccess db = new DBAccess(UserKeys.dbURL, UserKeys.adminUser, UserKeys.adminPassword);
+	DBAccess db = new DBAccess(UserKeys.dbURL, UserKeys.guestUser, UserKeys.guestPassword);
 	SQLBuilder sql = new SQLBuilder();
 
 	@Override
@@ -35,7 +35,11 @@ public class QueriesImpl implements Queries {
 		sqlQuery.append("SELECT ").append(sql.getSelect());
 		sqlFrom.append(sql.getFrom());
 		for (QueryRequest qr : queryRequests) {
-			sqlQuery.append(", " + qr.getTable() + "." + qr.getColumn() + " AS " + qr.getSearchField());
+			if (qr.getColumn() == ColumnNameKeys.STUDIENJAHR_INT) {
+				sqlQuery.append(", " + qr.getTable() + "." + ColumnNameKeys.STUDIENJAHR + " AS " + qr.getSearchField());
+			} else {
+				sqlQuery.append(", " + qr.getTable() + "." + qr.getColumn() + " AS " + qr.getSearchField());
+			}
 			if (qr.getSource() == SourceKeys.ORT_NORM_AB) {
 				sqlQuery.append(", " + qr.getTable() + "." + ColumnNameKeys.ANMERKUNG);
 			}
@@ -68,5 +72,26 @@ public class QueriesImpl implements Queries {
 		StringBuilder sqlQuery = new StringBuilder();
 		sqlQuery.append(sql.getSelectAll()).append(sql.getFrom()).append(" WHERE Person.PersonID = ?");
 		return db.startQuery(sqlQuery.toString(), inputs);
+	}
+
+	private int getFilledFields() {
+		// 111 -> leer
+		// 000 -> alles
+		// 011 -> nur Jhar
+		// 001 -> Jahr, Monat
+		// 101 -> Monat
+		// 110 -> Tag
+		String query = "SELECT " + TableNameKeys.PERSON + "." + ColumnNameKeys.STUDIENJAHR_INT + " FROM "
+				+ TableNameKeys.PERSON;
+		int result = -1;
+		try {
+			ResultSet set = db.startQuery(query, null);
+			System.out.println(set.getInt(1));
+			result = set.getInt(1);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
 	}
 }
