@@ -74,6 +74,32 @@ public class SetUpMatrikelDatabase {
 				stmt.clearBatch();
 
 				String[][] infoTableInfo = getInfoTables();
+				for (int i = 0; i < infoTableInfo.length; i++) {
+					String tableName = infoTableInfo[i][0];
+					String refTableID = infoTableInfo[i][1];
+					String srcTableID = infoTableInfo[i][2];
+					String personTableID = infoTableInfo[i][3];
+					String refTableName = infoTableInfo[i][4];
+					String srcTableName = infoTableInfo[i][5];
+					String personTableName = infoTableInfo[i][6];
+
+					String sql = "CREATE TABLE " + tableName + " ("
+							+ refTableID + " INTEGER NOT NULL, " + srcTableID
+							+ " INTEGER NOT NULL, " + personTableID
+							+ " INTEGER NOT NULL, " + "FOREIGN KEY ("
+							+ refTableID + ") REFERENCES " + refTableName + "("
+							+ refTableID
+							+ ") ON DELETE RESTRICT ON UPDATE RESTRICT, "
+							+ "FOREIGN KEY (" + srcTableID + ") REFERENCES "
+							+ srcTableName + "(" + srcTableID
+							+ ") ON DELETE RESTRICT ON UPDATE RESTRICT, "
+							+ "FOREIGN KEY (" + personTableID + ") REFERENCES "
+							+ personTableName + "(" + personTableID
+							+ ") ON DELETE RESTRICT ON UPDATE RESTRICT) ";
+					stmt.addBatch(sql);
+				}
+				stmt.executeBatch();
+				stmt.clearBatch();
 
 				interrupt++;
 				if (interrupt >= 10) {
@@ -89,12 +115,42 @@ public class SetUpMatrikelDatabase {
 	}
 
 	private String[][] getInfoTables() {
-		// TODO Auto-generated method stub
-		return null;
+		String[] fach = { TableNameKeys.FACH_INFO, ColumnNameKeys.FACH_TRAD_ID,
+				ColumnNameKeys.QUELLEN_ID, ColumnNameKeys.PERSON_ID,
+				TableNameKeys.FACH_TRAD, TableNameKeys.QUELLEN,
+				TableNameKeys.PERSON };
+		String[] vorname = { TableNameKeys.VORNAME_INFO,
+				ColumnNameKeys.VORNAME_TRAD_ID, ColumnNameKeys.QUELLEN_ID,
+				ColumnNameKeys.PERSON_ID, TableNameKeys.VORNAME_TRAD,
+				TableNameKeys.QUELLEN, TableNameKeys.PERSON };
+		String[] name = { TableNameKeys.NAME_INFO, ColumnNameKeys.NAME_TRAD_ID,
+				ColumnNameKeys.QUELLEN_ID, ColumnNameKeys.PERSON_ID,
+				TableNameKeys.NAME_TRAD, TableNameKeys.QUELLEN,
+				TableNameKeys.PERSON };
+		String[] ort = { TableNameKeys.ORT_INFO, ColumnNameKeys.ORT_TRAD_ID,
+				ColumnNameKeys.QUELLEN_ID, ColumnNameKeys.PERSON_ID,
+				TableNameKeys.ORT_TRAD, TableNameKeys.QUELLEN,
+				TableNameKeys.PERSON };
+		String[] seminar = { TableNameKeys.SEMINAR_INFO,
+				ColumnNameKeys.SEMINAR_TRAD_ID, ColumnNameKeys.QUELLEN_ID,
+				ColumnNameKeys.PERSON_ID, TableNameKeys.SEMINAR_TRAD,
+				TableNameKeys.QUELLEN, TableNameKeys.PERSON };
+		String[] wirtschaftslage = { TableNameKeys.WIRTSCHAFTSLAGE_INFO,
+				ColumnNameKeys.WIRTSCHAFTSLAGE_TRAD_ID,
+				ColumnNameKeys.QUELLEN_ID, ColumnNameKeys.PERSON_ID,
+				TableNameKeys.WIRTSCHAFTSLAGE_TRAD, TableNameKeys.QUELLEN,
+				TableNameKeys.PERSON };
+		String[] zusaetze = { TableNameKeys.ZUSAETZE_INFO,
+				ColumnNameKeys.ZUSAETZE_ID, ColumnNameKeys.QUELLEN_ID,
+				ColumnNameKeys.PERSON_ID, TableNameKeys.ZUSAETZE,
+				TableNameKeys.QUELLEN, TableNameKeys.PERSON };
+
+		String[][] result = { fach, vorname, name, ort, seminar,
+				wirtschaftslage, zusaetze };
+		return result;
 	}
 
 	private String[][] getTradTables() {
-		// TODO Auto-generated method stub
 		String[] anrede = { TableNameKeys.ANREDE_TRAD,
 				ColumnNameKeys.ANREDE_TRAD_ID, ColumnNameKeys.ANREDE_TRAD,
 				ColumnNameKeys.ANREDE_NORM_ID, TableNameKeys.ANREDE_NORM };
@@ -107,6 +163,9 @@ public class SetUpMatrikelDatabase {
 		String[] vorname = { TableNameKeys.VORNAME_TRAD,
 				ColumnNameKeys.VORNAME_TRAD_ID, ColumnNameKeys.VORNAME_TRAD,
 				ColumnNameKeys.VORNAME_NORM_ID, TableNameKeys.VORNAME_NORM };
+		String[] ort = { TableNameKeys.ORT_TRAD, ColumnNameKeys.ORT_TRAD_ID,
+				ColumnNameKeys.ORT_TRAD, ColumnNameKeys.ORT_NORM_ID,
+				TableNameKeys.ORT_NORM };
 		String[] seminar = { TableNameKeys.SEMINAR_TRAD,
 				ColumnNameKeys.SEMINAR_TRAD_ID, ColumnNameKeys.SEMINAR_TRAD,
 				ColumnNameKeys.SEMINAR_NORM_ID, TableNameKeys.SEMINAR_NORM };
@@ -116,7 +175,7 @@ public class SetUpMatrikelDatabase {
 				ColumnNameKeys.WIRTSCHAFTSLAGE_NORM_ID,
 				TableNameKeys.WIRTSCHAFTSLAGE_NORM };
 
-		String[][] result = { anrede, titel, name, vorname, seminar,
+		String[][] result = { anrede, titel, name, ort, vorname, seminar,
 				wirtschaftslage };
 
 		return result;
