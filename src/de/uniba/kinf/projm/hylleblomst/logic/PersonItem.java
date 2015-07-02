@@ -9,51 +9,45 @@ package de.uniba.kinf.projm.hylleblomst.logic;
  */
 public class PersonItem {
 
-	// TODO ggf müssen wir das alles umbenennen damit die Felder wie die
-	// SearchFieldKeys heißen, weil sonst die Tabelle nicht funktioniert. Ich
-	// arbeite auf Basis der SearchFieldKeys und muss diese als Ausgangspunkt
-	// nutzen, um die Tabellenspalten zu befüllen. Soweit ich das richtig
-	// verstehe, benötigen die PropertyValueFactories die identischen Namen bei
-	// der Eingabe und den Variablen, worauf sie sich beziehen. Verständlich?
-	// Nein? Für weitere Fragen bin ich per Brieftaube gerne erreichbar!
-
-	// TODO ist das wirklich ein int
-	private int id;
-	private String anrede;
-
-	private String titel;
-
+	// these fields are default and must be named in this way
+	// TODO soll das doch ein int sein?
+	private String id;
 	private String vorname_norm;
-	private String vorname_trad;
 	private String nachname_norm;
-	private String nachname_trad;
-	private String adlig;
-	private String jesuit;
-	private String wirtschaftslage;
 	private String ort_norm;
-	private String ort_trad;
-	private String fach;
 	private String fakultaet_norm;
-	private String fakultaet_trad;
-	private String seminar;
-	private String graduiert;
-	private String studienjahr_von;
-	private String studienjahr_bis;
-	private String einschreibe_datum_von;
-	private String einschreibe_datum_bis;
+	// these fields are associated with the SearchFieldKeys, so they should be
+	// named like this
+	private String ANREDE;
+	private String TITEL;
+	private String VORNAME;
+	private String NACHNAME;
+	private String ADLIG;
+	private String JESUIT;
+	private String WIRTSCHAFTSLAGE;
+	private String ORT;
+	private String FACH;
+	private String FAKULTAETEN;
+	private String SEMINAR;
+	private String GRADUIERT;
+	private String STUDIENJAHR_VON;
+	private String STUDIENJAHR_BIS;
+	private String EINSCHREIBEDATUM_VON;
+	private String EINSCHREIBEDATUM_BIS;
 	private String einschreibe_jahr;
 	private String einschreibe_monat;
 	private String einschreibe_tag;
-	private String zusaetze;
-	private String anmerkungen;
-	private String nummer;
-	private String seite_original;
-	private String nummer_hess;
+	private String ZUSAETZE;
+	private String FUNDORTE;
+	private String ANMERKUNGEN;
+	private String NUMMER;
+	private String SEITE_ORIGINALE;
+	private String NUMMER_HESS;
 
 	/**
 	 * @return the id
 	 */
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
@@ -61,38 +55,8 @@ public class PersonItem {
 	 * @param id
 	 *            the id to set
 	 */
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
-	}
-
-	/**
-	 * @return the anrede
-	 */
-	public String getAnrede() {
-		return anrede;
-	}
-
-	/**
-	 * @param anrede
-	 *            the anrede to set
-	 */
-	public void setAnrede(String anrede) {
-		this.anrede = anrede;
-	}
-
-	/**
-	 * @return the titel
-	 */
-	public String getTitel() {
-		return titel;
-	}
-
-	/**
-	 * @param titel
-	 *            the titel to set
-	 */
-	public void setTitel(String titel) {
-		this.titel = titel;
 	}
 
 	/**
@@ -111,21 +75,6 @@ public class PersonItem {
 	}
 
 	/**
-	 * @return the vorname_trad
-	 */
-	public String getVorname_trad() {
-		return vorname_trad;
-	}
-
-	/**
-	 * @param vorname_trad
-	 *            the vorname_trad to set
-	 */
-	public void setVorname_trad(String vorname_trad) {
-		this.vorname_trad = vorname_trad;
-	}
-
-	/**
 	 * @return the nachname_norm
 	 */
 	public String getNachname_norm() {
@@ -138,66 +87,6 @@ public class PersonItem {
 	 */
 	public void setNachname_norm(String nachname_norm) {
 		this.nachname_norm = nachname_norm;
-	}
-
-	/**
-	 * @return the nachname_trad
-	 */
-	public String getNachname_trad() {
-		return nachname_trad;
-	}
-
-	/**
-	 * @param nachname_trad
-	 *            the nachname_trad to set
-	 */
-	public void setNachname_trad(String nachname_trad) {
-		this.nachname_trad = nachname_trad;
-	}
-
-	/**
-	 * @return the adlig
-	 */
-	public String getAdlig() {
-		return adlig;
-	}
-
-	/**
-	 * @param adlig
-	 *            the adlig to set
-	 */
-	public void setAdlig(String adlig) {
-		this.adlig = adlig;
-	}
-
-	/**
-	 * @return the jesuit
-	 */
-	public String getJesuit() {
-		return jesuit;
-	}
-
-	/**
-	 * @param jesuit
-	 *            the jesuit to set
-	 */
-	public void setJesuit(String jesuit) {
-		this.jesuit = jesuit;
-	}
-
-	/**
-	 * @return the wirtschaftslage
-	 */
-	public String getWirtschaftslage() {
-		return wirtschaftslage;
-	}
-
-	/**
-	 * @param wirtschaftslage
-	 *            the wirtschaftslage to set
-	 */
-	public void setWirtschaftslage(String wirtschaftslage) {
-		this.wirtschaftslage = wirtschaftslage;
 	}
 
 	/**
@@ -216,36 +105,6 @@ public class PersonItem {
 	}
 
 	/**
-	 * @return the ort_trad
-	 */
-	public String getOrt_trad() {
-		return ort_trad;
-	}
-
-	/**
-	 * @param ort_trad
-	 *            the ort_trad to set
-	 */
-	public void setOrt_trad(String ort_trad) {
-		this.ort_trad = ort_trad;
-	}
-
-	/**
-	 * @return the fach
-	 */
-	public String getFach() {
-		return fach;
-	}
-
-	/**
-	 * @param fach
-	 *            the fach to set
-	 */
-	public void setFach(String fach) {
-		this.fach = fach;
-	}
-
-	/**
 	 * @return the fakultaet_norm
 	 */
 	public String getFakultaet_norm() {
@@ -261,108 +120,243 @@ public class PersonItem {
 	}
 
 	/**
-	 * @return the fakultaet_trad
+	 * @return the aNREDE
 	 */
-	public String getFakultaet_trad() {
-		return fakultaet_trad;
+	public String getANREDE() {
+		return ANREDE;
 	}
 
 	/**
-	 * @param fakultaet_trad
-	 *            the fakultaet_trad to set
+	 * @param aNREDE
+	 *            the aNREDE to set
 	 */
-	public void setFakultaet_trad(String fakultaet_trad) {
-		this.fakultaet_trad = fakultaet_trad;
+	public void setANREDE(String aNREDE) {
+		ANREDE = aNREDE;
 	}
 
 	/**
-	 * @return the seminar
+	 * @return the tITEL
 	 */
-	public String getSeminar() {
-		return seminar;
+	public String getTITEL() {
+		return TITEL;
 	}
 
 	/**
-	 * @param seminar
-	 *            the seminar to set
+	 * @param tITEL
+	 *            the tITEL to set
 	 */
-	public void setSeminar(String seminar) {
-		this.seminar = seminar;
+	public void setTITEL(String tITEL) {
+		TITEL = tITEL;
 	}
 
 	/**
-	 * @return the graduiert
+	 * @return the vORNAME
 	 */
-	public String getGraduiert() {
-		return graduiert;
+	public String getVORNAME() {
+		return VORNAME;
 	}
 
 	/**
-	 * @param graduiert
-	 *            the graduiert to set
+	 * @param vORNAME
+	 *            the vORNAME to set
 	 */
-	public void setGraduiert(String graduiert) {
-		this.graduiert = graduiert;
+	public void setVORNAME(String vORNAME) {
+		VORNAME = vORNAME;
 	}
 
 	/**
-	 * @return the studienjahr_von
+	 * @return the nACHNAME
 	 */
-	public String getStudienjahr_von() {
-		return studienjahr_von;
+	public String getNACHNAME() {
+		return NACHNAME;
 	}
 
 	/**
-	 * @param studienjahr_von
-	 *            the studienjahr_von to set
+	 * @param nACHNAME
+	 *            the nACHNAME to set
 	 */
-	public void setStudienjahr_von(String studienjahr_von) {
-		this.studienjahr_von = studienjahr_von;
+	public void setNACHNAME(String nACHNAME) {
+		NACHNAME = nACHNAME;
 	}
 
 	/**
-	 * @return the studienjahr_bis
+	 * @return the aDLIG
 	 */
-	public String getStudienjahr_bis() {
-		return studienjahr_bis;
+	public String getADLIG() {
+		return ADLIG;
 	}
 
 	/**
-	 * @param studienjahr_bis
-	 *            the studienjahr_bis to set
+	 * @param aDLIG
+	 *            the aDLIG to set
 	 */
-	public void setStudienjahr_bis(String studienjahr_bis) {
-		this.studienjahr_bis = studienjahr_bis;
+	public void setADLIG(String aDLIG) {
+		ADLIG = aDLIG;
 	}
 
 	/**
-	 * @return the einschreibe_datum_von
+	 * @return the jESUIT
 	 */
-	public String getEinschreibe_datum_von() {
-		return einschreibe_datum_von;
+	public String getJESUIT() {
+		return JESUIT;
 	}
 
 	/**
-	 * @param einschreibe_datum_von
-	 *            the einschreibe_datum_von to set
+	 * @param jESUIT
+	 *            the jESUIT to set
 	 */
-	public void setEinschreibe_datum_von(String einschreibe_datum_von) {
-		this.einschreibe_datum_von = einschreibe_datum_von;
+	public void setJESUIT(String jESUIT) {
+		JESUIT = jESUIT;
 	}
 
 	/**
-	 * @return the einschreibe_datum_bis
+	 * @return the wIRTSCHAFTSLAGE
 	 */
-	public String getEinschreibe_datum_bis() {
-		return einschreibe_datum_bis;
+	public String getWIRTSCHAFTSLAGE() {
+		return WIRTSCHAFTSLAGE;
 	}
 
 	/**
-	 * @param einschreibe_datum_bis
-	 *            the einschreibe_datum_bis to set
+	 * @param wIRTSCHAFTSLAGE
+	 *            the wIRTSCHAFTSLAGE to set
 	 */
-	public void setEinschreibe_datum_bis(String einschreibe_datum_bis) {
-		this.einschreibe_datum_bis = einschreibe_datum_bis;
+	public void setWIRTSCHAFTSLAGE(String wIRTSCHAFTSLAGE) {
+		WIRTSCHAFTSLAGE = wIRTSCHAFTSLAGE;
+	}
+
+	/**
+	 * @return the oRT
+	 */
+	public String getORT() {
+		return ORT;
+	}
+
+	/**
+	 * @param oRT
+	 *            the oRT to set
+	 */
+	public void setORT(String oRT) {
+		ORT = oRT;
+	}
+
+	/**
+	 * @return the fACH
+	 */
+	public String getFACH() {
+		return FACH;
+	}
+
+	/**
+	 * @param fACH
+	 *            the fACH to set
+	 */
+	public void setFACH(String fACH) {
+		FACH = fACH;
+	}
+
+	/**
+	 * @return the fAKULTAETEN
+	 */
+	public String getFAKULTAETEN() {
+		return FAKULTAETEN;
+	}
+
+	/**
+	 * @param fAKULTAETEN
+	 *            the fAKULTAETEN to set
+	 */
+	public void setFAKULTAETEN(String fAKULTAETEN) {
+		FAKULTAETEN = fAKULTAETEN;
+	}
+
+	/**
+	 * @return the sEMINAR
+	 */
+	public String getSEMINAR() {
+		return SEMINAR;
+	}
+
+	/**
+	 * @param sEMINAR
+	 *            the sEMINAR to set
+	 */
+	public void setSEMINAR(String sEMINAR) {
+		SEMINAR = sEMINAR;
+	}
+
+	/**
+	 * @return the gRADUIERT
+	 */
+	public String getGRADUIERT() {
+		return GRADUIERT;
+	}
+
+	/**
+	 * @param gRADUIERT
+	 *            the gRADUIERT to set
+	 */
+	public void setGRADUIERT(String gRADUIERT) {
+		GRADUIERT = gRADUIERT;
+	}
+
+	/**
+	 * @return the sTUDIENJAHR_VON
+	 */
+	public String getSTUDIENJAHR_VON() {
+		return STUDIENJAHR_VON;
+	}
+
+	/**
+	 * @param sTUDIENJAHR_VON
+	 *            the sTUDIENJAHR_VON to set
+	 */
+	public void setSTUDIENJAHR_VON(String sTUDIENJAHR_VON) {
+		STUDIENJAHR_VON = sTUDIENJAHR_VON;
+	}
+
+	/**
+	 * @return the sTUDIENJAHR_BIS
+	 */
+	public String getSTUDIENJAHR_BIS() {
+		return STUDIENJAHR_BIS;
+	}
+
+	/**
+	 * @param sTUDIENJAHR_BIS
+	 *            the sTUDIENJAHR_BIS to set
+	 */
+	public void setSTUDIENJAHR_BIS(String sTUDIENJAHR_BIS) {
+		STUDIENJAHR_BIS = sTUDIENJAHR_BIS;
+	}
+
+	/**
+	 * @return the eINSCHREIBEDATUM_VON
+	 */
+	public String getEINSCHREIBEDATUM_VON() {
+		return EINSCHREIBEDATUM_VON;
+	}
+
+	/**
+	 * @param eINSCHREIBEDATUM_VON
+	 *            the eINSCHREIBEDATUM_VON to set
+	 */
+	public void setEINSCHREIBEDATUM_VON(String eINSCHREIBEDATUM_VON) {
+		EINSCHREIBEDATUM_VON = eINSCHREIBEDATUM_VON;
+	}
+
+	/**
+	 * @return the eINSCHREIBEDATUM_BIS
+	 */
+	public String getEINSCHREIBEDATUM_BIS() {
+		return EINSCHREIBEDATUM_BIS;
+	}
+
+	/**
+	 * @param eINSCHREIBEDATUM_BIS
+	 *            the eINSCHREIBEDATUM_BIS to set
+	 */
+	public void setEINSCHREIBEDATUM_BIS(String eINSCHREIBEDATUM_BIS) {
+		EINSCHREIBEDATUM_BIS = eINSCHREIBEDATUM_BIS;
 	}
 
 	/**
@@ -411,78 +405,92 @@ public class PersonItem {
 	}
 
 	/**
-	 * @return the zusaetze
+	 * @return the zUSAETZE
 	 */
-	public String getZusaetze() {
-		return zusaetze;
+	public String getZUSAETZE() {
+		return ZUSAETZE;
 	}
 
 	/**
-	 * @param zusaetze
-	 *            the zusaetze to set
+	 * @param zUSAETZE
+	 *            the zUSAETZE to set
 	 */
-	public void setZusaetze(String zusaetze) {
-		this.zusaetze = zusaetze;
+	public void setZUSAETZE(String zUSAETZE) {
+		ZUSAETZE = zUSAETZE;
 	}
 
 	/**
-	 * @return the anmerkungen
+	 * @return the fUNDORTE
 	 */
-	public String getAnmerkungen() {
-		return anmerkungen;
+	public String getFUNDORTE() {
+		return FUNDORTE;
 	}
 
 	/**
-	 * @param anmerkungen
-	 *            the anmerkungen to set
+	 * @param fUNDORTE
+	 *            the fUNDORTE to set
 	 */
-	public void setAnmerkungen(String anmerkungen) {
-		this.anmerkungen = anmerkungen;
+	public void setFUNDORTE(String fUNDORTE) {
+		FUNDORTE = fUNDORTE;
 	}
 
 	/**
-	 * @return the nummer
+	 * @return the aNMERKUNGEN
 	 */
-	public String getNummer() {
-		return nummer;
+	public String getANMERKUNGEN() {
+		return ANMERKUNGEN;
 	}
 
 	/**
-	 * @param nummer
-	 *            the nummer to set
+	 * @param aNMERKUNGEN
+	 *            the aNMERKUNGEN to set
 	 */
-	public void setNummer(String nummer) {
-		this.nummer = nummer;
+	public void setANMERKUNGEN(String aNMERKUNGEN) {
+		ANMERKUNGEN = aNMERKUNGEN;
 	}
 
 	/**
-	 * @return the seite_original
+	 * @return the nUMMER
 	 */
-	public String getSeite_original() {
-		return seite_original;
+	public String getNUMMER() {
+		return NUMMER;
 	}
 
 	/**
-	 * @param seite_original
-	 *            the seite_original to set
+	 * @param nUMMER
+	 *            the nUMMER to set
 	 */
-	public void setSeite_original(String seite_original) {
-		this.seite_original = seite_original;
+	public void setNUMMER(String nUMMER) {
+		NUMMER = nUMMER;
 	}
 
 	/**
-	 * @return the nummer_hess
+	 * @return the sEITE_ORIGINALE
 	 */
-	public String getNummer_hess() {
-		return nummer_hess;
+	public String getSEITE_ORIGINALE() {
+		return SEITE_ORIGINALE;
 	}
 
 	/**
-	 * @param nummer_hess
-	 *            the nummer_hess to set
+	 * @param sEITE_ORIGINALE
+	 *            the sEITE_ORIGINALE to set
 	 */
-	public void setNummer_hess(String nummer_hess) {
-		this.nummer_hess = nummer_hess;
+	public void setSEITE_ORIGINALE(String sEITE_ORIGINALE) {
+		SEITE_ORIGINALE = sEITE_ORIGINALE;
 	}
 
+	/**
+	 * @return the nUMMER_HESS
+	 */
+	public String getNUMMER_HESS() {
+		return NUMMER_HESS;
+	}
+
+	/**
+	 * @param nUMMER_HESS
+	 *            the nUMMER_HESS to set
+	 */
+	public void setNUMMER_HESS(String nUMMER_HESS) {
+		NUMMER_HESS = nUMMER_HESS;
+	}
 }
