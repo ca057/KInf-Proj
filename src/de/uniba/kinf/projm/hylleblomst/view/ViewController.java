@@ -511,11 +511,11 @@ public class ViewController implements Initializable, Observer {
 
 	/**
 	 * 
-	 * @param id
+	 * @param string
 	 */
-	private void startSearchForSinglePerson(int id) {
+	private void startSearchForSinglePerson(String string) {
 		try {
-			searchCtrl.startSinglePersonSearch(id);
+			searchCtrl.startSinglePersonSearch(string);
 		} catch (Exception e) {
 			e.printStackTrace();
 			ui.showErrorMessage("Es können keine Detailinformationen für diese Person angezeigt werden.\n"
@@ -616,12 +616,13 @@ public class ViewController implements Initializable, Observer {
 			PersonItem person = new PersonItem();
 			person.setVorname_norm("person_vorname" + i);
 			person.setNachname_norm("person_nachname" + i);
-			person.setAdlig("person_adlig" + i);
-			person.setAnmerkungen("Anmerkungen" + i);
-			person.setFach("fach" + i);
-			person.setSeminar("Seminar" + i);
-			person.setId(i);
+			person.setADLIG("person_adlig" + i);
+			person.setANMERKUNGEN("Anmerkungen" + i);
+			person.setFACH("fach" + i);
+			person.setSEMINAR("Seminar" + i);
+			person.setORT("Ort" + i);
 			person.setOrt_norm("Bamberg" + i);
+			person.setId("ID" + i);
 			testList.add(person);
 		}
 

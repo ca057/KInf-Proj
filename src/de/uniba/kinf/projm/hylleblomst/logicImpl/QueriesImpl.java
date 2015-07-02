@@ -12,16 +12,19 @@ import de.uniba.kinf.projm.hylleblomst.logic.Queries;
 import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
 
 public class QueriesImpl implements Queries {
-	DBAccess db = new DBAccess("jdbc:derby:./db/MyDB;create=true", "admin", "password");;
+	DBAccess db = new DBAccess("jdbc:derby:./db/MyDB;create=true", "admin",
+			"password");;
 
 	@Override
-	public ArrayList<PersonItem> search(Collection<QueryRequest> queryRequests) throws SQLException {
+	public ArrayList<PersonItem> search(Collection<QueryRequest> queryRequests)
+			throws SQLException {
 
 		ResultSet test = startQuery(queryRequests);
 		return new ArrayList<PersonItem>();
 	}
 
-	private ResultSet startQuery(Collection<QueryRequest> queryRequests) throws SQLException {
+	private ResultSet startQuery(Collection<QueryRequest> queryRequests)
+			throws SQLException {
 		Boolean hasSource = false;
 		ArrayList<String> inputs = new ArrayList<String>();
 		StringBuilder sqlQuery = new StringBuilder();
@@ -41,26 +44,31 @@ public class QueriesImpl implements Queries {
 			if (!("true".equals(qr.getInput()))) {
 				inputs.add(qr.getInput());
 			}
-			sqlQuery.append(", Hylleblomst." + qr.getTable() + "." + qr.getColumn() + " AS " + qr.getSearchField());
+			sqlQuery.append(", Hylleblomst." + qr.getTable() + "."
+					+ qr.getColumn() + " AS " + qr.getSearchField());
 			if (qr.getSource() == SourceKeys.ORT_NORM_AB) {
-				sqlQuery.append(", Hylleblomst." + qr.getTable() + "." + "Anmerkung");
+				sqlQuery.append(", Hylleblomst." + qr.getTable() + "."
+						+ "Anmerkung");
 			}
 		}
 		if (hasSource) {
 			sqlFrom.append(", Hylleblomst.Quellen");
 		}
-		sqlQuery.append(" FROM ").append(sqlFrom).append(" WHERE ").append(sqlWhere);
+		sqlQuery.append(" FROM ").append(sqlFrom).append(" WHERE ")
+				.append(sqlWhere);
 		System.out.println(sqlQuery);
 		return db.startQuery(sqlQuery.toString(), inputs);
 	}
 
 	@Override
-	public ResultSet searchPerson(int id) throws SQLException {
+	public ResultSet searchPerson(String string) throws SQLException {
 		ArrayList<String> inputs = new ArrayList<String>();
-		inputs.add("" + id);
+		inputs.add("" + string);
 		StringBuilder sqlQuery = new StringBuilder();
-		sqlQuery.append(getSelectAll()).append(getFrom()).append(" WHERE Person.PersonID = ?");
-		db = new DBAccess("jdbc:derby:./db/MyDB;create=true", "admin", "password");
+		sqlQuery.append(getSelectAll()).append(getFrom())
+				.append(" WHERE Person.PersonID = ?");
+		db = new DBAccess("jdbc:derby:./db/MyDB;create=true", "admin",
+				"password");
 		return db.startQuery(sqlQuery.toString(), inputs);
 	}
 
@@ -82,10 +90,12 @@ public class QueriesImpl implements Queries {
 		String titel = "Hylleblomst.titel_trad ON Hylleblomst.person.titelID = Hylleblomst.titel_trad.titelTradID LEFT OUTER JOIN Hylleblomst.titel_Norm ON Hylleblomst.titel_Norm.titelNormID = Hylleblomst.titel_Trad.titelNormID";
 		String fakultaeten = "Hylleblomst.Fakultaeten ON Hylleblomst.person.fakultaetenID = Hylleblomst.fakultaeten.fakultaetenID";
 		String fundorte = "Hylleblomst.Fundorte ON Hylleblomst.person.fundortID = Hylleblomst.fundorte.fundorteID";
-		return vorname + " LEFT OUTER JOIN " + name + " LEFT OUTER JOIN " + ort + " LEFT OUTER JOIN " + seminar
-				+ " LEFT OUTER JOIN " + wirtschaftslage + " LEFT OUTER JOIN " + zusaetze + " LEFT OUTER JOIN " + fach
-				+ " LEFT OUTER JOIN " + anrede + " LEFT OUTER JOIN " + titel + " LEFT OUTER JOIN " + fakultaeten
-				+ " LEFT OUTER JOIN " + fundorte;
+		return vorname + " LEFT OUTER JOIN " + name + " LEFT OUTER JOIN " + ort
+				+ " LEFT OUTER JOIN " + seminar + " LEFT OUTER JOIN "
+				+ wirtschaftslage + " LEFT OUTER JOIN " + zusaetze
+				+ " LEFT OUTER JOIN " + fach + " LEFT OUTER JOIN " + anrede
+				+ " LEFT OUTER JOIN " + titel + " LEFT OUTER JOIN "
+				+ fakultaeten + " LEFT OUTER JOIN " + fundorte;
 	}
 
 	private String getSelect() {

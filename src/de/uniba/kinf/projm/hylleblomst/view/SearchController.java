@@ -101,15 +101,15 @@ public class SearchController extends Observable {
 
 	/**
 	 * 
-	 * @param id
+	 * @param string
 	 */
-	public void startSinglePersonSearch(int id) {
+	public void startSinglePersonSearch(String string) {
 		try {
-			queriesImpl.searchPerson(id);
+			queriesImpl.searchPerson(string);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new RuntimeException(
-					"Ein Fehler bei der Suche nach Person mit ID " + id
+					"Ein Fehler bei der Suche nach Person mit ID " + string
 							+ " ist aufgetreten.");
 		}
 	}
