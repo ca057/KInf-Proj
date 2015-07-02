@@ -77,8 +77,7 @@ public class SetUpMatrikelDatabase {
 					stmt.addBatch(sqlOrtAbweichungNorm);
 
 					// Set up Trad-tables which hold one ID, one attribute and
-					// one
-					// FK ID
+					// one FK ID
 					String[][] tradTableInfo = getTradTables();
 					for (int i = 0; i < tradTableInfo.length; i++) {
 						String tableName = tradTableInfo[i][0];
@@ -93,7 +92,7 @@ public class SetUpMatrikelDatabase {
 								+ " integer NOT NULL, " + "FOREIGN KEY ("
 								+ tableFK + ") REFERENCES " + tableRef + "("
 								+ tableFK
-								+ ") ON DELETE RESTRICT ON UPDATE RESTRICT";
+								+ ") ON DELETE RESTRICT ON UPDATE RESTRICT)";
 
 						stmt.addBatch(sql);
 					}
@@ -133,6 +132,7 @@ public class SetUpMatrikelDatabase {
 							+ ") REFERENCES " + TableNameKeys.TITEL_TRAD + "("
 							+ ColumnNameKeys.TITEL_TRAD_ID
 							+ ") ON DELETE RESTRICT ON UPDATE RESTRICT) ";
+					stmt.addBatch(sqlPerson);
 
 					// Set up Info-tables which represent a m:n:o relation
 					String[][] infoTableInfo = getInfoTables();
@@ -216,9 +216,16 @@ public class SetUpMatrikelDatabase {
 	}
 
 	private String[][] getTradTables() {
+		String[] ortNorm = { TableNameKeys.ORT_NORM,
+				ColumnNameKeys.ORT_NORM_ID, ColumnNameKeys.ORT_NORM,
+				ColumnNameKeys.ORT_ABWEICHUNG_NORM_ID,
+				TableNameKeys.ORT_ABWEICHUNG_NORM };
 		String[] anrede = { TableNameKeys.ANREDE_TRAD,
 				ColumnNameKeys.ANREDE_TRAD_ID, ColumnNameKeys.ANREDE_TRAD,
 				ColumnNameKeys.ANREDE_NORM_ID, TableNameKeys.ANREDE_NORM };
+		String[] fach = { TableNameKeys.FACH_TRAD, ColumnNameKeys.FACH_TRAD_ID,
+				ColumnNameKeys.FACH_TRAD, ColumnNameKeys.FACH_NORM_ID,
+				TableNameKeys.FACH_NORM };
 		String[] titel = { TableNameKeys.TITEL_TRAD,
 				ColumnNameKeys.TITEL_TRAD_ID, ColumnNameKeys.TITEL_TRAD,
 				ColumnNameKeys.TITEL_NORM_ID, TableNameKeys.TITEL_NORM };
@@ -239,13 +246,9 @@ public class SetUpMatrikelDatabase {
 				ColumnNameKeys.WIRTSCHAFTSLAGE_TRAD,
 				ColumnNameKeys.WIRTSCHAFTSLAGE_NORM_ID,
 				TableNameKeys.WIRTSCHAFTSLAGE_NORM };
-		String[] ortNorm = { TableNameKeys.ORT_NORM,
-				ColumnNameKeys.ORT_NORM_ID, ColumnNameKeys.ORT_NORM,
-				ColumnNameKeys.ORT_ABWEICHUNG_NORM_ID,
-				TableNameKeys.ORT_ABWEICHUNG_NORM };
 
-		String[][] result = { anrede, titel, name, ort, vorname, seminar,
-				wirtschaftslage, ortNorm };
+		String[][] result = { anrede, fach, titel, name, ortNorm, ort, vorname,
+				seminar, wirtschaftslage };
 
 		return result;
 	}
