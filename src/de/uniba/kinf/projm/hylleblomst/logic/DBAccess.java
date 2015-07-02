@@ -8,17 +8,15 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import de.uniba.kinf.projm.hylleblomst.keys.UserKeys;
-
 public class DBAccess {
 	private String dbURL;
 	private String user;
 	private String password;
 
 	public DBAccess(String dbURL, String user, String password) {
-		this.dbURL = UserKeys.dbURL;
-		this.user = UserKeys.guestUser;
-		this.password = UserKeys.guestPassword;
+		this.dbURL = dbURL;
+		this.user = user;
+		this.password = password;
 	}
 
 	void setUser(String user) {

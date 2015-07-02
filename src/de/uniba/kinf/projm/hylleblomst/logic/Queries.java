@@ -46,13 +46,4 @@ public interface Queries {
 	 * @throws SQLException
 	 */
 	ResultSet searchPerson(String id) throws SQLException;
-
-	/**
-	 * 
-	 * @param dbURL
-	 * @param user
-	 * @param password
-	 */
-	void setDatabase(String dbURL, String user, String password);
-
 }
