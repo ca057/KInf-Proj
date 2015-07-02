@@ -42,7 +42,8 @@ public class SetUpMatrikelDatabase {
 						ResultSet.CONCUR_READ_ONLY);) {
 			int interrupt = 0;
 			while (!allTablesExist()) {
-				// TODO insert all tables
+				// Set up simple Norm-tables which only hold an ID and one
+				// attribute
 				String[][] normTableInfo = getNormTables();
 				for (int i = 0; i < normTableInfo.length; i++) {
 					stmt.addBatch("CREATE TABLE" + normTableInfo[i][0] + " ("
@@ -53,6 +54,22 @@ public class SetUpMatrikelDatabase {
 				stmt.executeBatch();
 				stmt.clearBatch();
 
+				// Set up table Ort_Abweichung_Norm in Hylleblomst which is also
+				// a norm table but contains one extra column
+				String sqlOrtAbweichungNorm = "CREATE TABLE "
+						+ TableNameKeys.ORT_ABWEICHUNG_NORM + "("
+						+ ColumnNameKeys.ORT_ABWEICHUNG_NORM_ID
+						+ " integer PRIMARY KEY NOT NULL, "
+						+ ColumnNameKeys.ORT_ABWEICHUNG_NORM
+						+ " varchar(255), "
+						+ ColumnNameKeys.ORT_ABWEICHUNG_NORM_ANMERKUNG
+						+ " varchar(255))";
+
+				stmt.executeUpdate(sqlOrtAbweichungNorm);
+				stmt.clearBatch();
+
+				// Set up Trad-tables which hold one ID, one attribute and one
+				// FK ID
 				String[][] tradTableInfo = getTradTables();
 				for (int i = 0; i < tradTableInfo.length; i++) {
 					String tableName = tradTableInfo[i][0];
@@ -73,7 +90,73 @@ public class SetUpMatrikelDatabase {
 				stmt.executeBatch();
 				stmt.clearBatch();
 
+				// Set up person table
+				String sqlPerson = "CREATE TABLE " + TableNameKeys.PERSON + "("
+						+ ColumnNameKeys.PERSON_ID
+						+ " integer PRIMARY KEY NOT NULL, "
+						+ ColumnNameKeys.SEITE_ORIGINAL + " integer, "
+						+ ColumnNameKeys.NUMMER_HESS + " integer, "
+						+ ColumnNameKeys.JESUIT + " varchar(100), "
+						+ ColumnNameKeys.ADLIG + " varchar(100), "
+						+ ColumnNameKeys.DATUM + " date, "
+						+ ColumnNameKeys.DATUMS_FELDER_GESETZT
+						+ " varchar(3), " + ColumnNameKeys.STUDIENJAHR
+						+ " varchar(30), " + ColumnNameKeys.STUDIENJAHR_INT
+						+ " integer, " + ColumnNameKeys.GRADUIERT
+						+ " varchar(100), " + ColumnNameKeys.ANMERKUNG
+						+ " varchar(255), " + ColumnNameKeys.ANREDE_TRAD_ID
+						+ " integer, " + ColumnNameKeys.FAKULTAETEN_ID
+						+ " integer, " + ColumnNameKeys.FUNDORTE_ID
+						+ " integer, " + ColumnNameKeys.TITEL_TRAD_ID
+						+ " integer, " + "FOREIGN KEY ("
+						+ ColumnNameKeys.ANREDE_TRAD_ID + ") REFERENCES "
+						+ TableNameKeys.ANREDE_TRAD + "("
+						+ ColumnNameKeys.ANREDE_TRAD_ID
+						+ ") ON DELETE RESTRICT ON UPDATE RESTRICT, "
+						+ "FOREIGN KEY (" + ColumnNameKeys.FAKULTAETEN_ID
+						+ ") REFERENCES " + TableNameKeys.FAKULTAETEN + "("
+						+ ColumnNameKeys.FAKULTAETEN_ID
+						+ ") ON DELETE RESTRICT ON UPDATE RESTRICT, "
+						+ "FOREIGN KEY (" + ColumnNameKeys.FUNDORTE_ID
+						+ ") REFERENCES " + TableNameKeys.FUNDORTE + "("
+						+ ColumnNameKeys.FUNDORTE_ID
+						+ ") ON DELETE RESTRICT ON UPDATE RESTRICT, "
+						+ "FOREIGN KEY (" + ColumnNameKeys.TITEL_TRAD_ID
+						+ ") REFERENCES " + TableNameKeys.TITEL_TRAD + "("
+						+ ColumnNameKeys.TITEL_TRAD_ID
+						+ ") ON DELETE RESTRICT ON UPDATE RESTRICT) ";
+
+				stmt.executeUpdate(sqlPerson);
+				stmt.clearBatch();
+
+				// Set up Info-tables which represent a m:n:o relation
 				String[][] infoTableInfo = getInfoTables();
+				for (int i = 0; i < infoTableInfo.length; i++) {
+					String tableName = infoTableInfo[i][0];
+					String refTableID = infoTableInfo[i][1];
+					String srcTableID = infoTableInfo[i][2];
+					String personTableID = infoTableInfo[i][3];
+					String refTableName = infoTableInfo[i][4];
+					String srcTableName = infoTableInfo[i][5];
+					String personTableName = infoTableInfo[i][6];
+
+					String sql = "CREATE TABLE " + tableName + " ("
+							+ refTableID + " INTEGER NOT NULL, " + srcTableID
+							+ " INTEGER NOT NULL, " + personTableID
+							+ " INTEGER NOT NULL, " + "FOREIGN KEY ("
+							+ refTableID + ") REFERENCES " + refTableName + "("
+							+ refTableID
+							+ ") ON DELETE RESTRICT ON UPDATE RESTRICT, "
+							+ "FOREIGN KEY (" + srcTableID + ") REFERENCES "
+							+ srcTableName + "(" + srcTableID
+							+ ") ON DELETE RESTRICT ON UPDATE RESTRICT, "
+							+ "FOREIGN KEY (" + personTableID + ") REFERENCES "
+							+ personTableName + "(" + personTableID
+							+ ") ON DELETE RESTRICT ON UPDATE RESTRICT) ";
+					stmt.addBatch(sql);
+				}
+				stmt.executeBatch();
+				stmt.clearBatch();
 
 				interrupt++;
 				if (interrupt >= 10) {
@@ -89,12 +172,42 @@ public class SetUpMatrikelDatabase {
 	}
 
 	private String[][] getInfoTables() {
-		// TODO Auto-generated method stub
-		return null;
+		String[] fach = { TableNameKeys.FACH_INFO, ColumnNameKeys.FACH_TRAD_ID,
+				ColumnNameKeys.QUELLEN_ID, ColumnNameKeys.PERSON_ID,
+				TableNameKeys.FACH_TRAD, TableNameKeys.QUELLEN,
+				TableNameKeys.PERSON };
+		String[] vorname = { TableNameKeys.VORNAME_INFO,
+				ColumnNameKeys.VORNAME_TRAD_ID, ColumnNameKeys.QUELLEN_ID,
+				ColumnNameKeys.PERSON_ID, TableNameKeys.VORNAME_TRAD,
+				TableNameKeys.QUELLEN, TableNameKeys.PERSON };
+		String[] name = { TableNameKeys.NAME_INFO, ColumnNameKeys.NAME_TRAD_ID,
+				ColumnNameKeys.QUELLEN_ID, ColumnNameKeys.PERSON_ID,
+				TableNameKeys.NAME_TRAD, TableNameKeys.QUELLEN,
+				TableNameKeys.PERSON };
+		String[] ort = { TableNameKeys.ORT_INFO, ColumnNameKeys.ORT_TRAD_ID,
+				ColumnNameKeys.QUELLEN_ID, ColumnNameKeys.PERSON_ID,
+				TableNameKeys.ORT_TRAD, TableNameKeys.QUELLEN,
+				TableNameKeys.PERSON };
+		String[] seminar = { TableNameKeys.SEMINAR_INFO,
+				ColumnNameKeys.SEMINAR_TRAD_ID, ColumnNameKeys.QUELLEN_ID,
+				ColumnNameKeys.PERSON_ID, TableNameKeys.SEMINAR_TRAD,
+				TableNameKeys.QUELLEN, TableNameKeys.PERSON };
+		String[] wirtschaftslage = { TableNameKeys.WIRTSCHAFTSLAGE_INFO,
+				ColumnNameKeys.WIRTSCHAFTSLAGE_TRAD_ID,
+				ColumnNameKeys.QUELLEN_ID, ColumnNameKeys.PERSON_ID,
+				TableNameKeys.WIRTSCHAFTSLAGE_TRAD, TableNameKeys.QUELLEN,
+				TableNameKeys.PERSON };
+		String[] zusaetze = { TableNameKeys.ZUSAETZE_INFO,
+				ColumnNameKeys.ZUSAETZE_ID, ColumnNameKeys.QUELLEN_ID,
+				ColumnNameKeys.PERSON_ID, TableNameKeys.ZUSAETZE,
+				TableNameKeys.QUELLEN, TableNameKeys.PERSON };
+
+		String[][] result = { fach, vorname, name, ort, seminar,
+				wirtschaftslage, zusaetze };
+		return result;
 	}
 
 	private String[][] getTradTables() {
-		// TODO Auto-generated method stub
 		String[] anrede = { TableNameKeys.ANREDE_TRAD,
 				ColumnNameKeys.ANREDE_TRAD_ID, ColumnNameKeys.ANREDE_TRAD,
 				ColumnNameKeys.ANREDE_NORM_ID, TableNameKeys.ANREDE_NORM };
@@ -107,6 +220,9 @@ public class SetUpMatrikelDatabase {
 		String[] vorname = { TableNameKeys.VORNAME_TRAD,
 				ColumnNameKeys.VORNAME_TRAD_ID, ColumnNameKeys.VORNAME_TRAD,
 				ColumnNameKeys.VORNAME_NORM_ID, TableNameKeys.VORNAME_NORM };
+		String[] ort = { TableNameKeys.ORT_TRAD, ColumnNameKeys.ORT_TRAD_ID,
+				ColumnNameKeys.ORT_TRAD, ColumnNameKeys.ORT_NORM_ID,
+				TableNameKeys.ORT_NORM };
 		String[] seminar = { TableNameKeys.SEMINAR_TRAD,
 				ColumnNameKeys.SEMINAR_TRAD_ID, ColumnNameKeys.SEMINAR_TRAD,
 				ColumnNameKeys.SEMINAR_NORM_ID, TableNameKeys.SEMINAR_NORM };
@@ -115,9 +231,13 @@ public class SetUpMatrikelDatabase {
 				ColumnNameKeys.WIRTSCHAFTSLAGE_TRAD,
 				ColumnNameKeys.WIRTSCHAFTSLAGE_NORM_ID,
 				TableNameKeys.WIRTSCHAFTSLAGE_NORM };
+		String[] ortNorm = { TableNameKeys.ORT_NORM,
+				ColumnNameKeys.ORT_NORM_ID, ColumnNameKeys.ORT_NORM,
+				ColumnNameKeys.ORT_ABWEICHUNG_NORM_ID,
+				TableNameKeys.ORT_ABWEICHUNG_NORM };
 
-		String[][] result = { anrede, titel, name, vorname, seminar,
-				wirtschaftslage };
+		String[][] result = { anrede, titel, name, ort, vorname, seminar,
+				wirtschaftslage, ortNorm };
 
 		return result;
 	}
