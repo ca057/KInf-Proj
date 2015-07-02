@@ -369,9 +369,6 @@ public class ViewController implements Initializable, Observer {
 				if (event.isPrimaryButtonDown()) {
 					startSearchForSinglePerson(resultTable.getSelectionModel()
 							.getSelectedItem().getId());
-					// FIXME remove syso, just for testing purposes
-					System.out.println(resultTable.getSelectionModel()
-							.getSelectedItem().getId());
 				}
 				event.consume();
 			}
@@ -728,6 +725,7 @@ public class ViewController implements Initializable, Observer {
 		Stage stage = (Stage) root.getScene().getWindow();
 		if (ui.askForClosingWindow()) {
 			stage.close();
+			System.exit(0);
 		}
 	}
 

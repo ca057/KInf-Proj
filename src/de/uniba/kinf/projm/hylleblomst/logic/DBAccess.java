@@ -8,15 +8,17 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import de.uniba.kinf.projm.hylleblomst.keys.UserKeys;
+
 public class DBAccess {
 	private String dbURL;
 	private String user;
 	private String password;
 
 	public DBAccess(String dbURL, String user, String password) {
-		this.dbURL = dbURL;
-		this.user = user;
-		this.password = password;
+		this.dbURL = UserKeys.dbURL;
+		this.user = UserKeys.guestUser;
+		this.password = UserKeys.guestPassword;
 	}
 
 	void setUser(String user) {
@@ -32,11 +34,9 @@ public class DBAccess {
 				PreparedStatement stmt = con.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE,
 						ResultSet.CONCUR_READ_ONLY);) {
 			int parameterIndex = 1;
-			if (inputs != null) {
-				for (Object input : inputs) {
-					stmt.setString(parameterIndex, "%" + (String) input + "%");
-					parameterIndex++;
-				}
+			for (Object input : inputs) {
+				stmt.setString(parameterIndex, "%" + (String) input + "%");
+				parameterIndex++;
 			}
 			ResultSet results = stmt.executeQuery();
 

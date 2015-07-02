@@ -1,9 +1,15 @@
 package de.uniba.kinf.projm.hylleblomst.logicImpl;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import de.uniba.kinf.projm.hylleblomst.keys.ColumnNameKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
-import de.uniba.kinf.projm.hylleblomst.keys.TableNameKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
 
 public class QueryRequestImpl implements QueryRequest {
@@ -13,7 +19,8 @@ public class QueryRequestImpl implements QueryRequest {
 	private int source;
 	private String table;
 
-	public QueryRequestImpl(SearchFieldKeys searchField, String input, int source) {
+	public QueryRequestImpl(SearchFieldKeys searchField, String input,
+			int source) {
 		setInput(input);
 		setSource(source);
 		setSearchField(searchField);
@@ -66,161 +73,183 @@ public class QueryRequestImpl implements QueryRequest {
 	 */
 	private void searchFieldKeyToDatabaseData() {
 		if (source > SourceKeys.bottom && source < SourceKeys.top) {
+			// TODO Spaltentitel statt getColumnName()
 			switch (searchField) {
 			case ADLIG:
-				table = TableNameKeys.PERSON;
+				table = "PERSON";
 				column = ColumnNameKeys.ADLIG;
 				break;
 			case JESUIT:
-				table = TableNameKeys.PERSON;
+				table = "PERSON";
 				column = ColumnNameKeys.JESUIT;
 				break;
 			case STUDIENJAHR_VON:
 			case STUDIENJAHR_BIS:
-				table = TableNameKeys.PERSON;
-				column = ColumnNameKeys.STUDIENJAHR_INT;
+				// TODO Int-Wert!?
+				table = "PERSON";
+				column = ColumnNameKeys.STUDIENJAHR;
 				break;
 			case EINSCHREIBEDATUM_VON:
 			case EINSCHREIBEDATUM_BIS:
-				table = TableNameKeys.PERSON;
+				// TODO Felder gesetzt?!
+				table = "PERSON";
 				column = ColumnNameKeys.DATUM;
 				break;
 			case ANMERKUNGEN:
-				table = TableNameKeys.PERSON;
+				table = "PERSON";
 				column = ColumnNameKeys.ANMERKUNG;
 				break;
 			case NUMMER:
-				table = TableNameKeys.PERSON;
-				column = ColumnNameKeys.PERSON_ID;
+				table = "PERSON";
+				column = getColumnName(table, 1);
 				break;
 			case SEITE_ORIGINALE:
-				table = TableNameKeys.PERSON;
+				table = "PERSON";
 				column = ColumnNameKeys.SEITE_ORIGINAL;
 				break;
 			case NUMMER_HESS:
-				table = TableNameKeys.PERSON;
+				table = "PERSON";
 				column = ColumnNameKeys.NUMMER_HESS;
 				break;
 			case ANREDE:
 				if (source == SourceKeys.NORM) {
-					table = TableNameKeys.ANREDE_NORM;
-					column = ColumnNameKeys.ANREDE_NORM;
+					table = "ANREDE_NORM";
 				} else {
-					table = TableNameKeys.ANREDE_TRAD;
-					column = ColumnNameKeys.ANREDE_TRAD;
+					table = "ANREDE_TRAD";
 				}
+				column = getColumnName(table, 2);
 				break;
 			case TITEL:
 				if (source == SourceKeys.NORM) {
-					table = TableNameKeys.TITEL_NORM;
-					column = ColumnNameKeys.TITEL_NORM;
+					table = "TITEL_NORM";
 				} else {
-					table = TableNameKeys.TITEL_TRAD;
-					column = ColumnNameKeys.TITEL_TRAD;
+					table = "TITEL_TRAD";
 				}
+				column = getColumnName(table, 2);
 				break;
 			case VORNAME:
 				if (source == SourceKeys.NORM) {
-					table = TableNameKeys.VORNAME_NORM;
-					column = ColumnNameKeys.VORNAME_NORM;
+					table = "VORNAME_NORM";
 				} else {
-					table = TableNameKeys.VORNAME_TRAD;
-					column = ColumnNameKeys.VORNAME_TRAD;
+					table = "VORNAME_TRAD";
 				}
+				column = getColumnName(table, 2);
 				break;
 			case NACHNAME:
 				if (source == SourceKeys.NORM) {
-					table = TableNameKeys.NAME_NORM;
-					column = ColumnNameKeys.NAME_NORM;
+					table = "NAME_NORM";
 				} else {
-					table = TableNameKeys.NAME_TRAD;
-					column = ColumnNameKeys.NAME_TRAD;
+					table = "NAME_TRAD";
 				}
+				column = getColumnName(table, 2);
 				break;
 			case WIRTSCHAFTSLAGE:
 				if (source == SourceKeys.NORM) {
-					table = TableNameKeys.WIRTSCHAFTSLAGE_NORM;
-					column = ColumnNameKeys.WIRTSCHAFTSLAGE_NORM;
+					table = "WIRTSCHAFTSLAGE_NORM";
 				} else {
-					table = TableNameKeys.WIRTSCHAFTSLAGE_TRAD;
-					column = ColumnNameKeys.WIRTSCHAFTSLAGE_TRAD;
+					table = "WIRTSCHAFTSLAGE_TRAD";
 				}
+				column = getColumnName(table, 2);
 				break;
 			case ORT:
 				if (source == SourceKeys.NORM) {
-					table = TableNameKeys.ORT_NORM;
-					column = ColumnNameKeys.ORT_NORM;
+					table = "ORT_NORM";
 				} else if (source == SourceKeys.ORT_NORM_AB) {
-					table = TableNameKeys.ORT_ABWEICHUNG_NORM;
-					// column = ColumnNameKeys.ORT_ABWEICHUNG_NORM;
+					table = "ORT_ABWEICHUNG_NORM";
 				} else {
-					table = TableNameKeys.ORT_TRAD;
-					column = ColumnNameKeys.ORT_TRAD;
+					table = "ORT_TRAD";
 				}
+				column = getColumnName(table, 2);
 				break;
 			case FACH:
 				if (source == SourceKeys.NORM) {
-					table = TableNameKeys.FACH_NORM;
-					column = ColumnNameKeys.FACH_NORM;
+					table = "FACH_NORM";
 				} else {
-					table = TableNameKeys.FACH_TRAD;
-					column = ColumnNameKeys.FACH_TRAD;
+					table = "FACH_TRAD";
 				}
+				column = getColumnName(table, 2);
 				break;
 			case FAKULTAETEN:
-				table = TableNameKeys.FAKULTAETEN;
-				column = ColumnNameKeys.FAKULTAETEN_NORM;
+				table = "FAKULTAETEN";
+				column = getColumnName(table, 2);
 				break;
 			case SEMINAR:
 				if (source == SourceKeys.NORM) {
-					table = TableNameKeys.SEMINAR_NORM;
-					column = ColumnNameKeys.SEMINAR_NORM;
+					table = "SEMINAR_NORM";
 				} else {
-					table = TableNameKeys.SEMINAR_TRAD;
-					column = ColumnNameKeys.SEMINAR_TRAD;
+					table = "SEMINAR_TRAD";
 				}
+				column = getColumnName(table, 2);
 				break;
 			case GRADUIERT:
-				table = TableNameKeys.PERSON;
-				column = ColumnNameKeys.GRADUIERT;
+				table = "PERSON";
+				column = "GRADUIERT";
 				break;
 			case ZUSAETZE:
-				table = TableNameKeys.ZUSAETZE;
-				column = ColumnNameKeys.ZUSAETZE;
+				table = "ZUSAETZE";
+				column = getColumnName(table, 2);
 				break;
 			case FUNDORTE:
-				table = TableNameKeys.FUNDORTE;
-				column = ColumnNameKeys.FUNDORTE_NORM;
+				table = "FUNDORTE";
+				column = getColumnName(table, 2);
 				break;
 			default:
 				throw new IllegalArgumentException(
-						"Das zugehörige Tabellenelement für Suchfeld " + searchField.name() + " ist nicht definiert.");
+						"Das zugehörige Tabellenelement für Suchfeld "
+								+ searchField.name() + " ist nicht definiert.");
 			}
 		} else {
-			throw new IllegalArgumentException("Die Werte für Suchfeld " + searchField.toString() + " und Quelle "
-					+ source + " konnten keiner Tabelle und Spalte zugeordnet werden.");
+			throw new IllegalArgumentException("Die Werte für Suchfeld "
+					+ searchField.toString() + " und Quelle " + source
+					+ " konnten keiner Tabelle und Spalte zugeordnet werden.");
 		}
 	}
 
 	@Override
 	public String getWhere() {
 		if (source == SourceKeys.NO_SOURCE) {
-			if (searchField == SearchFieldKeys.ADLIG || searchField == SearchFieldKeys.JESUIT
+			if (searchField == SearchFieldKeys.ADLIG
+					|| searchField == SearchFieldKeys.JESUIT
 					|| searchField == SearchFieldKeys.GRADUIERT) {
-				return String.format("%s.%s <> ''", table, column);
+				return String.format("Hylleblomst.%s.%s <> ''", table, column);
 			}
-			if (searchField == SearchFieldKeys.EINSCHREIBEDATUM_VON || searchField == SearchFieldKeys.STUDIENJAHR_VON) {
-				return String.format("%s.%s > ?", table, column);
+			if (searchField == SearchFieldKeys.EINSCHREIBEDATUM_VON) {
+				return String.format("Hylleblomst.%s.%s > ?", table, column);
 			}
-			if (searchField == SearchFieldKeys.EINSCHREIBEDATUM_BIS || searchField == SearchFieldKeys.STUDIENJAHR_BIS) {
-				return String.format("%s.%s < ?", table, column);
+			if (searchField == SearchFieldKeys.EINSCHREIBEDATUM_BIS) {
+				return String.format("Hylleblomst.%s.%s < ?", table, column);
 			}
+			// TODO Jahr
 		} else if (source == SourceKeys.NORM) {
-			return String.format("%s_norm.%s LIKE ?", table.substring(0, table.indexOf("_")), column);
+			return String.format("Hylleblomst.%s_norm.%s LIKE ?",
+					table.substring(0, table.indexOf("_")), column);
 		} else if (!(source == SourceKeys.NO_SELECTION || searchField == SearchFieldKeys.ANREDE)) {
-			return String.format("%s.%s LIKE ? AND %s_info.%s = %s", table, column,
-					table.substring(0, table.indexOf("_")), ColumnNameKeys.QUELLEN_ID, source);
+			return String
+					.format("Hylleblomst.%s.%s LIKE ? AND Hylleblomst.%s_info.QuellenID = %s",
+							table, column,
+							table.substring(0, table.indexOf("_")), source);
 		}
-		return String.format("%s.%s LIKE ?", table, column);
+		return String.format("Hylleblomst.%s.%s LIKE ?", table, column);
+	}
+
+	public String getColumnName(String table, int i) {
+		String dbURL = "jdbc:derby:db/MyDB";
+		String user = "admin";
+		String password = "password";
+		String result = "";
+		try (Connection con = DriverManager
+				.getConnection(dbURL, user, password);
+				Statement stmt = con.createStatement(
+						ResultSet.TYPE_SCROLL_INSENSITIVE,
+						ResultSet.CONCUR_READ_ONLY);
+				ResultSet rs = stmt.executeQuery(String.format(
+						"SELECT * FROM hylleblomst.%s", table));) {
+			ResultSetMetaData rsmd = rs.getMetaData();
+			result = rsmd.getColumnName(i);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return result;
 	}
 }
