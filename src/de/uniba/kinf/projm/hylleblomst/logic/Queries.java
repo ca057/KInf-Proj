@@ -9,10 +9,6 @@ import java.util.Collection;
  * @author Hannes
  *
  */
-/**
- * @author Hannes
- *
- */
 public interface Queries {
 
 	/**
@@ -49,7 +45,7 @@ public interface Queries {
 	 * @return
 	 * @throws SQLException
 	 */
-	ResultSet searchPerson(int id) throws SQLException;
+	ResultSet searchPerson(String id) throws SQLException;
 
 	/**
 	 * 
