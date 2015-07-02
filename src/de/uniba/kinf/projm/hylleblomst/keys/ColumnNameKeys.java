@@ -5,10 +5,11 @@ public interface ColumnNameKeys {
 	public static final String ANREDE_NORM_ID = "AnredeNormID";
 	public static final String ANREDE_NORM = "AnredeNorm";
 	public static final String ANREDE_TRAD_ID = "AnredeTradID";
-
+	public static final String ANREDE_TRAD = "AnredeTrad";
 	public static final String FACH_NORM_ID = "FachNormID";
 	public static final String FACH_NORM = "FachNorm";
 	public static final String FACH_TRAD_ID = "FachTradID";
+	public static final String FACH_TRAD = "FachTrad";
 	public static final String FAKULTAETEN_ID = "FakultaetenID";
 	public static final String FAKULTAETEN_NORM = "FakultaetenNorm";
 	public static final String FUNDORTE_ID = "FundorteID";
@@ -16,25 +17,33 @@ public interface ColumnNameKeys {
 	public static final String NAME_NORM_ID = "NameNormID";
 	public static final String NAME_NORM = "NameNorm";
 	public static final String NAME_TRAD_ID = "NameTradID";
+	public static final String NAME_TRAD = "NameTrad";
 	public static final String ORT_ABWEICHUNG_NORM_ID = "OrtAbweichungNormID";
 	public static final String ORT_NORM_ID = "OrtNormID";
+	public static final String ORT_NORM = "OrtNorm";
 	public static final String ORT_TRAD_ID = "OrtTradID";
+	public static final String ORT_TRAD = "OrtTrad";
 	public static final String PERSON_ID = "PersonID";
 	public static final String QUELLEN_ID = "QuellenID";
 	public static final String QUELLEN_NAME = "QuellenName";
 	public static final String SEMINAR_NORM_ID = "SeminarNormID";
 	public static final String SEMINAR_NORM = "SeminarNorm";
 	public static final String SEMINAR_TRAD_ID = "SeminarTradID";
+	public static final String SEMINAR_TRAD = "SeminarTrad";
 	public static final String TITEL_NORM_ID = "TitelNormID";
 	public static final String TITEL_NORM = "TitelNorm";
 	public static final String TITEL_TRAD_ID = "TitelTradID";
+	public static final String TITEL_TRAD = "TitelTrad";
 	public static final String VORNAME_NORM_ID = "VornameNormID";
 	public static final String VORNAME_NORM = "VornameNorm";
 	public static final String VORNAME_TRAD_ID = "VornameTradID";
+	public static final String VORNAME_TRAD = "VornameTrad";
 	public static final String WIRTSCHAFTSLAGE_NORM_ID = "WirtschaftslageNormID";
 	public static final String WIRTSCHAFTSLAGE_NORM = "WirtschaftslageNorm";
 	public static final String WIRTSCHAFTSLAGE_TRAD_ID = "WirtschaftslageTradID";
+	public static final String WIRTSCHAFTSLAGE_TRAD = "WirtschaftslageTrad";
 	public static final String ZUSAETZE_ID = "ZusaetzeID";
+	public static final String ZUSAETZE = "Zusaetze";
 
 	public static final String SEITE_ORIGINAL = "SeiteOriginal";
 	public static final String NUMMER_HESS = "NummerHess";
