@@ -215,6 +215,15 @@ public class QueryRequestImpl implements QueryRequest {
 			if (searchField == SearchFieldKeys.EINSCHREIBEDATUM_BIS || searchField == SearchFieldKeys.STUDIENJAHR_BIS) {
 				return String.format("%s.%s < ?", table, column);
 			}
+			if (searchField == SearchFieldKeys.EINSCHREIBEDATUM_BIS) {
+				// 111 -> leer
+				// 000 -> alles
+				// 011 -> nur Jhar
+				// 001 -> Jahr, Monat
+				// 101 -> Monat
+				// 110 -> Tag
+				return String.format("%s.%s < CASE WHEN %1$s.%s = 0 THEN ", table, column);
+			}
 		} else if (source == SourceKeys.NORM) {
 			return String.format("%s_norm.%s LIKE ?", table.substring(0, table.indexOf("_")), column);
 		} else if (!(source == SourceKeys.NO_SELECTION || searchField == SearchFieldKeys.ANREDE)) {

@@ -27,6 +27,7 @@ public class QueriesImpl implements Queries {
 
 	private ResultSet startQuery(Collection<QueryRequest> queryRequests) throws SQLException {
 		Boolean hasSource = false;
+		Boolean isDate = false;
 		ArrayList<String> inputs = new ArrayList<String>();
 		StringBuilder sqlQuery = new StringBuilder();
 		StringBuilder sqlWhere = new StringBuilder();
@@ -46,13 +47,20 @@ public class QueriesImpl implements Queries {
 			if (qr.getSource() != SourceKeys.NO_SOURCE) {
 				hasSource = true;
 			}
-			if (sqlWhere.length() == 0) {
-				sqlWhere.append(qr.getWhere());
+			// if (qr.getColumn() == ColumnNameKeys.DATUM) {
+			// isDate = true;
+			// }
+			if (qr.getColumn() == ColumnNameKeys.DATUM) {
+
 			} else {
-				sqlWhere.append(" AND " + qr.getWhere());
-			}
-			if (!("true".equals(qr.getInput()))) {
-				inputs.add(qr.getInput());
+				if (sqlWhere.length() == 0) {
+					sqlWhere.append(qr.getWhere());
+				} else {
+					sqlWhere.append(" AND " + qr.getWhere());
+				}
+				if (!("true".equals(qr.getInput()))) {
+					inputs.add(qr.getInput());
+				}
 			}
 		}
 
@@ -75,12 +83,7 @@ public class QueriesImpl implements Queries {
 	}
 
 	private int getFilledFields() {
-		// 111 -> leer
-		// 000 -> alles
-		// 011 -> nur Jhar
-		// 001 -> Jahr, Monat
-		// 101 -> Monat
-		// 110 -> Tag
+
 		String query = "SELECT " + TableNameKeys.PERSON + "." + ColumnNameKeys.STUDIENJAHR_INT + " FROM "
 				+ TableNameKeys.PERSON;
 		int result = -1;
