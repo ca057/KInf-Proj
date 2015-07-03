@@ -1,6 +1,5 @@
 package de.uniba.kinf.projm.hylleblomst.database;
 
-import java.sql.BatchUpdateException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -43,134 +42,148 @@ public class SetUpMatrikelDatabase {
 						ResultSet.TYPE_SCROLL_INSENSITIVE,
 						ResultSet.CONCUR_READ_ONLY);) {
 
-			while (!allTablesExist()) {
-				try {
-					con.setAutoCommit(false);
+			while (!allTablesExist(con)) {
+				con.setAutoCommit(false);
 
-					interrupt++;
-					System.out.println("Try #" + interrupt);
-					if (interrupt >= 10) {
-						throw new SetUpException(
-								"Database could not be build, maybe some necessary information for setup is missing");
-					}
-					// Set up simple Norm-tables which only hold an ID and one
-					// attribute
-					String[][] normTableInfo = getNormTables();
-					for (int i = 0; i < normTableInfo.length; i++) {
-						stmt.addBatch("CREATE TABLE " + normTableInfo[i][0]
-								+ " (" + normTableInfo[i][1]
+				interrupt++;
+				System.out.println("Try #" + interrupt);
+				if (interrupt >= 10) {
+					throw new SetUpException(
+							"Database could not be build, maybe some necessary information for setup is missing");
+				}
+				// Set up simple Norm-tables which only hold an ID and one
+				// attribute
+				String[][] normTableInfo = getNormTables();
+				for (int i = 0; i < normTableInfo.length; i++) {
+					try {
+						stmt.executeUpdate("CREATE TABLE "
+								+ normTableInfo[i][0] + " ("
+								+ normTableInfo[i][1]
 								+ " integer PRIMARY KEY NOT NULL, "
 								+ normTableInfo[i][2] + " varchar(255))");
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
-
-					// Set up table Ort_Abweichung_Norm in Hylleblomst which is
-					// also
-					// a norm table but contains one extra column
-					String sqlOrtAbweichungNorm = "CREATE TABLE "
-							+ TableNameKeys.ORT_ABWEICHUNG_NORM + "("
-							+ ColumnNameKeys.ORT_ABWEICHUNG_NORM_ID
-							+ " integer PRIMARY KEY NOT NULL, "
-							+ ColumnNameKeys.ORT_ABWEICHUNG_NORM
-							+ " varchar(255), "
-							+ ColumnNameKeys.ORT_ABWEICHUNG_NORM_ANMERKUNG
-							+ " varchar(255))";
-					stmt.addBatch(sqlOrtAbweichungNorm);
-
-					// Set up Trad-tables which hold one ID, one attribute and
-					// one FK ID
-					String[][] tradTableInfo = getTradTables();
-					for (int i = 0; i < tradTableInfo.length; i++) {
-						String tableName = tradTableInfo[i][0];
-						String tableID = tradTableInfo[i][1];
-						String tableAttribute = tradTableInfo[i][2];
-						String tableFK = tradTableInfo[i][3];
-						String tableRef = tradTableInfo[i][4];
-
-						String sql = "CREATE TABLE " + tableName + " ("
-								+ tableID + " integer PRIMARY KEY NOT NULL, "
-								+ tableAttribute + " varchar(255), " + tableFK
-								+ " integer NOT NULL, " + "FOREIGN KEY ("
-								+ tableFK + ") REFERENCES " + tableRef + "("
-								+ tableFK
-								+ ") ON DELETE RESTRICT ON UPDATE RESTRICT)";
-
-						stmt.addBatch(sql);
-					}
-
-					// Set up person table
-					String sqlPerson = "CREATE TABLE " + TableNameKeys.PERSON
-							+ "(" + ColumnNameKeys.PERSON_ID
-							+ " integer PRIMARY KEY NOT NULL, "
-							+ ColumnNameKeys.SEITE_ORIGINAL + " integer, "
-							+ ColumnNameKeys.NUMMER_HESS + " integer, "
-							+ ColumnNameKeys.JESUIT + " varchar(100), "
-							+ ColumnNameKeys.ADLIG + " varchar(100), "
-							+ ColumnNameKeys.DATUM + " date, "
-							+ ColumnNameKeys.DATUMS_FELDER_GESETZT
-							+ " varchar(3), " + ColumnNameKeys.STUDIENJAHR
-							+ " varchar(30), " + ColumnNameKeys.STUDIENJAHR_INT
-							+ " integer, " + ColumnNameKeys.GRADUIERT
-							+ " varchar(100), " + ColumnNameKeys.ANMERKUNG
-							+ " varchar(255), " + ColumnNameKeys.ANREDE_TRAD_ID
-							+ " integer, " + ColumnNameKeys.FAKULTAETEN_ID
-							+ " integer, " + ColumnNameKeys.FUNDORTE_ID
-							+ " integer, " + ColumnNameKeys.TITEL_TRAD_ID
-							+ " integer, " + "FOREIGN KEY ("
-							+ ColumnNameKeys.ANREDE_TRAD_ID + ") REFERENCES "
-							+ TableNameKeys.ANREDE_TRAD + "("
-							+ ColumnNameKeys.ANREDE_TRAD_ID
-							+ ") ON DELETE RESTRICT ON UPDATE RESTRICT, "
-							+ "FOREIGN KEY (" + ColumnNameKeys.FAKULTAETEN_ID
-							+ ") REFERENCES " + TableNameKeys.FAKULTAETEN + "("
-							+ ColumnNameKeys.FAKULTAETEN_ID
-							+ ") ON DELETE RESTRICT ON UPDATE RESTRICT, "
-							+ "FOREIGN KEY (" + ColumnNameKeys.FUNDORTE_ID
-							+ ") REFERENCES " + TableNameKeys.FUNDORTE + "("
-							+ ColumnNameKeys.FUNDORTE_ID
-							+ ") ON DELETE RESTRICT ON UPDATE RESTRICT, "
-							+ "FOREIGN KEY (" + ColumnNameKeys.TITEL_TRAD_ID
-							+ ") REFERENCES " + TableNameKeys.TITEL_TRAD + "("
-							+ ColumnNameKeys.TITEL_TRAD_ID
-							+ ") ON DELETE RESTRICT ON UPDATE RESTRICT) ";
-					stmt.addBatch(sqlPerson);
-
-					// Set up Info-tables which represent a m:n:o relation
-					String[][] infoTableInfo = getInfoTables();
-					for (int i = 0; i < infoTableInfo.length; i++) {
-						String tableName = infoTableInfo[i][0];
-						String refTableID = infoTableInfo[i][1];
-						String srcTableID = infoTableInfo[i][2];
-						String personTableID = infoTableInfo[i][3];
-						String refTableName = infoTableInfo[i][4];
-						String srcTableName = infoTableInfo[i][5];
-						String personTableName = infoTableInfo[i][6];
-
-						String sql = "CREATE TABLE " + tableName + " ("
-								+ refTableID + " INTEGER NOT NULL, "
-								+ srcTableID + " INTEGER NOT NULL, "
-								+ personTableID + " INTEGER NOT NULL, "
-								+ "FOREIGN KEY (" + refTableID
-								+ ") REFERENCES " + refTableName + "("
-								+ refTableID
-								+ ") ON DELETE RESTRICT ON UPDATE RESTRICT, "
-								+ "FOREIGN KEY (" + srcTableID
-								+ ") REFERENCES " + srcTableName + "("
-								+ srcTableID
-								+ ") ON DELETE RESTRICT ON UPDATE RESTRICT, "
-								+ "FOREIGN KEY (" + personTableID
-								+ ") REFERENCES " + personTableName + "("
-								+ personTableID
-								+ ") ON DELETE RESTRICT ON UPDATE RESTRICT) ";
-						stmt.addBatch(sql);
-					}
-
-					stmt.executeBatch();
-					stmt.clearBatch();
-
-				} catch (BatchUpdateException e) {
-					// empty by intention
-					System.out.println(e.getMessage());
 				}
+
+				// Set up table Ort_Abweichung_Norm in Hylleblomst which is
+				// also
+				// a norm table but contains one extra column
+				String sqlOrtAbweichungNorm = "CREATE TABLE "
+						+ TableNameKeys.ORT_ABWEICHUNG_NORM + "("
+						+ ColumnNameKeys.ORT_ABWEICHUNG_NORM_ID
+						+ " integer PRIMARY KEY NOT NULL, "
+						+ ColumnNameKeys.ORT_ABWEICHUNG_NORM
+						+ " varchar(255), "
+						+ ColumnNameKeys.ORT_ABWEICHUNG_NORM_ANMERKUNG
+						+ " varchar(255))";
+				try {
+					stmt.executeUpdate(sqlOrtAbweichungNorm);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				// Set up Trad-tables which hold one ID, one attribute and
+				// one FK ID
+				String[][] tradTableInfo = getTradTables();
+				for (int i = 0; i < tradTableInfo.length; i++) {
+					String tableName = tradTableInfo[i][0];
+					String tableID = tradTableInfo[i][1];
+					String tableAttribute = tradTableInfo[i][2];
+					String tableFK = tradTableInfo[i][3];
+					String tableRef = tradTableInfo[i][4];
+
+					String sql = "CREATE TABLE " + tableName + " (" + tableID
+							+ " integer PRIMARY KEY NOT NULL, "
+							+ tableAttribute + " varchar(255), " + tableFK
+							+ " integer NOT NULL, " + "FOREIGN KEY (" + tableFK
+							+ ") REFERENCES " + tableRef + "(" + tableFK
+							+ ") ON DELETE RESTRICT ON UPDATE RESTRICT)";
+
+					try {
+						stmt.executeUpdate(sql);
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+
+				// Set up person table
+				String sqlPerson = "CREATE TABLE " + TableNameKeys.PERSON + "("
+						+ ColumnNameKeys.PERSON_ID
+						+ " integer PRIMARY KEY NOT NULL, "
+						+ ColumnNameKeys.SEITE_ORIGINAL + " integer, "
+						+ ColumnNameKeys.NUMMER_HESS + " integer, "
+						+ ColumnNameKeys.JESUIT + " varchar(100), "
+						+ ColumnNameKeys.ADLIG + " varchar(100), "
+						+ ColumnNameKeys.DATUM + " date, "
+						+ ColumnNameKeys.DATUMS_FELDER_GESETZT
+						+ " varchar(3), " + ColumnNameKeys.STUDIENJAHR
+						+ " varchar(30), " + ColumnNameKeys.STUDIENJAHR_INT
+						+ " integer, " + ColumnNameKeys.GRADUIERT
+						+ " varchar(100), " + ColumnNameKeys.ANMERKUNG
+						+ " varchar(255), " + ColumnNameKeys.ANREDE_TRAD_ID
+						+ " integer, " + ColumnNameKeys.FAKULTAETEN_ID
+						+ " integer, " + ColumnNameKeys.FUNDORTE_ID
+						+ " integer, " + ColumnNameKeys.TITEL_TRAD_ID
+						+ " integer, " + "FOREIGN KEY ("
+						+ ColumnNameKeys.ANREDE_TRAD_ID + ") REFERENCES "
+						+ TableNameKeys.ANREDE_TRAD + "("
+						+ ColumnNameKeys.ANREDE_TRAD_ID
+						+ ") ON DELETE RESTRICT ON UPDATE RESTRICT, "
+						+ "FOREIGN KEY (" + ColumnNameKeys.FAKULTAETEN_ID
+						+ ") REFERENCES " + TableNameKeys.FAKULTAETEN + "("
+						+ ColumnNameKeys.FAKULTAETEN_ID
+						+ ") ON DELETE RESTRICT ON UPDATE RESTRICT, "
+						+ "FOREIGN KEY (" + ColumnNameKeys.FUNDORTE_ID
+						+ ") REFERENCES " + TableNameKeys.FUNDORTE + "("
+						+ ColumnNameKeys.FUNDORTE_ID
+						+ ") ON DELETE RESTRICT ON UPDATE RESTRICT, "
+						+ "FOREIGN KEY (" + ColumnNameKeys.TITEL_TRAD_ID
+						+ ") REFERENCES " + TableNameKeys.TITEL_TRAD + "("
+						+ ColumnNameKeys.TITEL_TRAD_ID
+						+ ") ON DELETE RESTRICT ON UPDATE RESTRICT) ";
+				try {
+					stmt.executeUpdate(sqlPerson);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				// Set up Info-tables which represent a m:n:o relation
+				String[][] infoTableInfo = getInfoTables();
+				for (int i = 0; i < infoTableInfo.length; i++) {
+					String tableName = infoTableInfo[i][0];
+					String refTableID = infoTableInfo[i][1];
+					String srcTableID = infoTableInfo[i][2];
+					String personTableID = infoTableInfo[i][3];
+					String refTableName = infoTableInfo[i][4];
+					String srcTableName = infoTableInfo[i][5];
+					String personTableName = infoTableInfo[i][6];
+
+					String sql = "CREATE TABLE " + tableName + " ("
+							+ refTableID + " INTEGER NOT NULL, " + srcTableID
+							+ " INTEGER NOT NULL, " + personTableID
+							+ " INTEGER NOT NULL, " + "FOREIGN KEY ("
+							+ refTableID + ") REFERENCES " + refTableName + "("
+							+ refTableID
+							+ ") ON DELETE RESTRICT ON UPDATE RESTRICT, "
+							+ "FOREIGN KEY (" + srcTableID + ") REFERENCES "
+							+ srcTableName + "(" + srcTableID
+							+ ") ON DELETE RESTRICT ON UPDATE RESTRICT, "
+							+ "FOREIGN KEY (" + personTableID + ") REFERENCES "
+							+ personTableName + "(" + personTableID
+							+ ") ON DELETE RESTRICT ON UPDATE RESTRICT) ";
+					try {
+						stmt.executeUpdate(sql);
+					} catch (SQLException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+
 			}
 		} catch (SQLException e) {
 			throw new SetUpException("Database could not be build: ", e);
@@ -286,18 +299,18 @@ public class SetUpMatrikelDatabase {
 	 * This method checks whether all tables that are supposed to be inserted
 	 * already exist in the database
 	 * 
+	 * @param stmt2
+	 * @param con
+	 * 
 	 * @return
 	 * @throws SQLException
 	 */
-	private boolean allTablesExist() throws SQLException {
+	private boolean allTablesExist(Connection con) throws SQLException {
 		String[] tableNames = TableNameKeys.getAllTableNames();
 
-		try (Connection con = DriverManager.getConnection(UserKeys.dbURL,
-				UserKeys.adminUser, UserKeys.guestPassword);
-				PreparedStatement stmt = con.prepareStatement(
-						"SELECT TABLENAME FROM sys.systables",
-						ResultSet.TYPE_SCROLL_INSENSITIVE,
-						ResultSet.CONCUR_READ_ONLY);) {
+		try (PreparedStatement stmt = con.prepareStatement(
+				"SELECT TABLENAME FROM sys.systables",
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);) {
 
 			ResultSet rs = stmt.executeQuery();
 

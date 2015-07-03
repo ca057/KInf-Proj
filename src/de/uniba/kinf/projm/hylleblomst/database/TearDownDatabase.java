@@ -39,13 +39,21 @@ public class TearDownDatabase {
 
 			String[] tables = TableNameKeys.getAllTableNames();
 
-			while (schemaExists()) {
-				for (String table : tables) {
+			// while (schemaExists(con)) {
+			for (String table : tables) {
+				try {
 					stmt.executeUpdate(String.format("DROP TABLE %s", table));
+				} catch (SQLException e) {
+					// TODO empty by intention
 				}
+			}
+			try {
 				stmt.executeUpdate(String.format("DROP SCHEMA %s RESTRICT",
 						TableNameKeys.SCHEMA_NAME));
+			} catch (Exception e) {
+				// TODO empty by intention
 			}
+			// }
 			return true;
 		} catch (SQLException e) {
 			throw new SQLException("Database could not be torn down: ", e);
@@ -60,28 +68,26 @@ public class TearDownDatabase {
 	 * may only be dropped if it does not contain any more data. Furthermore, a
 	 * schema that does not exist can not only hold any data.
 	 * 
+	 * @param con2
+	 * 
 	 * @return {@code True} if database contains this schema, {@code false}
 	 *         otherwise.
 	 * @throws SQLException
 	 *             If an error occurs while trying to query the existence of the
 	 *             schema in question.
 	 */
-	private boolean schemaExists() throws SQLException {
-		boolean result = false;
+	private boolean schemaExists(Connection con2) throws SQLException {
+		boolean result = true;
 
-		try (Connection con = DriverManager.getConnection(UserKeys.dbURL,
-				UserKeys.guestUser, UserKeys.guestPassword)) {
-			PreparedStatement stmt = con.prepareStatement(
-					"SELECT * FROM sys.schemas WHERE name=?",
-					ResultSet.TYPE_SCROLL_INSENSITIVE,
-					ResultSet.CONCUR_READ_ONLY);
-			stmt.setString(1, TableNameKeys.SCHEMA_NAME);
-			ResultSet rs = stmt.executeQuery();
+		PreparedStatement stmt = con2.prepareStatement(
+				"SELECT * FROM sys.sysschemas WHERE SCHEMANAME=?",
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+		stmt.setString(1, TableNameKeys.SCHEMA_NAME);
+		ResultSet rs = stmt.executeQuery();
 
-			con.setAutoCommit(false);
-			result = rs.isBeforeFirst();
-			con.setAutoCommit(true);
-		}
+		con2.setAutoCommit(false);
+		result = rs.isBeforeFirst();
+		con2.setAutoCommit(true);
 
 		return result;
 	}
