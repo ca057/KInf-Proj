@@ -152,7 +152,7 @@ public class QueryRequestImpl implements QueryRequest {
 					column = ColumnNameKeys.ORT_NORM;
 				} else if (source == SourceKeys.ORT_NORM_AB) {
 					table = TableNameKeys.ORT_ABWEICHUNG_NORM;
-					// column = ColumnNameKeys.ORT_ABWEICHUNG_NORM;
+					column = ColumnNameKeys.ORT_ABWEICHUNG_NORM;
 				} else {
 					table = TableNameKeys.ORT_TRAD;
 					column = ColumnNameKeys.ORT_TRAD;
@@ -209,20 +209,39 @@ public class QueryRequestImpl implements QueryRequest {
 					|| searchField == SearchFieldKeys.GRADUIERT) {
 				return String.format("%s.%s <> ''", table, column);
 			}
-			if (searchField == SearchFieldKeys.EINSCHREIBEDATUM_VON || searchField == SearchFieldKeys.STUDIENJAHR_VON) {
+			if (searchField == SearchFieldKeys.STUDIENJAHR_VON) {
 				return String.format("%s.%s > ?", table, column);
 			}
-			if (searchField == SearchFieldKeys.EINSCHREIBEDATUM_BIS || searchField == SearchFieldKeys.STUDIENJAHR_BIS) {
+			if (searchField == SearchFieldKeys.STUDIENJAHR_BIS) {
 				return String.format("%s.%s < ?", table, column);
 			}
 			if (searchField == SearchFieldKeys.EINSCHREIBEDATUM_BIS) {
+				if (!(input.contains("mm-dd"))) {
+					input = input.substring(0, 3) + "-12-31";
+				} else if (input.contains("mm")) {
+					input = input.substring(0, 3) + "-12-" + input.substring(8, 9);
+				} else if (input.contains("dd")) {
+					input = input.substring(0, 6) + "-31";
+				}
 				// 111 -> leer
 				// 000 -> alles
 				// 011 -> nur Jhar
 				// 001 -> Jahr, Monat
 				// 101 -> Monat
 				// 110 -> Tag
-				return String.format("%s.%s < CASE WHEN %1$s.%s = 0 THEN ", table, column);
+				// return String.format("CASE WHEN %1$s.%s = 0 THEN %s.%s < ?",
+				// table, column);
+				return String.format("%s.%s < ?", table, column);
+			}
+			if (searchField == SearchFieldKeys.EINSCHREIBEDATUM_VON) {
+				if (!(input.contains("mm-dd"))) {
+					input = input.substring(0, 3) + "-01-01";
+				} else if (input.contains("mm")) {
+					input = input.substring(0, 3) + "-01-" + input.substring(8, 9);
+				} else if (input.contains("dd")) {
+					input = input.substring(0, 6) + "-01";
+				}
+				return String.format("CASE WHEN %1$s.%s = 0 THEN %s.%s > ?", table, column);
 			}
 		} else if (source == SourceKeys.NORM) {
 			return String.format("%s_norm.%s LIKE ?", table.substring(0, table.indexOf("_")), column);
