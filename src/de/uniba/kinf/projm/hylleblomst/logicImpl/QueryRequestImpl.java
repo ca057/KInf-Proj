@@ -245,7 +245,8 @@ public class QueryRequestImpl implements QueryRequest {
 			}
 		} else if (source == SourceKeys.NORM) {
 			return String.format("%s_norm.%s LIKE ?", table.substring(0, table.indexOf("_")), column);
-		} else if (!(source == SourceKeys.NO_SELECTION || searchField == SearchFieldKeys.ANREDE)) {
+		} else if (!(source == SourceKeys.NO_SELECTION || searchField == SearchFieldKeys.ANREDE
+				|| searchField == SearchFieldKeys.TITEL)) {
 			return String.format("%s.%s LIKE ? AND %s_info.%s = %s", table, column,
 					table.substring(0, table.indexOf("_")), ColumnNameKeys.QUELLEN_ID, source);
 		}
