@@ -22,18 +22,7 @@ public class QueriesImpl implements Queries {
 	public ArrayList<PersonItem> search(Collection<QueryRequest> queryRequests) throws SQLException {
 
 		ResultSet test = startQuery(queryRequests);
-		for (int i = 1; i < test.getFetchSize(); i++) {
-			test.getString(i);
-			String blub = test.getString("DATUM_INT");
-			String date = test.getString(ColumnNameKeys.DATUM);
-			if ("010".equals(blub)) {
-				date = date.substring(0, 4) + "X" + date.substring(7, 9);
-			} else if ("001".equals(blub)) {
-				date = date.substring(0, 7) + "X";
-			} else if ("011".equals(blub)) {
-				date = date.substring(0, 4) + "X.X";
-			}
-		}
+
 		return new ArrayList<PersonItem>();
 	}
 

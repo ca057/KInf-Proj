@@ -8,6 +8,8 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import de.uniba.kinf.projm.hylleblomst.keys.ColumnNameKeys;
+
 public class DBAccess {
 	private String dbURL;
 	private String user;
@@ -49,6 +51,18 @@ public class DBAccess {
 					string2.append(results.getString((x + 1)) + ", ");
 				}
 				System.out.println(string2.substring(0, string2.length() - 2).toString());
+			}
+			for (int i = 1; i < results.getFetchSize(); i++) {
+				results.getString(i);
+				String blub = results.getString("DATUM_INT");
+				String date = results.getString(ColumnNameKeys.DATUM);
+				if ("010".equals(blub)) {
+					date = date.substring(0, 4) + "X" + date.substring(7, 9);
+				} else if ("001".equals(blub)) {
+					date = date.substring(0, 7) + "X";
+				} else if ("011".equals(blub)) {
+					date = date.substring(0, 4) + "X.X";
+				}
 			}
 			return results;
 		}
