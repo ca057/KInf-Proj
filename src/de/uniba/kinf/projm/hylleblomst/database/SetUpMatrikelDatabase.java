@@ -46,7 +46,6 @@ public class SetUpMatrikelDatabase {
 				con.setAutoCommit(false);
 
 				interrupt++;
-				System.out.println("Try #" + interrupt);
 				if (interrupt >= 10) {
 					throw new SetUpException(
 							"Database could not be build, maybe some necessary information for setup is missing");
@@ -56,11 +55,20 @@ public class SetUpMatrikelDatabase {
 				String[][] normTableInfo = getNormTables();
 				for (int i = 0; i < normTableInfo.length; i++) {
 					try {
-						stmt.executeUpdate("CREATE TABLE "
-								+ normTableInfo[i][0] + " ("
-								+ normTableInfo[i][1]
-								+ " integer PRIMARY KEY NOT NULL, "
-								+ normTableInfo[i][2] + " varchar(255))");
+						String tableName = normTableInfo[i][0];
+						String tableID = normTableInfo[i][1];
+
+						if (tableName.equals(TableNameKeys.ZUSAETZE)) {
+							stmt.executeUpdate("CREATE TABLE " + tableName
+									+ " (" + tableID
+									+ " integer PRIMARY KEY NOT NULL, "
+									+ normTableInfo[i][2] + " varchar(1000))");
+						} else {
+							stmt.executeUpdate("CREATE TABLE " + tableName
+									+ " (" + tableID
+									+ " integer PRIMARY KEY NOT NULL, "
+									+ normTableInfo[i][2] + " varchar(255))");
+						}
 					} catch (SQLException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -95,12 +103,26 @@ public class SetUpMatrikelDatabase {
 					String tableFK = tradTableInfo[i][3];
 					String tableRef = tradTableInfo[i][4];
 
-					String sql = "CREATE TABLE " + tableName + " (" + tableID
-							+ " integer PRIMARY KEY NOT NULL, "
-							+ tableAttribute + " varchar(255), " + tableFK
-							+ " integer NOT NULL, " + "FOREIGN KEY (" + tableFK
-							+ ") REFERENCES " + tableRef + "(" + tableFK
-							+ ") ON DELETE RESTRICT ON UPDATE RESTRICT)";
+					String sql;
+
+					if (tableName.equals(TableNameKeys.ORT_NORM)
+							|| tableName
+									.equals(TableNameKeys.WIRTSCHAFTSLAGE_TRAD)) {
+						sql = "CREATE TABLE " + tableName + " (" + tableID
+								+ " integer PRIMARY KEY NOT NULL, "
+								+ tableAttribute + " varchar(255), " + tableFK
+								+ " integer, " + "FOREIGN KEY (" + tableFK
+								+ ") REFERENCES " + tableRef + "(" + tableFK
+								+ ") ON DELETE RESTRICT ON UPDATE RESTRICT)";
+					} else {
+						sql = "CREATE TABLE " + tableName + " (" + tableID
+								+ " integer PRIMARY KEY NOT NULL, "
+								+ tableAttribute + " varchar(255), " + tableFK
+								+ " integer NOT NULL, " + "FOREIGN KEY ("
+								+ tableFK + ") REFERENCES " + tableRef + "("
+								+ tableFK
+								+ ") ON DELETE RESTRICT ON UPDATE RESTRICT)";
+					}
 
 					try {
 						stmt.executeUpdate(sql);

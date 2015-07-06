@@ -39,21 +39,22 @@ public class TearDownDatabase {
 
 			String[] tables = TableNameKeys.getAllTableNames();
 
-			// while (schemaExists(con)) {
-			for (String table : tables) {
+			while (schemaExists(con)) {
+				for (String table : tables) {
+					try {
+						stmt.executeUpdate(String
+								.format("DROP TABLE %s", table));
+					} catch (SQLException e) {
+						// TODO empty by intention
+					}
+				}
 				try {
-					stmt.executeUpdate(String.format("DROP TABLE %s", table));
-				} catch (SQLException e) {
+					stmt.executeUpdate(String.format("DROP SCHEMA %s RESTRICT",
+							TableNameKeys.SCHEMA_NAME));
+				} catch (Exception e) {
 					// TODO empty by intention
 				}
 			}
-			try {
-				stmt.executeUpdate(String.format("DROP SCHEMA %s RESTRICT",
-						TableNameKeys.SCHEMA_NAME));
-			} catch (Exception e) {
-				// TODO empty by intention
-			}
-			// }
 			return true;
 		} catch (SQLException e) {
 			throw new SQLException("Database could not be torn down: ", e);
@@ -68,7 +69,7 @@ public class TearDownDatabase {
 	 * may only be dropped if it does not contain any more data. Furthermore, a
 	 * schema that does not exist can not only hold any data.
 	 * 
-	 * @param con2
+	 * @param con
 	 * 
 	 * @return {@code True} if database contains this schema, {@code false}
 	 *         otherwise.
@@ -76,18 +77,19 @@ public class TearDownDatabase {
 	 *             If an error occurs while trying to query the existence of the
 	 *             schema in question.
 	 */
-	private boolean schemaExists(Connection con2) throws SQLException {
-		boolean result = true;
+	private boolean schemaExists(Connection con) throws SQLException {
+		boolean result;
 
-		PreparedStatement stmt = con2.prepareStatement(
+		PreparedStatement stmt = con.prepareStatement(
 				"SELECT * FROM sys.sysschemas WHERE SCHEMANAME=?",
 				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-		stmt.setString(1, TableNameKeys.SCHEMA_NAME);
+		stmt.setString(1, TableNameKeys.SCHEMA_NAME.toUpperCase());
+
 		ResultSet rs = stmt.executeQuery();
 
-		con2.setAutoCommit(false);
+		con.setAutoCommit(false);
 		result = rs.isBeforeFirst();
-		con2.setAutoCommit(true);
+		con.setAutoCommit(true);
 
 		return result;
 	}
