@@ -15,6 +15,6 @@ public class ImportDataIntoDatabase {
 
 		ImportData importData = new ImportDataImpl();
 
-		importData.addData("./doc/complete_data.csv");
+		importData.addData("./doc/example_data.csv");
 	}
 }
