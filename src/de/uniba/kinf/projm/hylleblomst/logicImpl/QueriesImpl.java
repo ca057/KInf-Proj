@@ -22,12 +22,23 @@ public class QueriesImpl implements Queries {
 	public ArrayList<PersonItem> search(Collection<QueryRequest> queryRequests) throws SQLException {
 
 		ResultSet test = startQuery(queryRequests);
+		for (int i = 1; i < test.getFetchSize(); i++) {
+			test.getString(i);
+			String blub = test.getString("DATUM_INT");
+			String date = test.getString(ColumnNameKeys.DATUM);
+			if ("010".equals(blub)) {
+				date = date.substring(0, 4) + "X" + date.substring(7, 9);
+			} else if ("001".equals(blub)) {
+				date = date.substring(0, 7) + "X";
+			} else if ("011".equals(blub)) {
+				date = date.substring(0, 4) + "X.X";
+			}
+		}
 		return new ArrayList<PersonItem>();
 	}
 
 	private ResultSet startQuery(Collection<QueryRequest> queryRequests) throws SQLException {
 		Boolean hasSource = false;
-		Boolean isDate = false;
 		ArrayList<String> inputs = new ArrayList<String>();
 		StringBuilder sqlQuery = new StringBuilder();
 		StringBuilder sqlWhere = new StringBuilder();
@@ -38,6 +49,12 @@ public class QueriesImpl implements Queries {
 		for (QueryRequest qr : queryRequests) {
 			if (qr.getColumn() == ColumnNameKeys.STUDIENJAHR_INT) {
 				sqlQuery.append(", " + qr.getTable() + "." + ColumnNameKeys.STUDIENJAHR + " AS " + qr.getSearchField());
+			} else if (qr.getColumn() == ColumnNameKeys.DATUM) {
+				// FIXME Da müssen Christian und ich nochmal drüber reden, da
+				// bei der Rückgabe die ColumnNameKeys besser wären.
+				sqlQuery.append(", " + qr.getTable() + "." + ColumnNameKeys.DATUM);
+				sqlQuery.append(
+						", " + qr.getTable() + "." + ColumnNameKeys.DATUMS_FELDER_GESETZT + " AS " + "DATUM_INT");
 			} else {
 				sqlQuery.append(", " + qr.getTable() + "." + qr.getColumn() + " AS " + qr.getSearchField());
 			}
@@ -47,11 +64,7 @@ public class QueriesImpl implements Queries {
 			if (qr.getSource() != SourceKeys.NO_SOURCE) {
 				hasSource = true;
 			}
-			// if (qr.getColumn() == ColumnNameKeys.DATUM) {
-			// isDate = true;
-			// }
 			if (qr.getColumn() == ColumnNameKeys.DATUM) {
-
 			} else {
 				if (sqlWhere.length() == 0) {
 					sqlWhere.append(qr.getWhere());
@@ -63,7 +76,6 @@ public class QueriesImpl implements Queries {
 				}
 			}
 		}
-
 		if (hasSource) {
 			sqlFrom.append(", " + TableNameKeys.QUELLEN);
 		}
@@ -82,19 +94,20 @@ public class QueriesImpl implements Queries {
 		return db.startQuery(sqlQuery.toString(), inputs);
 	}
 
-	private int getFilledFields() {
-
-		String query = "SELECT " + TableNameKeys.PERSON + "." + ColumnNameKeys.STUDIENJAHR_INT + " FROM "
-				+ TableNameKeys.PERSON;
-		int result = -1;
-		try {
-			ResultSet set = db.startQuery(query, null);
-			System.out.println(set.getInt(1));
-			result = set.getInt(1);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return result;
-	}
+	// private int getFilledFields() {
+	//
+	// String query = "SELECT " + TableNameKeys.PERSON + "." +
+	// ColumnNameKeys.STUDIENJAHR_INT + " FROM "
+	// + TableNameKeys.PERSON;
+	// int result = -1;
+	// try {
+	// ResultSet set = db.startQuery(query, null);
+	// System.out.println(set.getInt(1));
+	// result = set.getInt(1);
+	// } catch (SQLException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	// return result;
+	// }
 }
