@@ -8,6 +8,8 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -17,6 +19,7 @@ import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -63,6 +66,9 @@ public class ViewController implements Initializable, Observer {
 	 */
 	private ArrayList<SearchFieldKeys> usedSearchFieldKeys = new ArrayList<SearchFieldKeys>();
 
+	private StringProperty sourceLabelName = new SimpleStringProperty(
+			"Quelle: ");
+
 	@FXML
 	BorderPane root;
 
@@ -83,6 +89,9 @@ public class ViewController implements Initializable, Observer {
 
 	@FXML
 	MenuItem mainMenu_help_about;
+
+	@FXML
+	ComboBox<String> search_sourcekey_selection;
 
 	@FXML
 	Accordion searchCategories;
@@ -203,6 +212,9 @@ public class ViewController implements Initializable, Observer {
 
 	@FXML
 	TableView<PersonItem> resultTable;
+
+	@FXML
+	Label search_sourceLabel;
 
 	@FXML
 	TextArea infoArea;
@@ -357,9 +369,6 @@ public class ViewController implements Initializable, Observer {
 				if (event.isPrimaryButtonDown()) {
 					startSearchForSinglePerson(resultTable.getSelectionModel()
 							.getSelectedItem().getId());
-					// FIXME remove syso, just for testing purposes
-					System.out.println(resultTable.getSelectionModel()
-							.getSelectedItem().getId());
 				}
 				event.consume();
 			}
@@ -458,25 +467,25 @@ public class ViewController implements Initializable, Observer {
 		inputSourceKey[1] = SourceKeys.NORM;
 		inputSourceKey[2] = SourceKeys.STANDARD;
 		inputSourceKey[3] = SourceKeys.NORM;
-		inputSourceKey[4] = getSourceKeyByValueAsString(searchCategory_person_vornameselection
+		inputSourceKey[4] = getSourceKeyByValueAsString(search_sourcekey_selection
 				.getValue());
 		inputSourceKey[5] = SourceKeys.STANDARD;
 		inputSourceKey[6] = SourceKeys.NO_SOURCE;
 		inputSourceKey[7] = SourceKeys.NO_SOURCE;
-		inputSourceKey[8] = getSourceKeyByValueAsString(searchCategory_personExtended_wirtschaftselection
+		inputSourceKey[8] = getSourceKeyByValueAsString(search_sourcekey_selection
 				.getValue());
-		inputSourceKey[9] = getSourceKeyByValueAsString(searchCategory_personExtended_ortselection
+		inputSourceKey[9] = getSourceKeyByValueAsString(search_sourcekey_selection
 				.getValue());
-		inputSourceKey[10] = getSourceKeyByValueAsString(searchCategory_study_studienfachselection
+		inputSourceKey[10] = getSourceKeyByValueAsString(search_sourcekey_selection
 				.getValue());
 		inputSourceKey[11] = SourceKeys.NO_SOURCE;
-		inputSourceKey[12] = getSourceKeyByValueAsString(searchCategory_study_seminarselection
+		inputSourceKey[12] = getSourceKeyByValueAsString(search_sourcekey_selection
 				.getValue());
 		inputSourceKey[13] = SourceKeys.NO_SOURCE;
 		inputSourceKey[14] = SourceKeys.NO_SOURCE;
 		inputSourceKey[15] = SourceKeys.NO_SOURCE;
 		inputSourceKey[16] = SourceKeys.NO_SOURCE;
-		inputSourceKey[17] = getSourceKeyByValueAsString(searchCategory_other_zusaetzeselection
+		inputSourceKey[17] = getSourceKeyByValueAsString(search_sourcekey_selection
 				.getValue());
 		inputSourceKey[18] = SourceKeys.NO_SOURCE;
 		inputSourceKey[19] = SourceKeys.NO_SOURCE;
@@ -498,10 +507,12 @@ public class ViewController implements Initializable, Observer {
 	private void startSearch() {
 		// Clear list of used SearchFieldKeys first
 		usedSearchFieldKeys.clear();
+		sourceLabelName.set("Quelle: " + search_sourcekey_selection.getValue());
 		try {
 			String[] input = generateArrayWithInputValues();
 			int[] sources = generateArrayWithSourceFieldKeys();
 			searchCtrl.executeSearch(input, sources);
+			search_sourceLabel.setText(sourceLabelName.getValue());
 		} catch (Exception e) {
 			e.printStackTrace();
 			ui.showErrorMessage("Die Suche konnte nicht gestartet werden.\n"
@@ -714,6 +725,7 @@ public class ViewController implements Initializable, Observer {
 		Stage stage = (Stage) root.getScene().getWindow();
 		if (ui.askForClosingWindow()) {
 			stage.close();
+			System.exit(0);
 		}
 	}
 

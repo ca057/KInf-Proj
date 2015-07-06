@@ -43,6 +43,28 @@
 							<children>
 								<VBox maxWidth="300.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 									<children>
+										<ComboBox fx:id="search_sourcekey_selection" prefWidth="275.0" promptText="Quelle auswählen">
+												<items>
+													<FXCollections fx:factory="observableArrayList">
+														<String fx:value="keine Quelle auswählen" />
+														<String fx:value="Standard" />
+														<String fx:value="normalisiert" />
+														<String fx:value="HS B (AUB, I 11)" />
+														<String fx:value="HS C (AUB, I 13/1)" />
+														<String fx:value="HS D (AUB, I 13/2)" />
+														<String fx:value="HS E (AUB, I 9)" />
+														<String fx:value="HS F (AUB, I 8)" />
+														<String fx:value="HS G (AUB, I 6)" />
+														<String fx:value="HS H (AEB, Rep. I, Nr. 321)" />
+														<String fx:value="HS I (SB Bamberg, Msc.Add.3a)" />
+														<String fx:value="HS J (SB Bamberg, Msc.Add.3)" />
+														<String fx:value="AUB, V E 38" />
+													</FXCollections>
+												</items>
+											<VBox.margin>
+												<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+											</VBox.margin>
+										</ComboBox>
 										<Accordion fx:id="searchCategories" prefHeight="635.0" prefWidth="300.0">
 											<panes>
 												<TitledPane fx:id="searchCategory_person" animated="false" text="Person">
@@ -77,25 +99,6 @@
 																		<Insets top="15.0" />
 																	</VBox.margin>
 																</Label>
-																<ComboBox fx:id="searchCategory_person_vornameselection" prefWidth="300.0" promptText="Vornamenquelle auswählen">
-																	<items>
-																		<FXCollections fx:factory="observableArrayList">
-																			<String fx:value="keine Quelle auswählen" />
-																			<String fx:value="Standard" />
-																			<String fx:value="normalisiert" />
-																			<String fx:value="HS B (AUB, I 11)" />
-																			<String fx:value="HS C (AUB, I 13/1)" />
-																			<String fx:value="HS D (AUB, I 13/2)" />
-																			<String fx:value="HS E (AUB, I 9)" />
-																			<String fx:value="HS F (AUB, I 8)" />
-																			<String fx:value="HS G (AUB, I 6)" />
-																			<String fx:value="HS H (AEB, Rep. I, Nr. 321)" />
-																			<String fx:value="HS I (SB Bamberg, Msc.Add.3a)" />
-																			<String fx:value="HS J (SB Bamberg, Msc.Add.3)" />
-																			<String fx:value="AUB, V E 38" />
-																		</FXCollections>
-																	</items>
-																</ComboBox>
 																<TextField fx:id="searchCategory_person_vornameinput" promptText="Vorname">
 																	<VBox.margin>
 																		<Insets top="5.0" />
@@ -106,24 +109,6 @@
 																		<Insets top="15.0" />
 																	</VBox.margin>
 																</Label>
-																<ComboBox fx:id="searchCategory_person_nachnameselection" prefWidth="270.0" promptText="Nachnamenquelle auswählen">
-																	<items>
-																		<FXCollections fx:factory="observableArrayList">
-																			<String fx:value="keine Quelle auswählen" />
-																			<String fx:value="Standard" />
-																			<String fx:value="HS B ( AUB, I 11)" />
-																			<String fx:value="HS C (AUB, I 13/1)" />
-																			<String fx:value="HS D (AUB, I 13/2)" />
-																			<String fx:value="HS E (AUB, I 9)" />
-																			<String fx:value="HS F (AUB, I 8)" />
-																			<String fx:value="HS G (AUB, I 6)" />
-																			<String fx:value="HS H (AEB, Rep. I, Nr. 321)" />
-																			<String fx:value="HS I (SB Bamberg, Msc.Add.3a)" />
-																			<String fx:value="HS J (SB Bamberg, Msc.Add.3)" />
-																			<String fx:value="AUB, V E 38" />
-																		</FXCollections>
-																	</items>
-																</ComboBox>
 																<TextField fx:id="searchCategory_person_nachnameinput" promptText="Nachname">
 																	<VBox.margin>
 																		<Insets top="5.0" />
@@ -148,18 +133,6 @@
 																		<Insets top="15.0" />
 																	</VBox.margin>
 																</Label>
-																<ComboBox fx:id="searchCategory_personExtended_wirtschaftselection" prefWidth="270.0" promptText="Quelle der wirtschaftl. Lage auswählen">
-																	<items>
-																		<FXCollections fx:factory="observableArrayList">
-																			<String fx:value="keine Quelle auswählen" />
-																			<String fx:value="Standard" />
-																			<String fx:value="normalisiert" />
-																			<String fx:value="HS B (AUB, I 11)" />
-																			<String fx:value="HS D (AUB, I 13/2)" />
-																			<String fx:value="HS J (SB Bamberg, Msc.Add.3)" />
-																		</FXCollections>
-																	</items>
-																</ComboBox>
 																<TextField fx:id="searchCategory_personExtended_wirtschaftinput" maxWidth="300.0" prefWidth="300.0" promptText="Wirtschaftliche Lage">
 																	<VBox.margin>
 																		<Insets top="5.0" />
@@ -170,26 +143,6 @@
 																		<Insets top="15.0" />
 																	</VBox.margin>
 																</Label>
-																<ComboBox fx:id="searchCategory_personExtended_ortselection" prefWidth="270.0" promptText="Ortsquelle auswählen">
-																	<items>
-																		<FXCollections fx:factory="observableArrayList">
-																			<String fx:value="keine Quelle auswählen" />
-																			<String fx:value="Standard" />
-																			<String fx:value="normalisiert" />
-																			<String fx:value="Abweichung normalisiert" />
-																			<String fx:value="HS B ( AUB, I 11)" />
-																			<String fx:value="HS C (AUB, I 13/1)" />
-																			<String fx:value="HS D (AUB, I 13/2)" />
-																			<String fx:value="HS E (AUB, I 9)" />
-																			<String fx:value="HS F (AUB, I 8)" />
-																			<String fx:value="HS G (AUB, I 6)" />
-																			<String fx:value="HS H (AEB, Rep. I, Nr. 321)" />
-																			<String fx:value="HS I (SB Bamberg, Msc.Add.3a)" />
-																			<String fx:value="HS J (SB Bamberg, Msc.Add.3)" />
-																			<String fx:value="AUB, V E 38" />
-																		</FXCollections>
-																	</items>
-																</ComboBox>
 																<TextField fx:id="searchCategory_personExtended_ortinput" maxWidth="300.0" prefWidth="300.0" promptText="Ort">
 																	<VBox.margin>
 																		<Insets top="5.0" />
@@ -210,16 +163,6 @@
 															</padding>
 															<children>
 																<Label text="Studienfach" />
-																<ComboBox fx:id="searchCategory_study_studienfachselection" prefWidth="270.0" promptText="Studienfachquelle auswählen">
-																	<items>
-																		<FXCollections fx:factory="observableArrayList">
-																			<String fx:value="keine Quelle auswählen" />
-																			<String fx:value="Standard" />
-																			<String fx:value="normalisiert" />
-																			<String fx:value="HS B ( AUB, I 11)" />
-																		</FXCollections>
-																	</items>
-																</ComboBox>
 																<TextField fx:id="searchCategory_study_studienfachinput" promptText="Studienfach">
 																	<VBox.margin>
 																		<Insets top="5.0" />
@@ -236,20 +179,6 @@
 																		<Insets top="15.0" />
 																	</VBox.margin>
 																</Label>
-																<ComboBox fx:id="searchCategory_study_seminarselection" prefWidth="270.0" promptText="Seminarquelle auswählen">
-																	<items>
-																		<FXCollections fx:factory="observableArrayList">
-																			<String fx:value="keine Quelle auswählen" />
-																			<String fx:value="Standard" />
-																			<String fx:value="normalisiert" />
-																			<String fx:value="HS B ( AUB, I 11)" />
-																			<String fx:value="HS D (AUB, I 13/2)" />
-																			<String fx:value="HS E (AUB, I 9)" />
-																			<String fx:value="HS I (SB Bamberg, Msc.Add.3a)" />
-																			<String fx:value="HS J (SB Bamberg, Msc.Add.3)" />
-																		</FXCollections>
-																	</items>
-																</ComboBox>
 																<TextField fx:id="searchCategory_study_seminarinput" promptText="Seminar">
 																	<VBox.margin>
 																		<Insets top="5.0" />
@@ -317,24 +246,6 @@
 															</padding>
 															<children>
 																<Label text="Zusätze" />
-																<ComboBox fx:id="searchCategory_other_zusaetzeselection" prefWidth="270.0" promptText="Quelle der Zusätze auswählen">
-																	<items>
-																		<FXCollections fx:factory="observableArrayList">
-																			<String fx:value="keine Quelle auswählen" />
-																			<String fx:value="Standard" />
-																			<String fx:value="HS B ( AUB, I 11)" />
-																			<String fx:value="HS C (AUB, I 13/1)" />
-																			<String fx:value="HS D (AUB, I 13/2)" />
-																			<String fx:value="HS E (AUB, I 9)" />
-																			<String fx:value="HS F (AUB, I 8)" />
-																			<String fx:value="HS G (AUB, I 6)" />
-																			<String fx:value="HS H (AEB, Rep. I, Nr. 321)" />
-																			<String fx:value="HS I (SB Bamberg, Msc.Add.3a)" />
-																			<String fx:value="HS J (SB Bamberg, Msc.Add.3)" />
-																			<String fx:value="AUB, V E 38" />
-																		</FXCollections>
-																	</items>
-																</ComboBox>
 																<TextField fx:id="searchCategory_other_zusaetzeinput" promptText="Zusätze">
 																	<VBox.margin>
 																		<Insets top="5.0" />
@@ -403,29 +314,21 @@
 					<items>
 						<AnchorPane minHeight="0.0" minWidth="50.0" prefHeight="100.0">
 							<children>
-								<HBox layoutX="215.0" layoutY="98.0" prefHeight="335.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+								<VBox prefHeight="335.0" prefWidth="698.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 									<children>
-										<ScrollPane maxWidth="200.0" minWidth="200.0" prefWidth="200.0">
-											<content>
-												<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="200.0">
-													<children>
-														<Label layoutX="14.0" layoutY="14.0" text="Angezeigte Felder">
-															<font>
-																<Font name="System Bold" size="12.0" />
-															</font>
-														</Label>
-													</children>
-												</AnchorPane>
-											</content>
-										</ScrollPane>
-										<TableView fx:id="resultTable" HBox.hgrow="ALWAYS">
+										<TableView fx:id="resultTable" prefWidth="698.0">
 											<columns>
 												<TableColumn prefWidth="75.0" text="C1" />
 												<TableColumn prefWidth="75.0" text="C2" />
 											</columns>
 										</TableView>
+										<Label fx:id="search_sourceLabel" text="">
+											<VBox.margin>
+												<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+											</VBox.margin>
+										</Label>
 									</children>
-								</HBox>
+								</VBox>
 							</children>
 						</AnchorPane>
 						<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
