@@ -35,8 +35,8 @@ public class DBAccess {
 						ResultSet.CONCUR_READ_ONLY);) {
 			int parameterIndex = 1;
 			if (inputs != null) {
-				for (Object input : inputs) {
-					stmt.setString(parameterIndex, "%" + (String) input + "%");
+				for (String input : inputs) {
+					stmt.setString(parameterIndex, input);
 					parameterIndex++;
 				}
 			}

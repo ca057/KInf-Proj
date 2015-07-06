@@ -249,6 +249,6 @@ public class QueryRequestImpl implements QueryRequest {
 			return String.format("%s.%s LIKE ? AND %s_info.%s = %s", table, column,
 					table.substring(0, table.indexOf("_")), ColumnNameKeys.QUELLEN_ID, source);
 		}
-		return String.format("%s.%s LIKE ?", table, column);
+		return String.format("%s.%s LIKE ? ", table, column);
 	}
 }
