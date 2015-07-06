@@ -6,7 +6,7 @@ public class TableNameKeys {
 	public static final String ANREDE_NORM = SCHEMA_NAME + ".anrede_norm";
 	public static final String ANREDE_TRAD = SCHEMA_NAME + ".anrede_trad";
 	public static final String QUELLEN = SCHEMA_NAME + ".quellen";
-	public static final String FUNDORTE = SCHEMA_NAME + ".fundorte";
+	public static final String FUNDORTE = SCHEMA_NAME + ".fundorte_norm";
 	public static final String FAKULTAETEN = SCHEMA_NAME + ".fakultaeten";
 	public static final String TITEL_NORM = SCHEMA_NAME + ".titel_norm";
 	public static final String TITEL_TRAD = SCHEMA_NAME + ".titel_trad";

@@ -21,19 +21,6 @@ import de.uniba.kinf.projm.hylleblomst.keys.UserKeys;
  */
 public class SetUpMatrikelDatabase {
 
-	public static void main(String[] args) throws SQLException {
-
-		try {
-			new SetUpMatrikelDatabase().run();
-		} catch (SetUpException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	public SetUpMatrikelDatabase() {
-	}
-
 	public boolean run() throws SetUpException {
 		int interrupt = 0;
 		try (Connection con = DriverManager.getConnection(UserKeys.dbURL,

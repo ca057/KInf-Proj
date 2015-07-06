@@ -20,18 +20,6 @@ import de.uniba.kinf.projm.hylleblomst.keys.UserKeys;
  */
 public class TearDownDatabase {
 
-	public static void main(String[] args) {
-		try {
-			new TearDownDatabase().run();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	public TearDownDatabase() {
-	}
-
 	public boolean run() throws SQLException {
 		try (Connection con = DriverManager.getConnection(UserKeys.dbURL,
 				UserKeys.adminUser, UserKeys.adminPassword)) {

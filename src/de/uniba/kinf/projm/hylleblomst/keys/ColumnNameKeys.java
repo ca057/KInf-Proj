@@ -12,7 +12,7 @@ public interface ColumnNameKeys {
 	public static final String FACH_TRAD = "FachTrad";
 	public static final String FAKULTAETEN_ID = "FakultaetenID";
 	public static final String FAKULTAETEN_NORM = "FakultaetenNorm";
-	public static final String FUNDORTE_ID = "FundorteID";
+	public static final String FUNDORTE_ID = "FundorteNormID";
 	public static final String FUNDORTE_NORM = "FundorteNorm";
 	public static final String NAME_NORM_ID = "NameNormID";
 	public static final String NAME_NORM = "NameNorm";
