@@ -8,6 +8,11 @@ import java.util.Observable;
 import java.util.Observer;
 import java.util.ResourceBundle;
 
+import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
+import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
+import de.uniba.kinf.projm.hylleblomst.logic.PersonItem;
+import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
+import de.uniba.kinf.projm.hylleblomst.logicImpl.QueriesImpl;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -31,11 +36,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
-import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
-import de.uniba.kinf.projm.hylleblomst.logic.PersonItem;
-import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
-import de.uniba.kinf.projm.hylleblomst.logicImpl.QueriesImpl;
 
 /**
  * Controller for the graphical user interface.
@@ -66,8 +66,7 @@ public class ViewController implements Initializable, Observer {
 	 */
 	private ArrayList<SearchFieldKeys> usedSearchFieldKeys = new ArrayList<SearchFieldKeys>();
 
-	private StringProperty sourceLabelName = new SimpleStringProperty(
-			"Quelle: ");
+	private StringProperty sourceLabelName = new SimpleStringProperty("Quelle: ");
 
 	@FXML
 	BorderPane root;
@@ -265,101 +264,86 @@ public class ViewController implements Initializable, Observer {
 	 * 
 	 */
 	private void setNumericalInputEventHandlers() {
-		searchCategory_study_studienjahrVon
-				.setOnKeyReleased(new EventHandler<KeyEvent>() {
+		searchCategory_study_studienjahrVon.setOnKeyReleased(new EventHandler<KeyEvent>() {
 
-					@Override
-					public void handle(KeyEvent ke) {
-						try {
-							if (getParsedInt(searchCategory_study_studienjahrVon
-									.getText()) < 0
-									|| getParsedInt(searchCategory_study_studienjahrVon
-											.getText()) > 2015) {
-								ke.consume();
-								throw new NumberFormatException();
-							}
-						} catch (NumberFormatException e) {
-							ui.showErrorMessage("Studienjahr muss eine Zahl zwischen 0 und 2015 sein.");
-							searchCategory_study_studienjahrVon.clear();
-						}
+			@Override
+			public void handle(KeyEvent ke) {
+				try {
+					if (getParsedInt(searchCategory_study_studienjahrVon.getText()) < 0
+							|| getParsedInt(searchCategory_study_studienjahrVon.getText()) > 2015) {
+						ke.consume();
+						throw new NumberFormatException();
 					}
-				});
-		searchCategory_study_studienjahrBis
-				.setOnKeyReleased(new EventHandler<KeyEvent>() {
+				} catch (NumberFormatException e) {
+					ui.showErrorMessage("Studienjahr muss eine Zahl zwischen 0 und 2015 sein.");
+					searchCategory_study_studienjahrVon.clear();
+				}
+			}
+		});
+		searchCategory_study_studienjahrBis.setOnKeyReleased(new EventHandler<KeyEvent>() {
 
-					@Override
-					public void handle(KeyEvent ke) {
-						try {
-							if (getParsedInt(searchCategory_study_studienjahrBis
-									.getText()) < 0
-									|| getParsedInt(searchCategory_study_studienjahrBis
-											.getText()) > 2015) {
-								ke.consume();
-								throw new NumberFormatException();
-							}
-						} catch (NumberFormatException e) {
-							ui.showErrorMessage("Studienjahr muss eine Zahl zwischen 0 und 2015 sein.");
-							searchCategory_study_studienjahrBis.clear();
-						}
+			@Override
+			public void handle(KeyEvent ke) {
+				try {
+					if (getParsedInt(searchCategory_study_studienjahrBis.getText()) < 0
+							|| getParsedInt(searchCategory_study_studienjahrBis.getText()) > 2015) {
+						ke.consume();
+						throw new NumberFormatException();
 					}
-				});
-		searchCategory_study_einschreibeJahr
-				.setOnKeyReleased(new EventHandler<KeyEvent>() {
+				} catch (NumberFormatException e) {
+					ui.showErrorMessage("Studienjahr muss eine Zahl zwischen 0 und 2015 sein.");
+					searchCategory_study_studienjahrBis.clear();
+				}
+			}
+		});
+		searchCategory_study_einschreibeJahr.setOnKeyReleased(new EventHandler<KeyEvent>() {
 
-					@Override
-					public void handle(KeyEvent ke) {
-						try {
-							if (getParsedInt(searchCategory_study_einschreibeJahr
-									.getText()) < 0
-									|| getParsedInt(searchCategory_study_einschreibeJahr
-											.getText()) > 2015) {
-								ke.consume();
-								throw new NumberFormatException();
-							}
-						} catch (NumberFormatException e) {
-							ui.showErrorMessage("Einschreibejahr muss eine Zahl zwischen 0 und 2015 sein.");
-							searchCategory_study_einschreibeJahr.clear();
-						}
+			@Override
+			public void handle(KeyEvent ke) {
+				try {
+					if (getParsedInt(searchCategory_study_einschreibeJahr.getText()) < 0
+							|| getParsedInt(searchCategory_study_einschreibeJahr.getText()) > 2015) {
+						ke.consume();
+						throw new NumberFormatException();
 					}
-				});
-		searchCategory_study_einschreibeMonat
-				.setOnKeyReleased(new EventHandler<KeyEvent>() {
+				} catch (NumberFormatException e) {
+					ui.showErrorMessage("Einschreibejahr muss eine Zahl zwischen 0 und 2015 sein.");
+					searchCategory_study_einschreibeJahr.clear();
+				}
+			}
+		});
+		searchCategory_study_einschreibeMonat.setOnKeyReleased(new EventHandler<KeyEvent>() {
 
-					@Override
-					public void handle(KeyEvent ke) {
-						try {
-							if (getParsedInt(searchCategory_study_einschreibeMonat
-									.getText()) < 1
-									|| getParsedInt(searchCategory_study_einschreibeMonat
-											.getText()) > 12) {
-								ke.consume();
-								throw new NumberFormatException();
-							}
-						} catch (NumberFormatException e) {
-							ui.showErrorMessage("Einschreibemonat muss eine Zahl von 1 bis 12 sein.");
-							searchCategory_study_einschreibeMonat.clear();
-						}
+			@Override
+			public void handle(KeyEvent ke) {
+				try {
+					if (getParsedInt(searchCategory_study_einschreibeMonat.getText()) < 1
+							|| getParsedInt(searchCategory_study_einschreibeMonat.getText()) > 12) {
+						ke.consume();
+						throw new NumberFormatException();
 					}
-				});
-		searchCategory_study_einschreibeTag
-				.setOnKeyReleased(new EventHandler<KeyEvent>() {
+				} catch (NumberFormatException e) {
+					ui.showErrorMessage("Einschreibemonat muss eine Zahl von 1 bis 12 sein.");
+					searchCategory_study_einschreibeMonat.clear();
+				}
+			}
+		});
+		searchCategory_study_einschreibeTag.setOnKeyReleased(new EventHandler<KeyEvent>() {
 
-					@Override
-					public void handle(KeyEvent ke) {
-						try {
-							if (getParsedInt(searchCategory_study_einschreibeTag
-									.getText()) < 1
-									|| getParsedInt(searchCategory_study_einschreibeTag
-											.getText()) > 31) {
-								ke.consume();
-								throw new NumberFormatException();
-							}
-						} catch (NumberFormatException e) {
-							ui.showErrorMessage("Einschreibetag muss eine Zahl von 1 bis 31 sein.");
-							searchCategory_study_einschreibeTag.clear();
-						}
+			@Override
+			public void handle(KeyEvent ke) {
+				try {
+					if (getParsedInt(searchCategory_study_einschreibeTag.getText()) < 1
+							|| getParsedInt(searchCategory_study_einschreibeTag.getText()) > 31) {
+						ke.consume();
+						throw new NumberFormatException();
 					}
-				});
+				} catch (NumberFormatException e) {
+					ui.showErrorMessage("Einschreibetag muss eine Zahl von 1 bis 31 sein.");
+					searchCategory_study_einschreibeTag.clear();
+				}
+			}
+		});
 	}
 
 	private void setTableViewEventHandlers() {
@@ -367,8 +351,7 @@ public class ViewController implements Initializable, Observer {
 			@Override
 			public void handle(MouseEvent event) {
 				if (event.isPrimaryButtonDown()) {
-					startSearchForSinglePerson(resultTable.getSelectionModel()
-							.getSelectedItem().getId());
+					startSearchForSinglePerson(resultTable.getSelectionModel().getSelectedItem().getId());
 				}
 				event.consume();
 			}
@@ -392,19 +375,14 @@ public class ViewController implements Initializable, Observer {
 			inputFields[3] = searchCategory_person_titelnorm.getText();
 			inputFields[4] = searchCategory_person_vornameinput.getText();
 			inputFields[5] = searchCategory_person_nachnameinput.getText();
-			inputFields[6] = String
-					.valueOf(searchCategory_personExtended_adeliger
-							.isSelected());
-			inputFields[7] = String
-					.valueOf(searchCategory_personExtended_jesuit.isSelected());
-			inputFields[8] = searchCategory_personExtended_wirtschaftinput
-					.getText();
+			inputFields[6] = String.valueOf(searchCategory_personExtended_adeliger.isSelected());
+			inputFields[7] = String.valueOf(searchCategory_personExtended_jesuit.isSelected());
+			inputFields[8] = searchCategory_personExtended_wirtschaftinput.getText();
 			inputFields[9] = searchCategory_personExtended_ortinput.getText();
 			inputFields[10] = searchCategory_study_studienfachinput.getText();
 			inputFields[11] = searchCategory_study_fakultaet.getText();
 			inputFields[12] = searchCategory_study_seminarinput.getText();
-			inputFields[13] = String.valueOf(searchCategory_study_graduiert
-					.isSelected());
+			inputFields[13] = String.valueOf(searchCategory_study_graduiert.isSelected());
 			inputFields[14] = searchCategory_study_studienjahrVon.getText();
 			inputFields[15] = searchCategory_study_studienjahrBis.getText();
 			inputFields[16] = getEinschreibungVon();
@@ -444,15 +422,13 @@ public class ViewController implements Initializable, Observer {
 
 	private int getParsedInt(String input) {
 		if ("".equals(input) || input == null) {
-			throw new InputMismatchException(
-					"Ein Fehler bei der Verarbeitung der Zahleingabe ist aufgetreten.");
+			throw new InputMismatchException("Ein Fehler bei der Verarbeitung der Zahleingabe ist aufgetreten.");
 		}
 		int result;
 		try {
 			result = Integer.parseInt(input);
 		} catch (NumberFormatException e) {
-			throw new NumberFormatException("Die Eingabe von \"" + input
-					+ "\" in einem Zahlenfeld ist nicht gültig.");
+			throw new NumberFormatException("Die Eingabe von \"" + input + "\" in einem Zahlenfeld ist nicht gültig.");
 		}
 		return result;
 	}
@@ -467,26 +443,20 @@ public class ViewController implements Initializable, Observer {
 		inputSourceKey[1] = SourceKeys.NORM;
 		inputSourceKey[2] = SourceKeys.STANDARD;
 		inputSourceKey[3] = SourceKeys.NORM;
-		inputSourceKey[4] = getSourceKeyByValueAsString(search_sourcekey_selection
-				.getValue());
+		inputSourceKey[4] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
 		inputSourceKey[5] = SourceKeys.STANDARD;
 		inputSourceKey[6] = SourceKeys.NO_SOURCE;
 		inputSourceKey[7] = SourceKeys.NO_SOURCE;
-		inputSourceKey[8] = getSourceKeyByValueAsString(search_sourcekey_selection
-				.getValue());
-		inputSourceKey[9] = getSourceKeyByValueAsString(search_sourcekey_selection
-				.getValue());
-		inputSourceKey[10] = getSourceKeyByValueAsString(search_sourcekey_selection
-				.getValue());
+		inputSourceKey[8] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
+		inputSourceKey[9] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
+		inputSourceKey[10] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
 		inputSourceKey[11] = SourceKeys.NO_SOURCE;
-		inputSourceKey[12] = getSourceKeyByValueAsString(search_sourcekey_selection
-				.getValue());
+		inputSourceKey[12] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
 		inputSourceKey[13] = SourceKeys.NO_SOURCE;
 		inputSourceKey[14] = SourceKeys.NO_SOURCE;
 		inputSourceKey[15] = SourceKeys.NO_SOURCE;
 		inputSourceKey[16] = SourceKeys.NO_SOURCE;
-		inputSourceKey[17] = getSourceKeyByValueAsString(search_sourcekey_selection
-				.getValue());
+		inputSourceKey[17] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
 		inputSourceKey[18] = SourceKeys.NO_SOURCE;
 		inputSourceKey[19] = SourceKeys.NO_SOURCE;
 		inputSourceKey[20] = SourceKeys.NO_SOURCE;
@@ -515,8 +485,7 @@ public class ViewController implements Initializable, Observer {
 			search_sourceLabel.setText(sourceLabelName.getValue());
 		} catch (Exception e) {
 			e.printStackTrace();
-			ui.showErrorMessage("Die Suche konnte nicht gestartet werden.\n"
-					+ e.getMessage());
+			ui.showErrorMessage("Die Suche konnte nicht gestartet werden.\n" + e.getMessage());
 		}
 	}
 
@@ -529,8 +498,8 @@ public class ViewController implements Initializable, Observer {
 			searchCtrl.startSinglePersonSearch(string);
 		} catch (Exception e) {
 			e.printStackTrace();
-			ui.showErrorMessage("Es können keine Detailinformationen für diese Person angezeigt werden.\n"
-					+ e.getMessage());
+			ui.showErrorMessage(
+					"Es können keine Detailinformationen für diese Person angezeigt werden.\n" + e.getMessage());
 		}
 	}
 
@@ -544,18 +513,13 @@ public class ViewController implements Initializable, Observer {
 		searchCategory_person_titel.clear();
 		searchCategory_person_titelnorm.clear();
 		searchCategory_person_vornameinput.clear();
-		searchCategory_person_vornameselection.setValue(null);
 		searchCategory_person_nachnameinput.clear();
 		searchCategory_personExtended_adeliger.setSelected(false);
 		searchCategory_personExtended_jesuit.setSelected(false);
-		searchCategory_personExtended_wirtschaftselection.setValue(null);
 		searchCategory_personExtended_wirtschaftinput.clear();
-		searchCategory_personExtended_ortselection.setValue(null);
 		searchCategory_personExtended_ortinput.clear();
-		searchCategory_study_studienfachselection.setValue(null);
 		searchCategory_study_studienfachinput.clear();
 		searchCategory_study_fakultaet.clear();
-		searchCategory_study_seminarselection.setValue(null);
 		searchCategory_study_seminarinput.clear();
 		searchCategory_study_graduiert.setSelected(false);
 		searchCategory_study_studienjahrVon.clear();
@@ -563,13 +527,13 @@ public class ViewController implements Initializable, Observer {
 		searchCategory_study_einschreibeTag.clear();
 		searchCategory_study_einschreibeMonat.clear();
 		searchCategory_study_einschreibeJahr.clear();
-		searchCategory_other_zusaetzeselection.setValue(null);
 		searchCategory_other_zusaetzeinput.clear();
 		searchCategory_other_fundort.clear();
 		searchCategory_other_anmerkungen.clear();
 		searchCategory_other_nummer.clear();
 		searchCategory_other_seite.clear();
 		searchCategory_other_nummerhess.clear();
+		search_sourcekey_selection.setValue(null);
 		infoArea.clear();
 	}
 
@@ -644,8 +608,7 @@ public class ViewController implements Initializable, Observer {
 		createColumnsOfSearchResult();
 
 		// FIXME this list must be the result list
-		ObservableList<PersonItem> data = FXCollections
-				.observableArrayList(testList);
+		ObservableList<PersonItem> data = FXCollections.observableArrayList(testList);
 
 		resultTable.setItems(data);
 	}
@@ -664,38 +627,30 @@ public class ViewController implements Initializable, Observer {
 		// ort_norm
 		// fakultaet_norm
 
-		TableColumn<PersonItem, String> id = new TableColumn<PersonItem, String>(
-				"ID");
-		PropertyValueFactory<PersonItem, String> idFactory = new PropertyValueFactory<PersonItem, String>(
-				"id");
+		TableColumn<PersonItem, String> id = new TableColumn<PersonItem, String>("ID");
+		PropertyValueFactory<PersonItem, String> idFactory = new PropertyValueFactory<PersonItem, String>("id");
 		id.setCellValueFactory(idFactory);
 
-		TableColumn<PersonItem, String> vorname_norm = new TableColumn<PersonItem, String>(
-				"Vorname (NORM)");
+		TableColumn<PersonItem, String> vorname_norm = new TableColumn<PersonItem, String>("Vorname (NORM)");
 		PropertyValueFactory<PersonItem, String> vornameFactory = new PropertyValueFactory<PersonItem, String>(
 				"vorname_norm");
 		vorname_norm.setCellValueFactory(vornameFactory);
 
-		TableColumn<PersonItem, String> nachname_norm = new TableColumn<PersonItem, String>(
-				"Nachname (NORM)");
+		TableColumn<PersonItem, String> nachname_norm = new TableColumn<PersonItem, String>("Nachname (NORM)");
 		PropertyValueFactory<PersonItem, String> nachnameFactory = new PropertyValueFactory<PersonItem, String>(
 				"nachname_norm");
 		nachname_norm.setCellValueFactory(nachnameFactory);
 
-		TableColumn<PersonItem, String> ort_norm = new TableColumn<PersonItem, String>(
-				"Ort (NORM)");
-		PropertyValueFactory<PersonItem, String> ortFactory = new PropertyValueFactory<PersonItem, String>(
-				"ort_norm");
+		TableColumn<PersonItem, String> ort_norm = new TableColumn<PersonItem, String>("Ort (NORM)");
+		PropertyValueFactory<PersonItem, String> ortFactory = new PropertyValueFactory<PersonItem, String>("ort_norm");
 		ort_norm.setCellValueFactory(ortFactory);
 
-		TableColumn<PersonItem, String> fakultaet_norm = new TableColumn<PersonItem, String>(
-				"Fakultät (NORM)");
+		TableColumn<PersonItem, String> fakultaet_norm = new TableColumn<PersonItem, String>("Fakultät (NORM)");
 		PropertyValueFactory<PersonItem, String> fakultaetFactory = new PropertyValueFactory<PersonItem, String>(
 				"fakultaet_norm");
 		fakultaet_norm.setCellValueFactory(fakultaetFactory);
 
-		resultTable.getColumns().addAll(id, vorname_norm, nachname_norm,
-				ort_norm, fakultaet_norm);
+		resultTable.getColumns().addAll(id, vorname_norm, nachname_norm, ort_norm, fakultaet_norm);
 	}
 
 	/**
@@ -707,8 +662,7 @@ public class ViewController implements Initializable, Observer {
 	private void createColumnsOfSearchResult() {
 		for (int i = 0; i < usedSearchFieldKeys.size(); i++) {
 			String columnName = usedSearchFieldKeys.get(i).toString();
-			TableColumn<PersonItem, String> column = new TableColumn<PersonItem, String>(
-					columnName);
+			TableColumn<PersonItem, String> column = new TableColumn<PersonItem, String>(columnName);
 			PropertyValueFactory<PersonItem, String> columnFactory = new PropertyValueFactory<PersonItem, String>(
 					columnName);
 			column.setCellValueFactory(columnFactory);
