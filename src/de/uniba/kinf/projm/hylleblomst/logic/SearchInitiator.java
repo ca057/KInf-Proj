@@ -12,7 +12,7 @@ import java.util.List;
  * @author Hannes
  *
  */
-public interface Queries {
+public interface SearchInitiator {
 
 	/**
 	 * <b>Preconditions</b>:
@@ -33,12 +33,12 @@ public interface Queries {
 	 * {@code SearchFieldKey}
 	 * </ul>
 	 * 
-	 * @param queryRequest
-	 *            A {@code Collection} of {@link QueryRequest} with all
+	 * @param userQueries
+	 *            A {@code Collection} of {@link UserQueries} with all
 	 * @return A {@Code ResultSet} with the outcome ot the search
 	 * @throws SQLException
 	 */
-	List<PersonItem> search(Collection<QueryRequest> queryRequest) throws SQLException;
+	List<PersonItem> search(Collection<UserQueries> userQueries) throws SQLException;
 
 	/**
 	 * Gets all information of a person.

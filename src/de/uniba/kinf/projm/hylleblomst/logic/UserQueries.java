@@ -6,7 +6,7 @@ import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
  * @author Hannes
  *
  */
-public interface QueryRequest {
+public interface UserQueries {
 
 	SearchFieldKeys getSearchField();
 

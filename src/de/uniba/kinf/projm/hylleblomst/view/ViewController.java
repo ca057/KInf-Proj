@@ -11,8 +11,8 @@ import java.util.ResourceBundle;
 import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.PersonItem;
-import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
-import de.uniba.kinf.projm.hylleblomst.logicImpl.QueriesImpl;
+import de.uniba.kinf.projm.hylleblomst.logic.UserQueries;
+import de.uniba.kinf.projm.hylleblomst.logicImpl.SearchInitiatorImpl;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -51,7 +51,7 @@ public class ViewController implements Initializable, Observer {
 
 	/**
 	 * Implements the logic of preparing the user input for passing it to the
-	 * {@link QueriesImpl}.
+	 * {@link SearchInitiatorImpl}.
 	 */
 	private SearchController searchCtrl;
 
@@ -221,7 +221,7 @@ public class ViewController implements Initializable, Observer {
 	/**
 	 * Constructor for a new Controller. When called, the array with
 	 * {@link SearchFieldKeys} and {@link SourceKeys} is build and set, the
-	 * instances of the {@link QueriesImpl}, {@link UIHelper} and
+	 * instances of the {@link SearchInitiatorImpl}, {@link UIHelper} and
 	 * {@link SearchController} are instantiated.
 	 * 
 	 */
@@ -696,13 +696,13 @@ public class ViewController implements Initializable, Observer {
 	 * input. Collects the user input from all input fields prints it to the
 	 * info area.
 	 */
-	void setInfoTextExtendedSearch(List<QueryRequest> requestList) {
+	void setInfoTextExtendedSearch(List<UserQueries> requestList) {
 		String info = "Suchanfrage\n-----------\n";
 		StringBuffer buffer = new StringBuffer();
 		if (requestList == null || requestList.size() == 0) {
 			info += "Keine Sucheingaben gefunden.";
 		} else {
-			for (QueryRequest qr : requestList) {
+			for (UserQueries qr : requestList) {
 				buffer.append(qr.getSearchField().toString() + ": ");
 				buffer.append(qr.getInput() + "; ");
 				buffer.append("Quellen#: " + qr.getSource() + "\n");

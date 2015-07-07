@@ -7,9 +7,9 @@ import java.util.Observable;
 
 import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.PersonItem;
-import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
-import de.uniba.kinf.projm.hylleblomst.logicImpl.QueriesImpl;
-import de.uniba.kinf.projm.hylleblomst.logicImpl.QueryRequestImpl;
+import de.uniba.kinf.projm.hylleblomst.logic.UserQueries;
+import de.uniba.kinf.projm.hylleblomst.logicImpl.SearchInitiatorImpl;
+import de.uniba.kinf.projm.hylleblomst.logicImpl.UserQueriesImpl;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -35,9 +35,9 @@ public class SearchController extends Observable {
 	private ObservableList<SearchFieldKeys> usedSearchFields = FXCollections.observableArrayList();
 
 	/**
-	 * QueriesImpl executes the search.
+	 * SearchInitiatorImpl executes the search.
 	 */
-	private QueriesImpl queriesImpl;
+	private SearchInitiatorImpl searchInitiatorImpl;
 
 	/**
 	 * 
@@ -52,7 +52,7 @@ public class SearchController extends Observable {
 		this.view = view;
 		this.inputCounter = view.getInputFieldCounter();
 		this.inputSearchFKey = generateSearchFieldKeyArray();
-		this.queriesImpl = new QueriesImpl();
+		this.searchInitiatorImpl = new SearchInitiatorImpl();
 	}
 
 	/**
@@ -67,10 +67,10 @@ public class SearchController extends Observable {
 		}
 		// clear list of used SearchFieldKeys first
 		usedSearchFields.clear();
-		List<QueryRequest> requestList = new ArrayList<QueryRequest>();
+		List<UserQueries> requestList = new ArrayList<UserQueries>();
 		for (int i = 0; i < inputValues.length; i++) {
 			if (!inputValues[i].isEmpty() && !"false".equals(inputValues[i]) && !"yyyy-mm-dd".equals(inputValues[i])) {
-				QueryRequestImpl tmpReq = new QueryRequestImpl(inputSearchFKey[i], inputValues[i], inputSourceKey[i]);
+				UserQueriesImpl tmpReq = new UserQueriesImpl(inputSearchFKey[i], inputValues[i], inputSourceKey[i]);
 				requestList.add(tmpReq);
 				// update observable list with the used SFK, so view can work
 				// with the correct table columns
@@ -83,7 +83,7 @@ public class SearchController extends Observable {
 			view.setInfoTextExtendedSearch(requestList);
 			view.fillResultTable();
 			if (requestList.size() != 0) {
-				List<PersonItem> result = queriesImpl.search(requestList);
+				List<PersonItem> result = searchInitiatorImpl.search(requestList);
 				// TODO remove comment for later implementation
 				// view.fillResultTable(result);
 			}
@@ -99,7 +99,7 @@ public class SearchController extends Observable {
 	 */
 	public void startSinglePersonSearch(String string) {
 		try {
-			queriesImpl.searchPerson(string);
+			searchInitiatorImpl.searchPerson(string);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new RuntimeException("Ein Fehler bei der Suche nach Person mit ID " + string + " ist aufgetreten.");

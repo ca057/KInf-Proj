@@ -59,7 +59,7 @@ public class TearDownDatabase {
 	}
 
 	/**
-	 * Queries a database whether it contains a schema holding data from the
+	 * SearchInitiator a database whether it contains a schema holding data from the
 	 * projects specified CSV-file.
 	 * 
 	 * This method is used in this context as due to database-settings a schema

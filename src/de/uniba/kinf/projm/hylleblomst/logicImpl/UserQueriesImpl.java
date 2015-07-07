@@ -4,16 +4,16 @@ import de.uniba.kinf.projm.hylleblomst.keys.ColumnNameKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.TableNameKeys;
-import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
+import de.uniba.kinf.projm.hylleblomst.logic.UserQueries;
 
-public class QueryRequestImpl implements QueryRequest {
+public class UserQueriesImpl implements UserQueries {
 	private SearchFieldKeys searchField;
 	private String column;
 	private String input;
 	private int source;
 	private String table;
 
-	public QueryRequestImpl(SearchFieldKeys searchField, String input, int source) {
+	public UserQueriesImpl(SearchFieldKeys searchField, String input, int source) {
 		setInput(input);
 		setSource(source);
 		setSearchField(searchField);

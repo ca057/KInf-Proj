@@ -11,28 +11,29 @@ import de.uniba.kinf.projm.hylleblomst.keys.TableNameKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.UserKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.DBAccess;
 import de.uniba.kinf.projm.hylleblomst.logic.PersonItem;
-import de.uniba.kinf.projm.hylleblomst.logic.Queries;
-import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
+import de.uniba.kinf.projm.hylleblomst.logic.SearchInitiator;
+import de.uniba.kinf.projm.hylleblomst.logic.UserQueries;
 
-public class QueriesImpl implements Queries {
+public class SearchInitiatorImpl implements SearchInitiator {
 	DBAccess db = new DBAccess(UserKeys.dbURL, UserKeys.guestUser, UserKeys.guestPassword);
 	SQLBuilder sql = new SQLBuilder();
 
 	@Override
-	public List<PersonItem> search(Collection<QueryRequest> queryRequests) throws SQLException {
-		return buildAndStartQuery(queryRequests);
+	public List<PersonItem> search(Collection<UserQueries> userQueries) throws SQLException {
+		return buildAndStartQuery(userQueries);
 	}
 
-	private List<PersonItem> buildAndStartQuery(Collection<QueryRequest> queryRequests) throws SQLException {
+	private List<PersonItem> buildAndStartQuery(Collection<UserQueries> userQueries) throws SQLException {
 		Boolean hasSource = false;
 		ArrayList<String> inputs = new ArrayList<String>();
 		StringBuilder sqlQuery = new StringBuilder();
-		StringBuilder sqlWhere = new StringBuilder();
 		StringBuilder sqlFrom = new StringBuilder();
+		StringBuilder sqlWhere = new StringBuilder();
 
 		sqlQuery.append("SELECT ").append(sql.getSelect());
 		sqlFrom.append(sql.getFrom());
-		for (QueryRequest qr : queryRequests) {
+
+		for (UserQueries qr : userQueries) {
 			if (qr.getColumn() == ColumnNameKeys.STUDIENJAHR_INT) {
 				sqlQuery.append(", " + qr.getTable() + "." + ColumnNameKeys.STUDIENJAHR + " AS " + qr.getSearchField());
 			} else if (qr.getColumn() == ColumnNameKeys.DATUM) {
@@ -79,21 +80,4 @@ public class QueriesImpl implements Queries {
 		sqlQuery.append(sql.getSelectAll()).append(sql.getFrom()).append(" WHERE Person.PersonID = ?");
 		return db.startQuery(sqlQuery.toString(), inputs);
 	}
-
-	// private int getFilledFields() {
-	//
-	// String query = "SELECT " + TableNameKeys.PERSON + "." +
-	// ColumnNameKeys.STUDIENJAHR_INT + " FROM "
-	// + TableNameKeys.PERSON;
-	// int result = -1;
-	// try {
-	// ResultSet set = db.startQuery(query, null);
-	// System.out.println(set.getInt(1));
-	// result = set.getInt(1);
-	// } catch (SQLException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	// return result;
-	// }
 }
