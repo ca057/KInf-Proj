@@ -30,8 +30,7 @@ public class TearDownDatabase {
 	}
 
 	public boolean run() throws SQLException {
-		try (Connection con = DriverManager.getConnection(UserKeys.dbURL,
-				UserKeys.adminUser, UserKeys.adminPassword)) {
+		try (Connection con = DriverManager.getConnection(UserKeys.dbURL, UserKeys.adminUser, UserKeys.adminPassword)) {
 			Statement stmt = con.createStatement();
 
 			String[] tables = TableNameKeys.getAllTableNames();
@@ -39,15 +38,13 @@ public class TearDownDatabase {
 			while (schemaExists(con)) {
 				for (String table : tables) {
 					try {
-						stmt.executeUpdate(String
-								.format("DROP TABLE %s", table));
+						stmt.executeUpdate(String.format("DROP TABLE %s", table));
 					} catch (SQLException e) {
 						// TODO empty by intention
 					}
 				}
 				try {
-					stmt.executeUpdate(String.format("DROP SCHEMA %s RESTRICT",
-							TableNameKeys.SCHEMA_NAME));
+					stmt.executeUpdate(String.format("DROP SCHEMA %s RESTRICT", TableNameKeys.SCHEMA_NAME));
 				} catch (Exception e) {
 					// TODO empty by intention
 				}
@@ -59,7 +56,7 @@ public class TearDownDatabase {
 	}
 
 	/**
-	 * SearchInitiator a database whether it contains a schema holding data from the
+	 * Queries a database whether it contains a schema holding data from the
 	 * projects specified CSV-file.
 	 * 
 	 * This method is used in this context as due to database-settings a schema
@@ -77,8 +74,7 @@ public class TearDownDatabase {
 	private boolean schemaExists(Connection con) throws SQLException {
 		boolean result;
 
-		PreparedStatement stmt = con.prepareStatement(
-				"SELECT * FROM sys.sysschemas WHERE SCHEMANAME=?",
+		PreparedStatement stmt = con.prepareStatement("SELECT * FROM sys.sysschemas WHERE SCHEMANAME=?",
 				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 		stmt.setString(1, TableNameKeys.SCHEMA_NAME.toUpperCase());
 
