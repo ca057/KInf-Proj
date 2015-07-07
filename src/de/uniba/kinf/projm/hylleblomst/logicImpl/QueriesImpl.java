@@ -1,9 +1,9 @@
 package de.uniba.kinf.projm.hylleblomst.logicImpl;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import de.uniba.kinf.projm.hylleblomst.keys.ColumnNameKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
@@ -19,14 +19,11 @@ public class QueriesImpl implements Queries {
 	SQLBuilder sql = new SQLBuilder();
 
 	@Override
-	public ArrayList<PersonItem> search(Collection<QueryRequest> queryRequests) throws SQLException {
-
-		ResultSet test = startQuery(queryRequests);
-
-		return new ArrayList<PersonItem>();
+	public List<PersonItem> search(Collection<QueryRequest> queryRequests) throws SQLException {
+		return buildAndStartQuery(queryRequests);
 	}
 
-	private ResultSet startQuery(Collection<QueryRequest> queryRequests) throws SQLException {
+	private List<PersonItem> buildAndStartQuery(Collection<QueryRequest> queryRequests) throws SQLException {
 		Boolean hasSource = false;
 		ArrayList<String> inputs = new ArrayList<String>();
 		StringBuilder sqlQuery = new StringBuilder();
@@ -75,7 +72,7 @@ public class QueriesImpl implements Queries {
 	}
 
 	@Override
-	public ResultSet searchPerson(String string) throws SQLException {
+	public List<PersonItem> searchPerson(String string) throws SQLException {
 		ArrayList<String> inputs = new ArrayList<String>();
 		inputs.add("" + string);
 		StringBuilder sqlQuery = new StringBuilder();

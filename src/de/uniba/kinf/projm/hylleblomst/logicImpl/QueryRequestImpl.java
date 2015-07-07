@@ -204,6 +204,9 @@ public class QueryRequestImpl implements QueryRequest {
 
 	@Override
 	public String getWhere() {
+		if (source == SourceKeys.NORM) {
+			return String.format("%s_norm.%s LIKE ?", table.substring(0, table.indexOf("_")), column);
+		}
 		if (source == SourceKeys.NO_SOURCE) {
 			if (searchField == SearchFieldKeys.ADLIG || searchField == SearchFieldKeys.JESUIT
 					|| searchField == SearchFieldKeys.GRADUIERT) {
@@ -223,14 +226,6 @@ public class QueryRequestImpl implements QueryRequest {
 				} else if (input.contains("dd")) {
 					input = input.substring(0, 6) + "-31";
 				}
-				// 111 -> leer
-				// 000 -> alles
-				// 011 -> nur Jhar
-				// 001 -> Jahr, Monat
-				// 101 -> Monat
-				// 110 -> Tag
-				// return String.format("CASE WHEN %1$s.%s = 0 THEN %s.%s < ?",
-				// table, column);
 				return String.format("%s.%s < ?", table, column);
 			}
 			if (searchField == SearchFieldKeys.EINSCHREIBEDATUM_VON) {
@@ -243,9 +238,8 @@ public class QueryRequestImpl implements QueryRequest {
 				}
 				return String.format("CASE WHEN %1$s.%s = 0 THEN %s.%s > ?", table, column);
 			}
-		} else if (source == SourceKeys.NORM) {
-			return String.format("%s_norm.%s LIKE ?", table.substring(0, table.indexOf("_")), column);
-		} else if (!(source == SourceKeys.NO_SELECTION || searchField == SearchFieldKeys.ANREDE
+		}
+		if (!(source == SourceKeys.NO_SELECTION || searchField == SearchFieldKeys.ANREDE
 				|| searchField == SearchFieldKeys.TITEL)) {
 			return String.format("%s.%s LIKE ? AND %s_info.%s = %s", table, column,
 					table.substring(0, table.indexOf("_")), ColumnNameKeys.QUELLEN_ID, source);

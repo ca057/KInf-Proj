@@ -5,13 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.PersonItem;
 import de.uniba.kinf.projm.hylleblomst.logic.QueryRequest;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.QueriesImpl;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.QueryRequestImpl;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  * Controller for executing the search.
@@ -32,8 +32,7 @@ public class SearchController extends Observable {
 	 */
 	private int inputCounter;
 
-	private ObservableList<SearchFieldKeys> usedSearchFields = FXCollections
-			.observableArrayList();
+	private ObservableList<SearchFieldKeys> usedSearchFields = FXCollections.observableArrayList();
 
 	/**
 	 * QueriesImpl executes the search.
@@ -62,19 +61,16 @@ public class SearchController extends Observable {
 	 * @param inputSourceKey
 	 */
 	void executeSearch(String[] inputValues, int[] inputSourceKey) {
-		if (inputSearchFKey == null || inputSearchFKey.length == 0
-				|| inputSourceKey == null || inputSourceKey.length == 0) {
-			throw new IllegalArgumentException(
-					"Die Liste mit Eingabefeldern ist leer oder hat keinen Wert.");
+		if (inputSearchFKey == null || inputSearchFKey.length == 0 || inputSourceKey == null
+				|| inputSourceKey.length == 0) {
+			throw new IllegalArgumentException("Die Liste mit Eingabefeldern ist leer oder hat keinen Wert.");
 		}
 		// clear list of used SearchFieldKeys first
 		usedSearchFields.clear();
 		List<QueryRequest> requestList = new ArrayList<QueryRequest>();
 		for (int i = 0; i < inputValues.length; i++) {
-			if (!inputValues[i].isEmpty() && !"false".equals(inputValues[i])
-					&& !"yyyy-mm-dd".equals(inputValues[i])) {
-				QueryRequestImpl tmpReq = new QueryRequestImpl(
-						inputSearchFKey[i], inputValues[i], inputSourceKey[i]);
+			if (!inputValues[i].isEmpty() && !"false".equals(inputValues[i]) && !"yyyy-mm-dd".equals(inputValues[i])) {
+				QueryRequestImpl tmpReq = new QueryRequestImpl(inputSearchFKey[i], inputValues[i], inputSourceKey[i]);
 				requestList.add(tmpReq);
 				// update observable list with the used SFK, so view can work
 				// with the correct table columns
@@ -87,15 +83,13 @@ public class SearchController extends Observable {
 			view.setInfoTextExtendedSearch(requestList);
 			view.fillResultTable();
 			if (requestList.size() != 0) {
-				ArrayList<PersonItem> result = queriesImpl.search(requestList);
+				List<PersonItem> result = queriesImpl.search(requestList);
 				// TODO remove comment for later implementation
 				// view.fillResultTable(result);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new RuntimeException(
-					"Ein Fehler bei der Suche ist aufgetreten:\n"
-							+ e.getMessage());
+			throw new RuntimeException("Ein Fehler bei der Suche ist aufgetreten:\n" + e.getMessage());
 		}
 	}
 
@@ -108,9 +102,7 @@ public class SearchController extends Observable {
 			queriesImpl.searchPerson(string);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new RuntimeException(
-					"Ein Fehler bei der Suche nach Person mit ID " + string
-							+ " ist aufgetreten.");
+			throw new RuntimeException("Ein Fehler bei der Suche nach Person mit ID " + string + " ist aufgetreten.");
 		}
 	}
 
