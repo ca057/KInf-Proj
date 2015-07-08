@@ -624,6 +624,8 @@ public class ViewController implements ControllerInterface, Initializable {
 				}
 				data.add(row);
 			}
+			// TODO is this needed?
+			result.close();
 			resultTable.setItems(data);
 		} catch (SQLException e) {
 			ui.showErrorMessage("Bei der Anzeige der gefundenen Datensätze ist ein Fehler aufgetreten.");
