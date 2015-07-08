@@ -1,7 +1,7 @@
 package de.uniba.kinf.projm.hylleblomst.keys;
 
-public class UserKeys {
-	public final static String dbURL = "jdbc:derby:./db/MyDB";
+public class DBUserKeys {
+	public final static String dbURL = "jdbc:derby:C:/Users/Simon/git/TestingDB/db/MyDB";
 
 	public final static String guestUser = "guest";
 	public final static String guestPassword = "ned-stark";
