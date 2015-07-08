@@ -6,19 +6,13 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Observable;
 
-import javax.sql.rowset.CachedRowSet;
-
+import de.uniba.kinf.projm.hylleblomst.gui.model.Model;
 import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
-import de.uniba.kinf.projm.hylleblomst.logic.SearchInitiator;
 import de.uniba.kinf.projm.hylleblomst.logic.UserQueries;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.UserQueriesImpl;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
 /**
  * Controller for executing the search.
- * 
- * @author ca
  *
  */
 public class SearchController implements ControllerInterface {
@@ -34,12 +28,10 @@ public class SearchController implements ControllerInterface {
 	 */
 	private int inputCounter;
 
-	private ObservableList<SearchFieldKeys> usedSearchFields = FXCollections.observableArrayList();
-
 	/**
 	 * SearchInitiatorImpl executes the search.
 	 */
-	private SearchInitiator searchInitiatorImpl;
+	private Model model;
 
 	/**
 	 * 
@@ -50,12 +42,13 @@ public class SearchController implements ControllerInterface {
 	 * 
 	 * @param view
 	 */
-	public SearchController(ViewController view, SearchInitiator searchInitiatorImpl) {
-		if (view == null || searchInitiatorImpl == null) {
-			throw new InputMismatchException("The passed ViewController or SearchInitiator has no value.");
+	public SearchController(ViewController view, Model model) {
+		if (view == null || model == null) {
+			throw new InputMismatchException(
+					"The passed ViewController or SearchInitiator has no value.");
 		}
 		this.view = view;
-		this.searchInitiatorImpl = searchInitiatorImpl;
+		this.model = model;
 		inputCounter = view.getInputFieldCounter();
 		inputSearchFKey = generateSearchFieldKeyArray();
 	}
@@ -66,24 +59,33 @@ public class SearchController implements ControllerInterface {
 	 * @param inputSourceKey
 	 */
 	void executeSearch(String[] inputValues, int[] inputSourceKey) {
-		if (inputSearchFKey == null || inputSearchFKey.length == 0 || inputSourceKey == null
-				|| inputSourceKey.length == 0) {
-			throw new IllegalArgumentException("Die Liste mit Eingabefeldern ist leer oder hat keinen Wert.");
+		if (inputSearchFKey == null || inputSearchFKey.length == 0
+				|| inputSourceKey == null || inputSourceKey.length == 0) {
+			throw new IllegalArgumentException(
+					"Die Liste mit Eingabefeldern ist leer oder hat keinen Wert.");
 		}
+
 		List<UserQueries> requestList = new ArrayList<UserQueries>();
 		for (int i = 0; i < inputValues.length; i++) {
-			if (!inputValues[i].isEmpty() && !"false".equals(inputValues[i]) && !"yyyy-mm-dd".equals(inputValues[i])) {
-				UserQueriesImpl tmpReq = new UserQueriesImpl(inputSearchFKey[i], inputValues[i], inputSourceKey[i]);
+			if (!inputValues[i].isEmpty() && !"false".equals(inputValues[i])
+					&& !"yyyy-mm-dd".equals(inputValues[i])) {
+				UserQueriesImpl tmpReq = new UserQueriesImpl(
+						inputSearchFKey[i], inputValues[i], inputSourceKey[i]);
 				requestList.add(tmpReq);
 			}
 		}
 
+		if (requestList.isEmpty()) {
+			throw new InputMismatchException(
+					"Suche kann nicht gestartet werden, da keine Eingaben vorliegen.");
+		}
 		try {
-			CachedRowSet resultSet = searchInitiatorImpl.search(requestList);
-			view.fillResultTable(resultSet);
+			model.search(requestList);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new RuntimeException("Ein Fehler bei der Suche ist aufgetreten:\n" + e.getMessage());
+			throw new RuntimeException(
+					"Ein Fehler bei der Suche ist aufgetreten:\n"
+							+ e.getMessage());
 		}
 	}
 
@@ -93,10 +95,12 @@ public class SearchController implements ControllerInterface {
 	 */
 	public void startSinglePersonSearch(String string) {
 		try {
-			searchInitiatorImpl.searchPerson(string);
+			model.searchPerson(string);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new RuntimeException("Ein Fehler bei der Suche nach Person mit ID " + string + " ist aufgetreten.");
+			throw new RuntimeException(
+					"Ein Fehler bei der Suche nach Person mit ID " + string
+							+ " ist aufgetreten.");
 		}
 	}
 
@@ -136,7 +140,6 @@ public class SearchController implements ControllerInterface {
 
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		// TODO Auto-generated method stub
 
 	}
 }

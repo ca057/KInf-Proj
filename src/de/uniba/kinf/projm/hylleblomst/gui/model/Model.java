@@ -14,29 +14,38 @@ public class Model extends Observable {
 	SearchInitiator search;
 	CachedRowSet searchResult;
 
+	public CachedRowSet getSearchResult() {
+		return searchResult;
+	}
+
 	public Model(SearchInitiator search) {
 		if (search != null) {
 			this.search = search;
 		} else {
-			throw new InputMismatchException("Die Logik des Programms ist fehlerhaft (null)");
+			throw new InputMismatchException(
+					"Die Logik des Programms ist fehlerhaft (null)");
 		}
 	}
 
 	public void search(Collection<UserQueries> userQueries) throws SQLException {
 		if (!(userQueries == null || userQueries.isEmpty())) {
 			searchResult = search.search(userQueries);
-			notifyObservers();
+			setChanged();
+			notifyObservers(searchResult);
 		} else {
-			throw new InputMismatchException("Die übergebene Collection ist fehlerhaft: " + search);
+			throw new InputMismatchException(
+					"Die übergebene Collection ist fehlerhaft: " + search);
 		}
 	}
 
 	public void searchPerson(String id) throws SQLException {
 		if (id != null) {
 			searchResult = search.searchPerson(id);
+			setChanged();
 			notifyObservers();
 		} else {
-			throw new InputMismatchException("Die übergebene ID ist fehlerhaft (null)");
+			throw new InputMismatchException(
+					"Die übergebene ID ist fehlerhaft (null)");
 		}
 	}
 }

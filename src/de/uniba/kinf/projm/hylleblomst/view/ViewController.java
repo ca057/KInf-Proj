@@ -6,13 +6,6 @@ import java.util.InputMismatchException;
 import java.util.Observable;
 import java.util.ResourceBundle;
 
-import javax.sql.rowset.CachedRowSet;
-
-import de.uniba.kinf.projm.hylleblomst.gui.model.Model;
-import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
-import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
-import de.uniba.kinf.projm.hylleblomst.logic.SearchInitiator;
-import de.uniba.kinf.projm.hylleblomst.logicImpl.SearchInitiatorImpl;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
@@ -39,6 +32,14 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
+import javax.sql.rowset.CachedRowSet;
+
+import de.uniba.kinf.projm.hylleblomst.gui.model.Model;
+import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
+import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
+import de.uniba.kinf.projm.hylleblomst.logic.SearchInitiator;
+import de.uniba.kinf.projm.hylleblomst.logicImpl.SearchInitiatorImpl;
+
 /**
  * Controller for the graphical user interface.
  * 
@@ -47,171 +48,170 @@ import javafx.util.Callback;
  */
 public class ViewController implements ControllerInterface, Initializable {
 
-	SearchInitiator initiator;
+	private SearchInitiator initiator;
 
-	Model model;
+	private Model model;
 
-	UIHelper ui;
+	private UIHelper ui;
 
 	private SearchController searchCtrl;
 
-	/**
-	 * Stores the number of input fields for usable generation of input field
-	 * arrays.
-	 */
+	private CachedRowSet cachedRowSet;
+
 	private int inputFieldCounter = 23;
 
-	private StringProperty sourceLabelName = new SimpleStringProperty("Quelle: ");
+	private StringProperty sourceLabelName = new SimpleStringProperty(
+			"Quelle: ");
 
 	@FXML
-	BorderPane root;
+	private BorderPane root;
 
 	@FXML
-	MenuItem mainMenu_file_save;
+	private MenuItem mainMenu_file_save;
 
 	@FXML
-	MenuItem mainMenu_file_export;
+	private MenuItem mainMenu_file_export;
 
 	@FXML
-	MenuItem mainMenu_file_close;
+	private MenuItem mainMenu_file_close;
 
 	@FXML
-	MenuItem mainMenu_edit_options;
+	private MenuItem mainMenu_edit_options;
 
 	@FXML
-	MenuItem mainMenu_help_help;
+	private MenuItem mainMenu_help_help;
 
 	@FXML
-	MenuItem mainMenu_help_about;
+	private MenuItem mainMenu_help_about;
 
 	@FXML
-	ComboBox<String> search_sourcekey_selection;
+	private ComboBox<String> search_sourcekey_selection;
 
 	@FXML
-	Accordion searchCategories;
+	private Accordion searchCategories;
 
 	@FXML
-	TitledPane searchCategory_person;
+	private TitledPane searchCategory_person;
 
 	@FXML
-	TextField searchCategory_person_anrede;
+	private TextField searchCategory_person_anrede;
 
 	@FXML
-	TextField searchCategory_person_anredenorm;
+	private TextField searchCategory_person_anredenorm;
 
 	@FXML
-	TextField searchCategory_person_titel;
+	private TextField searchCategory_person_titel;
 
 	@FXML
-	TextField searchCategory_person_titelnorm;
+	private TextField searchCategory_person_titelnorm;
 
 	@FXML
-	ComboBox<String> searchCategory_person_vornameselection;
+	private ComboBox<String> searchCategory_person_vornameselection;
 
 	@FXML
-	TextField searchCategory_person_vornameinput;
+	private TextField searchCategory_person_vornameinput;
 
 	@FXML
-	ComboBox<String> searchCategory_person_nachnameselection;
+	private ComboBox<String> searchCategory_person_nachnameselection;
 
 	@FXML
-	TextField searchCategory_person_nachnameinput;
+	private TextField searchCategory_person_nachnameinput;
 
 	@FXML
-	TitledPane searchCategory_personExtended;
+	private TitledPane searchCategory_personExtended;
 
 	@FXML
-	CheckBox searchCategory_personExtended_adeliger;
+	private CheckBox searchCategory_personExtended_adeliger;
 
 	@FXML
-	CheckBox searchCategory_personExtended_jesuit;
+	private CheckBox searchCategory_personExtended_jesuit;
 
 	@FXML
-	ComboBox<String> searchCategory_personExtended_wirtschaftselection;
+	private ComboBox<String> searchCategory_personExtended_wirtschaftselection;
 
 	@FXML
-	TextField searchCategory_personExtended_wirtschaftinput;
+	private TextField searchCategory_personExtended_wirtschaftinput;
 
 	@FXML
-	ComboBox<String> searchCategory_personExtended_ortselection;
+	private ComboBox<String> searchCategory_personExtended_ortselection;
 
 	@FXML
-	TextField searchCategory_personExtended_ortinput;
+	private TextField searchCategory_personExtended_ortinput;
 
 	@FXML
-	TitledPane searchCategory_study;
+	private TitledPane searchCategory_study;
 
 	@FXML
-	ComboBox<String> searchCategory_study_studienfachselection;
+	private ComboBox<String> searchCategory_study_studienfachselection;
 
 	@FXML
-	TextField searchCategory_study_studienfachinput;
+	private TextField searchCategory_study_studienfachinput;
 
 	@FXML
-	TextField searchCategory_study_fakultaet;
+	private TextField searchCategory_study_fakultaet;
 
 	@FXML
-	ComboBox<String> searchCategory_study_seminarselection;
+	private ComboBox<String> searchCategory_study_seminarselection;
 
 	@FXML
-	TextField searchCategory_study_seminarinput;
+	private TextField searchCategory_study_seminarinput;
 
 	@FXML
-	CheckBox searchCategory_study_graduiert;
+	private CheckBox searchCategory_study_graduiert;
 
 	@FXML
-	TextField searchCategory_study_studienjahrVon;
+	private TextField searchCategory_study_studienjahrVon;
 
 	@FXML
-	TextField searchCategory_study_studienjahrBis;
+	private TextField searchCategory_study_studienjahrBis;
 
 	@FXML
-	TextField searchCategory_study_einschreibeTag;
+	private TextField searchCategory_study_einschreibeTag;
 
 	@FXML
-	TextField searchCategory_study_einschreibeMonat;
+	private TextField searchCategory_study_einschreibeMonat;
 
 	@FXML
-	TextField searchCategory_study_einschreibeJahr;
+	private TextField searchCategory_study_einschreibeJahr;
 
 	@FXML
-	TitledPane searchCategory_other;
+	private TitledPane searchCategory_other;
 
 	@FXML
-	ComboBox<String> searchCategory_other_zusaetzeselection;
+	private ComboBox<String> searchCategory_other_zusaetzeselection;
 
 	@FXML
-	TextField searchCategory_other_zusaetzeinput;
+	private TextField searchCategory_other_zusaetzeinput;
 
 	@FXML
-	TextField searchCategory_other_fundort;
+	private TextField searchCategory_other_fundort;
 
 	@FXML
-	TextField searchCategory_other_anmerkungen;
+	private TextField searchCategory_other_anmerkungen;
 
 	@FXML
-	TextField searchCategory_other_nummer;
+	private TextField searchCategory_other_nummer;
 
 	@FXML
-	TextField searchCategory_other_seite;
+	private TextField searchCategory_other_seite;
 
 	@FXML
-	TextField searchCategory_other_nummerhess;
+	private TextField searchCategory_other_nummerhess;
 
 	@FXML
-	Button searchMenu_clearSearch;
+	private Button searchMenu_clearSearch;
 
 	@FXML
-	Button searchMenu_search;
+	private Button searchMenu_search;
 
 	@FXML
-	TableView<ObservableList<String>> resultTable;
+	private TableView<ObservableList<String>> resultTable;
 
 	@FXML
-	Label search_sourceLabel;
+	private Label search_sourceLabel;
 
 	@FXML
-	TextArea infoArea;
+	private TextArea infoArea;
 
 	/**
 	 * Constructor for a new Controller. When called, the array with
@@ -224,7 +224,8 @@ public class ViewController implements ControllerInterface, Initializable {
 		ui = new UIHelper();
 		initiator = new SearchInitiatorImpl();
 		model = new Model(initiator);
-		searchCtrl = new SearchController(this, initiator);
+		model.addObserver(this);
+		searchCtrl = new SearchController(this, model);
 	}
 
 	@Override
@@ -261,86 +262,101 @@ public class ViewController implements ControllerInterface, Initializable {
 	 * 
 	 */
 	private void setNumericalInputEventHandlers() {
-		searchCategory_study_studienjahrVon.setOnKeyReleased(new EventHandler<KeyEvent>() {
+		searchCategory_study_studienjahrVon
+				.setOnKeyReleased(new EventHandler<KeyEvent>() {
 
-			@Override
-			public void handle(KeyEvent ke) {
-				try {
-					if (getParsedInt(searchCategory_study_studienjahrVon.getText()) < 0
-							|| getParsedInt(searchCategory_study_studienjahrVon.getText()) > 2015) {
-						ke.consume();
-						throw new NumberFormatException();
+					@Override
+					public void handle(KeyEvent ke) {
+						try {
+							if (getParsedInt(searchCategory_study_studienjahrVon
+									.getText()) < 0
+									|| getParsedInt(searchCategory_study_studienjahrVon
+											.getText()) > 2015) {
+								ke.consume();
+								throw new NumberFormatException();
+							}
+						} catch (NumberFormatException e) {
+							ui.showErrorMessage("Studienjahr muss eine Zahl zwischen 0 und 2015 sein.");
+							searchCategory_study_studienjahrVon.clear();
+						}
 					}
-				} catch (NumberFormatException e) {
-					ui.showErrorMessage("Studienjahr muss eine Zahl zwischen 0 und 2015 sein.");
-					searchCategory_study_studienjahrVon.clear();
-				}
-			}
-		});
-		searchCategory_study_studienjahrBis.setOnKeyReleased(new EventHandler<KeyEvent>() {
+				});
+		searchCategory_study_studienjahrBis
+				.setOnKeyReleased(new EventHandler<KeyEvent>() {
 
-			@Override
-			public void handle(KeyEvent ke) {
-				try {
-					if (getParsedInt(searchCategory_study_studienjahrBis.getText()) < 0
-							|| getParsedInt(searchCategory_study_studienjahrBis.getText()) > 2015) {
-						ke.consume();
-						throw new NumberFormatException();
+					@Override
+					public void handle(KeyEvent ke) {
+						try {
+							if (getParsedInt(searchCategory_study_studienjahrBis
+									.getText()) < 0
+									|| getParsedInt(searchCategory_study_studienjahrBis
+											.getText()) > 2015) {
+								ke.consume();
+								throw new NumberFormatException();
+							}
+						} catch (NumberFormatException e) {
+							ui.showErrorMessage("Studienjahr muss eine Zahl zwischen 0 und 2015 sein.");
+							searchCategory_study_studienjahrBis.clear();
+						}
 					}
-				} catch (NumberFormatException e) {
-					ui.showErrorMessage("Studienjahr muss eine Zahl zwischen 0 und 2015 sein.");
-					searchCategory_study_studienjahrBis.clear();
-				}
-			}
-		});
-		searchCategory_study_einschreibeJahr.setOnKeyReleased(new EventHandler<KeyEvent>() {
+				});
+		searchCategory_study_einschreibeJahr
+				.setOnKeyReleased(new EventHandler<KeyEvent>() {
 
-			@Override
-			public void handle(KeyEvent ke) {
-				try {
-					if (getParsedInt(searchCategory_study_einschreibeJahr.getText()) < 0
-							|| getParsedInt(searchCategory_study_einschreibeJahr.getText()) > 2015) {
-						ke.consume();
-						throw new NumberFormatException();
+					@Override
+					public void handle(KeyEvent ke) {
+						try {
+							if (getParsedInt(searchCategory_study_einschreibeJahr
+									.getText()) < 0
+									|| getParsedInt(searchCategory_study_einschreibeJahr
+											.getText()) > 2015) {
+								ke.consume();
+								throw new NumberFormatException();
+							}
+						} catch (NumberFormatException e) {
+							ui.showErrorMessage("Einschreibejahr muss eine Zahl zwischen 0 und 2015 sein.");
+							searchCategory_study_einschreibeJahr.clear();
+						}
 					}
-				} catch (NumberFormatException e) {
-					ui.showErrorMessage("Einschreibejahr muss eine Zahl zwischen 0 und 2015 sein.");
-					searchCategory_study_einschreibeJahr.clear();
-				}
-			}
-		});
-		searchCategory_study_einschreibeMonat.setOnKeyReleased(new EventHandler<KeyEvent>() {
+				});
+		searchCategory_study_einschreibeMonat
+				.setOnKeyReleased(new EventHandler<KeyEvent>() {
 
-			@Override
-			public void handle(KeyEvent ke) {
-				try {
-					if (getParsedInt(searchCategory_study_einschreibeMonat.getText()) < 1
-							|| getParsedInt(searchCategory_study_einschreibeMonat.getText()) > 12) {
-						ke.consume();
-						throw new NumberFormatException();
+					@Override
+					public void handle(KeyEvent ke) {
+						try {
+							if (getParsedInt(searchCategory_study_einschreibeMonat
+									.getText()) < 1
+									|| getParsedInt(searchCategory_study_einschreibeMonat
+											.getText()) > 12) {
+								ke.consume();
+								throw new NumberFormatException();
+							}
+						} catch (NumberFormatException e) {
+							ui.showErrorMessage("Einschreibemonat muss eine Zahl von 1 bis 12 sein.");
+							searchCategory_study_einschreibeMonat.clear();
+						}
 					}
-				} catch (NumberFormatException e) {
-					ui.showErrorMessage("Einschreibemonat muss eine Zahl von 1 bis 12 sein.");
-					searchCategory_study_einschreibeMonat.clear();
-				}
-			}
-		});
-		searchCategory_study_einschreibeTag.setOnKeyReleased(new EventHandler<KeyEvent>() {
+				});
+		searchCategory_study_einschreibeTag
+				.setOnKeyReleased(new EventHandler<KeyEvent>() {
 
-			@Override
-			public void handle(KeyEvent ke) {
-				try {
-					if (getParsedInt(searchCategory_study_einschreibeTag.getText()) < 1
-							|| getParsedInt(searchCategory_study_einschreibeTag.getText()) > 31) {
-						ke.consume();
-						throw new NumberFormatException();
+					@Override
+					public void handle(KeyEvent ke) {
+						try {
+							if (getParsedInt(searchCategory_study_einschreibeTag
+									.getText()) < 1
+									|| getParsedInt(searchCategory_study_einschreibeTag
+											.getText()) > 31) {
+								ke.consume();
+								throw new NumberFormatException();
+							}
+						} catch (NumberFormatException e) {
+							ui.showErrorMessage("Einschreibetag muss eine Zahl von 1 bis 31 sein.");
+							searchCategory_study_einschreibeTag.clear();
+						}
 					}
-				} catch (NumberFormatException e) {
-					ui.showErrorMessage("Einschreibetag muss eine Zahl von 1 bis 31 sein.");
-					searchCategory_study_einschreibeTag.clear();
-				}
-			}
-		});
+				});
 	}
 
 	private void setTableViewEventHandlers() {
@@ -372,14 +388,19 @@ public class ViewController implements ControllerInterface, Initializable {
 			inputFields[3] = searchCategory_person_titelnorm.getText();
 			inputFields[4] = searchCategory_person_vornameinput.getText();
 			inputFields[5] = searchCategory_person_nachnameinput.getText();
-			inputFields[6] = String.valueOf(searchCategory_personExtended_adeliger.isSelected());
-			inputFields[7] = String.valueOf(searchCategory_personExtended_jesuit.isSelected());
-			inputFields[8] = searchCategory_personExtended_wirtschaftinput.getText();
+			inputFields[6] = String
+					.valueOf(searchCategory_personExtended_adeliger
+							.isSelected());
+			inputFields[7] = String
+					.valueOf(searchCategory_personExtended_jesuit.isSelected());
+			inputFields[8] = searchCategory_personExtended_wirtschaftinput
+					.getText();
 			inputFields[9] = searchCategory_personExtended_ortinput.getText();
 			inputFields[10] = searchCategory_study_studienfachinput.getText();
 			inputFields[11] = searchCategory_study_fakultaet.getText();
 			inputFields[12] = searchCategory_study_seminarinput.getText();
-			inputFields[13] = String.valueOf(searchCategory_study_graduiert.isSelected());
+			inputFields[13] = String.valueOf(searchCategory_study_graduiert
+					.isSelected());
 			inputFields[14] = searchCategory_study_studienjahrVon.getText();
 			inputFields[15] = searchCategory_study_studienjahrBis.getText();
 			inputFields[16] = getEinschreibungVon();
@@ -419,13 +440,15 @@ public class ViewController implements ControllerInterface, Initializable {
 
 	private int getParsedInt(String input) {
 		if ("".equals(input) || input == null) {
-			throw new InputMismatchException("Ein Fehler bei der Verarbeitung der Zahleingabe ist aufgetreten.");
+			throw new InputMismatchException(
+					"Ein Fehler bei der Verarbeitung der Zahleingabe ist aufgetreten.");
 		}
 		int result;
 		try {
 			result = Integer.parseInt(input);
 		} catch (NumberFormatException e) {
-			throw new NumberFormatException("Die Eingabe von \"" + input + "\" in einem Zahlenfeld ist nicht gültig.");
+			throw new NumberFormatException("Die Eingabe von \"" + input
+					+ "\" in einem Zahlenfeld ist nicht gültig.");
 		}
 		return result;
 	}
@@ -440,20 +463,26 @@ public class ViewController implements ControllerInterface, Initializable {
 		inputSourceKey[1] = SourceKeys.NORM;
 		inputSourceKey[2] = SourceKeys.STANDARD;
 		inputSourceKey[3] = SourceKeys.NORM;
-		inputSourceKey[4] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
+		inputSourceKey[4] = getSourceKeyByValueAsString(search_sourcekey_selection
+				.getValue());
 		inputSourceKey[5] = SourceKeys.STANDARD;
 		inputSourceKey[6] = SourceKeys.NO_SOURCE;
 		inputSourceKey[7] = SourceKeys.NO_SOURCE;
-		inputSourceKey[8] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
-		inputSourceKey[9] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
-		inputSourceKey[10] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
+		inputSourceKey[8] = getSourceKeyByValueAsString(search_sourcekey_selection
+				.getValue());
+		inputSourceKey[9] = getSourceKeyByValueAsString(search_sourcekey_selection
+				.getValue());
+		inputSourceKey[10] = getSourceKeyByValueAsString(search_sourcekey_selection
+				.getValue());
 		inputSourceKey[11] = SourceKeys.NO_SOURCE;
-		inputSourceKey[12] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
+		inputSourceKey[12] = getSourceKeyByValueAsString(search_sourcekey_selection
+				.getValue());
 		inputSourceKey[13] = SourceKeys.NO_SOURCE;
 		inputSourceKey[14] = SourceKeys.NO_SOURCE;
 		inputSourceKey[15] = SourceKeys.NO_SOURCE;
 		inputSourceKey[16] = SourceKeys.NO_SOURCE;
-		inputSourceKey[17] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
+		inputSourceKey[17] = getSourceKeyByValueAsString(search_sourcekey_selection
+				.getValue());
 		inputSourceKey[18] = SourceKeys.NO_SOURCE;
 		inputSourceKey[19] = SourceKeys.NO_SOURCE;
 		inputSourceKey[20] = SourceKeys.NO_SOURCE;
@@ -479,7 +508,8 @@ public class ViewController implements ControllerInterface, Initializable {
 			setLabelSource();
 		} catch (Exception e) {
 			e.printStackTrace();
-			ui.showErrorMessage("Die Suche konnte nicht gestartet werden.\n" + e.getMessage());
+			ui.showErrorMessage("Die Suche konnte nicht gestartet werden.\n"
+					+ e.getMessage());
 		}
 	}
 
@@ -501,8 +531,8 @@ public class ViewController implements ControllerInterface, Initializable {
 			searchCtrl.startSinglePersonSearch(string);
 		} catch (Exception e) {
 			e.printStackTrace();
-			ui.showErrorMessage(
-					"Es können keine Detailinformationen für diese Person angezeigt werden.\n" + e.getMessage());
+			ui.showErrorMessage("Es können keine Detailinformationen für diese Person angezeigt werden.\n"
+					+ e.getMessage());
 		}
 	}
 
@@ -580,26 +610,32 @@ public class ViewController implements ControllerInterface, Initializable {
 	}
 
 	void fillResultTable(CachedRowSet result) {
-		ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
+		if (result == null || result.size() == 0) {
+			throw new InputMismatchException(
+					"Das übergebene Set mit dem Tabelleninhalt ist leer oder hat keinen Wert.");
+		}
+		ObservableList<ObservableList<String>> data = FXCollections
+				.observableArrayList();
 		try {
 			for (int i = 0; i < result.getMetaData().getColumnCount(); i++) {
 				final int j = i;
 				TableColumn<ObservableList<String>, String> col = new TableColumn<ObservableList<String>, String>(
 						result.getMetaData().getColumnName(i + 1));
-				col.setCellValueFactory(
-						new Callback<CellDataFeatures<ObservableList<String>, String>, ObservableValue<String>>() {
+				col.setCellValueFactory(new Callback<CellDataFeatures<ObservableList<String>, String>, ObservableValue<String>>() {
 
-							@Override
-							public ObservableValue<String> call(
-									CellDataFeatures<ObservableList<String>, String> param) {
-								return new SimpleStringProperty(param.getValue().get(j).toString());
-							}
-						});
+					@Override
+					public ObservableValue<String> call(
+							CellDataFeatures<ObservableList<String>, String> param) {
+						return new SimpleStringProperty(param.getValue().get(j)
+								.toString());
+					}
+				});
 				resultTable.getColumns().add(col);
 			}
 
 			while (result.next()) {
-				ObservableList<String> row = FXCollections.observableArrayList();
+				ObservableList<String> row = FXCollections
+						.observableArrayList();
 				for (int i = 1; i < result.getMetaData().getColumnCount(); i++) {
 					row.add(result.getString(i));
 				}
@@ -633,8 +669,12 @@ public class ViewController implements ControllerInterface, Initializable {
 	}
 
 	@Override
-	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
-
+	public void update(Observable observable, Object updateData) {
+		if (observable != null) {
+			if (observable instanceof Model
+					&& updateData instanceof CachedRowSet) {
+				fillResultTable((CachedRowSet) updateData);
+			}
+		}
 	}
 }
