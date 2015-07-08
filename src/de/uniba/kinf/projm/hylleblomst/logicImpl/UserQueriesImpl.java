@@ -219,7 +219,7 @@ public class UserQueriesImpl implements UserQueries {
 				return String.format("%s.%s < ?", table, column);
 			}
 			if (searchField == SearchFieldKeys.EINSCHREIBEDATUM_BIS) {
-				if (!(input.contains("mm-dd"))) {
+				if (input.contains("mm-dd")) {
 					input = input.substring(0, 3) + "-12-31";
 				} else if (input.contains("mm")) {
 					input = input.substring(0, 3) + "-12-" + input.substring(8, 9);
