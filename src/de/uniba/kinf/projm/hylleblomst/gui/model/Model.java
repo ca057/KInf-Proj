@@ -18,7 +18,7 @@ public class Model extends Observable {
 		if (search != null) {
 			this.search = search;
 		} else {
-			throw new InputMismatchException("Die Logik des Programms ist fehlerhaft: " + search);
+			throw new InputMismatchException("Die Logik des Programms ist fehlerhaft (null)");
 		}
 	}
 
@@ -36,7 +36,7 @@ public class Model extends Observable {
 			searchResult = search.searchPerson(id);
 			notifyObservers();
 		} else {
-			throw new InputMismatchException("Die übergebene ID ist fehlerhaft: " + search);
+			throw new InputMismatchException("Die übergebene ID ist fehlerhaft (null)");
 		}
 	}
 }

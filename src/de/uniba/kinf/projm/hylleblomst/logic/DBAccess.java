@@ -42,9 +42,10 @@ public class DBAccess {
 					parameterIndex++;
 				}
 			}
+
 			con.setAutoCommit(false);
-			ResultSet results = stmt.executeQuery();
-			crs.populate(results);
+			crs.populate(stmt.executeQuery());
+			con.setAutoCommit(true);
 
 			// ResultSetMetaData rsmd = stmt.getMetaData();
 			// int columnsNumber = rsmd.getColumnCount();
@@ -71,7 +72,6 @@ public class DBAccess {
 			// }
 			// return new Person
 			// ItemBuilder().startBuildingPersonItems(results);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
