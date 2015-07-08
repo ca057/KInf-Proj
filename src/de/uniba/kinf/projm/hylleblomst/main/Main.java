@@ -1,13 +1,19 @@
 package de.uniba.kinf.projm.hylleblomst.main;
 
-public class Main {
+import de.uniba.kinf.projm.hylleblomst.gui.model.Model;
+import de.uniba.kinf.projm.hylleblomst.logic.SearchInitiator;
+import de.uniba.kinf.projm.hylleblomst.logicImpl.SearchInitiatorImpl;
+import javafx.application.Application;
+import javafx.stage.Stage;
 
-	public static void main(String[] args) {
-		try {
+public class Main extends Application {
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+	@Override
+	public void start(Stage primaryStage) throws Exception {
+		// Logik starten
+		SearchInitiator initiator = new SearchInitiatorImpl();
+		// Model starten
+		Model model = new Model(initiator);
+		// View starten
 	}
-
 }

@@ -6,9 +6,14 @@ import java.util.List;
 import java.util.Observable;
 
 import de.uniba.kinf.projm.hylleblomst.logic.PersonItem;
+import de.uniba.kinf.projm.hylleblomst.logic.SearchInitiator;
 import de.uniba.kinf.projm.hylleblomst.logic.UserQueries;
 
 public class Model extends Observable {
+
+	public Model(SearchInitiator initiator) {
+
+	}
 
 	public void search(Collection<UserQueries> userQueries) throws SQLException {
 
