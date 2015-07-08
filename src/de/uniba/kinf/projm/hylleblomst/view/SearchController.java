@@ -19,7 +19,7 @@ import javafx.collections.ObservableList;
  * @author ca
  *
  */
-public class SearchController extends Observable {
+public class SearchController implements ControllerInterface {
 
 	/**
 	 * Array stores for every input field the corresponding search field key.
@@ -72,22 +72,10 @@ public class SearchController extends Observable {
 			if (!inputValues[i].isEmpty() && !"false".equals(inputValues[i]) && !"yyyy-mm-dd".equals(inputValues[i])) {
 				UserQueriesImpl tmpReq = new UserQueriesImpl(inputSearchFKey[i], inputValues[i], inputSourceKey[i]);
 				requestList.add(tmpReq);
-				// update observable list with the used SFK, so view can work
-				// with the correct table columns
-				usedSearchFields.add(inputSearchFKey[i]);
-				notifyObservers(usedSearchFields);
 			}
 		}
 
 		try {
-			// view.setInfoTextExtendedSearch(requestList);
-			// view.fillResultTable();
-			// if (requestList.size() != 0) {
-			// List<PersonItem> result =
-			// searchInitiatorImpl.search(requestList);
-			// // TODO remove comment for later implementation
-			// // view.fillResultTable(result);
-			// }
 			ResultSet resultSet = searchInitiatorImpl.search(requestList);
 			view.fillResultTableWithResultSet(resultSet);
 		} catch (SQLException e) {
@@ -141,5 +129,11 @@ public class SearchController extends Observable {
 		sfkArray[22] = SearchFieldKeys.NUMMER_HESS;
 
 		return sfkArray;
+	}
+
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		// TODO Auto-generated method stub
+
 	}
 }

@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Observable;
-import java.util.Observer;
 import java.util.ResourceBundle;
 
 import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
@@ -48,7 +47,7 @@ import javafx.util.Callback;
  * @author ca
  *
  */
-public class ViewController implements Initializable, Observer {
+public class ViewController implements ControllerInterface, Initializable {
 	/**
 	 * UIHelper supports a nice user interaction.
 	 */
@@ -233,7 +232,6 @@ public class ViewController implements Initializable, Observer {
 	public ViewController() {
 		ui = new UIHelper();
 		searchCtrl = new SearchController(this);
-		searchCtrl.addObserver(this);
 	}
 
 	@Override
@@ -629,7 +627,6 @@ public class ViewController implements Initializable, Observer {
 
 							@Override
 							public ObservableValue<String> call(CellDataFeatures<ObservableList, String> param) {
-
 								return new SimpleStringProperty(param.getValue().get(j).toString());
 							}
 						});
@@ -641,7 +638,7 @@ public class ViewController implements Initializable, Observer {
 				for (int i = 1; i < result.getMetaData().getColumnCount(); i++) {
 					row.add(result.getString(i));
 				}
-				data.add(row);
+				data.addAll(row);
 			}
 			resultTable.setItems(data);
 		} catch (SQLException e) {
@@ -750,14 +747,9 @@ public class ViewController implements Initializable, Observer {
 		infoArea.setText(info);
 	}
 
-	/**
-	 * 
-	 */
-	@SuppressWarnings("unchecked")
 	@Override
-	public void update(Observable observable, Object updatedSearchFieldKeyList) {
-		if (observable instanceof SearchController) {
-			usedSearchFieldKeys = (ArrayList<SearchFieldKeys>) updatedSearchFieldKeyList;
-		}
+	public void update(Observable o, Object arg) {
+		// TODO Auto-generated method stub
+
 	}
 }
