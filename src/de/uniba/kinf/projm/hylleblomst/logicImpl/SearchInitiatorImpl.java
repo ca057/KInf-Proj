@@ -34,6 +34,8 @@ public class SearchInitiatorImpl implements SearchInitiator {
 		StringBuilder sqlQuery = new StringBuilder();
 		StringBuilder sqlFrom = new StringBuilder();
 		StringBuilder sqlWhere = new StringBuilder();
+		// FIXME Das mit inputs als Instanzvariable ist nicht besonders schön.
+		inputs.clear();
 
 		sqlQuery.append("SELECT ").append(sql.getSelect());
 		sqlFrom.append(sql.getFrom());

@@ -12,6 +12,7 @@ public class UserQueriesImpl implements UserQueries {
 	private String input;
 	private int source;
 	private String table;
+	private String sqlWhere;
 
 	public UserQueriesImpl(SearchFieldKeys searchField, String input, int source) {
 		setInput(input);
@@ -58,6 +59,11 @@ public class UserQueriesImpl implements UserQueries {
 		return column;
 	}
 
+	@Override
+	public String getWhere() {
+		return sqlWhere;
+	}
+
 	/**
 	 * Returns the name of the table the {@code SearchFieldKey} key belongs to.
 	 * 
@@ -70,36 +76,66 @@ public class UserQueriesImpl implements UserQueries {
 			case ADLIG:
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.ADLIG;
+				sqlWhere = String.format("%s.%s <> ''", table, column);
 				break;
 			case JESUIT:
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.JESUIT;
+				sqlWhere = String.format("%s.%s <> ''", table, column);
 				break;
 			case STUDIENJAHR_VON:
+				table = TableNameKeys.PERSON;
+				column = ColumnNameKeys.STUDIENJAHR_INT;
+				sqlWhere = String.format("%s.%s > ?", table, column);
+				break;
 			case STUDIENJAHR_BIS:
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.STUDIENJAHR_INT;
+				sqlWhere = String.format("%s.%s < ?", table, column);
 				break;
 			case EINSCHREIBEDATUM_VON:
+				table = TableNameKeys.PERSON;
+				column = ColumnNameKeys.DATUM;
+				sqlWhere = String.format("%s.%s > ?", table, column);
+				if (input.contains("mm-dd")) {
+					input = input.substring(0, input.indexOf("-", 1)) + "-01-01";
+				} else if (input.contains("mm")) {
+					input = input.substring(0, input.indexOf("-", 2)) + "-01-" + input.substring(8, 9);
+				} else if (input.contains("dd")) {
+					input = input.substring(0, input.indexOf("-", 3)) + "-01";
+				}
+				break;
 			case EINSCHREIBEDATUM_BIS:
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.DATUM;
+				sqlWhere = String.format("%s.%s < ?", table, column);
+				if (input.contains("mm-dd")) {
+					input = input.substring(0, 3) + "-12-31";
+				} else if (input.contains("mm")) {
+					input = input.substring(0, 3) + "-12-" + input.substring(8, 9);
+				} else if (input.contains("dd")) {
+					input = input.substring(0, 6) + "-31";
+				}
 				break;
 			case ANMERKUNGEN:
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.ANMERKUNG;
+				sqlWhere = buildSQLWhere();
 				break;
 			case NUMMER:
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.PERSON_ID;
+				sqlWhere = buildSQLWhere();
 				break;
 			case SEITE_ORIGINALE:
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.SEITE_ORIGINAL;
+				sqlWhere = buildSQLWhere();
 				break;
 			case NUMMER_HESS:
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.NUMMER_HESS;
+				sqlWhere = buildSQLWhere();
 				break;
 			case ANREDE:
 				if (source == SourceKeys.NORM) {
@@ -109,6 +145,7 @@ public class UserQueriesImpl implements UserQueries {
 					table = TableNameKeys.ANREDE_TRAD;
 					column = ColumnNameKeys.ANREDE_TRAD;
 				}
+				sqlWhere = buildSQLWhere();
 				break;
 			case TITEL:
 				if (source == SourceKeys.NORM) {
@@ -118,6 +155,7 @@ public class UserQueriesImpl implements UserQueries {
 					table = TableNameKeys.TITEL_TRAD;
 					column = ColumnNameKeys.TITEL_TRAD;
 				}
+				sqlWhere = buildSQLWhere();
 				break;
 			case VORNAME:
 				if (source == SourceKeys.NORM) {
@@ -127,6 +165,7 @@ public class UserQueriesImpl implements UserQueries {
 					table = TableNameKeys.VORNAME_TRAD;
 					column = ColumnNameKeys.VORNAME_TRAD;
 				}
+				sqlWhere = buildSQLWhere();
 				break;
 			case NACHNAME:
 				if (source == SourceKeys.NORM) {
@@ -136,6 +175,7 @@ public class UserQueriesImpl implements UserQueries {
 					table = TableNameKeys.NAME_TRAD;
 					column = ColumnNameKeys.NAME_TRAD;
 				}
+				sqlWhere = buildSQLWhere();
 				break;
 			case WIRTSCHAFTSLAGE:
 				if (source == SourceKeys.NORM) {
@@ -145,6 +185,7 @@ public class UserQueriesImpl implements UserQueries {
 					table = TableNameKeys.WIRTSCHAFTSLAGE_TRAD;
 					column = ColumnNameKeys.WIRTSCHAFTSLAGE_TRAD;
 				}
+				sqlWhere = buildSQLWhere();
 				break;
 			case ORT:
 				if (source == SourceKeys.NORM) {
@@ -157,6 +198,7 @@ public class UserQueriesImpl implements UserQueries {
 					table = TableNameKeys.ORT_TRAD;
 					column = ColumnNameKeys.ORT_TRAD;
 				}
+				sqlWhere = buildSQLWhere();
 				break;
 			case FACH:
 				if (source == SourceKeys.NORM) {
@@ -166,6 +208,7 @@ public class UserQueriesImpl implements UserQueries {
 					table = TableNameKeys.FACH_TRAD;
 					column = ColumnNameKeys.FACH_TRAD;
 				}
+				sqlWhere = buildSQLWhere();
 				break;
 			case FAKULTAETEN:
 				table = TableNameKeys.FAKULTAETEN;
@@ -179,18 +222,22 @@ public class UserQueriesImpl implements UserQueries {
 					table = TableNameKeys.SEMINAR_TRAD;
 					column = ColumnNameKeys.SEMINAR_TRAD;
 				}
+				sqlWhere = buildSQLWhere();
 				break;
 			case GRADUIERT:
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.GRADUIERT;
+				sqlWhere = String.format("%s.%s <> ''", table, column);
 				break;
 			case ZUSAETZE:
 				table = TableNameKeys.ZUSAETZE;
 				column = ColumnNameKeys.ZUSAETZE;
+				sqlWhere = buildSQLWhere();
 				break;
 			case FUNDORTE:
 				table = TableNameKeys.FUNDORTE;
 				column = ColumnNameKeys.FUNDORTE_NORM;
+				sqlWhere = buildSQLWhere();
 				break;
 			default:
 				throw new IllegalArgumentException(
@@ -202,48 +249,15 @@ public class UserQueriesImpl implements UserQueries {
 		}
 	}
 
-	@Override
-	public String getWhere() {
+	private String buildSQLWhere() {
 		if (source == SourceKeys.NORM) {
 			return String.format("%s_norm.%s LIKE ?", table.substring(0, table.indexOf("_")), column);
 		}
-		if (source == SourceKeys.NO_SOURCE) {
-			if (searchField == SearchFieldKeys.ADLIG || searchField == SearchFieldKeys.JESUIT
-					|| searchField == SearchFieldKeys.GRADUIERT) {
-				return String.format("%s.%s <> ''", table, column);
-			}
-			if (searchField == SearchFieldKeys.STUDIENJAHR_VON) {
-				return String.format("%s.%s > ?", table, column);
-			}
-			if (searchField == SearchFieldKeys.STUDIENJAHR_BIS) {
-				return String.format("%s.%s < ?", table, column);
-			}
-			if (searchField == SearchFieldKeys.EINSCHREIBEDATUM_BIS) {
-				if (input.contains("mm-dd")) {
-					input = input.substring(0, 3) + "-12-31";
-				} else if (input.contains("mm")) {
-					input = input.substring(0, 3) + "-12-" + input.substring(8, 9);
-				} else if (input.contains("dd")) {
-					input = input.substring(0, 6) + "-31";
-				}
-				return String.format("%s.%s < ?", table, column);
-			}
-			if (searchField == SearchFieldKeys.EINSCHREIBEDATUM_VON) {
-				if (input.contains("mm-dd")) {
-					input = input.substring(0, input.indexOf("-", 1)) + "-01-01";
-				} else if (input.contains("mm")) {
-					input = input.substring(0, input.indexOf("-", 2)) + "-01-" + input.substring(8, 9);
-				} else if (input.contains("dd")) {
-					input = input.substring(0, input.indexOf("-", 3)) + "-01";
-				}
-				return String.format("%s.%s > ?", table, column);
-			}
+		if (source == SourceKeys.NO_SELECTION || searchField == SearchFieldKeys.ANREDE
+				|| searchField == SearchFieldKeys.TITEL) {
+			return String.format("%s.%s LIKE ? ", table, column);
 		}
-		if (!(source == SourceKeys.NO_SELECTION || searchField == SearchFieldKeys.ANREDE
-				|| searchField == SearchFieldKeys.TITEL)) {
-			return String.format("%s.%s LIKE ? AND %s_info.%s = %s", table, column,
-					table.substring(0, table.indexOf("_")), ColumnNameKeys.QUELLEN_ID, source);
-		}
-		return String.format("%s.%s LIKE ? ", table, column);
+		return String.format("%s.%s LIKE ? AND %s_info.%s = %s", table, column, table.substring(0, table.indexOf("_")),
+				ColumnNameKeys.QUELLEN_ID, source);
 	}
 }
