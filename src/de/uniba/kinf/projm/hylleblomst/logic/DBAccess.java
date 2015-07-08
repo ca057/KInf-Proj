@@ -72,11 +72,13 @@ public class DBAccess {
 			// }
 			// }
 
-			while (crs.next()) {
-				System.out.println("ID: " + crs.getInt(1) + ",  Name: " + crs.getString(2) + ", Name: "
-						+ crs.getString(3) + ", Ort: " + crs.getString(4) + ", Fakultäten: " + crs.getString(5)
-						+ ", Test: " + crs.getString(6));
-			}
+			// while (crs.next()) {
+			// System.out.println("ID: " + crs.getInt(1) + ", Name: " +
+			// crs.getString(2) + ", Name: "
+			// + crs.getString(3) + ", Ort: " + crs.getString(4) + ",
+			// Fakultäten: " + crs.getString(5)
+			// + ", Test: " + crs.getString(6));
+			// }
 
 		} catch (Exception e) {
 			e.printStackTrace();
