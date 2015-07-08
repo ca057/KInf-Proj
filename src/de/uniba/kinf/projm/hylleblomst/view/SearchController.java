@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Observable;
 
 import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
+import de.uniba.kinf.projm.hylleblomst.logic.SearchInitiator;
 import de.uniba.kinf.projm.hylleblomst.logic.UserQueries;
-import de.uniba.kinf.projm.hylleblomst.logicImpl.SearchInitiatorImpl;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.UserQueriesImpl;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -37,7 +37,7 @@ public class SearchController implements ControllerInterface {
 	/**
 	 * SearchInitiatorImpl executes the search.
 	 */
-	private SearchInitiatorImpl searchInitiatorImpl;
+	private SearchInitiator searchInitiatorImpl;
 
 	/**
 	 * 
@@ -48,11 +48,11 @@ public class SearchController implements ControllerInterface {
 	 * 
 	 * @param view
 	 */
-	public SearchController(ViewController view) {
+	public SearchController(ViewController view, SearchInitiator searchInitiatorImpl) {
 		this.view = view;
 		this.inputCounter = view.getInputFieldCounter();
 		this.inputSearchFKey = generateSearchFieldKeyArray();
-		this.searchInitiatorImpl = new SearchInitiatorImpl();
+		this.searchInitiatorImpl = searchInitiatorImpl;
 	}
 
 	/**

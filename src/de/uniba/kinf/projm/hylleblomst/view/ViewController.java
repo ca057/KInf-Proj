@@ -9,9 +9,11 @@ import java.util.List;
 import java.util.Observable;
 import java.util.ResourceBundle;
 
+import de.uniba.kinf.projm.hylleblomst.gui.model.Model;
 import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.PersonItem;
+import de.uniba.kinf.projm.hylleblomst.logic.SearchInitiator;
 import de.uniba.kinf.projm.hylleblomst.logic.UserQueries;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.SearchInitiatorImpl;
 import javafx.beans.property.SimpleStringProperty;
@@ -48,15 +50,13 @@ import javafx.util.Callback;
  *
  */
 public class ViewController implements ControllerInterface, Initializable {
-	/**
-	 * UIHelper supports a nice user interaction.
-	 */
+
+	SearchInitiator initiator;
+
+	Model model;
+
 	UIHelper ui;
 
-	/**
-	 * Implements the logic of preparing the user input for passing it to the
-	 * {@link SearchInitiatorImpl}.
-	 */
 	private SearchController searchCtrl;
 
 	/**
@@ -231,7 +231,15 @@ public class ViewController implements ControllerInterface, Initializable {
 	 */
 	public ViewController() {
 		ui = new UIHelper();
-		searchCtrl = new SearchController(this);
+		initiator = new SearchInitiatorImpl();
+		model = new Model(initiator);
+		searchCtrl = new SearchController(this, initiator);
+	}
+
+	public void setModel(Model model) {
+		if (model != null) {
+			this.model = model;
+		}
 	}
 
 	@Override
