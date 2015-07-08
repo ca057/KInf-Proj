@@ -344,8 +344,10 @@ public class ViewController implements ControllerInterface, Initializable {
 		resultTable.setOnMousePressed(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				if (event.isPrimaryButtonDown()) {
-					// startSearchForSinglePerson(resultTable.getSelectionModel().getSelectedItem().getId());
+				if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+					System.out.println(
+							"Suche Details von ID " + resultTable.getSelectionModel().getSelectedItem().get(0));
+					startSearchForSinglePerson(resultTable.getSelectionModel().getSelectedItem().get(0));
 				}
 				event.consume();
 			}
@@ -470,13 +472,19 @@ public class ViewController implements ControllerInterface, Initializable {
 	@FXML
 	private void startSearch() {
 		try {
+			resultTable.getColumns().clear();
+			resultTable.getItems().clear();
 			String[] input = generateArrayWithInputValues();
 			int[] sources = generateArrayWithSourceFieldKeys();
 			searchCtrl.executeSearch(input, sources);
 			setLabelSource();
 		} catch (Exception e) {
 			e.printStackTrace();
-			ui.showErrorMessage("Die Suche konnte nicht gestartet werden.\n" + e.getMessage());
+			if (e.getMessage().isEmpty()) {
+				ui.showErrorMessage("Bei der Suche ist ein Fehler aufgetreten.");
+			} else {
+				ui.showErrorMessage(e.getMessage());
+			}
 		}
 	}
 
@@ -580,6 +588,8 @@ public class ViewController implements ControllerInterface, Initializable {
 		if (result == null) {
 			throw new InputMismatchException(
 					"Das übergebene Set mit dem Tabelleninhalt ist leer oder hat keinen Wert.");
+		} else if (result.size() == 0) {
+			throw new RuntimeException("Die Suchanfrage hat kein Ergebnis geliefert.");
 		}
 		ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
 		try {
@@ -613,6 +623,7 @@ public class ViewController implements ControllerInterface, Initializable {
 				data.add(row);
 			}
 			resultTable.setItems(data);
+			resultTable.getColumns().get(0).setVisible(false);
 		} catch (SQLException e) {
 			ui.showErrorMessage("Bei der Anzeige der gefundenen Datensätze ist ein Fehler aufgetreten.");
 			e.printStackTrace();
