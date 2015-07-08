@@ -56,8 +56,6 @@ public class ViewController implements ControllerInterface, Initializable {
 
 	private SearchController searchCtrl;
 
-	private CachedRowSet cachedRowSet;
-
 	private int inputFieldCounter = 23;
 
 	private StringProperty sourceLabelName = new SimpleStringProperty(
@@ -627,12 +625,21 @@ public class ViewController implements ControllerInterface, Initializable {
 							+ columnName.substring(columnName.indexOf("_"));
 				}
 				TableColumn<ObservableList<String>, String> col = new TableColumn<ObservableList<String>, String>(
-						result.getMetaData().getColumnName(i + 1));
+						columnName);
+				System.out.println("columnCount: "
+						+ result.getMetaData().getColumnCount());
+				System.out.println("size: " + result.size());
+				System.out.println("columnName: " + columnName);
 				col.setCellValueFactory(new Callback<CellDataFeatures<ObservableList<String>, String>, ObservableValue<String>>() {
 
 					@Override
 					public ObservableValue<String> call(
 							CellDataFeatures<ObservableList<String>, String> param) {
+						System.out.println(j + ": "
+								+ param.getValue().toString());
+						System.out.println(j + ": "
+								+ param.getValue().get(j).toString());
+
 						return new SimpleStringProperty(param.getValue().get(j)
 								.toString());
 					}

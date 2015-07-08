@@ -33,10 +33,13 @@ public class DBAccess {
 		this.password = password;
 	}
 
-	public CachedRowSet startQuery(String query, ArrayList<String> inputs) throws SQLException {
+	public CachedRowSet startQuery(String query, ArrayList<String> inputs)
+			throws SQLException {
 		CachedRowSet crs = new CachedRowSetImpl();
-		try (Connection con = DriverManager.getConnection(dbURL, user, password);
-				PreparedStatement stmt = con.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE,
+		try (Connection con = DriverManager
+				.getConnection(dbURL, user, password);
+				PreparedStatement stmt = con.prepareStatement(query,
+						ResultSet.TYPE_SCROLL_INSENSITIVE,
 						ResultSet.CONCUR_READ_ONLY);) {
 			int parameterIndex = 1;
 			if (inputs != null) {
@@ -49,10 +52,8 @@ public class DBAccess {
 			con.setAutoCommit(false);
 
 			ResultSet results = stmt.executeQuery();
-			if (results.next()) {
-				System.out.println(results.getString(1));
-			} else {
-				System.out.println("Problem.");
+			while (results.next()) {
+				System.out.println(results.getString(5));
 			}
 
 			crs.populate(results);
@@ -65,7 +66,8 @@ public class DBAccess {
 				for (int x = 0; x < columnsNumber; x++) {
 					string2.append(results.getString((x + 1)) + ", ");
 				}
-				System.out.println(string2.substring(0, string2.length() - 2).toString());
+				System.out.println(string2.substring(0, string2.length() - 2)
+						.toString());
 			}
 			for (int i = 1; i < results.getFetchSize(); i++) {
 				results.getString(i);
