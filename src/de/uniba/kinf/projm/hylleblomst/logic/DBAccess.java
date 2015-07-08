@@ -4,15 +4,12 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.sql.rowset.CachedRowSet;
 
-import com.sun.rowset.RowSetFactoryImpl;
-
-import de.uniba.kinf.projm.hylleblomst.keys.ColumnNameKeys;
+import com.sun.rowset.CachedRowSetImpl;
 
 public class DBAccess {
 	private String dbURL;
@@ -34,8 +31,8 @@ public class DBAccess {
 	}
 
 	public CachedRowSet startQuery(String query, ArrayList<String> inputs) throws SQLException {
-		// CachedRowSet crs = new CachedRowSetImpl();
-		CachedRowSet crs = new RowSetFactoryImpl().createCachedRowSet();
+		CachedRowSet crs = new CachedRowSetImpl();
+		// CachedRowSet crs = new RowSetFactoryImpl().createCachedRowSet();
 		try (Connection con = DriverManager.getConnection(dbURL, user, password);
 				PreparedStatement stmt = con.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE,
 						ResultSet.CONCUR_READ_ONLY);) {
@@ -46,37 +43,39 @@ public class DBAccess {
 					parameterIndex++;
 				}
 			}
+			// ResultSet results = stmt.executeQuery();
 
 			con.setAutoCommit(false);
-
-			ResultSet results = stmt.executeQuery();
-			while (results.next()) {
-				System.out.println(results.getString(6));
-			}
-
-			crs.populate(results);
+			crs.populate(stmt.executeQuery());
 			con.setAutoCommit(true);
 
-			ResultSetMetaData rsmd = stmt.getMetaData();
-			int columnsNumber = rsmd.getColumnCount();
-			while (results.next()) {
-				StringBuilder string2 = new StringBuilder();
-				for (int x = 0; x < columnsNumber; x++) {
-					string2.append(results.getString((x + 1)) + ", ");
-				}
-				System.out.println(string2.substring(0, string2.length() - 2).toString());
-			}
-			for (int i = 1; i < results.getFetchSize(); i++) {
-				results.getString(i);
-				String blub = results.getString("DATUM_INT");
-				String date = results.getString(ColumnNameKeys.DATUM);
-				if ("010".equals(blub)) {
-					date = date.substring(0, 4) + "X" + date.substring(7, 9);
-				} else if ("001".equals(blub)) {
-					date = date.substring(0, 7) + "X";
-				} else if ("011".equals(blub)) {
-					date = date.substring(0, 4) + "X.X";
-				}
+			// ResultSetMetaData rsmd = stmt.getMetaData();
+			// int columnsNumber = rsmd.getColumnCount();
+			// while (results.next()) {
+			// StringBuilder string2 = new StringBuilder();
+			// for (int x = 0; x < columnsNumber; x++) {
+			// string2.append(results.getString((x + 1)) + ", ");
+			// }
+			// System.out.println(string2.substring(0, string2.length() -
+			// 2).toString());
+			// }
+			// for (int i = 1; i < results.getFetchSize(); i++) {
+			// results.getString(i);
+			// String blub = results.getString("DATUM_INT");
+			// String date = results.getString(ColumnNameKeys.DATUM);
+			// if ("010".equals(blub)) {
+			// date = date.substring(0, 4) + "X" + date.substring(7, 9);
+			// } else if ("001".equals(blub)) {
+			// date = date.substring(0, 7) + "X";
+			// } else if ("011".equals(blub)) {
+			// date = date.substring(0, 4) + "X.X";
+			// }
+			// }
+
+			while (crs.next()) {
+				System.out.println("ID: " + crs.getInt(1) + ",  Name: " + crs.getString(2) + ", Name: "
+						+ crs.getString(3) + ", Ort: " + crs.getString(4) + ", Fakultäten: " + crs.getString(5)
+						+ ", Test: " + crs.getString(6));
 			}
 
 		} catch (Exception e) {
