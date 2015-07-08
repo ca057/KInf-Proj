@@ -579,6 +579,7 @@ public class ViewController implements ControllerInterface, Initializable {
 		}
 		ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
 		try {
+			result.first();
 			while (result.next()) {
 				System.out.println("ID: " + result.getInt(1) + ",  Name: " + result.getString(2) + ", Name: "
 						+ result.getString(3) + ", Ort: " + result.getString(4) + ", Fakultäten: " + result.getString(5)
@@ -619,11 +620,17 @@ public class ViewController implements ControllerInterface, Initializable {
 			result.first();
 			while (result.next()) {
 				ObservableList<String> row = FXCollections.observableArrayList();
-				for (int i = 1; i < result.getMetaData().getColumnCount(); i++) {
+				for (int i = 1; i <= result.getMetaData().getColumnCount(); i++) {
 					row.add(result.getString(i));
 				}
 				data.add(row);
 			}
+			for (int i = 0; i < data.size(); i++) {
+				for (int j = 0; j < data.get(i).size(); j++) {
+					System.out.println(data.get(i).get(j).toString());
+				}
+			}
+
 			resultTable.setItems(data);
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
