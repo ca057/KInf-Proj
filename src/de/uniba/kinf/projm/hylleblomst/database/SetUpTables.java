@@ -28,6 +28,9 @@ public class SetUpTables {
 				Statement stmt = con.createStatement(
 						ResultSet.TYPE_SCROLL_INSENSITIVE,
 						ResultSet.CONCUR_READ_ONLY);) {
+			if (allTablesExist(con)) {
+				return true;
+			}
 
 			while (!allTablesExist(con)) {
 				con.setAutoCommit(false);
