@@ -2,7 +2,6 @@ package de.uniba.kinf.projm.hylleblomst.logic;
 
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.List;
 
 import javax.sql.rowset.CachedRowSet;
 
@@ -50,5 +49,5 @@ public interface SearchInitiator {
 	 * @return
 	 * @throws SQLException
 	 */
-	List<PersonItem> searchPerson(String id) throws SQLException;
+	CachedRowSet searchPerson(String id) throws SQLException;
 }

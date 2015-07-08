@@ -3,7 +3,7 @@ package de.uniba.kinf.projm.hylleblomst.logicImpl;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.InputMismatchException;
 
 import javax.sql.rowset.CachedRowSet;
 
@@ -12,22 +12,26 @@ import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.TableNameKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.UserKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.DBAccess;
-import de.uniba.kinf.projm.hylleblomst.logic.PersonItem;
 import de.uniba.kinf.projm.hylleblomst.logic.SearchInitiator;
 import de.uniba.kinf.projm.hylleblomst.logic.UserQueries;
 
 public class SearchInitiatorImpl implements SearchInitiator {
 	DBAccess db = new DBAccess(UserKeys.dbURL, UserKeys.guestUser, UserKeys.guestPassword);
 	SQLBuilder sql = new SQLBuilder();
+	ArrayList<String> inputs = new ArrayList<String>();
 
 	@Override
 	public CachedRowSet search(Collection<UserQueries> userQueries) throws SQLException {
-		return buildAndStartQuery(userQueries);
+		if (!(userQueries == null || userQueries.isEmpty())) {
+			return db.startQuery(buildQuery(userQueries), inputs);
+
+		} else {
+			throw new InputMismatchException("Die übergebene Collection ist fehlerhalft: " + userQueries);
+		}
 	}
 
-	private CachedRowSet buildAndStartQuery(Collection<UserQueries> userQueries) throws SQLException {
+	private String buildQuery(Collection<UserQueries> userQueries) throws SQLException {
 		Boolean hasSource = false;
-		ArrayList<String> inputs = new ArrayList<String>();
 		StringBuilder sqlQuery = new StringBuilder();
 		StringBuilder sqlFrom = new StringBuilder();
 		StringBuilder sqlWhere = new StringBuilder();
@@ -71,11 +75,11 @@ public class SearchInitiatorImpl implements SearchInitiator {
 
 		sqlQuery.append(" FROM ").append(sqlFrom).append(" WHERE ").append(sqlWhere);
 		System.out.println(sqlQuery);
-		return db.startQuery(sqlQuery.toString(), inputs);
+		return sqlQuery.toString();
 	}
 
 	@Override
-	public List<PersonItem> searchPerson(String string) throws SQLException {
+	public CachedRowSet searchPerson(String string) throws SQLException {
 		ArrayList<String> inputs = new ArrayList<String>();
 		inputs.add("" + string);
 		StringBuilder sqlQuery = new StringBuilder();
