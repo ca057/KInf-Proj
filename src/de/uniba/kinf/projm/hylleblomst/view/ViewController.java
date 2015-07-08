@@ -2,9 +2,7 @@ package de.uniba.kinf.projm.hylleblomst.view;
 
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.InputMismatchException;
-import java.util.List;
 import java.util.Observable;
 import java.util.ResourceBundle;
 
@@ -14,7 +12,6 @@ import de.uniba.kinf.projm.hylleblomst.gui.model.Model;
 import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.SearchInitiator;
-import de.uniba.kinf.projm.hylleblomst.logic.UserQueries;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.SearchInitiatorImpl;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -63,11 +60,6 @@ public class ViewController implements ControllerInterface, Initializable {
 	 * arrays.
 	 */
 	private int inputFieldCounter = 23;
-
-	/**
-	 * 
-	 */
-	private ArrayList<SearchFieldKeys> usedSearchFieldKeys = new ArrayList<SearchFieldKeys>();
 
 	private StringProperty sourceLabelName = new SimpleStringProperty("Quelle: ");
 
@@ -235,17 +227,12 @@ public class ViewController implements ControllerInterface, Initializable {
 		searchCtrl = new SearchController(this, initiator);
 	}
 
-	public void setModel(Model model) {
-		if (model != null) {
-			this.model = model;
-		}
-	}
-
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		clearResultTable();
 		setEventHandlers();
 		searchCategories.setExpandedPane(searchCategory_person);
+		search_sourceLabel.setText(sourceLabelName.getValueSafe());
 	}
 
 	private void clearResultTable() {
@@ -485,18 +472,24 @@ public class ViewController implements ControllerInterface, Initializable {
 	 */
 	@FXML
 	private void startSearch() {
-		// Clear list of used SearchFieldKeys first
-		usedSearchFieldKeys.clear();
-		sourceLabelName.set("Quelle: " + search_sourcekey_selection.getValue());
 		try {
 			String[] input = generateArrayWithInputValues();
 			int[] sources = generateArrayWithSourceFieldKeys();
 			searchCtrl.executeSearch(input, sources);
-			search_sourceLabel.setText(sourceLabelName.getValue());
+			setLabelSource();
 		} catch (Exception e) {
 			e.printStackTrace();
 			ui.showErrorMessage("Die Suche konnte nicht gestartet werden.\n" + e.getMessage());
 		}
+	}
+
+	private void setLabelSource() {
+		String labelText = search_sourcekey_selection.getValue();
+		if (labelText == null) {
+			labelText = "Keine Quelle ausgewählt.";
+		}
+		sourceLabelName.set("Quelle: " + labelText);
+		search_sourceLabel.setText(sourceLabelName.getValueSafe());
 	}
 
 	/**
@@ -610,7 +603,7 @@ public class ViewController implements ControllerInterface, Initializable {
 				for (int i = 1; i < result.getMetaData().getColumnCount(); i++) {
 					row.add(result.getString(i));
 				}
-				data.addAll(row);
+				data.add(row);
 			}
 			resultTable.setItems(data);
 		} catch (SQLException e) {
@@ -637,27 +630,6 @@ public class ViewController implements ControllerInterface, Initializable {
 	@FXML
 	private void showInfo() {
 		ui.showInfo();
-	}
-
-	/**
-	 * Helps ensuring full functionality and provides a feedback of the search
-	 * input. Collects the user input from all input fields prints it to the
-	 * info area.
-	 */
-	void setInfoTextExtendedSearch(List<UserQueries> requestList) {
-		String info = "Suchanfrage\n-----------\n";
-		StringBuffer buffer = new StringBuffer();
-		if (requestList == null || requestList.size() == 0) {
-			info += "Keine Sucheingaben gefunden.";
-		} else {
-			for (UserQueries qr : requestList) {
-				buffer.append(qr.getSearchField().toString() + ": ");
-				buffer.append(qr.getInput() + "; ");
-				buffer.append("Quellen#: " + qr.getSource() + "\n");
-			}
-		}
-		info += buffer.toString();
-		infoArea.setText(info);
 	}
 
 	@Override

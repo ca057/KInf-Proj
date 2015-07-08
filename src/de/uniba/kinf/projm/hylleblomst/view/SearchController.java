@@ -70,8 +70,6 @@ public class SearchController implements ControllerInterface {
 				|| inputSourceKey.length == 0) {
 			throw new IllegalArgumentException("Die Liste mit Eingabefeldern ist leer oder hat keinen Wert.");
 		}
-		// clear list of used SearchFieldKeys first
-		usedSearchFields.clear();
 		List<UserQueries> requestList = new ArrayList<UserQueries>();
 		for (int i = 0; i < inputValues.length; i++) {
 			if (!inputValues[i].isEmpty() && !"false".equals(inputValues[i]) && !"yyyy-mm-dd".equals(inputValues[i])) {
