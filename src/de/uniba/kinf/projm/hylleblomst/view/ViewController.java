@@ -614,6 +614,8 @@ public class ViewController implements ControllerInterface, Initializable {
 						});
 				resultTable.getColumns().add(col);
 			}
+			// set visibility of first column with ID to false
+			resultTable.getColumns().get(0).setVisible(false);
 			result.first();
 			while (result.next()) {
 				ObservableList<String> row = FXCollections.observableArrayList();
@@ -623,7 +625,6 @@ public class ViewController implements ControllerInterface, Initializable {
 				data.add(row);
 			}
 			resultTable.setItems(data);
-			resultTable.getColumns().get(0).setVisible(false);
 		} catch (SQLException e) {
 			ui.showErrorMessage("Bei der Anzeige der gefundenen Datensätze ist ein Fehler aufgetreten.");
 			e.printStackTrace();
