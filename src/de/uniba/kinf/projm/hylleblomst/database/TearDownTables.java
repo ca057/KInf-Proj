@@ -18,11 +18,11 @@ import de.uniba.kinf.projm.hylleblomst.keys.UserKeys;
  * @author Simon
  *
  */
-public class TearDownDatabase {
+public class TearDownTables {
 
 	public static void main(String[] args) {
 		try {
-			new TearDownDatabase().run();
+			new TearDownTables().run();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

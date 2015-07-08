@@ -219,7 +219,7 @@ public class UserQueriesImpl implements UserQueries {
 				return String.format("%s.%s < ?", table, column);
 			}
 			if (searchField == SearchFieldKeys.EINSCHREIBEDATUM_BIS) {
-				if (!(input.contains("mm-dd"))) {
+				if (input.contains("mm-dd")) {
 					input = input.substring(0, 3) + "-12-31";
 				} else if (input.contains("mm")) {
 					input = input.substring(0, 3) + "-12-" + input.substring(8, 9);
@@ -229,14 +229,14 @@ public class UserQueriesImpl implements UserQueries {
 				return String.format("%s.%s < ?", table, column);
 			}
 			if (searchField == SearchFieldKeys.EINSCHREIBEDATUM_VON) {
-				if (!(input.contains("mm-dd"))) {
-					input = input.substring(0, 3) + "-01-01";
+				if (input.contains("mm-dd")) {
+					input = input.substring(0, input.indexOf("-", 1)) + "-01-01";
 				} else if (input.contains("mm")) {
-					input = input.substring(0, 3) + "-01-" + input.substring(8, 9);
+					input = input.substring(0, input.indexOf("-", 2)) + "-01-" + input.substring(8, 9);
 				} else if (input.contains("dd")) {
-					input = input.substring(0, 6) + "-01";
+					input = input.substring(0, input.indexOf("-", 3)) + "-01";
 				}
-				return String.format("CASE WHEN %1$s.%s = 0 THEN %s.%s > ?", table, column);
+				return String.format("%s.%s > ?", table, column);
 			}
 		}
 		if (!(source == SourceKeys.NO_SELECTION || searchField == SearchFieldKeys.ANREDE

@@ -18,10 +18,6 @@ import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
  */
 public class Validation {
 
-	private String dbURL;
-	private String password;
-	private String user;
-
 	private Connection con;
 	private PreparedStatement stmt;
 
@@ -37,9 +33,6 @@ public class Validation {
 	 *            The password of the specified user to access database
 	 */
 	protected Validation(String dbURL, String user, String password) {
-		this.dbURL = dbURL;
-		this.user = user;
-		this.password = password;
 
 		try {
 			this.con = DriverManager.getConnection(dbURL, user, password);

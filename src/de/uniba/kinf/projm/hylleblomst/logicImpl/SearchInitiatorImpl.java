@@ -24,9 +24,8 @@ public class SearchInitiatorImpl implements SearchInitiator {
 	public CachedRowSet search(Collection<UserQueries> userQueries) throws SQLException {
 		if (!(userQueries == null || userQueries.isEmpty())) {
 			return db.startQuery(buildQuery(userQueries), inputs);
-
 		} else {
-			throw new InputMismatchException("Die übergebene Collection ist fehlerhalft: " + userQueries);
+			throw new InputMismatchException("Die übergebene Collection ist fehlerhaft (null oder leer)");
 		}
 	}
 
@@ -57,18 +56,17 @@ public class SearchInitiatorImpl implements SearchInitiator {
 			if (qr.getSource() != SourceKeys.NO_SOURCE) {
 				hasSource = true;
 			}
-			if (qr.getColumn() == ColumnNameKeys.DATUM) {
+
+			if (sqlWhere.length() == 0) {
+				sqlWhere.append(qr.getWhere());
 			} else {
-				if (sqlWhere.length() == 0) {
-					sqlWhere.append(qr.getWhere());
-				} else {
-					sqlWhere.append(" AND " + qr.getWhere());
-				}
-				if (!("true".equals(qr.getInput()))) {
-					inputs.add(qr.getInput());
-				}
+				sqlWhere.append(" AND " + qr.getWhere());
+			}
+			if (!("true".equals(qr.getInput()))) {
+				inputs.add(qr.getInput());
 			}
 		}
+
 		if (hasSource) {
 			sqlFrom.append(", " + TableNameKeys.QUELLEN);
 		}
