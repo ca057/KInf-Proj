@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import de.uniba.kinf.projm.hylleblomst.keys.TableNameKeys;
-import de.uniba.kinf.projm.hylleblomst.keys.UserKeys;
+import de.uniba.kinf.projm.hylleblomst.keys.DBUserKeys;
 
 /**
  * The purpose of this class is to provide an easy and fast way to tear down an
@@ -30,7 +30,7 @@ public class TearDownTables {
 	}
 
 	public boolean run() throws SQLException {
-		try (Connection con = DriverManager.getConnection(UserKeys.dbURL, UserKeys.adminUser, UserKeys.adminPassword)) {
+		try (Connection con = DriverManager.getConnection(DBUserKeys.dbURL, DBUserKeys.adminUser, DBUserKeys.adminPassword)) {
 			Statement stmt = con.createStatement();
 
 			String[] tables = TableNameKeys.getAllTableNames();

@@ -4,10 +4,10 @@ import java.io.File;
 
 public class DatabaseKeys {
 
-	public String dbURL;
+	public final String dbURL;
 
-	public void setDatabaseURL(File file) {
-		dbURL = "jdbc:derby:" + file.getAbsolutePath() + "/MyDB";
-
+	public DatabaseKeys(File file) {
+		this.dbURL = "jdbc:derby:" + file.getAbsolutePath() + "/MyDB";
 	}
+
 }
