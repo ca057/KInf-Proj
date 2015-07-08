@@ -11,6 +11,8 @@ public class DatabaseController {
 	public DatabaseController() {
 	}
 
+	// TODO meaningful error messages
+
 	/**
 	 * Set up a database in the specified location.
 	 * 
