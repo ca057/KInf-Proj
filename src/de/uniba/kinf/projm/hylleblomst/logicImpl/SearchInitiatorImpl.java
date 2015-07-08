@@ -1,5 +1,6 @@
 package de.uniba.kinf.projm.hylleblomst.logicImpl;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,11 +20,11 @@ public class SearchInitiatorImpl implements SearchInitiator {
 	SQLBuilder sql = new SQLBuilder();
 
 	@Override
-	public List<PersonItem> search(Collection<UserQueries> userQueries) throws SQLException {
+	public ResultSet search(Collection<UserQueries> userQueries) throws SQLException {
 		return buildAndStartQuery(userQueries);
 	}
 
-	private List<PersonItem> buildAndStartQuery(Collection<UserQueries> userQueries) throws SQLException {
+	private ResultSet buildAndStartQuery(Collection<UserQueries> userQueries) throws SQLException {
 		Boolean hasSource = false;
 		ArrayList<String> inputs = new ArrayList<String>();
 		StringBuilder sqlQuery = new StringBuilder();
@@ -78,6 +79,7 @@ public class SearchInitiatorImpl implements SearchInitiator {
 		inputs.add("" + string);
 		StringBuilder sqlQuery = new StringBuilder();
 		sqlQuery.append(sql.getSelectAll()).append(sql.getFrom()).append(" WHERE Person.PersonID = ?");
-		return db.startQuery(sqlQuery.toString(), inputs);
+		// return db.startQuery(sqlQuery.toString(), inputs);
+		return null;
 	}
 }

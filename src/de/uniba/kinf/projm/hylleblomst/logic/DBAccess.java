@@ -7,10 +7,8 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.List;
 
 import de.uniba.kinf.projm.hylleblomst.keys.ColumnNameKeys;
-import de.uniba.kinf.projm.hylleblomst.logicImpl.PersonItemBuilder;
 
 public class DBAccess {
 	private String dbURL;
@@ -31,7 +29,7 @@ public class DBAccess {
 		this.password = password;
 	}
 
-	public List<PersonItem> startQuery(String query, ArrayList<String> inputs) throws SQLException {
+	public ResultSet startQuery(String query, ArrayList<String> inputs) throws SQLException {
 		try (Connection con = DriverManager.getConnection(dbURL, user, password);
 				PreparedStatement stmt = con.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE,
 						ResultSet.CONCUR_READ_ONLY);) {
@@ -66,7 +64,8 @@ public class DBAccess {
 					date = date.substring(0, 4) + "X.X";
 				}
 			}
-			return new PersonItemBuilder().startBuildingPersonItems(results);
+			// return new PersonItemBuilder().startBuildingPersonItems(results);
+			return results;
 		}
 	}
 }
