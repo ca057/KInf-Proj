@@ -47,12 +47,19 @@ public class DBAccess {
 			}
 
 			con.setAutoCommit(false);
+
 			ResultSet results = stmt.executeQuery();
+			if (results.next()) {
+				System.out.println(results.getString(1));
+			} else {
+				System.out.println("Problem.");
+			}
+
 			crs.populate(results);
+			con.setAutoCommit(true);
 
 			ResultSetMetaData rsmd = stmt.getMetaData();
 			int columnsNumber = rsmd.getColumnCount();
-
 			while (results.next()) {
 				StringBuilder string2 = new StringBuilder();
 				for (int x = 0; x < columnsNumber; x++) {
@@ -72,7 +79,7 @@ public class DBAccess {
 					date = date.substring(0, 4) + "X.X";
 				}
 			}
-			con.setAutoCommit(true);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
