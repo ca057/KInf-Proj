@@ -250,14 +250,14 @@ public class UserQueriesImpl implements UserQueries {
 	}
 
 	private String buildSQLWhere() {
-		if (source == SourceKeys.NORM) {
-			return String.format("%s_norm.%s LIKE ?", table.substring(0, table.indexOf("_")), column);
-		}
 		if (source == SourceKeys.NO_SELECTION || searchField == SearchFieldKeys.ANREDE
 				|| searchField == SearchFieldKeys.TITEL) {
-			return String.format("%s.%s LIKE ? ", table, column);
+			return String.format("UPPER(%s.%s) LIKE UPPER(?) ", table, column);
 		}
-		return String.format("%s.%s LIKE ? AND %s_info.%s = %s", table, column, table.substring(0, table.indexOf("_")),
-				ColumnNameKeys.QUELLEN_ID, source);
+		if (source == SourceKeys.NORM) {
+			return String.format("UPPER(%s_norm.%s) LIKE UPPER(?) ", table.substring(0, table.indexOf("_")), column);
+		}
+		return String.format("UPPER(%s.%s) LIKE UPPER(?) AND %1s_info.%s = %s", table, column,
+				table.substring(0, table.indexOf("_")), ColumnNameKeys.QUELLEN_ID, source);
 	}
 }
