@@ -599,7 +599,7 @@ public class ViewController implements ControllerInterface, Initializable {
 				String columnName = result.getMetaData().getColumnName(i + 1);
 				if (columnName.contains("_")) {
 					columnName = columnName.substring(0, columnName.indexOf("_")) + " "
-							+ columnName.substring(columnName.indexOf("_"));
+							+ columnName.substring(columnName.indexOf("_") + 1);
 				}
 				TableColumn<ObservableList<String>, String> col = new TableColumn<ObservableList<String>, String>(
 						columnName);
