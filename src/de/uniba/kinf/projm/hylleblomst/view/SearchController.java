@@ -1,10 +1,12 @@
 package de.uniba.kinf.projm.hylleblomst.view;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Observable;
+
+import javax.sql.rowset.CachedRowSet;
 
 import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.SearchInitiator;
@@ -49,10 +51,13 @@ public class SearchController implements ControllerInterface {
 	 * @param view
 	 */
 	public SearchController(ViewController view, SearchInitiator searchInitiatorImpl) {
+		if (view == null || searchInitiatorImpl == null) {
+			throw new InputMismatchException("The passed ViewController or SearchInitiator has no value.");
+		}
 		this.view = view;
-		this.inputCounter = view.getInputFieldCounter();
-		this.inputSearchFKey = generateSearchFieldKeyArray();
 		this.searchInitiatorImpl = searchInitiatorImpl;
+		inputCounter = view.getInputFieldCounter();
+		inputSearchFKey = generateSearchFieldKeyArray();
 	}
 
 	/**
@@ -76,8 +81,8 @@ public class SearchController implements ControllerInterface {
 		}
 
 		try {
-			ResultSet resultSet = searchInitiatorImpl.search(requestList);
-			view.fillResultTableWithResultSet(resultSet);
+			CachedRowSet resultSet = searchInitiatorImpl.search(requestList);
+			view.fillResultTable(resultSet);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new RuntimeException("Ein Fehler bei der Suche ist aufgetreten:\n" + e.getMessage());

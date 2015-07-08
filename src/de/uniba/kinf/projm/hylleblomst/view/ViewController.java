@@ -1,7 +1,6 @@
 package de.uniba.kinf.projm.hylleblomst.view;
 
 import java.net.URL;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
@@ -9,10 +8,11 @@ import java.util.List;
 import java.util.Observable;
 import java.util.ResourceBundle;
 
+import javax.sql.rowset.CachedRowSet;
+
 import de.uniba.kinf.projm.hylleblomst.gui.model.Model;
 import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
-import de.uniba.kinf.projm.hylleblomst.logic.PersonItem;
 import de.uniba.kinf.projm.hylleblomst.logic.SearchInitiator;
 import de.uniba.kinf.projm.hylleblomst.logic.UserQueries;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.SearchInitiatorImpl;
@@ -36,7 +36,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -214,7 +213,7 @@ public class ViewController implements ControllerInterface, Initializable {
 	Button searchMenu_search;
 
 	@FXML
-	TableView resultTable;
+	TableView<ObservableList<String>> resultTable;
 
 	@FXML
 	Label search_sourceLabel;
@@ -587,54 +586,19 @@ public class ViewController implements ControllerInterface, Initializable {
 		return SourceKeys.NO_SELECTION;
 	}
 
-	/**
-	 * 
-	 */
-	// FIXME remove comments from parameter
-	void fillResultTable(/* List<PersonItem> results */) {
-		// clear old table content first
-		resultTable.getColumns().clear();
-
-		// FIXME generate list with person items for testing purposes, delete
-		// this setup in the end
-		List<PersonItem> testList = new ArrayList<PersonItem>();
-		for (int i = 0; i < 10; i++) {
-			PersonItem person = new PersonItem();
-			person.setVorname_norm("person_vorname" + i);
-			person.setNachname_norm("person_nachname" + i);
-			person.setADLIG("person_adlig" + i);
-			person.setANMERKUNGEN("Anmerkungen" + i);
-			person.setFACH("fach" + i);
-			person.setSEMINAR("Seminar" + i);
-			person.setORT("Ort" + i);
-			person.setOrt_norm("Bamberg" + i);
-			person.setId("ID" + i);
-			testList.add(person);
-		}
-
-		// create all default columns
-		createDefaultColumns();
-		// create additional table columns depending on the list of input fields
-		// the user searched for
-		createColumnsOfSearchResult();
-
-		// FIXME this list must be the result list
-		ObservableList<PersonItem> data = FXCollections.observableArrayList(testList);
-
-		resultTable.setItems(data);
-	}
-
-	void fillResultTableWithResultSet(ResultSet result) {
-		ObservableList<ObservableList> data = FXCollections.observableArrayList();
+	void fillResultTable(CachedRowSet result) {
+		ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
 		try {
 			for (int i = 0; i < result.getMetaData().getColumnCount(); i++) {
 				final int j = i;
-				TableColumn<ObservableList, String> col = new TableColumn(result.getMetaData().getColumnName(i + 1));
+				TableColumn<ObservableList<String>, String> col = new TableColumn<ObservableList<String>, String>(
+						result.getMetaData().getColumnName(i + 1));
 				col.setCellValueFactory(
-						new Callback<CellDataFeatures<ObservableList, String>, ObservableValue<String>>() {
+						new Callback<CellDataFeatures<ObservableList<String>, String>, ObservableValue<String>>() {
 
 							@Override
-							public ObservableValue<String> call(CellDataFeatures<ObservableList, String> param) {
+							public ObservableValue<String> call(
+									CellDataFeatures<ObservableList<String>, String> param) {
 								return new SimpleStringProperty(param.getValue().get(j).toString());
 							}
 						});
@@ -653,64 +617,6 @@ public class ViewController implements ControllerInterface, Initializable {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-	}
-
-	/**
-	 * 
-	 */
-	@SuppressWarnings("unchecked")
-	private void createDefaultColumns() {
-		// these columns are default columns and will be displayed for all
-		// search requests
-
-		// id
-		// vorname_norm
-		// nachname_norm
-		// ort_norm
-		// fakultaet_norm
-
-		TableColumn<PersonItem, String> id = new TableColumn<PersonItem, String>("ID");
-		PropertyValueFactory<PersonItem, String> idFactory = new PropertyValueFactory<PersonItem, String>("id");
-		id.setCellValueFactory(idFactory);
-
-		TableColumn<PersonItem, String> vorname_norm = new TableColumn<PersonItem, String>("Vorname (NORM)");
-		PropertyValueFactory<PersonItem, String> vornameFactory = new PropertyValueFactory<PersonItem, String>(
-				"vorname_norm");
-		vorname_norm.setCellValueFactory(vornameFactory);
-
-		TableColumn<PersonItem, String> nachname_norm = new TableColumn<PersonItem, String>("Nachname (NORM)");
-		PropertyValueFactory<PersonItem, String> nachnameFactory = new PropertyValueFactory<PersonItem, String>(
-				"nachname_norm");
-		nachname_norm.setCellValueFactory(nachnameFactory);
-
-		TableColumn<PersonItem, String> ort_norm = new TableColumn<PersonItem, String>("Ort (NORM)");
-		PropertyValueFactory<PersonItem, String> ortFactory = new PropertyValueFactory<PersonItem, String>("ort_norm");
-		ort_norm.setCellValueFactory(ortFactory);
-
-		TableColumn<PersonItem, String> fakultaet_norm = new TableColumn<PersonItem, String>("Fakultät (NORM)");
-		PropertyValueFactory<PersonItem, String> fakultaetFactory = new PropertyValueFactory<PersonItem, String>(
-				"fakultaet_norm");
-		fakultaet_norm.setCellValueFactory(fakultaetFactory);
-
-		resultTable.getColumns().addAll(id, vorname_norm, nachname_norm, ort_norm, fakultaet_norm);
-	}
-
-	/**
-	 * Creates all columns for the {@code resultTable}, which are no default
-	 * column. Uses the list {@code usedSearchFieldKeys} to create the columns
-	 * which need to be displayed. If a column is part of the default column, it
-	 * will not be created.
-	 */
-	private void createColumnsOfSearchResult() {
-		for (int i = 0; i < usedSearchFieldKeys.size(); i++) {
-			String columnName = usedSearchFieldKeys.get(i).toString();
-			TableColumn<PersonItem, String> column = new TableColumn<PersonItem, String>(columnName);
-			PropertyValueFactory<PersonItem, String> columnFactory = new PropertyValueFactory<PersonItem, String>(
-					columnName);
-			column.setCellValueFactory(columnFactory);
-			resultTable.getColumns().add(column);
-		}
 	}
 
 	/**
@@ -718,7 +624,6 @@ public class ViewController implements ControllerInterface, Initializable {
 	 */
 	@FXML
 	protected void closeWindow() {
-		// FIXME check if this is correct
 		Stage stage = (Stage) root.getScene().getWindow();
 		if (ui.askForClosingWindow()) {
 			stage.close();
