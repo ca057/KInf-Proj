@@ -54,7 +54,7 @@ public class SetUpDatabase {
 			stmt.setString(1, DBUserKeys.adminUser);
 			stmt.setString(2, "FULLACCESS");
 			stmt.executeUpdate();
-			stmt.setString(1, DBUserKeys.guestUser);
+			stmt.setString(1, DBUserKeys.guestUser2);
 			stmt.setString(2, "READONLYACCESS");
 			stmt.executeUpdate();
 		} catch (SQLException e) {
@@ -70,8 +70,8 @@ public class SetUpDatabase {
 			stmt.setString(1, DBUserKeys.adminUser);
 			stmt.setString(2, DBUserKeys.adminPassword);
 			stmt.executeUpdate();
-			stmt.setString(1, DBUserKeys.guestUser);
-			stmt.setString(2, DBUserKeys.guestPassword);
+			stmt.setString(1, DBUserKeys.guestUser2);
+			stmt.setString(2, DBUserKeys.guestPassword2);
 			stmt.executeUpdate();
 		} catch (SQLException e) {
 			throw new SetUpException(e.getSQLState() + "\n" + e.getMessage());

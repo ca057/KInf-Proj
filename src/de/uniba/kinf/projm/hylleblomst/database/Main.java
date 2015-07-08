@@ -10,10 +10,10 @@ public class Main {
 
 		DatabaseController dbController = new DatabaseController(location);
 
-		// System.out.println("Set up database: "
-		// + dbController.setUpDatabase(location));
+		System.out.println("Set up database: "
+				+ dbController.setUpDatabase(location));
 
-		// System.out.println("Set up tables: " + dbController.setUpTables());
+		System.out.println("Set up tables: " + dbController.setUpTables());
 
 		System.out.println("Import data: "
 				+ dbController.importDataIntoDatabase(data));

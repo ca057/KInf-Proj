@@ -619,6 +619,13 @@ public class ViewController implements ControllerInterface, Initializable {
 		try {
 			for (int i = 0; i < result.getMetaData().getColumnCount(); i++) {
 				final int j = i;
+				String columnName = result.getMetaData().getColumnName(i + 1);
+				if (columnName.contains("_")) {
+					columnName = columnName.substring(0,
+							columnName.indexOf("_"))
+							+ " "
+							+ columnName.substring(columnName.indexOf("_"));
+				}
 				TableColumn<ObservableList<String>, String> col = new TableColumn<ObservableList<String>, String>(
 						result.getMetaData().getColumnName(i + 1));
 				col.setCellValueFactory(new Callback<CellDataFeatures<ObservableList<String>, String>, ObservableValue<String>>() {

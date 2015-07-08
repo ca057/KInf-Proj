@@ -51,7 +51,7 @@ public class DatabaseController {
 
 	public boolean importDataIntoDatabase(File file) {
 		try {
-			new ImportDataImpl().addData(db, file.getAbsolutePath());
+			new ImportDataImpl().addData(file.getAbsolutePath());
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();

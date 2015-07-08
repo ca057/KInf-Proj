@@ -16,7 +16,7 @@ import de.uniba.kinf.projm.hylleblomst.logic.SearchInitiator;
 import de.uniba.kinf.projm.hylleblomst.logic.UserQueries;
 
 public class SearchInitiatorImpl implements SearchInitiator {
-	DBAccess db = new DBAccess(DBUserKeys.dbURL, DBUserKeys.guestUser, DBUserKeys.guestPassword);
+	DBAccess db = new DBAccess(DBUserKeys.dbURL, DBUserKeys.guestUser2, DBUserKeys.guestPassword2);
 	SQLBuilder sql = new SQLBuilder();
 	ArrayList<String> inputs = new ArrayList<String>();
 
