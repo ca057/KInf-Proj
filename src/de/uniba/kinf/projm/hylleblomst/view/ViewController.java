@@ -15,6 +15,7 @@ import de.uniba.kinf.projm.hylleblomst.logic.SearchInitiator;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.SearchInitiatorImpl;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -26,6 +27,8 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -34,6 +37,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 /**
  * Controller for the graphical user interface.
@@ -580,43 +584,26 @@ public class ViewController implements ControllerInterface, Initializable {
 		ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
 		try {
 			result.first();
-			while (result.next()) {
-				System.out.println("ID: " + result.getInt(1) + ",  Name: " + result.getString(2) + ", Name: "
-						+ result.getString(3) + ", Ort: " + result.getString(4) + ", Fakultäten: " + result.getString(5)
-						+ ", Test: " + result.getString(6));
+			for (int i = 0; i < result.getMetaData().getColumnCount(); i++) {
+				final int j = i;
+				String columnName = result.getMetaData().getColumnName(i + 1);
+				if (columnName.contains("_")) {
+					columnName = columnName.substring(0, columnName.indexOf("_")) + " "
+							+ columnName.substring(columnName.indexOf("_"));
+				}
+				TableColumn<ObservableList<String>, String> col = new TableColumn<ObservableList<String>, String>(
+						columnName);
+				col.setCellValueFactory(
+						new Callback<CellDataFeatures<ObservableList<String>, String>, ObservableValue<String>>() {
+
+							@Override
+							public ObservableValue<String> call(
+									CellDataFeatures<ObservableList<String>, String> param) {
+								return new SimpleStringProperty(param.getValue().get(j).toString());
+							}
+						});
+				resultTable.getColumns().add(col);
 			}
-			// for (int i = 0; i < result.getMetaData().getColumnCount(); i++) {
-			// final int j = i;
-			// String columnName = result.getMetaData().getColumnName(i + 1);
-			// if (columnName.contains("_")) {
-			// columnName = columnName.substring(0, columnName.indexOf("_")) + "
-			// "
-			// + columnName.substring(columnName.indexOf("_"));
-			// }
-			// TableColumn<ObservableList<String>, String> col = new
-			// TableColumn<ObservableList<String>, String>(
-			// columnName);
-			// System.out.println("columnCount: " +
-			// result.getMetaData().getColumnCount());
-			// System.out.println("size: " + result.size());
-			// System.out.println("columnName: " + columnName);
-			// col.setCellValueFactory(
-			// new Callback<CellDataFeatures<ObservableList<String>, String>,
-			// ObservableValue<String>>() {
-			//
-			// @Override
-			// public ObservableValue<String> call(
-			// CellDataFeatures<ObservableList<String>, String> param) {
-			// System.out.println(j + ": " + param.getValue().toString());
-			// System.out.println(j + ": " +
-			// param.getValue().get(j).toString());
-			//
-			// return new
-			// SimpleStringProperty(param.getValue().get(j).toString());
-			// }
-			// });
-			// resultTable.getColumns().add(col);
-			// }
 			result.first();
 			while (result.next()) {
 				ObservableList<String> row = FXCollections.observableArrayList();
@@ -625,15 +612,9 @@ public class ViewController implements ControllerInterface, Initializable {
 				}
 				data.add(row);
 			}
-			for (int i = 0; i < data.size(); i++) {
-				for (int j = 0; j < data.get(i).size(); j++) {
-					System.out.println(data.get(i).get(j).toString());
-				}
-			}
-
 			resultTable.setItems(data);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			ui.showErrorMessage("Bei der Anzeige der gefundenen Datensätze ist ein Fehler aufgetreten.");
 			e.printStackTrace();
 		}
 	}
