@@ -19,11 +19,11 @@ import de.uniba.kinf.projm.hylleblomst.keys.UserKeys;
  * @author Simon
  *
  */
-public class SetUpMatrikelDatabase {
+public class SetUpTables {
 
 	public static void main(String[] args) {
 		try {
-			new SetUpMatrikelDatabase().run();
+			new SetUpTables().run();
 		} catch (SetUpException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
