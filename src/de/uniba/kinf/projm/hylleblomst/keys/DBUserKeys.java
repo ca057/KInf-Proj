@@ -1,0 +1,11 @@
+package de.uniba.kinf.projm.hylleblomst.keys;
+
+public class DBUserKeys {
+	public final static String dbURL = "jdbc:derby:C:/Users/Simon/git/TestingDB/db/MyDB";
+
+	public final static String guestUser = "guest";
+	public final static String guestPassword = "ned-stark";
+
+	public final static String adminUser = "admin";
+	public final static String adminPassword = "r+l=j";
+}

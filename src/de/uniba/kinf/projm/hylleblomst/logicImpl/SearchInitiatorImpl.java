@@ -10,13 +10,13 @@ import javax.sql.rowset.CachedRowSet;
 import de.uniba.kinf.projm.hylleblomst.keys.ColumnNameKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.TableNameKeys;
-import de.uniba.kinf.projm.hylleblomst.keys.UserKeys;
+import de.uniba.kinf.projm.hylleblomst.keys.DBUserKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.DBAccess;
 import de.uniba.kinf.projm.hylleblomst.logic.SearchInitiator;
 import de.uniba.kinf.projm.hylleblomst.logic.UserQueries;
 
 public class SearchInitiatorImpl implements SearchInitiator {
-	DBAccess db = new DBAccess(UserKeys.dbURL, UserKeys.guestUser, UserKeys.guestPassword);
+	DBAccess db = new DBAccess(DBUserKeys.dbURL, DBUserKeys.guestUser, DBUserKeys.guestPassword);
 	SQLBuilder sql = new SQLBuilder();
 	ArrayList<String> inputs = new ArrayList<String>();
 

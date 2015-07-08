@@ -5,10 +5,14 @@ import java.sql.SQLException;
 
 import de.uniba.kinf.projm.hylleblomst.dataImport.ImportDataImpl;
 import de.uniba.kinf.projm.hylleblomst.exceptions.SetUpException;
+import de.uniba.kinf.projm.hylleblomst.keys.DatabaseKeys;
 
 public class DatabaseController {
 
-	public DatabaseController() {
+	DatabaseKeys db;
+
+	public DatabaseController(File file) {
+		this.db = new DatabaseKeys(file);
 	}
 
 	// TODO meaningful error messages
@@ -30,8 +34,9 @@ public class DatabaseController {
 
 	public boolean setUpTables() {
 		try {
-			return new SetUpTables().run();
+			return new SetUpTables().run(db.dbURL);
 		} catch (SetUpException e) {
+			e.printStackTrace();
 			return false;
 		}
 	}
@@ -49,7 +54,8 @@ public class DatabaseController {
 			new ImportDataImpl().addData(file.getAbsolutePath());
 			return true;
 		} catch (Exception e) {
-			return false;
+			e.printStackTrace();
 		}
+		return false;
 	}
 }

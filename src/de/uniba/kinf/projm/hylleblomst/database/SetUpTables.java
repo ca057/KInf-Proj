@@ -9,8 +9,8 @@ import java.sql.Statement;
 
 import de.uniba.kinf.projm.hylleblomst.exceptions.SetUpException;
 import de.uniba.kinf.projm.hylleblomst.keys.ColumnNameKeys;
+import de.uniba.kinf.projm.hylleblomst.keys.DBUserKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.TableNameKeys;
-import de.uniba.kinf.projm.hylleblomst.keys.UserKeys;
 
 /**
  * This class has the sole purpose of setting up a database with all tables
@@ -21,25 +21,18 @@ import de.uniba.kinf.projm.hylleblomst.keys.UserKeys;
  */
 public class SetUpTables {
 
-	public static void main(String[] args) {
-		try {
-			new SetUpTables().run();
-		} catch (SetUpException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	public boolean run() throws SetUpException {
+	public boolean run(String dbURL) throws SetUpException {
 		int interrupt = 0;
-		try (Connection con = DriverManager.getConnection(UserKeys.dbURL,
-				UserKeys.adminUser, UserKeys.adminPassword);
+		try (Connection con = DriverManager.getConnection(dbURL,
+				DBUserKeys.adminUser, DBUserKeys.adminPassword);
 				Statement stmt = con.createStatement(
 						ResultSet.TYPE_SCROLL_INSENSITIVE,
 						ResultSet.CONCUR_READ_ONLY);) {
 
 			while (!allTablesExist(con)) {
 				con.setAutoCommit(false);
+
+				stmt.executeUpdate("CREATE SCHEMA hylleblomst");
 
 				interrupt++;
 				if (interrupt >= 10) {
