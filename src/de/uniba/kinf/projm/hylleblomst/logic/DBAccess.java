@@ -30,9 +30,11 @@ public class DBAccess {
 	}
 
 	public ResultSet startQuery(String query, ArrayList<String> inputs) throws SQLException {
-		try (Connection con = DriverManager.getConnection(dbURL, user, password);
-				PreparedStatement stmt = con.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE,
-						ResultSet.CONCUR_READ_ONLY);) {
+		Object object = new Object();
+		try {
+			Connection con = DriverManager.getConnection(dbURL, user, password);
+			PreparedStatement stmt = con.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE,
+					ResultSet.CONCUR_READ_ONLY);
 			int parameterIndex = 1;
 			if (inputs != null) {
 				for (String input : inputs) {
@@ -40,7 +42,9 @@ public class DBAccess {
 					parameterIndex++;
 				}
 			}
+			con.setAutoCommit(false);
 			ResultSet results = stmt.executeQuery();
+			con.setAutoCommit(false);
 
 			ResultSetMetaData rsmd = stmt.getMetaData();
 			int columnsNumber = rsmd.getColumnCount();
@@ -65,7 +69,12 @@ public class DBAccess {
 				}
 			}
 			// return new PersonItemBuilder().startBuildingPersonItems(results);
+			object = results;
 			return results;
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			return (ResultSet) object;
 		}
 	}
 }

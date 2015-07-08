@@ -1,12 +1,12 @@
 package de.uniba.kinf.projm.hylleblomst.view;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
 import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
-import de.uniba.kinf.projm.hylleblomst.logic.PersonItem;
 import de.uniba.kinf.projm.hylleblomst.logic.UserQueries;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.SearchInitiatorImpl;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.UserQueriesImpl;
@@ -80,13 +80,16 @@ public class SearchController extends Observable {
 		}
 
 		try {
-			view.setInfoTextExtendedSearch(requestList);
-			view.fillResultTable();
-			if (requestList.size() != 0) {
-				List<PersonItem> result = searchInitiatorImpl.search(requestList);
-				// TODO remove comment for later implementation
-				// view.fillResultTable(result);
-			}
+			// view.setInfoTextExtendedSearch(requestList);
+			// view.fillResultTable();
+			// if (requestList.size() != 0) {
+			// List<PersonItem> result =
+			// searchInitiatorImpl.search(requestList);
+			// // TODO remove comment for later implementation
+			// // view.fillResultTable(result);
+			// }
+			ResultSet resultSet = searchInitiatorImpl.search(requestList);
+			view.fillResultTableWithResultSet(resultSet);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new RuntimeException("Ein Fehler bei der Suche ist aufgetreten:\n" + e.getMessage());

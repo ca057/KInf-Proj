@@ -1,6 +1,8 @@
 package de.uniba.kinf.projm.hylleblomst.view;
 
 import java.net.URL;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
@@ -15,6 +17,7 @@ import de.uniba.kinf.projm.hylleblomst.logic.UserQueries;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.SearchInitiatorImpl;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -27,6 +30,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -36,6 +40,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 /**
  * Controller for the graphical user interface.
@@ -210,7 +215,7 @@ public class ViewController implements Initializable, Observer {
 	Button searchMenu_search;
 
 	@FXML
-	TableView<PersonItem> resultTable;
+	TableView resultTable;
 
 	@FXML
 	Label search_sourceLabel;
@@ -351,7 +356,7 @@ public class ViewController implements Initializable, Observer {
 			@Override
 			public void handle(MouseEvent event) {
 				if (event.isPrimaryButtonDown()) {
-					startSearchForSinglePerson(resultTable.getSelectionModel().getSelectedItem().getId());
+					// startSearchForSinglePerson(resultTable.getSelectionModel().getSelectedItem().getId());
 				}
 				event.consume();
 			}
@@ -611,6 +616,39 @@ public class ViewController implements Initializable, Observer {
 		ObservableList<PersonItem> data = FXCollections.observableArrayList(testList);
 
 		resultTable.setItems(data);
+	}
+
+	void fillResultTableWithResultSet(ResultSet result) {
+		ObservableList<ObservableList> data = FXCollections.observableArrayList();
+		try {
+			for (int i = 0; i < result.getMetaData().getColumnCount(); i++) {
+				final int j = i;
+				TableColumn<ObservableList, String> col = new TableColumn(result.getMetaData().getColumnName(i + 1));
+				col.setCellValueFactory(
+						new Callback<CellDataFeatures<ObservableList, String>, ObservableValue<String>>() {
+
+							@Override
+							public ObservableValue<String> call(CellDataFeatures<ObservableList, String> param) {
+
+								return new SimpleStringProperty(param.getValue().get(j).toString());
+							}
+						});
+				resultTable.getColumns().add(col);
+			}
+
+			while (result.next()) {
+				ObservableList<String> row = FXCollections.observableArrayList();
+				for (int i = 1; i < result.getMetaData().getColumnCount(); i++) {
+					row.add(result.getString(i));
+				}
+				data.add(row);
+			}
+			resultTable.setItems(data);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 
 	/**
