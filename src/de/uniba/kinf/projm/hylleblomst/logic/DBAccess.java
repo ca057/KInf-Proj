@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 import javax.sql.rowset.CachedRowSet;
 
-import com.sun.rowset.CachedRowSetImpl;
+import com.sun.rowset.RowSetFactoryImpl;
 
 import de.uniba.kinf.projm.hylleblomst.keys.ColumnNameKeys;
 
@@ -33,13 +33,11 @@ public class DBAccess {
 		this.password = password;
 	}
 
-	public CachedRowSet startQuery(String query, ArrayList<String> inputs)
-			throws SQLException {
-		CachedRowSet crs = new CachedRowSetImpl();
-		try (Connection con = DriverManager
-				.getConnection(dbURL, user, password);
-				PreparedStatement stmt = con.prepareStatement(query,
-						ResultSet.TYPE_SCROLL_INSENSITIVE,
+	public CachedRowSet startQuery(String query, ArrayList<String> inputs) throws SQLException {
+		// CachedRowSet crs = new CachedRowSetImpl();
+		CachedRowSet crs = new RowSetFactoryImpl().createCachedRowSet();
+		try (Connection con = DriverManager.getConnection(dbURL, user, password);
+				PreparedStatement stmt = con.prepareStatement(query, ResultSet.TYPE_SCROLL_INSENSITIVE,
 						ResultSet.CONCUR_READ_ONLY);) {
 			int parameterIndex = 1;
 			if (inputs != null) {
@@ -53,7 +51,7 @@ public class DBAccess {
 
 			ResultSet results = stmt.executeQuery();
 			while (results.next()) {
-				System.out.println(results.getString(5));
+				System.out.println(results.getString(6));
 			}
 
 			crs.populate(results);
@@ -66,8 +64,7 @@ public class DBAccess {
 				for (int x = 0; x < columnsNumber; x++) {
 					string2.append(results.getString((x + 1)) + ", ");
 				}
-				System.out.println(string2.substring(0, string2.length() - 2)
-						.toString());
+				System.out.println(string2.substring(0, string2.length() - 2).toString());
 			}
 			for (int i = 1; i < results.getFetchSize(); i++) {
 				results.getString(i);
