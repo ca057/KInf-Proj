@@ -13,6 +13,23 @@ public class SQLBuilder {
 				+ "." + ColumnNameKeys.VORNAME_TRAD_ID + " LEFT OUTER JOIN " + TableNameKeys.VORNAME_NORM + " ON "
 				+ TableNameKeys.VORNAME_NORM + "." + ColumnNameKeys.VORNAME_NORM_ID + " = " + TableNameKeys.VORNAME_TRAD
 				+ "." + ColumnNameKeys.VORNAME_NORM_ID;
+		// StringBuilder vorname = new StringBuilder();
+		// vorname.append(TableNameKeys.PERSON).append(" LEFT OUTER JOIN
+		// ").append(TableNameKeys.VORNAME_INFO)
+		// .append(" ON
+		// ").append(TableNameKeys.PERSON).append(".").append(ColumnNameKeys.PERSON_ID).append("
+		// = ")
+		// .append(TableNameKeys.VORNAME_INFO).append(".").append(ColumnNameKeys.PERSON_ID)
+		// .append(" LEFT OUTER JOIN
+		// ").append(TableNameKeys.VORNAME_TRAD).append(" ON ")
+		// .append(TableNameKeys.VORNAME_TRAD).append(".").append(ColumnNameKeys.VORNAME_TRAD_ID).append("
+		// = ")
+		// .append(TableNameKeys.VORNAME_INFO).append(".").append(ColumnNameKeys.VORNAME_TRAD_ID)
+		// .append(" LEFT OUTER JOIN
+		// ").append(TableNameKeys.VORNAME_NORM).append(" ON ")
+		// .append(TableNameKeys.VORNAME_NORM).append(".").append(ColumnNameKeys.VORNAME_NORM_ID).append("
+		// = ")
+		// .append(TableNameKeys.VORNAME_TRAD).append(".").append(ColumnNameKeys.VORNAME_NORM_ID);
 		String name = TableNameKeys.NAME_INFO + " ON " + TableNameKeys.PERSON + "." + ColumnNameKeys.PERSON_ID + " = "
 				+ TableNameKeys.NAME_INFO + "." + ColumnNameKeys.PERSON_ID + " LEFT OUTER JOIN "
 				+ TableNameKeys.NAME_TRAD + " ON " + TableNameKeys.NAME_TRAD + "." + ColumnNameKeys.NAME_TRAD_ID + " = "
