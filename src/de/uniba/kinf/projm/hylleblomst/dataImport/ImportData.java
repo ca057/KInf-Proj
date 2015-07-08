@@ -1,6 +1,7 @@
 package de.uniba.kinf.projm.hylleblomst.dataImport;
 
 import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
+import de.uniba.kinf.projm.hylleblomst.keys.DatabaseKeys;
 
 /**
  * Passes rows to
@@ -28,6 +29,7 @@ public interface ImportData {
 	 * 
 	 * @see {@link ImportData.Import}
 	 */
-	public void addData(String path) throws ImportException, Exception;
+	public void addData(DatabaseKeys db, String path) throws ImportException,
+			Exception;
 
 }

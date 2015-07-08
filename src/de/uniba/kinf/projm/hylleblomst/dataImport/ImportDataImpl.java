@@ -8,11 +8,16 @@ import java.util.List;
 import de.uniba.kinf.projm.hylleblomst.database.ImportDatabase;
 import de.uniba.kinf.projm.hylleblomst.database.ImportDatabaseImpl;
 import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
+import de.uniba.kinf.projm.hylleblomst.keys.DBUserKeys;
+import de.uniba.kinf.projm.hylleblomst.keys.DatabaseKeys;
 
 public class ImportDataImpl implements ImportData {
 
+	DatabaseKeys db;
+
 	@Override
-	public void addData(String path) throws Exception {
+	public void addData(DatabaseKeys db, String path) throws Exception {
+		this.db = db;
 		if (path == null || path.isEmpty()) {
 			throw new IllegalArgumentException(
 					"Der übergebene String ist leer oder {@code null}");
@@ -43,9 +48,10 @@ public class ImportDataImpl implements ImportData {
 	private void addCSV(Path path) throws Exception {
 		CsvHelper csvhelper = new CsvHelper(path);
 		List<String[]> rows = csvhelper.getAllLines();
+
 		try {
-			ImportDatabase database = new ImportDatabaseImpl(
-					"jdbc:derby:./db/MyDB;create=true", "admin", "password");
+			ImportDatabase database = new ImportDatabaseImpl(db.dbURL,
+					DBUserKeys.adminUser, DBUserKeys.adminPassword);
 			database.importData(rows);
 		} catch (ImportException e) {
 			// TODO gefangene Exception genauer definieren, wenn in Database
