@@ -1,9 +1,10 @@
 package de.uniba.kinf.projm.hylleblomst.logic;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
+
+import javax.sql.rowset.CachedRowSet;
 
 /**
  * @author Hannes
@@ -39,7 +40,7 @@ public interface SearchInitiator {
 	 * @return A {@Code ResultSet} with the outcome ot the search
 	 * @throws SQLException
 	 */
-	ResultSet search(Collection<UserQueries> userQueries) throws SQLException;
+	CachedRowSet search(Collection<UserQueries> userQueries) throws SQLException;
 
 	/**
 	 * Gets all information of a person.

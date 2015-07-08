@@ -1,10 +1,11 @@
 package de.uniba.kinf.projm.hylleblomst.logicImpl;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import javax.sql.rowset.CachedRowSet;
 
 import de.uniba.kinf.projm.hylleblomst.keys.ColumnNameKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
@@ -20,11 +21,11 @@ public class SearchInitiatorImpl implements SearchInitiator {
 	SQLBuilder sql = new SQLBuilder();
 
 	@Override
-	public ResultSet search(Collection<UserQueries> userQueries) throws SQLException {
+	public CachedRowSet search(Collection<UserQueries> userQueries) throws SQLException {
 		return buildAndStartQuery(userQueries);
 	}
 
-	private ResultSet buildAndStartQuery(Collection<UserQueries> userQueries) throws SQLException {
+	private CachedRowSet buildAndStartQuery(Collection<UserQueries> userQueries) throws SQLException {
 		Boolean hasSource = false;
 		ArrayList<String> inputs = new ArrayList<String>();
 		StringBuilder sqlQuery = new StringBuilder();
