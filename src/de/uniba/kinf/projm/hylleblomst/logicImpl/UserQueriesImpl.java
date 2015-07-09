@@ -6,6 +6,10 @@ import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.TableNameKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.UserQueries;
 
+/**
+ * @author Johannes
+ *
+ */
 public class UserQueriesImpl implements UserQueries {
 	private SearchFieldKeys searchField;
 	private String column;
@@ -16,6 +20,13 @@ public class UserQueriesImpl implements UserQueries {
 	private Boolean isOR = false;
 	private Boolean isOpenSearch = false;
 
+	/**
+	 * @param searchField
+	 * @param input
+	 * @param source
+	 * @param isOr
+	 * @param isOpenSearch
+	 */
 	public UserQueriesImpl(SearchFieldKeys searchField, String input, int source, Boolean isOr, Boolean isOpenSearch) {
 		this.isOR = isOr;
 		this.isOpenSearch = isOpenSearch;
@@ -32,7 +43,7 @@ public class UserQueriesImpl implements UserQueries {
 
 	public void setSearchField(SearchFieldKeys searchField) {
 		this.searchField = searchField;
-		searchFieldKeyToDatabaseData();
+		// searchFieldKeyToDatabaseData();
 	}
 
 	@Override
@@ -78,11 +89,8 @@ public class UserQueriesImpl implements UserQueries {
 		return isOR;
 	}
 
-	/**
+	/*
 	 * Returns the name of the table the {@code SearchFieldKey} key belongs to.
-	 * 
-	 * @param key
-	 * @return
 	 */
 	private void searchFieldKeyToDatabaseData() {
 		if (source > SourceKeys.bottom && source < SourceKeys.top) {
@@ -91,6 +99,7 @@ public class UserQueriesImpl implements UserQueries {
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.ADLIG;
 				sqlWhere = String.format("%s.%s <> ''", table, column);
+				// source = SourceKeys.NO_SOURCE;
 				break;
 			case JESUIT:
 				table = TableNameKeys.PERSON;
@@ -124,12 +133,13 @@ public class UserQueriesImpl implements UserQueries {
 				column = ColumnNameKeys.DATUM;
 				sqlWhere = String.format("%s.%s < ?", table, column);
 				if (input.contains("mm-dd")) {
-					input = input.substring(0, 3) + "-12-31";
+					input = input.substring(0, input.indexOf("-", 1)) + "-12-31";
 				} else if (input.contains("mm")) {
-					input = input.substring(0, 3) + "-12-" + input.substring(8, 9);
+					input = input.substring(0, input.indexOf("-", 2)) + "-12-" + input.substring(8, 9);
 				} else if (input.contains("dd")) {
-					input = input.substring(0, 6) + "-31";
+					input = input.substring(0, input.indexOf("-", 3)) + "-31";
 				}
+				System.out.println(input);
 				break;
 			case ANMERKUNGEN:
 				table = TableNameKeys.PERSON;
@@ -263,12 +273,17 @@ public class UserQueriesImpl implements UserQueries {
 		}
 	}
 
+	/*
+	 * 
+	 */
 	private String buildSQLWhere() {
 		if (isOpenSearch) {
-			input = "%" + input + "%";
-			// TODO % und Funktion einfügen
-			if (source == SourceKeys.NO_SELECTION || searchField == SearchFieldKeys.ANREDE
-					|| searchField == SearchFieldKeys.TITEL) {
+
+			updateInputForOpenSearch();
+
+			if (source == SourceKeys.NO_SELECTION || source == SourceKeys.NO_SOURCE) {
+				// || searchField == SearchFieldKeys.ANREDE || searchField ==
+				// SearchFieldKeys.TITEL) {
 				return String.format("UPPER(%s.%s) LIKE UPPER(?)", table, column);
 			}
 			if (source == SourceKeys.NORM) {
@@ -278,16 +293,33 @@ public class UserQueriesImpl implements UserQueries {
 					table.substring(0, table.indexOf("_")), ColumnNameKeys.QUELLEN_ID, source);
 
 		} else {
-			if (source == SourceKeys.NO_SELECTION || searchField == SearchFieldKeys.ANREDE
-					|| searchField == SearchFieldKeys.TITEL) {
+			if (source == SourceKeys.NO_SELECTION || source == SourceKeys.NO_SOURCE) {
+				// || searchField == SearchFieldKeys.ANREDE || searchField ==
+				// SearchFieldKeys.TITEL) {
 				return String.format("UPPER(%s.%s) = UPPER(?) ", table, column);
 			}
 			if (source == SourceKeys.NORM) {
 				return String.format("UPPER(%s_norm.%s) = UPPER(?) ", table.substring(0, table.indexOf("_")), column,
 						"%");
 			}
+
 			return String.format("UPPER(%s.%s) = UPPER(?) AND %1s_info.%s = %s", table, column,
 					table.substring(0, table.indexOf("_")), ColumnNameKeys.QUELLEN_ID, source);
 		}
+	}
+
+	/*
+	 * 
+	 */
+	private void updateInputForOpenSearch() {
+		StringBuilder newInput = new StringBuilder().append(input.substring(0, 1));
+		for (int i = 1; i < input.length(); i++) {
+			newInput.append("%" + input.substring(i, i + 1));
+			System.out.println(newInput);
+		}
+		input = "%" + newInput + "%";
+		System.out.println(input);
+		// FIXME Warum wird das hier pro Instanz 2x aufgerufen?
+		// System.out.println(newInput);
 	}
 }

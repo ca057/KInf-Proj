@@ -21,13 +21,12 @@ public interface ImportData {
 	 * 
 	 * @param path
 	 *            The path to the file as {@code String}
-	 * @return true - if import was successful
-	 * @return false - if import failed
+	 * @return true - if import was successful, false - if import failed
+	 * 
 	 * @throws ImportException
-	 * @throws Exception
 	 * 
 	 * @see {@link ImportData.Import}
 	 */
-	public void addData(String path) throws ImportException, Exception;
+	public void addData(String path) throws ImportException;
 
 }

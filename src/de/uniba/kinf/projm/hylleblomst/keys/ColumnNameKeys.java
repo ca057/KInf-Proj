@@ -1,5 +1,9 @@
 package de.uniba.kinf.projm.hylleblomst.keys;
 
+/**
+ * @author Simon
+ *
+ */
 public interface ColumnNameKeys {
 
 	public static final String ANREDE_NORM_ID = "AnredeNormID";
@@ -60,15 +64,10 @@ public interface ColumnNameKeys {
 	public static final String ANMERKUNG = "Anmerkung";
 
 	public static String[][] getNormTableColumnNames() {
-		String[][] result = { { ANREDE_NORM_ID, ANREDE_NORM },
-				{ FACH_NORM_ID, FACH_NORM },
-				{ FAKULTAETEN_ID, FAKULTAETEN_NORM },
-				{ FUNDORTE_ID, FUNDORTE_NORM },
-				{ VORNAME_NORM_ID, VORNAME_NORM }, { NAME_NORM_ID, NAME_NORM },
-				{ QUELLEN_ID, QUELLEN_NAME },
-				{ SEMINAR_NORM_ID, SEMINAR_NORM },
-				{ TITEL_NORM_ID, TITEL_NORM },
-				{ WIRTSCHAFTSLAGE_NORM_ID, WIRTSCHAFTSLAGE_NORM } };
+		String[][] result = { { ANREDE_NORM_ID, ANREDE_NORM }, { FACH_NORM_ID, FACH_NORM },
+				{ FAKULTAETEN_ID, FAKULTAETEN_NORM }, { FUNDORTE_ID, FUNDORTE_NORM }, { VORNAME_NORM_ID, VORNAME_NORM },
+				{ NAME_NORM_ID, NAME_NORM }, { QUELLEN_ID, QUELLEN_NAME }, { SEMINAR_NORM_ID, SEMINAR_NORM },
+				{ TITEL_NORM_ID, TITEL_NORM }, { WIRTSCHAFTSLAGE_NORM_ID, WIRTSCHAFTSLAGE_NORM } };
 
 		return result;
 	}

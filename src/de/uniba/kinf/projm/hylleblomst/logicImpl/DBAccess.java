@@ -1,21 +1,30 @@
-package de.uniba.kinf.projm.hylleblomst.logic;
+package de.uniba.kinf.projm.hylleblomst.logicImpl;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.sql.rowset.CachedRowSet;
 
 import com.sun.rowset.CachedRowSetImpl;
 
+/**
+ * @author Johannes
+ *
+ */
 public class DBAccess {
 	private String dbURL;
 	private String user;
 	private String password;
 
+	/**
+	 * @param dbURL
+	 * @param user
+	 * @param password
+	 */
 	public DBAccess(String dbURL, String user, String password) {
 		this.dbURL = dbURL;
 		this.user = user;
@@ -30,7 +39,13 @@ public class DBAccess {
 		this.password = password;
 	}
 
-	public CachedRowSet startQuery(String query, ArrayList<String> inputs) throws SQLException {
+	/**
+	 * @param query
+	 * @param inputs
+	 * @return
+	 * @throws SQLException
+	 */
+	public CachedRowSet startQuery(String query, List<String> inputs) throws SQLException {
 		CachedRowSet crs = new CachedRowSetImpl();
 		// CachedRowSet crs = new RowSetFactoryImpl().createCachedRowSet();
 		try (Connection con = DriverManager.getConnection(dbURL, user, password);
@@ -74,8 +89,6 @@ public class DBAccess {
 			// }
 			// }
 
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		return crs;
 	}

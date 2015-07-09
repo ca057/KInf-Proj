@@ -1,4 +1,4 @@
-package de.uniba.kinf.projm.hylleblomst.view;
+package de.uniba.kinf.projm.hylleblomst.controller;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -125,12 +125,13 @@ public class SearchController implements ControllerInterface {
 		sfkArray[14] = SearchFieldKeys.STUDIENJAHR_VON;
 		sfkArray[15] = SearchFieldKeys.STUDIENJAHR_BIS;
 		sfkArray[16] = SearchFieldKeys.EINSCHREIBEDATUM_VON;
-		sfkArray[17] = SearchFieldKeys.ZUSAETZE;
-		sfkArray[18] = SearchFieldKeys.FUNDORTE;
-		sfkArray[19] = SearchFieldKeys.ANMERKUNGEN;
-		sfkArray[20] = SearchFieldKeys.NUMMER;
-		sfkArray[21] = SearchFieldKeys.SEITE_ORIGINALE;
-		sfkArray[22] = SearchFieldKeys.NUMMER_HESS;
+		sfkArray[17] = SearchFieldKeys.EINSCHREIBEDATUM_BIS;
+		sfkArray[18] = SearchFieldKeys.ZUSAETZE;
+		sfkArray[19] = SearchFieldKeys.FUNDORTE;
+		sfkArray[20] = SearchFieldKeys.ANMERKUNGEN;
+		sfkArray[21] = SearchFieldKeys.NUMMER;
+		sfkArray[22] = SearchFieldKeys.SEITE_ORIGINALE;
+		sfkArray[23] = SearchFieldKeys.NUMMER_HESS;
 
 		return sfkArray;
 	}

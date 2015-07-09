@@ -9,20 +9,21 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.collections.FXCollections ?>
 
-<BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniba.kinf.projm.hylleblomst.view.ViewController">
+<BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniba.kinf.projm.hylleblomst.controller.ViewController">
 	<top>
 		<MenuBar fx:id="mainMenu" BorderPane.alignment="CENTER">
 			<menus>
 				<Menu fx:id="mainMenu_file" mnemonicParsing="false" text="Datei">
 					<items>
-						<MenuItem fx:id="mainMenu_file_save" mnemonicParsing="false" text="Speichern" />
 						<MenuItem fx:id="mainMenu_file_export" mnemonicParsing="false" text="Export" />
-						<MenuItem fx:id="mainMenu_file_close" mnemonicParsing="false" onAction="#closeWindow" text="Programm beenden" />
+						<MenuItem fx:id="mainMenu_file_close" mnemonicParsing="false" text="Programm beenden" />
 					</items>
 				</Menu>
-				<Menu fx:id="mainMenu_edit" mnemonicParsing="false" text="Bearbeiten">
+				<Menu fx:id="mainMenu_database" mnemonicParsing="false" text="Datenbank">
 					<items>
-						<MenuItem fx:id="mainMenu_edit_options" mnemonicParsing="false" text="Optionen" />
+						<MenuItem fx:id="mainMenu_database_setupDatabase" mnemonicParsing="false" text="Datenbank und Tabellen anlegen" />
+						<MenuItem fx:id="mainMenu_database_importData" mnemonicParsing="false" text="Daten importieren" />
+						<MenuItem fx:id="mainMenu_database_clearDatabase" mnemonicParsing="false" text="Datenbank löschen" />
 					</items>
 				</Menu>
 				<Menu fx:id="mainMenu_help" mnemonicParsing="false" text="Hilfe">
@@ -225,10 +226,12 @@
 																		<Insets top="15.0" />
 																	</VBox.margin>
 																</Label>
-																<GridPane>
+																<GridPane prefHeight="90.0" prefWidth="258.0">
 																	<columnConstraints>
-																		<ColumnConstraints hgrow="SOMETIMES" maxWidth="50.0" minWidth="10.0" prefWidth="50.0" />
-																		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+																		<ColumnConstraints hgrow="SOMETIMES" maxWidth="50.0" minWidth="10.0" percentWidth="22.5" />
+																		<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="27.5" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="22.5" />
+                                                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="27.5" />
 																	</columnConstraints>
 																	<rowConstraints>
 																		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -236,12 +239,48 @@
 																		<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
 																	</rowConstraints>
 																	<children>
-																		<Label text="Tag" />
-																		<Label text="Monat" GridPane.rowIndex="1" />
-																		<Label text="Jahr" GridPane.rowIndex="2" />
-																		<TextField fx:id="searchCategory_study_einschreibeTag" maxWidth="75.0" minWidth="50.0" prefWidth="50.0" promptText="Tag" GridPane.columnIndex="1" />
-																		<TextField fx:id="searchCategory_study_einschreibeMonat" maxWidth="75.0" minWidth="50.0" prefWidth="50.0" promptText="Monat" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-																		<TextField fx:id="searchCategory_study_einschreibeJahr" maxWidth="75.0" minWidth="50.0" prefWidth="50.0" promptText="Jahr" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+																		<Label text="von Tag" />
+																		<Label text="von Monat" GridPane.rowIndex="1" />
+																		<Label text="von Jahr" GridPane.rowIndex="2" />
+																		<TextField fx:id="searchCategory_study_einschreibeTagVon" maxWidth="75.0" minWidth="50.0" prefWidth="50.0" promptText="von Tag" GridPane.columnIndex="1">
+                                                         <GridPane.margin>
+                                                            <Insets />
+                                                         </GridPane.margin></TextField>
+																		<TextField fx:id="searchCategory_study_einschreibeMonatVon" maxWidth="75.0" minWidth="50.0" prefWidth="50.0" promptText="von Monat" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                         <GridPane.margin>
+                                                            <Insets />
+                                                         </GridPane.margin></TextField>
+																		<TextField fx:id="searchCategory_study_einschreibeJahrVon" maxWidth="75.0" minWidth="50.0" prefWidth="50.0" promptText="von Jahr" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                         <GridPane.margin>
+                                                            <Insets />
+                                                         </GridPane.margin></TextField>
+                                                      <Label text="bis Tag" GridPane.columnIndex="2">
+                                                         <GridPane.margin>
+                                                            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                                         </GridPane.margin></Label>
+                                                      <Label text="bis Monat" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                                         <GridPane.margin>
+                                                            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                                         </GridPane.margin></Label>
+                                                      <Label text="bis Jahr" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                                         <GridPane.margin>
+                                                            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                                         </GridPane.margin></Label>
+                                                      <TextField fx:id="searchCategory_study_einschreibeTagBis" maxWidth="75.0" minWidth="50.0" prefWidth="50.0" promptText="bis Tag" GridPane.columnIndex="3">
+                                                         <GridPane.margin>
+                                                            <Insets />
+                                                         </GridPane.margin>
+                                                      </TextField>
+                                                      <TextField fx:id="searchCategory_study_einschreibeMonatBis" maxWidth="75.0" minWidth="50.0" prefWidth="50.0" promptText="bis Monat" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                                         <GridPane.margin>
+                                                            <Insets />
+                                                         </GridPane.margin>
+                                                      </TextField>
+                                                      <TextField fx:id="searchCategory_study_einschreibeJahrBis" maxWidth="75.0" minWidth="50.0" prefWidth="50.0" promptText="bis Jahr" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                                                         <GridPane.margin>
+                                                            <Insets />
+                                                         </GridPane.margin>
+                                                      </TextField>
 																	</children>
 																</GridPane>
 															</children>

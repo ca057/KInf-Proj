@@ -1,4 +1,4 @@
-package de.uniba.kinf.projm.hylleblomst.view;
+package de.uniba.kinf.projm.hylleblomst.controller;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -19,6 +19,7 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -53,15 +54,12 @@ public class ViewController implements ControllerInterface, Initializable {
 
 	private SearchController searchCtrl;
 
-	private int inputFieldCounter = 23;
+	private int inputFieldCounter = 24;
 
 	private StringProperty sourceLabelName = new SimpleStringProperty("Quelle: ");
 
 	@FXML
 	private BorderPane root;
-
-	@FXML
-	private MenuItem mainMenu_file_save;
 
 	@FXML
 	private MenuItem mainMenu_file_export;
@@ -70,7 +68,13 @@ public class ViewController implements ControllerInterface, Initializable {
 	private MenuItem mainMenu_file_close;
 
 	@FXML
-	private MenuItem mainMenu_edit_options;
+	private MenuItem mainMenu_database_setupDatabase;
+
+	@FXML
+	private MenuItem mainMenu_database_importData;
+
+	@FXML
+	private MenuItem mainMenu_database_clearDatabase;
 
 	@FXML
 	private MenuItem mainMenu_help_help;
@@ -166,13 +170,22 @@ public class ViewController implements ControllerInterface, Initializable {
 	private TextField searchCategory_study_studienjahrBis;
 
 	@FXML
-	private TextField searchCategory_study_einschreibeTag;
+	private TextField searchCategory_study_einschreibeTagVon;
 
 	@FXML
-	private TextField searchCategory_study_einschreibeMonat;
+	private TextField searchCategory_study_einschreibeMonatVon;
 
 	@FXML
-	private TextField searchCategory_study_einschreibeJahr;
+	private TextField searchCategory_study_einschreibeJahrVon;
+
+	@FXML
+	private TextField searchCategory_study_einschreibeTagBis;
+
+	@FXML
+	private TextField searchCategory_study_einschreibeMonatBis;
+
+	@FXML
+	private TextField searchCategory_study_einschreibeJahrBis;
 
 	@FXML
 	private TitledPane searchCategory_other;
@@ -254,8 +267,52 @@ public class ViewController implements ControllerInterface, Initializable {
 	 * 
 	 */
 	private void setEventHandlers() {
+		setMenuEventHandlers();
 		setNumericalInputEventHandlers();
 		setTableViewEventHandlers();
+	}
+
+	private void setMenuEventHandlers() {
+		mainMenu_file_close.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				closeWindow();
+				event.consume();
+			}
+		});
+		mainMenu_file_export.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				ui.functionNotAvailable();
+				event.consume();
+			}
+		});
+		mainMenu_database_setupDatabase.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				model.setUpDatabase();
+				event.consume();
+			}
+		});
+		mainMenu_database_importData.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				model.importData();
+				event.consume();
+			}
+		});
+		mainMenu_database_clearDatabase.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				model.clearDatabase();
+				event.consume();
+			}
+		});
 	}
 
 	/**
@@ -294,51 +351,99 @@ public class ViewController implements ControllerInterface, Initializable {
 				}
 			}
 		});
-		searchCategory_study_einschreibeJahr.setOnKeyReleased(new EventHandler<KeyEvent>() {
+		searchCategory_study_einschreibeJahrVon.setOnKeyReleased(new EventHandler<KeyEvent>() {
 
 			@Override
 			public void handle(KeyEvent ke) {
 				try {
-					if (getParsedInt(searchCategory_study_einschreibeJahr.getText()) < 0
-							|| getParsedInt(searchCategory_study_einschreibeJahr.getText()) > 2015) {
+					if (getParsedInt(searchCategory_study_einschreibeJahrVon.getText()) < 0
+							|| getParsedInt(searchCategory_study_einschreibeJahrVon.getText()) > 2015) {
 						ke.consume();
 						throw new NumberFormatException();
 					}
 				} catch (NumberFormatException e) {
 					ui.showErrorMessage("Einschreibejahr muss eine Zahl zwischen 0 und 2015 sein.");
-					searchCategory_study_einschreibeJahr.clear();
+					searchCategory_study_einschreibeJahrVon.clear();
 				}
 			}
 		});
-		searchCategory_study_einschreibeMonat.setOnKeyReleased(new EventHandler<KeyEvent>() {
+		searchCategory_study_einschreibeMonatVon.setOnKeyReleased(new EventHandler<KeyEvent>() {
 
 			@Override
 			public void handle(KeyEvent ke) {
 				try {
-					if (getParsedInt(searchCategory_study_einschreibeMonat.getText()) < 1
-							|| getParsedInt(searchCategory_study_einschreibeMonat.getText()) > 12) {
+					if (getParsedInt(searchCategory_study_einschreibeMonatVon.getText()) < 1
+							|| getParsedInt(searchCategory_study_einschreibeMonatVon.getText()) > 12) {
 						ke.consume();
 						throw new NumberFormatException();
 					}
 				} catch (NumberFormatException e) {
 					ui.showErrorMessage("Einschreibemonat muss eine Zahl von 1 bis 12 sein.");
-					searchCategory_study_einschreibeMonat.clear();
+					searchCategory_study_einschreibeMonatVon.clear();
 				}
 			}
 		});
-		searchCategory_study_einschreibeTag.setOnKeyReleased(new EventHandler<KeyEvent>() {
+		searchCategory_study_einschreibeTagVon.setOnKeyReleased(new EventHandler<KeyEvent>() {
 
 			@Override
 			public void handle(KeyEvent ke) {
 				try {
-					if (getParsedInt(searchCategory_study_einschreibeTag.getText()) < 1
-							|| getParsedInt(searchCategory_study_einschreibeTag.getText()) > 31) {
+					if (getParsedInt(searchCategory_study_einschreibeTagVon.getText()) < 1
+							|| getParsedInt(searchCategory_study_einschreibeTagVon.getText()) > 31) {
 						ke.consume();
 						throw new NumberFormatException();
 					}
 				} catch (NumberFormatException e) {
 					ui.showErrorMessage("Einschreibetag muss eine Zahl von 1 bis 31 sein.");
-					searchCategory_study_einschreibeTag.clear();
+					searchCategory_study_einschreibeTagVon.clear();
+				}
+			}
+		});
+		searchCategory_study_einschreibeJahrBis.setOnKeyReleased(new EventHandler<KeyEvent>() {
+
+			@Override
+			public void handle(KeyEvent ke) {
+				try {
+					if (getParsedInt(searchCategory_study_einschreibeJahrBis.getText()) < 0
+							|| getParsedInt(searchCategory_study_einschreibeJahrBis.getText()) > 2015) {
+						ke.consume();
+						throw new NumberFormatException();
+					}
+				} catch (NumberFormatException e) {
+					ui.showErrorMessage("Einschreibejahr muss eine Zahl zwischen 0 und 2015 sein.");
+					searchCategory_study_einschreibeJahrBis.clear();
+				}
+			}
+		});
+		searchCategory_study_einschreibeMonatBis.setOnKeyReleased(new EventHandler<KeyEvent>() {
+
+			@Override
+			public void handle(KeyEvent ke) {
+				try {
+					if (getParsedInt(searchCategory_study_einschreibeMonatBis.getText()) < 1
+							|| getParsedInt(searchCategory_study_einschreibeMonatBis.getText()) > 12) {
+						ke.consume();
+						throw new NumberFormatException();
+					}
+				} catch (NumberFormatException e) {
+					ui.showErrorMessage("Einschreibemonat muss eine Zahl von 1 bis 12 sein.");
+					searchCategory_study_einschreibeMonatBis.clear();
+				}
+			}
+		});
+		searchCategory_study_einschreibeTagBis.setOnKeyReleased(new EventHandler<KeyEvent>() {
+
+			@Override
+			public void handle(KeyEvent ke) {
+				try {
+					if (getParsedInt(searchCategory_study_einschreibeTagBis.getText()) < 1
+							|| getParsedInt(searchCategory_study_einschreibeTagBis.getText()) > 31) {
+						ke.consume();
+						throw new NumberFormatException();
+					}
+				} catch (NumberFormatException e) {
+					ui.showErrorMessage("Einschreibetag muss eine Zahl von 1 bis 31 sein.");
+					searchCategory_study_einschreibeTagBis.clear();
 				}
 			}
 		});
@@ -405,59 +510,53 @@ public class ViewController implements ControllerInterface, Initializable {
 	}
 
 	void fillResultTable(CachedRowSet result) {
-		if (result == null) {
-			throw new IllegalArgumentException(
-					"Das übergebene Set mit dem Tabelleninhalt ist leer oder hat keinen Wert.");
-		} else if (result.size() == 0) {
-			throw new RuntimeException("Die Suchanfrage hat kein Ergebnis geliefert.");
-		}
-		ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
-		try {
-			result.first();
-			for (int i = 0; i < result.getMetaData().getColumnCount(); i++) {
-				final int j = i;
-				String columnName = result.getMetaData().getColumnName(i + 1);
-				if (columnName.contains("_")) {
-					columnName = columnName.substring(0, columnName.indexOf("_")) + " "
-							+ columnName.substring(columnName.indexOf("_") + 1);
-				}
-				TableColumn<ObservableList<String>, String> col = new TableColumn<ObservableList<String>, String>(
-						columnName);
-				col.setCellValueFactory(
-						new Callback<CellDataFeatures<ObservableList<String>, String>, ObservableValue<String>>() {
+		if (result == null || result.size() == 0) {
+			ui.showInfo("Die Suche hat kein Ergebnis zurückgeliefert.");
+		} else {
+			ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
+			try {
+				result.first();
+				for (int i = 0; i < result.getMetaData().getColumnCount(); i++) {
+					final int j = i;
+					String columnName = result.getMetaData().getColumnName(i + 1);
+					if (columnName.contains("_")) {
+						columnName = columnName.substring(0, columnName.indexOf("_")) + " "
+								+ columnName.substring(columnName.indexOf("_") + 1);
+					}
+					TableColumn<ObservableList<String>, String> col = new TableColumn<ObservableList<String>, String>(
+							columnName);
+					col.setCellValueFactory(
+							new Callback<CellDataFeatures<ObservableList<String>, String>, ObservableValue<String>>() {
 
-							@Override
-							public ObservableValue<String> call(
-									CellDataFeatures<ObservableList<String>, String> param) {
-								if (param.getValue().get(j) == null) {
-									return new SimpleStringProperty("");
+								@Override
+								public ObservableValue<String> call(
+										CellDataFeatures<ObservableList<String>, String> param) {
+									Optional<String> optionalParam = Optional.ofNullable(param.getValue().get(j));
+									if (optionalParam.isPresent()) {
+										return new SimpleStringProperty(optionalParam.get());
+									} else {
+										return new SimpleStringProperty();
+									}
 								}
-								Optional<String> optionalParam = Optional
-										.ofNullable(param.getValue().get(j).toString());
-								if (optionalParam.isPresent()) {
-									return new SimpleStringProperty(optionalParam.get());
-								} else {
-									return new SimpleStringProperty("");
-								}
-							}
-						});
-				resultTable.getColumns().add(col);
-			}
-			// set visibility of first column with ID to false
-			resultTable.getColumns().get(0).setVisible(false);
-			result.first();
-			while (result.next()) {
-				ObservableList<String> row = FXCollections.observableArrayList();
-				for (int i = 1; i <= result.getMetaData().getColumnCount(); i++) {
-					row.add(result.getString(i));
+							});
+					resultTable.getColumns().add(col);
 				}
-				data.add(row);
+				// set visibility of first column with ID to false
+				resultTable.getColumns().get(0).setVisible(false);
+				result.first();
+				while (result.next()) {
+					ObservableList<String> row = FXCollections.observableArrayList();
+					for (int i = 1; i <= result.getMetaData().getColumnCount(); i++) {
+						row.add(result.getString(i));
+					}
+					data.add(row);
+				}
+				result.close();
+				resultTable.setItems(data);
+			} catch (SQLException e) {
+				ui.showErrorMessage("Bei der Anzeige der gefundenen Datensätze ist ein Fehler aufgetreten.");
+				e.printStackTrace();
 			}
-			result.close();
-			resultTable.setItems(data);
-		} catch (SQLException e) {
-			ui.showErrorMessage("Bei der Anzeige der gefundenen Datensätze ist ein Fehler aufgetreten.");
-			e.printStackTrace();
 		}
 	}
 
@@ -498,12 +597,13 @@ public class ViewController implements ControllerInterface, Initializable {
 			inputFields[14] = searchCategory_study_studienjahrVon.getText();
 			inputFields[15] = searchCategory_study_studienjahrBis.getText();
 			inputFields[16] = getEinschreibungVon();
-			inputFields[17] = searchCategory_other_zusaetzeinput.getText();
-			inputFields[18] = searchCategory_other_fundort.getText();
-			inputFields[19] = searchCategory_other_anmerkungen.getText();
-			inputFields[20] = searchCategory_other_nummer.getText();
-			inputFields[21] = searchCategory_other_seite.getText();
-			inputFields[22] = searchCategory_other_nummerhess.getText();
+			inputFields[17] = getEinschreibungBis();
+			inputFields[18] = searchCategory_other_zusaetzeinput.getText();
+			inputFields[19] = searchCategory_other_fundort.getText();
+			inputFields[20] = searchCategory_other_anmerkungen.getText();
+			inputFields[21] = searchCategory_other_nummer.getText();
+			inputFields[22] = searchCategory_other_seite.getText();
+			inputFields[23] = searchCategory_other_nummerhess.getText();
 		} catch (IllegalArgumentException e) {
 			ui.showErrorMessage(e.getMessage());
 		}
@@ -519,14 +619,32 @@ public class ViewController implements ControllerInterface, Initializable {
 		String monat = "mm";
 		String tag = "dd";
 
-		if (!searchCategory_study_einschreibeJahr.getText().isEmpty()) {
-			jahr = searchCategory_study_einschreibeJahr.getText();
+		if (!searchCategory_study_einschreibeJahrVon.getText().isEmpty()) {
+			jahr = searchCategory_study_einschreibeJahrVon.getText();
 		}
-		if (!searchCategory_study_einschreibeMonat.getText().isEmpty()) {
-			monat = searchCategory_study_einschreibeMonat.getText();
+		if (!searchCategory_study_einschreibeMonatVon.getText().isEmpty()) {
+			monat = searchCategory_study_einschreibeMonatVon.getText();
 		}
-		if (!searchCategory_study_einschreibeTag.getText().isEmpty()) {
-			tag = searchCategory_study_einschreibeTag.getText();
+		if (!searchCategory_study_einschreibeTagVon.getText().isEmpty()) {
+			tag = searchCategory_study_einschreibeTagVon.getText();
+		}
+
+		return jahr + "-" + monat + "-" + tag;
+	}
+
+	private String getEinschreibungBis() {
+		String jahr = "yyyy";
+		String monat = "mm";
+		String tag = "dd";
+
+		if (!searchCategory_study_einschreibeJahrBis.getText().isEmpty()) {
+			jahr = searchCategory_study_einschreibeJahrBis.getText();
+		}
+		if (!searchCategory_study_einschreibeMonatBis.getText().isEmpty()) {
+			monat = searchCategory_study_einschreibeMonatBis.getText();
+		}
+		if (!searchCategory_study_einschreibeTagBis.getText().isEmpty()) {
+			tag = searchCategory_study_einschreibeTagBis.getText();
 		}
 
 		return jahr + "-" + monat + "-" + tag;
@@ -568,12 +686,13 @@ public class ViewController implements ControllerInterface, Initializable {
 		inputSourceKey[14] = SourceKeys.NO_SOURCE;
 		inputSourceKey[15] = SourceKeys.NO_SOURCE;
 		inputSourceKey[16] = SourceKeys.NO_SOURCE;
-		inputSourceKey[17] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
-		inputSourceKey[18] = SourceKeys.NO_SOURCE;
+		inputSourceKey[17] = SourceKeys.NO_SOURCE;
+		inputSourceKey[18] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
 		inputSourceKey[19] = SourceKeys.NO_SOURCE;
 		inputSourceKey[20] = SourceKeys.NO_SOURCE;
 		inputSourceKey[21] = SourceKeys.NO_SOURCE;
 		inputSourceKey[22] = SourceKeys.NO_SOURCE;
+		inputSourceKey[23] = SourceKeys.NO_SOURCE;
 
 		return inputSourceKey;
 	}
@@ -647,9 +766,12 @@ public class ViewController implements ControllerInterface, Initializable {
 		searchCategory_study_graduiert.setSelected(false);
 		searchCategory_study_studienjahrVon.clear();
 		searchCategory_study_studienjahrBis.clear();
-		searchCategory_study_einschreibeTag.clear();
-		searchCategory_study_einschreibeMonat.clear();
-		searchCategory_study_einschreibeJahr.clear();
+		searchCategory_study_einschreibeTagVon.clear();
+		searchCategory_study_einschreibeMonatVon.clear();
+		searchCategory_study_einschreibeJahrVon.clear();
+		searchCategory_study_einschreibeTagBis.clear();
+		searchCategory_study_einschreibeMonatBis.clear();
+		searchCategory_study_einschreibeJahrBis.clear();
 		searchCategory_other_zusaetzeinput.clear();
 		searchCategory_other_fundort.clear();
 		searchCategory_other_anmerkungen.clear();
@@ -666,7 +788,7 @@ public class ViewController implements ControllerInterface, Initializable {
 	 * Closes the window when the users submits the action.
 	 */
 	@FXML
-	protected void closeWindow() {
+	private void closeWindow() {
 		Stage stage = (Stage) root.getScene().getWindow();
 		if (ui.askForClosingWindow()) {
 			stage.close();
@@ -679,6 +801,6 @@ public class ViewController implements ControllerInterface, Initializable {
 	 */
 	@FXML
 	private void showInfo() {
-		ui.showInfo();
+		ui.showApplicationInfo();
 	}
 }
