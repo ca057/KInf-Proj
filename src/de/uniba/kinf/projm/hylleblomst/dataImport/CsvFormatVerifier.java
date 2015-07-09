@@ -10,9 +10,14 @@ public class CsvFormatVerifier {
 	public File csvFile;
 	CsvHelper referenceFile;
 
-	public CsvFormatVerifier(File file) {
-		this.csvFile = file;
-		referenceFile = new CsvHelper(Paths.get("./doc/reference.csv"));
+	public CsvFormatVerifier(File file) throws ImportException {
+		if (file.isFile() && file.getAbsolutePath().endsWith(".csv")) {
+			this.csvFile = file;
+			referenceFile = new CsvHelper(Paths.get("./doc/reference.csv"));
+		} else {
+			throw new ImportException(
+					"Given path doesn't point to a regular csv-file");
+		}
 	}
 
 	public boolean verifyCsv() {
