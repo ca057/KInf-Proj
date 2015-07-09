@@ -19,6 +19,7 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -272,9 +273,46 @@ public class ViewController implements ControllerInterface, Initializable {
 	}
 
 	private void setMenuEventHandlers() {
-		// TODO Auto-generated method stub
-		// set all event handlers, delete those which are defined in the
-		// fxml-file
+		mainMenu_file_close.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				closeWindow();
+				event.consume();
+			}
+		});
+		mainMenu_file_export.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				ui.functionNotAvailable();
+				event.consume();
+			}
+		});
+		mainMenu_database_setupDatabase.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				ui.functionNotAvailable();
+				event.consume();
+			}
+		});
+		mainMenu_database_importData.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				ui.functionNotAvailable();
+				event.consume();
+			}
+		});
+		mainMenu_database_clearDatabase.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				ui.functionNotAvailable();
+				event.consume();
+			}
+		});
 	}
 
 	/**
@@ -750,7 +788,7 @@ public class ViewController implements ControllerInterface, Initializable {
 	 * Closes the window when the users submits the action.
 	 */
 	@FXML
-	protected void closeWindow() {
+	private void closeWindow() {
 		Stage stage = (Stage) root.getScene().getWindow();
 		if (ui.askForClosingWindow()) {
 			stage.close();
