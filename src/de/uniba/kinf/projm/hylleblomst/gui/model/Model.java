@@ -1,5 +1,6 @@
 package de.uniba.kinf.projm.hylleblomst.gui.model;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.InputMismatchException;
@@ -50,13 +51,13 @@ public class Model extends Observable {
 		}
 	}
 
-	public void setUpDatabase() {
+	public void setUpDatabase(File dirForSetup) {
 		// DatabaseController --> File ist Speicherort
 		// setUpDatabase()
 		// setUpTables()
 	}
 
-	public void importData() {
+	public void importData(File importFile) {
 		// importDataIntoDatabase()
 
 	}
