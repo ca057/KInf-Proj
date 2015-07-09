@@ -657,12 +657,12 @@ public class ViewController implements ControllerInterface, Initializable {
 
 		if (!searchCategory_study_einschreibeJahrVon.getText().isEmpty()) {
 			jahr = searchCategory_study_einschreibeJahrVon.getText();
-		}
-		if (!searchCategory_study_einschreibeMonatVon.getText().isEmpty()) {
-			monat = searchCategory_study_einschreibeMonatVon.getText();
-		}
-		if (!searchCategory_study_einschreibeTagVon.getText().isEmpty()) {
-			tag = searchCategory_study_einschreibeTagVon.getText();
+			if (!searchCategory_study_einschreibeMonatVon.getText().isEmpty()) {
+				monat = searchCategory_study_einschreibeMonatVon.getText();
+			}
+			if (!searchCategory_study_einschreibeTagVon.getText().isEmpty()) {
+				tag = searchCategory_study_einschreibeTagVon.getText();
+			}
 		}
 
 		return jahr + "-" + monat + "-" + tag;
@@ -675,12 +675,12 @@ public class ViewController implements ControllerInterface, Initializable {
 
 		if (!searchCategory_study_einschreibeJahrBis.getText().isEmpty()) {
 			jahr = searchCategory_study_einschreibeJahrBis.getText();
-		}
-		if (!searchCategory_study_einschreibeMonatBis.getText().isEmpty()) {
-			monat = searchCategory_study_einschreibeMonatBis.getText();
-		}
-		if (!searchCategory_study_einschreibeTagBis.getText().isEmpty()) {
-			tag = searchCategory_study_einschreibeTagBis.getText();
+			if (!searchCategory_study_einschreibeMonatBis.getText().isEmpty()) {
+				monat = searchCategory_study_einschreibeMonatBis.getText();
+			}
+			if (!searchCategory_study_einschreibeTagBis.getText().isEmpty()) {
+				tag = searchCategory_study_einschreibeTagBis.getText();
+			}
 		}
 
 		return jahr + "-" + monat + "-" + tag;
