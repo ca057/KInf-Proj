@@ -5,7 +5,11 @@ import java.io.File;
 import de.uniba.kinf.projm.hylleblomst.dataImport.CsvFormatVerifier;
 import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 
-public class Main {
+/**
+ * @author Simon
+ *
+ */
+public class TestingMain {
 
 	public static void main(String[] args) {
 		File location = new File("./db");

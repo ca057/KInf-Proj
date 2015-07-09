@@ -11,7 +11,7 @@ import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 import de.uniba.kinf.projm.hylleblomst.keys.DBUserKeys;
 
 /**
- * @author Hannes
+ * @author Hannes, Simon
  *
  */
 public class ImportDataImpl implements ImportData {

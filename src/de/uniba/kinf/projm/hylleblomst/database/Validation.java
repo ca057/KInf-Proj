@@ -1,7 +1,6 @@
 package de.uniba.kinf.projm.hylleblomst.database;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
@@ -16,30 +15,18 @@ import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
  * @author Simon
  *
  */
-public class Validation {
+class Validation {
 
 	private Connection con;
-	private PreparedStatement stmt;
 
 	/**
 	 * Constructor for class validation.
 	 * 
-	 * @param dbURL
-	 *            A String that contains the directory of the database which is
-	 *            to be validated
-	 * @param user
-	 *            The username provided as String
-	 * @param password
-	 *            The password of the specified user to access database
+	 * @param con
+	 *            The {@link Connection} to use to access database.
 	 */
-	protected Validation(String dbURL, String user, String password) {
-
-		try {
-			this.con = DriverManager.getConnection(dbURL, user, password);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	protected Validation(Connection con) {
+		this.con = con;
 	}
 
 	/**
@@ -51,32 +38,23 @@ public class Validation {
 	boolean personIDIsTaken(int personID) throws ImportException {
 		boolean result = true;
 
-		try {
-			stmt = con.prepareStatement(
-					"SELECT PersonID FROM hylleblomst.person WHERE PersonID=?",
-					ResultSet.TYPE_SCROLL_INSENSITIVE,
-					ResultSet.CONCUR_READ_ONLY);
+		try (PreparedStatement stmt = con.prepareStatement(
+				"SELECT PersonID FROM hylleblomst.person WHERE PersonID=?",
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);) {
 			stmt.setInt(1, personID);
 
 			ResultSet rs = stmt.executeQuery();
 
 			con.setAutoCommit(false);
-			/*
-			 * Returns true if ResultSet is not empty, false otherwise
-			 */
+
+			// Returns true if ResultSet is not empty, false otherwise
+
 			result = rs.isBeforeFirst();
 			con.setAutoCommit(true);
 
 		} catch (SQLException e) {
 			throw new ImportException("PersonID could not be validated: "
 					+ e.getSQLState());
-		} finally {
-			try {
-				stmt.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 		return result;
 	}
@@ -102,11 +80,9 @@ public class Validation {
 
 		String column = getColumnName(table, 2);
 
-		try {
-			stmt = con.prepareStatement(String.format(
-					"SELECT %s FROM %s WHERE %1$s=?", column, table),
-					ResultSet.TYPE_SCROLL_INSENSITIVE,
-					ResultSet.CONCUR_READ_ONLY);
+		try (PreparedStatement stmt = con.prepareStatement(
+				String.format("SELECT %s FROM %s WHERE %1$s=?", column, table),
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);) {
 			stmt.setString(1, entry);
 
 			ResultSet rs = stmt.executeQuery();
@@ -121,13 +97,6 @@ public class Validation {
 		} catch (SQLException e) {
 			throw new ImportException("PersonID could not be validated: "
 					+ e.getSQLState());
-		} finally {
-			try {
-				stmt.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 
 		return result;
@@ -140,11 +109,10 @@ public class Validation {
 		String columnTwo = getColumnName(table, 2);
 		String columnThree = getColumnName(table, 3);
 
-		try {
-			stmt = con.prepareStatement(String.format(
-					"SELECT %s, %s FROM %s WHERE %1$s=? AND %2$s=?", columnTwo,
-					columnThree, table), ResultSet.TYPE_SCROLL_INSENSITIVE,
-					ResultSet.CONCUR_READ_ONLY);
+		try (PreparedStatement stmt = con.prepareStatement(String.format(
+				"SELECT %s, %s FROM %s WHERE %1$s=? AND %2$s=?", columnTwo,
+				columnThree, table), ResultSet.TYPE_SCROLL_INSENSITIVE,
+				ResultSet.CONCUR_READ_ONLY);) {
 			stmt.setString(1, entry);
 			stmt.setInt(2, foreignKey);
 
@@ -152,40 +120,30 @@ public class Validation {
 
 			con.setAutoCommit(false);
 
-			/*
-			 * Returns true if ResultSet is not empty, false otherwise
-			 */
+			// Returns true if ResultSet is not empty, false otherwise
 			result = rs.isBeforeFirst();
 			con.setAutoCommit(true);
 
 		} catch (SQLException e) {
 			throw new ImportException("PersonID could not be validated: "
 					+ e.getSQLState());
-		} finally {
-			try {
-				stmt.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 		return result;
 	}
 
-	boolean entryAlreadyInDatabase(String entry, String anmerkung, String table) {
+	boolean entryAlreadyInDatabase(String entry, String anmerkung, String table)
+			throws ImportException {
 		boolean result = true;
 
 		String columnOne = getColumnName(table, 1);
 		String columnTwo = getColumnName(table, 2);
 		String columnThree = getColumnName(table, 3);
+		String sqlQuery = String.format(
+				"SELECT %2$s FROM %1$s WHERE %3$s=? AND %4$s=?", table,
+				columnOne, columnTwo, columnThree);
 
-		try {
-			String sqlQuery = String.format(
-					"SELECT %2$s FROM %1$s WHERE %3$s=? AND %4$s=?", table,
-					columnOne, columnTwo, columnThree);
-			PreparedStatement stmt = con.prepareStatement(sqlQuery,
-					ResultSet.TYPE_SCROLL_INSENSITIVE,
-					ResultSet.CONCUR_READ_ONLY);
+		try (PreparedStatement stmt = con.prepareStatement(sqlQuery,
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);) {
 
 			stmt.setString(1, entry);
 			stmt.setString(2, anmerkung);
@@ -198,35 +156,26 @@ public class Validation {
 
 			con.setAutoCommit(true);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} finally {
-			try {
-				stmt.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			throw new ImportException("Could not be validated: " + table + "\n"
+					+ e.getSQLState());
 		}
 
 		return result;
 	}
 
 	boolean entryAlreadyInDatabase(int tradID, int quellenID, int personID,
-			String table) {
+			String table) throws ImportException {
 		boolean result = true;
 
 		String columnOne = getColumnName(table, 1);
 		String columnTwo = getColumnName(table, 2);
 		String columnThree = getColumnName(table, 3);
+		String querySql = String.format(
+				"SELECT %s, %s, %s FROM %s WHERE %1$s=? AND %2$s=? AND %3$s=?",
+				columnOne, columnTwo, columnThree, table);
 
-		try {
-			String querySql = String
-					.format("SELECT %s, %s, %s FROM %s WHERE %1$s=? AND %2$s=? AND %3$s=?",
-							columnOne, columnTwo, columnThree, table);
-			stmt = con.prepareStatement(querySql,
-					ResultSet.TYPE_SCROLL_INSENSITIVE,
-					ResultSet.CONCUR_READ_ONLY);
+		try (PreparedStatement stmt = con.prepareStatement(querySql,
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);) {
 			stmt.setInt(1, tradID);
 			stmt.setInt(2, quellenID);
 			stmt.setInt(3, personID);
@@ -235,22 +184,14 @@ public class Validation {
 
 			con.setAutoCommit(false);
 
-			/*
-			 * Returns true if ResultSet is not empty, false otherwise
-			 */
+			// Returns true if ResultSet is not empty, false otherwise
 			result = rs.isBeforeFirst();
 
 			con.setAutoCommit(true);
 
 		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				stmt.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			throw new ImportException("Could not be validated: " + table + "\n"
+					+ e.getSQLState());
 		}
 
 		return result;
@@ -267,12 +208,10 @@ public class Validation {
 	 */
 	private String getColumnName(String table, int i) {
 		String result = "";
+		String querySql = String.format("SELECT * FROM %s", table);
 
-		try {
-			String querySql = String.format("SELECT * FROM %s", table);
-			stmt = con.prepareStatement(querySql,
-					ResultSet.TYPE_SCROLL_INSENSITIVE,
-					ResultSet.CONCUR_READ_ONLY);
+		try (PreparedStatement stmt = con.prepareStatement(querySql,
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);) {
 
 			ResultSet rs = stmt.executeQuery();
 			ResultSetMetaData rsmd = rs.getMetaData();
@@ -281,13 +220,6 @@ public class Validation {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				stmt.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 
 		return result;
@@ -304,14 +236,13 @@ public class Validation {
 	int getMaxID(String table) {
 		int result = 0;
 
-		try {
-			String column = (table.replace("_", "") + "ID").replace(
-					"hylleblomst.", "");
-			String getMaxIDSQL = String.format("SELECT max(%s) FROM %s",
-					column, table);
-			stmt = con.prepareStatement(getMaxIDSQL,
-					ResultSet.TYPE_SCROLL_INSENSITIVE,
-					ResultSet.CONCUR_READ_ONLY);
+		String column = (table.replace("_", "") + "ID").replace("hylleblomst.",
+				"");
+		String getMaxIDSQL = String.format("SELECT max(%s) FROM %s", column,
+				table);
+
+		try (PreparedStatement stmt = con.prepareStatement(getMaxIDSQL,
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);) {
 			ResultSet rs = stmt.executeQuery();
 
 			con.setAutoCommit(false);
@@ -322,13 +253,6 @@ public class Validation {
 			con.setAutoCommit(true);
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				stmt.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 
 		return result;
@@ -343,19 +267,18 @@ public class Validation {
 	 *            The table in which to look for the ID
 	 * @return The ID of the searched entry if existent in specified table,
 	 *         <code>0</code> otherwise
+	 * @throws ImportException
 	 */
-	int getIDOfEntry(String entry, String table) {
+	int getIDOfEntry(String entry, String table) throws ImportException {
 		int id = 0;
+		String column = getColumnName(table, 2);
+		String querySql = String.format("SELECT * FROM %s WHERE %s=?", table,
+				column);
 
-		try {
-			String column = getColumnName(table, 2);
-			String querySql = String.format("SELECT * FROM %s WHERE %s=?",
-					table, column);
-			stmt = con.prepareStatement(querySql,
-					ResultSet.TYPE_SCROLL_INSENSITIVE,
-					ResultSet.CONCUR_READ_ONLY);
+		try (PreparedStatement stmt = con.prepareStatement(querySql,
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);) {
+
 			stmt.setString(1, entry);
-
 			ResultSet rs = stmt.executeQuery();
 
 			con.setAutoCommit(false);
@@ -366,8 +289,8 @@ public class Validation {
 			con.setAutoCommit(true);
 
 		} catch (SQLException e) {
-			// TODO: handle exception
-			e.printStackTrace();
+			throw new ImportException("Wasn't able to fetch ID: " + table
+					+ "\n" + e.getSQLState());
 		}
 		return id;
 	}
@@ -377,14 +300,13 @@ public class Validation {
 
 		String columnTwo = getColumnName(table, 2);
 		String columnThree = getColumnName(table, 3);
+		String querySql = String.format(
+				"SELECT * FROM %3$s WHERE %1$s=? AND %2$s=?", columnTwo,
+				columnThree, table);
 
-		try {
-			String querySql = String.format(
-					"SELECT * FROM %3$s WHERE %1$s=? AND %2$s=?", columnTwo,
-					columnThree, table);
-			stmt = con.prepareStatement(querySql,
-					ResultSet.TYPE_SCROLL_INSENSITIVE,
-					ResultSet.CONCUR_READ_ONLY);
+		try (PreparedStatement stmt = con.prepareStatement(querySql,
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);) {
+
 			stmt.setString(1, entry);
 			stmt.setInt(2, foreignKey);
 
@@ -431,14 +353,8 @@ public class Validation {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return 0;
-		} finally {
-			try {
-				stmt.close();
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 		return id;
 	}
+
 }

@@ -7,10 +7,8 @@ import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 /**
  * Adds data to the database.
  * 
- * @author Hannes
+ * @author Hannes, Simon
  * 
- * @see {@link de.uniba.kinf.projm.hylleblomst.dataImport.ImportData}
- *
  */
 public interface ImportDatabase {
 

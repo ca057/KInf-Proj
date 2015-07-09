@@ -8,6 +8,10 @@ import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 import de.uniba.kinf.projm.hylleblomst.exceptions.SetUpException;
 import de.uniba.kinf.projm.hylleblomst.keys.DatabaseKeys;
 
+/**
+ * @author Simon
+ *
+ */
 public class DatabaseManagement {
 
 	DatabaseKeys db;
