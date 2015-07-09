@@ -281,40 +281,32 @@ public class UserQueriesImpl implements UserQueries {
 	 */
 	private String buildSQLWhere() {
 		StringBuilder result = new StringBuilder();
-		result.append(String.format("UPPER(%s.%s)", table, column));
-		result.append(insertEquationSymbol());
-		result.append("UPPER(?)");
+		result.append(String.format("UPPER(%s.%s)", table, column)).append(getEquationSymbol()).append("UPPER(?)");
 
 		if (source == SourceKeys.NO_SELECTION || source == SourceKeys.ORT_NORM_AB) {
 			result.append(String.format(" OR UPPER(%s_norm.%snorm) ", table.substring(0, table.indexOf("_")),
-					column.substring(0, column.length() - 4)));
-			result.append(insertEquationSymbol());
-			result.append("UPPER(?)");
-
+					column.substring(0, column.length() - 4))).append(getEquationSymbol()).append("UPPER(?)");
 		}
+
 		if (source == SourceKeys.ORT_NORM_AB) {
-			result.append(String.format("OR UPPER(%s.%s)", TableNameKeys.ORT_ABWEICHUNG_NORM,
-					ColumnNameKeys.ORT_ABWEICHUNG_NORM));
-			result.append(insertEquationSymbol());
-			result.append("UPPER(?)");
-			return result.toString();
+			return result
+					.append(String.format("OR UPPER(%s.%s)", TableNameKeys.ORT_ABWEICHUNG_NORM,
+							ColumnNameKeys.ORT_ABWEICHUNG_NORM))
+					.append(getEquationSymbol()).append("UPPER(?)").toString();
 		}
 
-		if (source == SourceKeys.NORM || source == SourceKeys.NO_SOURCE || source == SourceKeys.NO_SELECTION
-				|| SearchFieldKeys.ANREDE.equals(searchField) || SearchFieldKeys.TITEL.equals(searchField)) {
-			return result.toString();
+		if (!(source == SourceKeys.NORM || source == SourceKeys.NO_SOURCE || source == SourceKeys.NO_SELECTION
+				|| SearchFieldKeys.ANREDE.equals(searchField) || SearchFieldKeys.TITEL.equals(searchField))) {
+			result.append(String.format(" AND %1s_info.%s = %s", table.substring(0, table.indexOf("_")),
+					ColumnNameKeys.QUELLEN_ID, source));
 		}
-
-		return result.append(String.format(" AND %1s_info.%s = %s", table.substring(0, table.indexOf("_")),
-				ColumnNameKeys.QUELLEN_ID, source)).toString();
-		// if (!(source == SourceKeys.NO_SOURCE) || ) {
-		// result.append(String.format("%1s_info.%s = %s", table.substring(0,
-		// table.indexOf("_")),
-		// ColumnNameKeys.QUELLEN_ID, source));
-		// }
+		return result.toString();
 	}
 
-	private String insertEquationSymbol() {
+	/*
+	 * Depending on openSearch, "=" or "like" is chosen for the equation.
+	 */
+	private String getEquationSymbol() {
 		if (isOpenSearch) {
 			return (" LIKE ");
 		} else {
@@ -323,7 +315,8 @@ public class UserQueriesImpl implements UserQueries {
 	}
 
 	/*
-	 * 
+	 * This method updates the input, if open search is selected. It inserts "%"
+	 * before/after every character.
 	 */
 	private String updateInputForOpenSearch(String input) {
 		StringBuilder newInput = new StringBuilder().append(input.substring(0, 1));
