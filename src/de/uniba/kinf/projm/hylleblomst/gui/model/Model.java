@@ -83,11 +83,14 @@ public class Model extends Observable {
 			throw new InputMismatchException(
 					"Übergebener Pfad hat keinen Wert, die Datei kann nicht importiert werden.");
 		}
-		// importDataIntoDatabase()
-
 	}
 
-	public void clearDatabase() {
-		// tearDownTables
+	public void clearDatabase() throws SetUpException {
+		try {
+			dbManagement.tearDownTables();
+		} catch (SetUpException e) {
+			e.printStackTrace();
+			throw new SetUpException(e.getMessage());
+		}
 	}
 }
