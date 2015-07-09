@@ -16,7 +16,7 @@
 				<Menu fx:id="mainMenu_file" mnemonicParsing="false" text="Datei">
 					<items>
 						<MenuItem fx:id="mainMenu_file_export" mnemonicParsing="false" text="Export" />
-						<MenuItem fx:id="mainMenu_file_close" mnemonicParsing="false" text="Programm beenden" />
+						<MenuItem fx:id="mainMenu_file_close" mnemonicParsing="false" onAction="#closeWindow" text="Programm beenden" />
 					</items>
 				</Menu>
 				<Menu fx:id="mainMenu_database" mnemonicParsing="false" text="Datenbank">
@@ -87,12 +87,24 @@
 															<children>
 																<Label text="Anrede" />
 																<TextField fx:id="searchCategory_person_anrede" promptText="Anrede" />
+																<Label text="Anrede (normalisiert)">
+																	<VBox.margin>
+																		<Insets top="5.0" />
+																	</VBox.margin>
+																</Label>
+																<TextField fx:id="searchCategory_person_anredenorm" promptText="Anrede (normalisiert)" />
 																<Label text="Titel">
 																	<VBox.margin>
 																		<Insets top="15.0" />
 																	</VBox.margin>
 																</Label>
 																<TextField fx:id="searchCategory_person_titel" promptText="Titel" />
+																<Label text="Titel (normalisiert)">
+																	<VBox.margin>
+																		<Insets top="5.0" />
+																	</VBox.margin>
+																</Label>
+																<TextField fx:id="searchCategory_person_titelnorm" promptText="Titel (normalisiert)" />
 																<Label text="Vorname">
 																	<VBox.margin>
 																		<Insets top="15.0" />
@@ -156,7 +168,7 @@
 												</TitledPane>
 												<TitledPane fx:id="searchCategory_study" animated="false" text="Studium">
 													<content>
-														<VBox prefWidth="100.0">
+														<VBox prefHeight="200.0" prefWidth="100.0">
 															<padding>
 																<Insets bottom="10.0" left="10.0" right="20.0" top="10.0" />
 															</padding>
@@ -271,7 +283,6 @@
                                                       </TextField>
 																	</children>
 																</GridPane>
-                                                <Label fx:id="searchCategory_study_einschreibeHinweis" wrapText="true" />
 															</children>
 														</VBox>
 													</content>
