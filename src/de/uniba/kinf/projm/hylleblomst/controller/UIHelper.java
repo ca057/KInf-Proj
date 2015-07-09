@@ -74,13 +74,29 @@ public class UIHelper {
 	/**
 	 * Shows an alert window with some random information about the application.
 	 */
-	protected void showInfo() {
+	protected void showApplicationInfo() {
 		alertInformation.setTitle(getAppName() + " - Über");
 		alertInformation.setHeaderText(getAppName() + " v1.82.02.22.3");
 		alertInformation.setGraphic(new ImageView(this.getClass().getResource("einhorn.gif").toString()));
 		String content = "Mit Liebe gemacht von\nSimon Stemper, Johannes Trepesch, Christian Ost";
 		content += "\n\u00A9 2015 WTFPL – Do What the Fuck You Want to Public License";
 		alertInformation.setContentText(content);
+
+		alertInformation.showAndWait();
+	}
+
+	/**
+	 * Shows an alert window with a passed information text.
+	 */
+	protected void showInfo(String info) {
+		alertInformation.setTitle(getAppName() + " - Information");
+		alertInformation.setHeaderText("Information");
+		if (info == null || info.isEmpty()) {
+			alertInformation.setContentText(
+					"Hier gibt es ein Problem: Es wurden keine weiteren Informationen zum Anzeigen übergeben.");
+		} else {
+			alertInformation.setContentText(info);
+		}
 
 		alertInformation.showAndWait();
 	}

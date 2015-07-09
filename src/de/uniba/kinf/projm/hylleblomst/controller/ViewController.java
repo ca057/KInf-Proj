@@ -511,7 +511,7 @@ public class ViewController implements ControllerInterface, Initializable {
 
 	void fillResultTable(CachedRowSet result) {
 		if (result == null || result.size() == 0) {
-			ui.showErrorMessage("Die Suche hat kein Ergebnis zurückgeliefert.");
+			ui.showInfo("Die Suche hat kein Ergebnis zurückgeliefert.");
 		} else {
 			ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
 			try {
@@ -801,6 +801,6 @@ public class ViewController implements ControllerInterface, Initializable {
 	 */
 	@FXML
 	private void showInfo() {
-		ui.showInfo();
+		ui.showApplicationInfo();
 	}
 }
