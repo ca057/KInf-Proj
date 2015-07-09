@@ -592,7 +592,6 @@ public class ViewController implements ControllerInterface, Initializable {
 			try {
 				result.first();
 				for (int i = 0; i < result.getMetaData().getColumnCount(); i++) {
-					final int j = i;
 					String columnName = result.getMetaData().getColumnName(i + 1);
 					if (columnName.contains("_")) {
 						columnName = columnName.substring(0, columnName.indexOf("_")) + " "
@@ -600,14 +599,40 @@ public class ViewController implements ControllerInterface, Initializable {
 					}
 					TableColumn<ObservableList<String>, String> col = new TableColumn<ObservableList<String>, String>(
 							columnName);
+					if ("DATUMSFELDERGESETZT".equals(columnName)) {
+						col.setVisible(false);
+					}
+					final int j = i;
+					final String columnNameForCheck = columnName;
 					col.setCellValueFactory(
 							new Callback<CellDataFeatures<ObservableList<String>, String>, ObservableValue<String>>() {
+
+								private String formatDate(String oldDate, String key) {
+									String[] dateArray = oldDate.split("-");
+									if ("1".equals(key.substring(2))) {
+										dateArray[2] = "*";
+									}
+									if ("1".equals(key.substring(1, 2))) {
+										dateArray[1] = "*";
+									}
+									if ("1".equals(key.substring(0, 1))) {
+										dateArray[0] = "*";
+									}
+									String newDate = dateArray[0] + "-" + dateArray[1] + "-" + dateArray[2];
+									if ("-*-*".equals(newDate.substring(4))) {
+										return dateArray[0];
+									}
+									return newDate;
+								}
 
 								@Override
 								public ObservableValue<String> call(
 										CellDataFeatures<ObservableList<String>, String> param) {
 									Optional<String> optionalParam = Optional.ofNullable(param.getValue().get(j));
-									if (optionalParam.isPresent()) {
+									if (optionalParam.isPresent() && columnNameForCheck.equals("DATUM")) {
+										return new SimpleStringProperty(formatDate(param.getValue().get(j).toString(),
+												param.getValue().get(j + 1).toString()));
+									} else if (optionalParam.isPresent()) {
 										return new SimpleStringProperty(optionalParam.get());
 									} else {
 										return new SimpleStringProperty();
@@ -721,7 +746,6 @@ public class ViewController implements ControllerInterface, Initializable {
 				tag = searchCategory_study_einschreibeTagBis.getText();
 			}
 		}
-
 		return jahr + "-" + monat + "-" + tag;
 	}
 
