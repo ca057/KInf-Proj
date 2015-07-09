@@ -97,10 +97,6 @@ public class SQLBuilder {
 	}
 
 	String getSelectAll() {
-		return "DISTINCT " + TableNameKeys.PERSON + "." + ColumnNameKeys.PERSON_ID + " AS PersonID, "
-				+ TableNameKeys.VORNAME_NORM + "." + ColumnNameKeys.VORNAME_NORM + " AS vorname_norm, "
-				+ TableNameKeys.NAME_NORM + "." + ColumnNameKeys.NAME_NORM + " AS nachname_norm, "
-				+ TableNameKeys.ORT_NORM + "." + ColumnNameKeys.ORT_NORM + " AS ort_norm, " + TableNameKeys.FAKULTAETEN
-				+ "." + ColumnNameKeys.FAKULTAETEN_NORM + " AS fakultaet_norm";
+		return " * ";
 	}
 }

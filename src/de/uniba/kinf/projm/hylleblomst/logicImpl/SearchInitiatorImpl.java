@@ -80,11 +80,10 @@ public class SearchInitiatorImpl implements SearchInitiator {
 
 	@Override
 	public CachedRowSet searchPerson(String string) throws SQLException {
-		ArrayList<String> inputs = new ArrayList<String>();
-		inputs.add("" + string);
+		inputs.clear();
+		inputs.add(string);
 		StringBuilder sqlQuery = new StringBuilder();
 		sqlQuery.append(sql.getSelectAll()).append(sql.getFrom()).append(" WHERE Person.PersonID = ?");
-		// return db.startQuery(sqlQuery.toString(), inputs);
-		return null;
+		return db.startQuery(sqlQuery.toString(), inputs);
 	}
 }

@@ -43,7 +43,6 @@ public class DBAccess {
 					parameterIndex++;
 				}
 			}
-			// ResultSet results = stmt.executeQuery();
 
 			con.setAutoCommit(false);
 			crs.populate(stmt.executeQuery());
@@ -70,14 +69,6 @@ public class DBAccess {
 			// } else if ("011".equals(blub)) {
 			// date = date.substring(0, 4) + "X.X";
 			// }
-			// }
-
-			// while (crs.next()) {
-			// System.out.println("ID: " + crs.getInt(1) + ", Name: " +
-			// crs.getString(2) + ", Name: "
-			// + crs.getString(3) + ", Ort: " + crs.getString(4) + ",
-			// Fakultäten: " + crs.getString(5)
-			// + ", Test: " + crs.getString(6));
 			// }
 
 		} catch (Exception e) {
