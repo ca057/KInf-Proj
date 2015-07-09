@@ -1,5 +1,6 @@
 package de.uniba.kinf.projm.hylleblomst.controller;
 
+import java.io.File;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.Observable;
@@ -8,6 +9,8 @@ import java.util.ResourceBundle;
 
 import javax.sql.rowset.CachedRowSet;
 
+import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
+import de.uniba.kinf.projm.hylleblomst.exceptions.SetUpException;
 import de.uniba.kinf.projm.hylleblomst.exceptions.ViewException;
 import de.uniba.kinf.projm.hylleblomst.gui.model.Model;
 import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
@@ -39,6 +42,9 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -299,7 +305,17 @@ public class ViewController implements ControllerInterface, Initializable {
 
 			@Override
 			public void handle(ActionEvent event) {
-				model.setUpDatabase();
+				DirectoryChooser dirChooser = new DirectoryChooser();
+				dirChooser.setTitle(ui.getAppName() + " - Pfad für Datenbank auswählen");
+				Optional<File> setupDir = Optional.ofNullable(dirChooser.showDialog(root.getScene().getWindow()));
+				if (setupDir.isPresent()) {
+					try {
+						model.setUpDatabase(setupDir.get().getAbsoluteFile());
+					} catch (SetUpException e) {
+						ui.showErrorMessage(e.getMessage());
+						e.printStackTrace();
+					}
+				}
 				event.consume();
 			}
 		});
@@ -307,7 +323,20 @@ public class ViewController implements ControllerInterface, Initializable {
 
 			@Override
 			public void handle(ActionEvent event) {
-				model.importData();
+				FileChooser fileChooser = new FileChooser();
+				fileChooser.setTitle(ui.getAppName() + " - CSV-Datei für Import auswählen");
+				fileChooser.getExtensionFilters().add(new ExtensionFilter("CSV-Datei (*.csv)", "*.csv"));
+
+				Optional<File> importFile = Optional
+						.ofNullable(fileChooser.showOpenDialog(root.getScene().getWindow()));
+				if (importFile.isPresent()) {
+					try {
+						model.importData(importFile.get().getAbsoluteFile());
+					} catch (ImportException e) {
+						ui.showErrorMessage(e.getMessage());
+						e.printStackTrace();
+					}
+				}
 				event.consume();
 			}
 		});
@@ -315,7 +344,9 @@ public class ViewController implements ControllerInterface, Initializable {
 
 			@Override
 			public void handle(ActionEvent event) {
-				model.clearDatabase();
+				if (ui.getUserConfirmation("Datenbank löschen")) {
+					model.clearDatabase();
+				}
 				event.consume();
 			}
 		});
@@ -657,12 +688,12 @@ public class ViewController implements ControllerInterface, Initializable {
 
 		if (!searchCategory_study_einschreibeJahrVon.getText().isEmpty()) {
 			jahr = searchCategory_study_einschreibeJahrVon.getText();
-		}
-		if (!searchCategory_study_einschreibeMonatVon.getText().isEmpty()) {
-			monat = searchCategory_study_einschreibeMonatVon.getText();
-		}
-		if (!searchCategory_study_einschreibeTagVon.getText().isEmpty()) {
-			tag = searchCategory_study_einschreibeTagVon.getText();
+			if (!searchCategory_study_einschreibeMonatVon.getText().isEmpty()) {
+				monat = searchCategory_study_einschreibeMonatVon.getText();
+			}
+			if (!searchCategory_study_einschreibeTagVon.getText().isEmpty()) {
+				tag = searchCategory_study_einschreibeTagVon.getText();
+			}
 		}
 
 		return jahr + "-" + monat + "-" + tag;
@@ -675,12 +706,12 @@ public class ViewController implements ControllerInterface, Initializable {
 
 		if (!searchCategory_study_einschreibeJahrBis.getText().isEmpty()) {
 			jahr = searchCategory_study_einschreibeJahrBis.getText();
-		}
-		if (!searchCategory_study_einschreibeMonatBis.getText().isEmpty()) {
-			monat = searchCategory_study_einschreibeMonatBis.getText();
-		}
-		if (!searchCategory_study_einschreibeTagBis.getText().isEmpty()) {
-			tag = searchCategory_study_einschreibeTagBis.getText();
+			if (!searchCategory_study_einschreibeMonatBis.getText().isEmpty()) {
+				monat = searchCategory_study_einschreibeMonatBis.getText();
+			}
+			if (!searchCategory_study_einschreibeTagBis.getText().isEmpty()) {
+				tag = searchCategory_study_einschreibeTagBis.getText();
+			}
 		}
 
 		return jahr + "-" + monat + "-" + tag;

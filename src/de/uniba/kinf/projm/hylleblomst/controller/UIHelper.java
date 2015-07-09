@@ -38,7 +38,7 @@ public class UIHelper {
 	 * @return <code>true</code> if stage should be closed, <code>false</code>
 	 *         otherwise
 	 */
-	public boolean askForClosingWindow() {
+	boolean askForClosingWindow() {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle(appName + " - Programm beenden");
 		alert.setHeaderText("Programm beenden");
@@ -64,7 +64,7 @@ public class UIHelper {
 	 * Opens an alert window, showing an information that the expected function
 	 * is not available at the moment.
 	 */
-	public void functionNotAvailable() {
+	void functionNotAvailable() {
 		alertInformation.setTitle(appName + " - Hinweis");
 		alertInformation.setHeaderText(null);
 		alertInformation.setContentText("Diese Funktion steht zur Zeit leider noch nicht zur Verfügung.");
@@ -74,7 +74,7 @@ public class UIHelper {
 	/**
 	 * Shows an alert window with some random information about the application.
 	 */
-	protected void showApplicationInfo() {
+	void showApplicationInfo() {
 		alertInformation.setTitle(getAppName() + " - Über");
 		alertInformation.setHeaderText(getAppName() + " v1.82.02.22.3");
 		alertInformation.setGraphic(new ImageView(this.getClass().getResource("einhorn.gif").toString()));
@@ -88,7 +88,7 @@ public class UIHelper {
 	/**
 	 * Shows an alert window with a passed information text.
 	 */
-	protected void showInfo(String info) {
+	void showInfo(String info) {
 		alertInformation.setTitle(getAppName() + " - Information");
 		alertInformation.setHeaderText("Information");
 		if (info == null || info.isEmpty()) {
@@ -115,7 +115,7 @@ public class UIHelper {
 	 * @param errorMsg
 	 *            The error message as String
 	 */
-	protected void showErrorMessage(String errorMsg) {
+	void showErrorMessage(String errorMsg) {
 		Alert exceptionAlert = new Alert(AlertType.ERROR);
 		exceptionAlert.setTitle(appName + " - Fehler");
 		exceptionAlert.setHeaderText("Ein Fehler ist aufgetreten.");
@@ -125,4 +125,26 @@ public class UIHelper {
 		exceptionAlert.setContentText(errorMsg);
 		exceptionAlert.showAndWait();
 	}
+
+	boolean getUserConfirmation(String nameOfAction) {
+		if (nameOfAction == null || nameOfAction.isEmpty()) {
+			throw new IllegalArgumentException(
+					"Bestätigungsfenster kann nicht angezeigt werden, da keine Informationen übergeben wurden.");
+		}
+		Alert confirmationAlert = new Alert(AlertType.CONFIRMATION);
+		confirmationAlert.setTitle(appName + " - Achtung");
+		confirmationAlert.setHeaderText(nameOfAction);
+		confirmationAlert.setContentText("Möchten Sie diese Aktion wirklich durchführen?");
+
+		Optional<ButtonType> result = confirmationAlert.showAndWait();
+
+		if (result.isPresent() && result.get() == ButtonType.OK) {
+			confirmationAlert.close();
+			return true;
+		} else {
+			confirmationAlert.close();
+			return false;
+		}
+	}
+
 }
