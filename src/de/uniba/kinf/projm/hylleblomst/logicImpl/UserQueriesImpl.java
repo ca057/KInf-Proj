@@ -109,17 +109,17 @@ public class UserQueriesImpl implements UserQueries {
 			case STUDIENJAHR_VON:
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.STUDIENJAHR_INT;
-				sqlWhere = String.format("%s.%s > ?", table, column);
+				sqlWhere = String.format("%s.%s >= ?", table, column);
 				break;
 			case STUDIENJAHR_BIS:
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.STUDIENJAHR_INT;
-				sqlWhere = String.format("%s.%s < ?", table, column);
+				sqlWhere = String.format("%s.%s <= ?", table, column);
 				break;
 			case EINSCHREIBEDATUM_VON:
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.DATUM;
-				sqlWhere = String.format("%s.%s > ?", table, column);
+				sqlWhere = String.format("%s.%s >= ?", table, column);
 				if (input.contains("mm-dd")) {
 					input = input.substring(0, input.indexOf("-", 1)) + "-01-01";
 				} else if (input.contains("mm")) {
@@ -131,7 +131,7 @@ public class UserQueriesImpl implements UserQueries {
 			case EINSCHREIBEDATUM_BIS:
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.DATUM;
-				sqlWhere = String.format("%s.%s < ?", table, column);
+				sqlWhere = String.format("%s.%s <= ?", table, column);
 				if (input.contains("mm-dd")) {
 					input = input.substring(0, input.indexOf("-", 1)) + "-12-31";
 				} else if (input.contains("mm")) {
@@ -281,7 +281,11 @@ public class UserQueriesImpl implements UserQueries {
 
 			updateInputForOpenSearch();
 
-			if (source == SourceKeys.NO_SELECTION || source == SourceKeys.NO_SOURCE) {
+			if (source == SourceKeys.NO_SELECTION) {
+				return String.format("UPPER(%s.%s) LIKE UPPER(?) OR UPPER(%s_norm.%snorm) LIKE UPPER(?)", table, column,
+						table.substring(0, table.indexOf("_")), column.substring(0, column.lastIndexOf("t")));
+			}
+			if (source == SourceKeys.NO_SOURCE) {
 				// || searchField == SearchFieldKeys.ANREDE || searchField ==
 				// SearchFieldKeys.TITEL) {
 				return String.format("UPPER(%s.%s) LIKE UPPER(?)", table, column);
@@ -293,7 +297,11 @@ public class UserQueriesImpl implements UserQueries {
 					table.substring(0, table.indexOf("_")), ColumnNameKeys.QUELLEN_ID, source);
 
 		} else {
-			if (source == SourceKeys.NO_SELECTION || source == SourceKeys.NO_SOURCE) {
+			if (source == SourceKeys.NO_SELECTION) {
+				return String.format("UPPER(%s.%s) = UPPER(?) OR UPPER(%s_norm.%snorm) = UPPER(?)", table, column,
+						table.substring(0, table.indexOf("_")), column.substring(0, column.lastIndexOf("t")));
+			}
+			if (source == SourceKeys.NO_SOURCE) {
 				// || searchField == SearchFieldKeys.ANREDE || searchField ==
 				// SearchFieldKeys.TITEL) {
 				return String.format("UPPER(%s.%s) = UPPER(?) ", table, column);
