@@ -60,9 +60,12 @@ public class SearchInitiatorImpl implements SearchInitiator {
 
 			if (sqlWhere.length() == 0) {
 				sqlWhere.append(qr.getWhere());
+			} else if (qr.useOrCondition()) {
+				sqlWhere.append(" OR " + qr.getWhere());
 			} else {
 				sqlWhere.append(" AND " + qr.getWhere());
 			}
+
 			if (!("true".equals(qr.getInput()))) {
 				inputs.add(qr.getInput());
 			}

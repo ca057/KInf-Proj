@@ -69,12 +69,12 @@ public class UserQueriesImpl implements UserQueries {
 	}
 
 	@Override
-	public Boolean getIsOpenSearch() {
+	public Boolean isOpenSearch() {
 		return isOpenSearch;
 	}
 
 	@Override
-	public Boolean getIsOrCombination() {
+	public Boolean useOrCondition() {
 		return isOR;
 	}
 
@@ -264,14 +264,30 @@ public class UserQueriesImpl implements UserQueries {
 	}
 
 	private String buildSQLWhere() {
-		if (source == SourceKeys.NO_SELECTION || searchField == SearchFieldKeys.ANREDE
-				|| searchField == SearchFieldKeys.TITEL) {
-			return String.format("UPPER(%s.%s) LIKE UPPER(?) ", table, column);
+		if (this.isOpenSearch) {
+			// TODO % und Funktion einfügen
+			if (source == SourceKeys.NO_SELECTION || searchField == SearchFieldKeys.ANREDE
+					|| searchField == SearchFieldKeys.TITEL) {
+				return String.format("UPPER(%s.%s) LIKE UPPER(%s ? %3$s) ", table, column, "%");
+			}
+			if (source == SourceKeys.NORM) {
+				return String.format("UPPER(%s_norm.%s) LIKE UPPER(?) ", table.substring(0, table.indexOf("_")),
+						column);
+			}
+			return String.format("UPPER(%s.%s) LIKE UPPER(?) AND %1s_info.%s = %s", table, column,
+					table.substring(0, table.indexOf("_")), ColumnNameKeys.QUELLEN_ID, source);
+
+		} else {
+			if (source == SourceKeys.NO_SELECTION || searchField == SearchFieldKeys.ANREDE
+					|| searchField == SearchFieldKeys.TITEL) {
+				return String.format("UPPER(%s.%s) = UPPER(?) ", table, column);
+			}
+			if (source == SourceKeys.NORM) {
+				return String.format("UPPER(%s_norm.%s) LIKE UPPER(%s ? %3$s) ", table.substring(0, table.indexOf("_")),
+						column, "%");
+			}
+			return String.format("UPPER(%s.%s) = UPPER(?) AND %1s_info.%s = %s", table, column,
+					table.substring(0, table.indexOf("_")), ColumnNameKeys.QUELLEN_ID, source);
 		}
-		if (source == SourceKeys.NORM) {
-			return String.format("UPPER(%s_norm.%s) LIKE UPPER(?) ", table.substring(0, table.indexOf("_")), column);
-		}
-		return String.format("UPPER(%s.%s) LIKE UPPER(?) AND %1s_info.%s = %s", table, column,
-				table.substring(0, table.indexOf("_")), ColumnNameKeys.QUELLEN_ID, source);
 	}
 }
