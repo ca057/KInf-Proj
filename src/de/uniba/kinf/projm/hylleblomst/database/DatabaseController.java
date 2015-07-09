@@ -64,8 +64,11 @@ public class DatabaseController {
 	 */
 	public void importDataIntoDatabase(File file) throws ImportException {
 		try {
-			new CsvFormatVerifier(file);
-			new ImportDataImpl().addData(file.getAbsolutePath());
+			if (new CsvFormatVerifier(file).verifyCsv()) {
+				new ImportDataImpl().addData(file.getAbsolutePath());
+			} else {
+				throw new ImportException("Chosen file is not in valid format");
+			}
 		} catch (Exception e) {
 			StringBuilder errorMessage = new StringBuilder();
 			errorMessage.append("Data could not be imported: ");
