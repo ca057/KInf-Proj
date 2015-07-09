@@ -54,7 +54,7 @@ class CsvHelper {
 	 *             if there was a problem during import
 	 */
 	String[] getLine(int lineNumber) throws ImportException {
-		if (allLines.isEmpty()) {
+		if (allLines == null || allLines.isEmpty()) {
 			getAllLines();
 		}
 		return allLines.get(lineNumber + 1);
