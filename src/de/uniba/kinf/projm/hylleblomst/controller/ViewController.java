@@ -429,11 +429,7 @@ public class ViewController implements ControllerInterface, Initializable {
 							@Override
 							public ObservableValue<String> call(
 									CellDataFeatures<ObservableList<String>, String> param) {
-								if (param.getValue().get(j) == null) {
-									return new SimpleStringProperty("");
-								}
-								Optional<String> optionalParam = Optional
-										.ofNullable(param.getValue().get(j).toString());
+								Optional<String> optionalParam = Optional.ofNullable(param.getValue().get(j));
 								if (optionalParam.isPresent()) {
 									return new SimpleStringProperty(optionalParam.get());
 								} else {

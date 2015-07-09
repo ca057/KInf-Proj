@@ -9,14 +9,10 @@ import javafx.scene.image.ImageView;
 
 /**
  * Supports the creation of a lovely user interface <3.
- * 
- * @author ca
  *
  */
 public class UIHelper {
-	/**
-	 * The name of the application.
-	 */
+
 	private String appName = "Hylleblomst";
 
 	private Alert alertInformation = new Alert(AlertType.INFORMATION);
@@ -71,8 +67,7 @@ public class UIHelper {
 	public void functionNotAvailable() {
 		alertInformation.setTitle(appName + " - Hinweis");
 		alertInformation.setHeaderText(null);
-		alertInformation
-				.setContentText("Diese Funktion steht zur Zeit leider noch nicht zur Verfügung.");
+		alertInformation.setContentText("Diese Funktion steht zur Zeit leider noch nicht zur Verfügung.");
 		alertInformation.showAndWait();
 	}
 
@@ -82,8 +77,7 @@ public class UIHelper {
 	protected void showInfo() {
 		alertInformation.setTitle(getAppName() + " - Über");
 		alertInformation.setHeaderText(getAppName() + " v1.82.02.22.3");
-		alertInformation.setGraphic(new ImageView(this.getClass()
-				.getResource("einhorn.gif").toString()));
+		alertInformation.setGraphic(new ImageView(this.getClass().getResource("einhorn.gif").toString()));
 		String content = "Mit Liebe gemacht von\nSimon Stemper, Johannes Trepesch, Christian Ost";
 		content += "\n\u00A9 2015 WTFPL – Do What the Fuck You Want to Public License";
 		alertInformation.setContentText(content);
@@ -99,7 +93,7 @@ public class UIHelper {
 	 * <b>Precondition</b>
 	 * </p>
 	 * <ul>
-	 * <li> {@code errorMsg} must not be null
+	 * <li>{@code errorMsg} must not be null
 	 * </ul>
 	 * 
 	 * @param errorMsg
