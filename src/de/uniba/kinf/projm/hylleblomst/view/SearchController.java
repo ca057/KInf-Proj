@@ -6,6 +6,7 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Observable;
 
+import de.uniba.kinf.projm.hylleblomst.exceptions.ViewException;
 import de.uniba.kinf.projm.hylleblomst.gui.model.Model;
 import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.UserQueries;
@@ -35,21 +36,15 @@ public class SearchController implements ControllerInterface {
 
 	/**
 	 * 
+	 * @param inputFieldCounter
+	 * @param model
 	 */
-	private ViewController view;
-
-	/**
-	 * 
-	 * @param view
-	 */
-	public SearchController(ViewController view, Model model) {
-		if (view == null || model == null) {
-			throw new InputMismatchException(
-					"The passed ViewController or SearchInitiator has no value.");
+	public SearchController(int inputFieldCounter, Model model) {
+		if (inputFieldCounter == 0 || model == null) {
+			throw new InputMismatchException("Die Anzahl der Eingabefelder ist 0 oder das Model hat keinen Wert.");
 		}
-		this.view = view;
 		this.model = model;
-		inputCounter = view.getInputFieldCounter();
+		inputCounter = inputFieldCounter;
 		inputSearchFKey = generateSearchFieldKeyArray();
 	}
 
@@ -57,50 +52,48 @@ public class SearchController implements ControllerInterface {
 	 * 
 	 * @param inputValues
 	 * @param inputSourceKey
+	 * @throws ViewException
 	 */
-	void executeSearch(String[] inputValues, int[] inputSourceKey) {
-		if (inputSearchFKey == null || inputSearchFKey.length == 0
-				|| inputSourceKey == null || inputSourceKey.length == 0) {
-			throw new IllegalArgumentException(
-					"Die Liste mit Eingabefeldern ist leer oder hat keinen Wert.");
+	void executeSearch(String[] inputValues, int[] inputSourceKey) throws ViewException {
+		if (inputSearchFKey == null || inputSearchFKey.length == 0 || inputSourceKey == null
+				|| inputSourceKey.length == 0) {
+			throw new IllegalArgumentException("Die Liste mit Eingabefeldern ist leer oder hat keinen Wert.");
 		}
 
 		List<UserQueries> requestList = new ArrayList<UserQueries>();
 		for (int i = 0; i < inputValues.length; i++) {
-			if (!inputValues[i].isEmpty() && !"false".equals(inputValues[i])
-					&& !"yyyy-mm-dd".equals(inputValues[i])) {
-				UserQueriesImpl tmpReq = new UserQueriesImpl(
-						inputSearchFKey[i], inputValues[i], inputSourceKey[i]);
+			if (!inputValues[i].isEmpty() && !"false".equals(inputValues[i]) && !"yyyy-mm-dd".equals(inputValues[i])) {
+				UserQueriesImpl tmpReq = new UserQueriesImpl(inputSearchFKey[i], inputValues[i], inputSourceKey[i]);
 				requestList.add(tmpReq);
 			}
 		}
 
 		if (requestList.isEmpty()) {
-			throw new InputMismatchException(
-					"Suche kann nicht gestartet werden, da keine Eingaben vorliegen.");
+			throw new InputMismatchException("Suche kann nicht gestartet werden, da keine Eingaben vorliegen.");
 		}
 		try {
 			model.search(requestList);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new RuntimeException(
-					"Ein Fehler bei der Suche ist aufgetreten:\n"
-							+ e.getMessage());
+			throw new ViewException("Ein Fehler bei der Suche ist aufgetreten:\n" + e.getMessage());
 		}
 	}
 
 	/**
 	 * 
-	 * @param string
+	 * @param id
+	 * @throws ViewException
 	 */
-	public void startSinglePersonSearch(String string) {
+	public void startSinglePersonSearch(String id) throws ViewException {
+		if (id == null || id.isEmpty()) {
+			throw new InputMismatchException(
+					"Übergebene ID ist leer oder hat keinen Wert. Personendetails können nicht gesucht werden.");
+		}
 		try {
-			model.searchPerson(string);
+			model.searchPerson(id);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new RuntimeException(
-					"Ein Fehler bei der Suche nach Person mit ID " + string
-							+ " ist aufgetreten.");
+			throw new ViewException("Ein Fehler bei der Suche nach Person mit ID " + id + " ist aufgetreten.");
 		}
 	}
 
@@ -138,6 +131,9 @@ public class SearchController implements ControllerInterface {
 		return sfkArray;
 	}
 
+	/**
+	 * Not needed for the implementation of this controller.
+	 */
 	@Override
 	public void update(Observable arg0, Object arg1) {
 

@@ -41,9 +41,6 @@ import javafx.util.Callback;
 
 /**
  * Controller for the graphical user interface.
- * 
- * @author ca
- *
  */
 public class ViewController implements ControllerInterface, Initializable {
 
@@ -221,7 +218,7 @@ public class ViewController implements ControllerInterface, Initializable {
 		initiator = new SearchInitiatorImpl();
 		model = new Model(initiator);
 		model.addObserver(this);
-		searchCtrl = new SearchController(this, model);
+		searchCtrl = new SearchController(inputFieldCounter, model);
 	}
 
 	@Override
@@ -355,6 +352,104 @@ public class ViewController implements ControllerInterface, Initializable {
 	}
 
 	/**
+	 * Collects all data from the input fields and starts the search.
+	 * 
+	 * @throws IllegalArgumentException
+	 *             if the list with all input fields could not be generated or
+	 *             is null
+	 */
+	@FXML
+	private void startSearch() {
+		try {
+			resultTable.getColumns().clear();
+			resultTable.getItems().clear();
+			String[] input = generateArrayWithInputValues();
+			int[] sources = generateArrayWithSourceFieldKeys();
+			searchCtrl.executeSearch(input, sources);
+			setLabelSource();
+		} catch (Exception e) {
+			e.printStackTrace();
+			if (e.getMessage().isEmpty()) {
+				ui.showErrorMessage("Bei der Suche ist ein Fehler aufgetreten.");
+			} else {
+				ui.showErrorMessage(e.getMessage());
+			}
+		}
+	}
+
+	/**
+	 * 
+	 * @param string
+	 */
+	private void startSearchForSinglePerson(String string) {
+		try {
+			searchCtrl.startSinglePersonSearch(string);
+		} catch (Exception e) {
+			e.printStackTrace();
+			ui.showErrorMessage(
+					"Es können keine Detailinformationen für diese Person angezeigt werden.\n" + e.getMessage());
+		}
+	}
+
+	void fillResultTable(CachedRowSet result) {
+		if (result == null) {
+			throw new InputMismatchException(
+					"Das übergebene Set mit dem Tabelleninhalt ist leer oder hat keinen Wert.");
+		} else if (result.size() == 0) {
+			throw new RuntimeException("Die Suchanfrage hat kein Ergebnis geliefert.");
+		}
+		ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
+		try {
+			result.first();
+			for (int i = 0; i < result.getMetaData().getColumnCount(); i++) {
+				final int j = i;
+				String columnName = result.getMetaData().getColumnName(i + 1);
+				if (columnName.contains("_")) {
+					columnName = columnName.substring(0, columnName.indexOf("_")) + " "
+							+ columnName.substring(columnName.indexOf("_") + 1);
+				}
+				TableColumn<ObservableList<String>, String> col = new TableColumn<ObservableList<String>, String>(
+						columnName);
+				col.setCellValueFactory(
+						new Callback<CellDataFeatures<ObservableList<String>, String>, ObservableValue<String>>() {
+
+							@Override
+							public ObservableValue<String> call(
+									CellDataFeatures<ObservableList<String>, String> param) {
+								return new SimpleStringProperty(param.getValue().get(j).toString());
+							}
+						});
+				resultTable.getColumns().add(col);
+			}
+			// set visibility of first column with ID to false
+			resultTable.getColumns().get(0).setVisible(false);
+			result.first();
+			while (result.next()) {
+				ObservableList<String> row = FXCollections.observableArrayList();
+				for (int i = 1; i <= result.getMetaData().getColumnCount(); i++) {
+					row.add(result.getString(i));
+				}
+				data.add(row);
+			}
+			// TODO is this needed?
+			result.close();
+			resultTable.setItems(data);
+		} catch (SQLException e) {
+			ui.showErrorMessage("Bei der Anzeige der gefundenen Datensätze ist ein Fehler aufgetreten.");
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void update(Observable observable, Object updateData) {
+		if (observable != null) {
+			if (observable instanceof Model && updateData instanceof CachedRowSet) {
+				fillResultTable((CachedRowSet) updateData);
+			}
+		}
+	}
+
+	/**
 	 * Builds an array of all input fields and their value at the moment of
 	 * building. The order of inputs corresponds with the order of the keys in
 	 * {@link #generateArraysWithSourceFieldKeys()}. The method does not check,
@@ -417,7 +512,7 @@ public class ViewController implements ControllerInterface, Initializable {
 	}
 
 	private int getParsedInt(String input) {
-		if ("".equals(input) || input == null) {
+		if (input.isEmpty() || input == null) {
 			throw new InputMismatchException("Ein Fehler bei der Verarbeitung der Zahleingabe ist aufgetreten.");
 		}
 		int result;
@@ -463,89 +558,6 @@ public class ViewController implements ControllerInterface, Initializable {
 	}
 
 	/**
-	 * Collects all data from the input fields and starts the search.
-	 * 
-	 * @throws IllegalArgumentException
-	 *             if the list with all input fields could not be generated or
-	 *             is null
-	 */
-	@FXML
-	private void startSearch() {
-		try {
-			resultTable.getColumns().clear();
-			resultTable.getItems().clear();
-			String[] input = generateArrayWithInputValues();
-			int[] sources = generateArrayWithSourceFieldKeys();
-			searchCtrl.executeSearch(input, sources);
-			setLabelSource();
-		} catch (Exception e) {
-			e.printStackTrace();
-			if (e.getMessage().isEmpty()) {
-				ui.showErrorMessage("Bei der Suche ist ein Fehler aufgetreten.");
-			} else {
-				ui.showErrorMessage(e.getMessage());
-			}
-		}
-	}
-
-	private void setLabelSource() {
-		String labelText = search_sourcekey_selection.getValue();
-		if (labelText == null) {
-			labelText = "Keine Quelle ausgewählt.";
-		}
-		sourceLabelName.set("Quelle: " + labelText);
-		search_sourceLabel.setText(sourceLabelName.getValueSafe());
-	}
-
-	/**
-	 * 
-	 * @param string
-	 */
-	private void startSearchForSinglePerson(String string) {
-		try {
-			searchCtrl.startSinglePersonSearch(string);
-		} catch (Exception e) {
-			e.printStackTrace();
-			ui.showErrorMessage(
-					"Es können keine Detailinformationen für diese Person angezeigt werden.\n" + e.getMessage());
-		}
-	}
-
-	/**
-	 * Clears all input fields of the search.
-	 */
-	@FXML
-	private void clearSearchInput() {
-		searchCategory_person_anrede.clear();
-		searchCategory_person_anredenorm.clear();
-		searchCategory_person_titel.clear();
-		searchCategory_person_titelnorm.clear();
-		searchCategory_person_vornameinput.clear();
-		searchCategory_person_nachnameinput.clear();
-		searchCategory_personExtended_adeliger.setSelected(false);
-		searchCategory_personExtended_jesuit.setSelected(false);
-		searchCategory_personExtended_wirtschaftinput.clear();
-		searchCategory_personExtended_ortinput.clear();
-		searchCategory_study_studienfachinput.clear();
-		searchCategory_study_fakultaet.clear();
-		searchCategory_study_seminarinput.clear();
-		searchCategory_study_graduiert.setSelected(false);
-		searchCategory_study_studienjahrVon.clear();
-		searchCategory_study_studienjahrBis.clear();
-		searchCategory_study_einschreibeTag.clear();
-		searchCategory_study_einschreibeMonat.clear();
-		searchCategory_study_einschreibeJahr.clear();
-		searchCategory_other_zusaetzeinput.clear();
-		searchCategory_other_fundort.clear();
-		searchCategory_other_anmerkungen.clear();
-		searchCategory_other_nummer.clear();
-		searchCategory_other_seite.clear();
-		searchCategory_other_nummerhess.clear();
-		search_sourcekey_selection.setValue(null);
-		infoArea.clear();
-	}
-
-	/**
 	 * Checks the value of the selection for the source of the first name and
 	 * returns the corresponding {@link SourceKey}.
 	 * 
@@ -584,53 +596,47 @@ public class ViewController implements ControllerInterface, Initializable {
 		return SourceKeys.NO_SELECTION;
 	}
 
-	void fillResultTable(CachedRowSet result) {
-		if (result == null) {
-			throw new InputMismatchException(
-					"Das übergebene Set mit dem Tabelleninhalt ist leer oder hat keinen Wert.");
-		} else if (result.size() == 0) {
-			throw new RuntimeException("Die Suchanfrage hat kein Ergebnis geliefert.");
+	private void setLabelSource() {
+		String labelText = search_sourcekey_selection.getValue();
+		if (labelText == null) {
+			labelText = "Keine Quelle ausgewählt.";
 		}
-		ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
-		try {
-			result.first();
-			for (int i = 0; i < result.getMetaData().getColumnCount(); i++) {
-				final int j = i;
-				String columnName = result.getMetaData().getColumnName(i + 1);
-				if (columnName.contains("_")) {
-					columnName = columnName.substring(0, columnName.indexOf("_")) + " "
-							+ columnName.substring(columnName.indexOf("_") + 1);
-				}
-				TableColumn<ObservableList<String>, String> col = new TableColumn<ObservableList<String>, String>(
-						columnName);
-				col.setCellValueFactory(
-						new Callback<CellDataFeatures<ObservableList<String>, String>, ObservableValue<String>>() {
+		sourceLabelName.set("Quelle: " + labelText);
+		search_sourceLabel.setText(sourceLabelName.getValueSafe());
+	}
 
-							@Override
-							public ObservableValue<String> call(
-									CellDataFeatures<ObservableList<String>, String> param) {
-								return new SimpleStringProperty(param.getValue().get(j).toString());
-							}
-						});
-				resultTable.getColumns().add(col);
-			}
-			// set visibility of first column with ID to false
-			resultTable.getColumns().get(0).setVisible(false);
-			result.first();
-			while (result.next()) {
-				ObservableList<String> row = FXCollections.observableArrayList();
-				for (int i = 1; i <= result.getMetaData().getColumnCount(); i++) {
-					row.add(result.getString(i));
-				}
-				data.add(row);
-			}
-			// TODO is this needed?
-			result.close();
-			resultTable.setItems(data);
-		} catch (SQLException e) {
-			ui.showErrorMessage("Bei der Anzeige der gefundenen Datensätze ist ein Fehler aufgetreten.");
-			e.printStackTrace();
-		}
+	/**
+	 * Clears all input fields of the search.
+	 */
+	@FXML
+	private void clearSearchInput() {
+		searchCategory_person_anrede.clear();
+		searchCategory_person_anredenorm.clear();
+		searchCategory_person_titel.clear();
+		searchCategory_person_titelnorm.clear();
+		searchCategory_person_vornameinput.clear();
+		searchCategory_person_nachnameinput.clear();
+		searchCategory_personExtended_adeliger.setSelected(false);
+		searchCategory_personExtended_jesuit.setSelected(false);
+		searchCategory_personExtended_wirtschaftinput.clear();
+		searchCategory_personExtended_ortinput.clear();
+		searchCategory_study_studienfachinput.clear();
+		searchCategory_study_fakultaet.clear();
+		searchCategory_study_seminarinput.clear();
+		searchCategory_study_graduiert.setSelected(false);
+		searchCategory_study_studienjahrVon.clear();
+		searchCategory_study_studienjahrBis.clear();
+		searchCategory_study_einschreibeTag.clear();
+		searchCategory_study_einschreibeMonat.clear();
+		searchCategory_study_einschreibeJahr.clear();
+		searchCategory_other_zusaetzeinput.clear();
+		searchCategory_other_fundort.clear();
+		searchCategory_other_anmerkungen.clear();
+		searchCategory_other_nummer.clear();
+		searchCategory_other_seite.clear();
+		searchCategory_other_nummerhess.clear();
+		search_sourcekey_selection.setValue(null);
+		infoArea.clear();
 	}
 
 	/**
@@ -651,14 +657,5 @@ public class ViewController implements ControllerInterface, Initializable {
 	@FXML
 	private void showInfo() {
 		ui.showInfo();
-	}
-
-	@Override
-	public void update(Observable observable, Object updateData) {
-		if (observable != null) {
-			if (observable instanceof Model && updateData instanceof CachedRowSet) {
-				fillResultTable((CachedRowSet) updateData);
-			}
-		}
 	}
 }
