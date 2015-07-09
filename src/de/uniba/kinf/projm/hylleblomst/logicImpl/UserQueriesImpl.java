@@ -318,8 +318,5 @@ public class UserQueriesImpl implements UserQueries {
 			System.out.println(newInput);
 		}
 		input = "%" + newInput + "%";
-		System.out.println(input);
-		// FIXME Warum wird das hier pro Instanz 2x aufgerufen?
-		// System.out.println(newInput);
 	}
 }
