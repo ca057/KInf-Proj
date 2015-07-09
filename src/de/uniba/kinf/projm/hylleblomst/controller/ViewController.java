@@ -53,15 +53,12 @@ public class ViewController implements ControllerInterface, Initializable {
 
 	private SearchController searchCtrl;
 
-	private int inputFieldCounter = 23;
+	private int inputFieldCounter = 24;
 
 	private StringProperty sourceLabelName = new SimpleStringProperty("Quelle: ");
 
 	@FXML
 	private BorderPane root;
-
-	@FXML
-	private MenuItem mainMenu_file_save;
 
 	@FXML
 	private MenuItem mainMenu_file_export;
@@ -70,7 +67,13 @@ public class ViewController implements ControllerInterface, Initializable {
 	private MenuItem mainMenu_file_close;
 
 	@FXML
-	private MenuItem mainMenu_edit_options;
+	private MenuItem mainMenu_database_setupDatabase;
+
+	@FXML
+	private MenuItem mainMenu_database_importData;
+
+	@FXML
+	private MenuItem mainMenu_database_clearDatabase;
 
 	@FXML
 	private MenuItem mainMenu_help_help;
@@ -166,13 +169,22 @@ public class ViewController implements ControllerInterface, Initializable {
 	private TextField searchCategory_study_studienjahrBis;
 
 	@FXML
-	private TextField searchCategory_study_einschreibeTag;
+	private TextField searchCategory_study_einschreibeTagVon;
 
 	@FXML
-	private TextField searchCategory_study_einschreibeMonat;
+	private TextField searchCategory_study_einschreibeMonatVon;
 
 	@FXML
-	private TextField searchCategory_study_einschreibeJahr;
+	private TextField searchCategory_study_einschreibeJahrVon;
+
+	@FXML
+	private TextField searchCategory_study_einschreibeTagBis;
+
+	@FXML
+	private TextField searchCategory_study_einschreibeMonatBis;
+
+	@FXML
+	private TextField searchCategory_study_einschreibeJahrBis;
 
 	@FXML
 	private TitledPane searchCategory_other;
@@ -254,8 +266,15 @@ public class ViewController implements ControllerInterface, Initializable {
 	 * 
 	 */
 	private void setEventHandlers() {
+		setMenuEventHandlers();
 		setNumericalInputEventHandlers();
 		setTableViewEventHandlers();
+	}
+
+	private void setMenuEventHandlers() {
+		// TODO Auto-generated method stub
+		// set all event handlers, delete those which are defined in the
+		// fxml-file
 	}
 
 	/**
@@ -294,51 +313,99 @@ public class ViewController implements ControllerInterface, Initializable {
 				}
 			}
 		});
-		searchCategory_study_einschreibeJahr.setOnKeyReleased(new EventHandler<KeyEvent>() {
+		searchCategory_study_einschreibeJahrVon.setOnKeyReleased(new EventHandler<KeyEvent>() {
 
 			@Override
 			public void handle(KeyEvent ke) {
 				try {
-					if (getParsedInt(searchCategory_study_einschreibeJahr.getText()) < 0
-							|| getParsedInt(searchCategory_study_einschreibeJahr.getText()) > 2015) {
+					if (getParsedInt(searchCategory_study_einschreibeJahrVon.getText()) < 0
+							|| getParsedInt(searchCategory_study_einschreibeJahrVon.getText()) > 2015) {
 						ke.consume();
 						throw new NumberFormatException();
 					}
 				} catch (NumberFormatException e) {
 					ui.showErrorMessage("Einschreibejahr muss eine Zahl zwischen 0 und 2015 sein.");
-					searchCategory_study_einschreibeJahr.clear();
+					searchCategory_study_einschreibeJahrVon.clear();
 				}
 			}
 		});
-		searchCategory_study_einschreibeMonat.setOnKeyReleased(new EventHandler<KeyEvent>() {
+		searchCategory_study_einschreibeMonatVon.setOnKeyReleased(new EventHandler<KeyEvent>() {
 
 			@Override
 			public void handle(KeyEvent ke) {
 				try {
-					if (getParsedInt(searchCategory_study_einschreibeMonat.getText()) < 1
-							|| getParsedInt(searchCategory_study_einschreibeMonat.getText()) > 12) {
+					if (getParsedInt(searchCategory_study_einschreibeMonatVon.getText()) < 1
+							|| getParsedInt(searchCategory_study_einschreibeMonatVon.getText()) > 12) {
 						ke.consume();
 						throw new NumberFormatException();
 					}
 				} catch (NumberFormatException e) {
 					ui.showErrorMessage("Einschreibemonat muss eine Zahl von 1 bis 12 sein.");
-					searchCategory_study_einschreibeMonat.clear();
+					searchCategory_study_einschreibeMonatVon.clear();
 				}
 			}
 		});
-		searchCategory_study_einschreibeTag.setOnKeyReleased(new EventHandler<KeyEvent>() {
+		searchCategory_study_einschreibeTagVon.setOnKeyReleased(new EventHandler<KeyEvent>() {
 
 			@Override
 			public void handle(KeyEvent ke) {
 				try {
-					if (getParsedInt(searchCategory_study_einschreibeTag.getText()) < 1
-							|| getParsedInt(searchCategory_study_einschreibeTag.getText()) > 31) {
+					if (getParsedInt(searchCategory_study_einschreibeTagVon.getText()) < 1
+							|| getParsedInt(searchCategory_study_einschreibeTagVon.getText()) > 31) {
 						ke.consume();
 						throw new NumberFormatException();
 					}
 				} catch (NumberFormatException e) {
 					ui.showErrorMessage("Einschreibetag muss eine Zahl von 1 bis 31 sein.");
-					searchCategory_study_einschreibeTag.clear();
+					searchCategory_study_einschreibeTagVon.clear();
+				}
+			}
+		});
+		searchCategory_study_einschreibeJahrBis.setOnKeyReleased(new EventHandler<KeyEvent>() {
+
+			@Override
+			public void handle(KeyEvent ke) {
+				try {
+					if (getParsedInt(searchCategory_study_einschreibeJahrBis.getText()) < 0
+							|| getParsedInt(searchCategory_study_einschreibeJahrBis.getText()) > 2015) {
+						ke.consume();
+						throw new NumberFormatException();
+					}
+				} catch (NumberFormatException e) {
+					ui.showErrorMessage("Einschreibejahr muss eine Zahl zwischen 0 und 2015 sein.");
+					searchCategory_study_einschreibeJahrBis.clear();
+				}
+			}
+		});
+		searchCategory_study_einschreibeMonatBis.setOnKeyReleased(new EventHandler<KeyEvent>() {
+
+			@Override
+			public void handle(KeyEvent ke) {
+				try {
+					if (getParsedInt(searchCategory_study_einschreibeMonatBis.getText()) < 1
+							|| getParsedInt(searchCategory_study_einschreibeMonatBis.getText()) > 12) {
+						ke.consume();
+						throw new NumberFormatException();
+					}
+				} catch (NumberFormatException e) {
+					ui.showErrorMessage("Einschreibemonat muss eine Zahl von 1 bis 12 sein.");
+					searchCategory_study_einschreibeMonatBis.clear();
+				}
+			}
+		});
+		searchCategory_study_einschreibeTagBis.setOnKeyReleased(new EventHandler<KeyEvent>() {
+
+			@Override
+			public void handle(KeyEvent ke) {
+				try {
+					if (getParsedInt(searchCategory_study_einschreibeTagBis.getText()) < 1
+							|| getParsedInt(searchCategory_study_einschreibeTagBis.getText()) > 31) {
+						ke.consume();
+						throw new NumberFormatException();
+					}
+				} catch (NumberFormatException e) {
+					ui.showErrorMessage("Einschreibetag muss eine Zahl von 1 bis 31 sein.");
+					searchCategory_study_einschreibeTagBis.clear();
 				}
 			}
 		});
@@ -492,12 +559,13 @@ public class ViewController implements ControllerInterface, Initializable {
 			inputFields[14] = searchCategory_study_studienjahrVon.getText();
 			inputFields[15] = searchCategory_study_studienjahrBis.getText();
 			inputFields[16] = getEinschreibungVon();
-			inputFields[17] = searchCategory_other_zusaetzeinput.getText();
-			inputFields[18] = searchCategory_other_fundort.getText();
-			inputFields[19] = searchCategory_other_anmerkungen.getText();
-			inputFields[20] = searchCategory_other_nummer.getText();
-			inputFields[21] = searchCategory_other_seite.getText();
-			inputFields[22] = searchCategory_other_nummerhess.getText();
+			inputFields[17] = getEinschreibungBis();
+			inputFields[18] = searchCategory_other_zusaetzeinput.getText();
+			inputFields[19] = searchCategory_other_fundort.getText();
+			inputFields[20] = searchCategory_other_anmerkungen.getText();
+			inputFields[21] = searchCategory_other_nummer.getText();
+			inputFields[22] = searchCategory_other_seite.getText();
+			inputFields[23] = searchCategory_other_nummerhess.getText();
 		} catch (IllegalArgumentException e) {
 			ui.showErrorMessage(e.getMessage());
 		}
@@ -513,14 +581,32 @@ public class ViewController implements ControllerInterface, Initializable {
 		String monat = "mm";
 		String tag = "dd";
 
-		if (!searchCategory_study_einschreibeJahr.getText().isEmpty()) {
-			jahr = searchCategory_study_einschreibeJahr.getText();
+		if (!searchCategory_study_einschreibeJahrVon.getText().isEmpty()) {
+			jahr = searchCategory_study_einschreibeJahrVon.getText();
 		}
-		if (!searchCategory_study_einschreibeMonat.getText().isEmpty()) {
-			monat = searchCategory_study_einschreibeMonat.getText();
+		if (!searchCategory_study_einschreibeMonatVon.getText().isEmpty()) {
+			monat = searchCategory_study_einschreibeMonatVon.getText();
 		}
-		if (!searchCategory_study_einschreibeTag.getText().isEmpty()) {
-			tag = searchCategory_study_einschreibeTag.getText();
+		if (!searchCategory_study_einschreibeTagVon.getText().isEmpty()) {
+			tag = searchCategory_study_einschreibeTagVon.getText();
+		}
+
+		return jahr + "-" + monat + "-" + tag;
+	}
+
+	private String getEinschreibungBis() {
+		String jahr = "yyyy";
+		String monat = "mm";
+		String tag = "dd";
+
+		if (!searchCategory_study_einschreibeJahrBis.getText().isEmpty()) {
+			jahr = searchCategory_study_einschreibeJahrBis.getText();
+		}
+		if (!searchCategory_study_einschreibeMonatBis.getText().isEmpty()) {
+			monat = searchCategory_study_einschreibeMonatBis.getText();
+		}
+		if (!searchCategory_study_einschreibeTagBis.getText().isEmpty()) {
+			tag = searchCategory_study_einschreibeTagBis.getText();
 		}
 
 		return jahr + "-" + monat + "-" + tag;
@@ -562,12 +648,13 @@ public class ViewController implements ControllerInterface, Initializable {
 		inputSourceKey[14] = SourceKeys.NO_SOURCE;
 		inputSourceKey[15] = SourceKeys.NO_SOURCE;
 		inputSourceKey[16] = SourceKeys.NO_SOURCE;
-		inputSourceKey[17] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
-		inputSourceKey[18] = SourceKeys.NO_SOURCE;
+		inputSourceKey[17] = SourceKeys.NO_SOURCE;
+		inputSourceKey[18] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
 		inputSourceKey[19] = SourceKeys.NO_SOURCE;
 		inputSourceKey[20] = SourceKeys.NO_SOURCE;
 		inputSourceKey[21] = SourceKeys.NO_SOURCE;
 		inputSourceKey[22] = SourceKeys.NO_SOURCE;
+		inputSourceKey[23] = SourceKeys.NO_SOURCE;
 
 		return inputSourceKey;
 	}
@@ -641,9 +728,12 @@ public class ViewController implements ControllerInterface, Initializable {
 		searchCategory_study_graduiert.setSelected(false);
 		searchCategory_study_studienjahrVon.clear();
 		searchCategory_study_studienjahrBis.clear();
-		searchCategory_study_einschreibeTag.clear();
-		searchCategory_study_einschreibeMonat.clear();
-		searchCategory_study_einschreibeJahr.clear();
+		searchCategory_study_einschreibeTagVon.clear();
+		searchCategory_study_einschreibeMonatVon.clear();
+		searchCategory_study_einschreibeJahrVon.clear();
+		searchCategory_study_einschreibeTagBis.clear();
+		searchCategory_study_einschreibeMonatBis.clear();
+		searchCategory_study_einschreibeJahrBis.clear();
 		searchCategory_other_zusaetzeinput.clear();
 		searchCategory_other_fundort.clear();
 		searchCategory_other_anmerkungen.clear();
