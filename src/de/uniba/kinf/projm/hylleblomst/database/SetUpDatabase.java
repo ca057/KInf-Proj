@@ -1,7 +1,5 @@
 package de.uniba.kinf.projm.hylleblomst.database;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -17,9 +15,9 @@ import de.uniba.kinf.projm.hylleblomst.keys.DBUserKeys;
 public class SetUpDatabase {
 
 	public void run(String dbURL) throws SetUpException {
-		if (!Files.isDirectory(Paths.get(dbURL))) {
-			throw new SetUpException("Path is no directory");
-		}
+		// if (!Files.isDirectory(Paths.get(dbURL))) {
+		// throw new SetUpException("Path is no directory");
+		// }
 
 		// StringBuilder urlStatement = new StringBuilder(dbURL);
 		// urlStatement.append("; create=true");
@@ -28,10 +26,11 @@ public class SetUpDatabase {
 		// urlStatement.append("; password=");
 		// urlStatement.append(DBUserKeys.adminPassword);
 
-		try (Connection con = DriverManager.getConnection(dbURL,
-				DBUserKeys.adminUser, DBUserKeys.adminPassword)) {
+		try (Connection con = DriverManager.getConnection(dbURL
+				+ "; create=true", DBUserKeys.adminUser,
+				DBUserKeys.adminPassword)) {
 			// Create users
-			createUsers(con);
+			// createUsers(con);
 
 			// Set access
 			setUserAccess(con);
@@ -51,7 +50,7 @@ public class SetUpDatabase {
 			PreparedStatement stmt;
 			stmt = con
 					.prepareStatement("CALL SYSCS_UTIL.SYSCS_CREATE_USER(?, ?)");
-			createAdminUser(stmt);
+			// createAdminUser(stmt);
 			createGuestUser(stmt);
 		} catch (SQLException | SetUpException e) {
 			throw new SetUpException(e.getMessage());

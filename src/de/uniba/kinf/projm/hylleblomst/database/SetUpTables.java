@@ -181,11 +181,11 @@ public class SetUpTables {
 			throws SetUpException {
 		String tableName = infoTableInfo[i][0];
 		String refTableID = infoTableInfo[i][1];
-		String srcTableID = infoTableInfo[i][2];
-		String personTableID = infoTableInfo[i][3];
-		String refTableName = infoTableInfo[i][4];
-		String srcTableName = infoTableInfo[i][5];
-		String personTableName = infoTableInfo[i][6];
+		String srcTableID = ColumnNameKeys.QUELLEN_ID;
+		String personTableID = ColumnNameKeys.PERSON_ID;
+		String refTableName = infoTableInfo[i][2];
+		String srcTableName = TableNameKeys.QUELLEN;
+		String personTableName = TableNameKeys.PERSON;
 
 		String sql = "CREATE TABLE " + tableName + " (" + refTableID
 				+ " INTEGER NOT NULL, " + srcTableID + " INTEGER NOT NULL, "
@@ -271,39 +271,32 @@ public class SetUpTables {
 		}
 	}
 
-	private String[][] getInfoTables() {
-		String[] fach = { TableNameKeys.FACH_INFO, ColumnNameKeys.FACH_TRAD_ID,
-				ColumnNameKeys.QUELLEN_ID, ColumnNameKeys.PERSON_ID,
-				TableNameKeys.FACH_TRAD, TableNameKeys.QUELLEN,
-				TableNameKeys.PERSON };
-		String[] vorname = { TableNameKeys.VORNAME_INFO,
-				ColumnNameKeys.VORNAME_TRAD_ID, ColumnNameKeys.QUELLEN_ID,
-				ColumnNameKeys.PERSON_ID, TableNameKeys.VORNAME_TRAD,
-				TableNameKeys.QUELLEN, TableNameKeys.PERSON };
-		String[] name = { TableNameKeys.NAME_INFO, ColumnNameKeys.NAME_TRAD_ID,
-				ColumnNameKeys.QUELLEN_ID, ColumnNameKeys.PERSON_ID,
-				TableNameKeys.NAME_TRAD, TableNameKeys.QUELLEN,
-				TableNameKeys.PERSON };
-		String[] ort = { TableNameKeys.ORT_INFO, ColumnNameKeys.ORT_TRAD_ID,
-				ColumnNameKeys.QUELLEN_ID, ColumnNameKeys.PERSON_ID,
-				TableNameKeys.ORT_TRAD, TableNameKeys.QUELLEN,
-				TableNameKeys.PERSON };
-		String[] seminar = { TableNameKeys.SEMINAR_INFO,
-				ColumnNameKeys.SEMINAR_TRAD_ID, ColumnNameKeys.QUELLEN_ID,
-				ColumnNameKeys.PERSON_ID, TableNameKeys.SEMINAR_TRAD,
-				TableNameKeys.QUELLEN, TableNameKeys.PERSON };
-		String[] wirtschaftslage = { TableNameKeys.WIRTSCHAFTSLAGE_INFO,
-				ColumnNameKeys.WIRTSCHAFTSLAGE_TRAD_ID,
-				ColumnNameKeys.QUELLEN_ID, ColumnNameKeys.PERSON_ID,
-				TableNameKeys.WIRTSCHAFTSLAGE_TRAD, TableNameKeys.QUELLEN,
-				TableNameKeys.PERSON };
-		String[] zusaetze = { TableNameKeys.ZUSAETZE_INFO,
-				ColumnNameKeys.ZUSAETZE_ID, ColumnNameKeys.QUELLEN_ID,
-				ColumnNameKeys.PERSON_ID, TableNameKeys.ZUSAETZE,
-				TableNameKeys.QUELLEN, TableNameKeys.PERSON };
+	private String[][] getNormTables() {
+		String[][] result = {
+				{ TableNameKeys.ANREDE_NORM, ColumnNameKeys.ANREDE_NORM_ID,
+						ColumnNameKeys.ANREDE_NORM },
+				{ TableNameKeys.FACH_NORM, ColumnNameKeys.FACH_NORM_ID,
+						ColumnNameKeys.FACH_NORM },
+				{ TableNameKeys.FAKULTAETEN, ColumnNameKeys.FAKULTAETEN_ID,
+						ColumnNameKeys.FAKULTAETEN_NORM },
+				{ TableNameKeys.FUNDORTE, ColumnNameKeys.FUNDORTE_ID,
+						ColumnNameKeys.FUNDORTE_NORM },
+				{ TableNameKeys.VORNAME_NORM, ColumnNameKeys.VORNAME_NORM_ID,
+						ColumnNameKeys.VORNAME_NORM },
+				{ TableNameKeys.NAME_NORM, ColumnNameKeys.NAME_NORM_ID,
+						ColumnNameKeys.NAME_NORM },
+				{ TableNameKeys.QUELLEN, ColumnNameKeys.QUELLEN_ID,
+						ColumnNameKeys.QUELLEN_NAME },
+				{ TableNameKeys.SEMINAR_NORM, ColumnNameKeys.SEMINAR_NORM_ID,
+						ColumnNameKeys.SEMINAR_NORM },
+				{ TableNameKeys.TITEL_NORM, ColumnNameKeys.TITEL_NORM_ID,
+						ColumnNameKeys.TITEL_NORM },
+				{ TableNameKeys.WIRTSCHAFTSLAGE_NORM,
+						ColumnNameKeys.WIRTSCHAFTSLAGE_NORM_ID,
+						ColumnNameKeys.WIRTSCHAFTSLAGE_NORM },
+				{ TableNameKeys.ZUSAETZE, ColumnNameKeys.ZUSAETZE_ID,
+						ColumnNameKeys.ZUSAETZE } };
 
-		String[][] result = { fach, vorname, name, ort, seminar,
-				wirtschaftslage, zusaetze };
 		return result;
 	}
 
@@ -345,32 +338,25 @@ public class SetUpTables {
 		return result;
 	}
 
-	private String[][] getNormTables() {
-		String[][] result = {
-				{ TableNameKeys.ANREDE_NORM, ColumnNameKeys.ANREDE_NORM_ID,
-						ColumnNameKeys.ANREDE_NORM },
-				{ TableNameKeys.FACH_NORM, ColumnNameKeys.FACH_NORM_ID,
-						ColumnNameKeys.FACH_NORM },
-				{ TableNameKeys.FAKULTAETEN, ColumnNameKeys.FAKULTAETEN_ID,
-						ColumnNameKeys.FAKULTAETEN_NORM },
-				{ TableNameKeys.FUNDORTE, ColumnNameKeys.FUNDORTE_ID,
-						ColumnNameKeys.FUNDORTE_NORM },
-				{ TableNameKeys.VORNAME_NORM, ColumnNameKeys.VORNAME_NORM_ID,
-						ColumnNameKeys.VORNAME_NORM },
-				{ TableNameKeys.NAME_NORM, ColumnNameKeys.NAME_NORM_ID,
-						ColumnNameKeys.NAME_NORM },
-				{ TableNameKeys.QUELLEN, ColumnNameKeys.QUELLEN_ID,
-						ColumnNameKeys.QUELLEN_NAME },
-				{ TableNameKeys.SEMINAR_NORM, ColumnNameKeys.SEMINAR_NORM_ID,
-						ColumnNameKeys.SEMINAR_NORM },
-				{ TableNameKeys.TITEL_NORM, ColumnNameKeys.TITEL_NORM_ID,
-						ColumnNameKeys.TITEL_NORM },
-				{ TableNameKeys.WIRTSCHAFTSLAGE_NORM,
-						ColumnNameKeys.WIRTSCHAFTSLAGE_NORM_ID,
-						ColumnNameKeys.WIRTSCHAFTSLAGE_NORM },
-				{ TableNameKeys.ZUSAETZE, ColumnNameKeys.ZUSAETZE_ID,
-						ColumnNameKeys.ZUSAETZE } };
+	private String[][] getInfoTables() {
+		String[] fach = { TableNameKeys.FACH_INFO, ColumnNameKeys.FACH_TRAD_ID,
+				TableNameKeys.FACH_TRAD, };
+		String[] vorname = { TableNameKeys.VORNAME_INFO,
+				ColumnNameKeys.VORNAME_TRAD_ID, TableNameKeys.VORNAME_TRAD, };
+		String[] name = { TableNameKeys.NAME_INFO, ColumnNameKeys.NAME_TRAD_ID,
+				TableNameKeys.NAME_TRAD, };
+		String[] ort = { TableNameKeys.ORT_INFO, ColumnNameKeys.ORT_TRAD_ID,
+				TableNameKeys.ORT_TRAD, };
+		String[] seminar = { TableNameKeys.SEMINAR_INFO,
+				ColumnNameKeys.SEMINAR_TRAD_ID, TableNameKeys.SEMINAR_TRAD, };
+		String[] wirtschaftslage = { TableNameKeys.WIRTSCHAFTSLAGE_INFO,
+				ColumnNameKeys.WIRTSCHAFTSLAGE_TRAD_ID,
+				TableNameKeys.WIRTSCHAFTSLAGE_TRAD };
+		String[] zusaetze = { TableNameKeys.ZUSAETZE_INFO,
+				ColumnNameKeys.ZUSAETZE_ID, TableNameKeys.ZUSAETZE, };
 
+		String[][] result = { fach, vorname, name, ort, seminar,
+				wirtschaftslage, zusaetze };
 		return result;
 	}
 }

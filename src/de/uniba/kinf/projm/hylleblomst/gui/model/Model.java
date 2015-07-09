@@ -31,7 +31,8 @@ public class Model extends Observable {
 		if (search != null) {
 			this.search = search;
 		} else {
-			throw new InputMismatchException("Die Logik des Programms ist fehlerhaft (null)");
+			throw new InputMismatchException(
+					"Die Logik des Programms ist fehlerhaft (null)");
 		}
 	}
 
@@ -41,7 +42,8 @@ public class Model extends Observable {
 			setChanged();
 			notifyObservers(searchResult);
 		} else {
-			throw new InputMismatchException("Die übergebene Collection ist fehlerhaft: " + search);
+			throw new InputMismatchException(
+					"Die übergebene Collection ist fehlerhaft: " + search);
 		}
 	}
 
@@ -51,7 +53,8 @@ public class Model extends Observable {
 			setChanged();
 			notifyObservers();
 		} else {
-			throw new InputMismatchException("Die übergebene ID ist fehlerhaft (null)");
+			throw new InputMismatchException(
+					"Die übergebene ID ist fehlerhaft (null)");
 		}
 	}
 
