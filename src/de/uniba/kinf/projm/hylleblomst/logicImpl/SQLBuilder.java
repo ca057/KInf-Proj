@@ -12,7 +12,7 @@ import de.uniba.kinf.projm.hylleblomst.keys.TableNameKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.UserQueries;
 
 /**
- * @author Hannes
+ * @author Johannes
  *
  */
 public class SQLBuilder {

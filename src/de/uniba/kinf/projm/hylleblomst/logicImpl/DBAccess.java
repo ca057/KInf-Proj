@@ -12,7 +12,7 @@ import javax.sql.rowset.CachedRowSet;
 import com.sun.rowset.CachedRowSetImpl;
 
 /**
- * @author Hannes
+ * @author Johannes
  *
  */
 public class DBAccess {

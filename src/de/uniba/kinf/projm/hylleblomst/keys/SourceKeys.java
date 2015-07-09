@@ -1,5 +1,9 @@
 package de.uniba.kinf.projm.hylleblomst.keys;
 
+/**
+ * @author Christian, Johannes
+ *
+ */
 public class SourceKeys {
 
 	public static final Integer ORT_NORM_AB = -3;

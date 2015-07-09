@@ -13,7 +13,7 @@ import de.uniba.kinf.projm.hylleblomst.logic.UserQueries;
 /**
  * Implementation of {@link SearchInitiator}
  * 
- * @author Hannes
+ * @author Johannes
  *
  */
 public class SearchInitiatorImpl implements SearchInitiator {
