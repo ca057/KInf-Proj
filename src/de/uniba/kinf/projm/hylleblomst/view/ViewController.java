@@ -81,6 +81,12 @@ public class ViewController implements ControllerInterface, Initializable {
 	private ComboBox<String> search_sourcekey_selection;
 
 	@FXML
+	private CheckBox search_useOrConjunction;
+
+	@FXML
+	private CheckBox search_useOpenedSearch;
+
+	@FXML
 	private Accordion searchCategories;
 
 	@FXML
@@ -365,7 +371,8 @@ public class ViewController implements ControllerInterface, Initializable {
 			resultTable.getItems().clear();
 			String[] input = generateArrayWithInputValues();
 			int[] sources = generateArrayWithSourceFieldKeys();
-			searchCtrl.executeSearch(input, sources);
+			searchCtrl.executeSearch(input, sources, search_useOrConjunction.isSelected(),
+					search_useOpenedSearch.isSelected());
 			setLabelSource();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -636,6 +643,8 @@ public class ViewController implements ControllerInterface, Initializable {
 		searchCategory_other_seite.clear();
 		searchCategory_other_nummerhess.clear();
 		search_sourcekey_selection.setValue(null);
+		search_useOrConjunction.setSelected(false);
+		search_useOpenedSearch.setSelected(false);
 		infoArea.clear();
 	}
 
