@@ -2,6 +2,9 @@ package de.uniba.kinf.projm.hylleblomst.database;
 
 import java.io.File;
 
+import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
+import de.uniba.kinf.projm.hylleblomst.exceptions.SetUpException;
+
 public class Main {
 
 	public static void main(String[] args) {
@@ -10,12 +13,23 @@ public class Main {
 
 		DatabaseController dbController = new DatabaseController(location);
 
-		System.out.println("Set up database: "
-				+ dbController.setUpDatabase(location));
+		try {
+			dbController.setUpDatabase();
+		} catch (SetUpException e) {
+			System.out.println(e.getMessage());
+		}
 
-		System.out.println("Set up tables: " + dbController.setUpTables());
+		try {
+			dbController.setUpTables();
+		} catch (SetUpException e) {
+			System.out.println(e.getMessage());
+		}
 
-		System.out.println("Import data: "
-				+ dbController.importDataIntoDatabase(data));
+		try {
+			dbController.importDataIntoDatabase(data);
+		} catch (ImportException e) {
+			System.out.println(e.getMessage());
+		}
+
 	}
 }

@@ -7,51 +7,55 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import de.uniba.kinf.projm.hylleblomst.keys.TableNameKeys;
+import de.uniba.kinf.projm.hylleblomst.exceptions.SetUpException;
 import de.uniba.kinf.projm.hylleblomst.keys.DBUserKeys;
+import de.uniba.kinf.projm.hylleblomst.keys.TableNameKeys;
 
 /**
- * The purpose of this class is to provide an easy and fast way to tear down an
- * existing database if this is necessary due to maintenance, limited file space
- * or other reasons.
+ * The purpose of this class is to provide an easy and fast way to tear down the
+ * information in an existing database if this is necessary due to maintenance,
+ * limited file space or other reasons.
  * 
  * @author Simon
  *
  */
 public class TearDownTables {
 
-	public static void main(String[] args) {
-		try {
-			new TearDownTables().run();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+	public boolean run(String dbURL) throws SetUpException {
+		int interrupt = 0;
 
-	public boolean run() throws SQLException {
-		try (Connection con = DriverManager.getConnection(DBUserKeys.dbURL, DBUserKeys.adminUser, DBUserKeys.adminPassword)) {
+		try (Connection con = DriverManager.getConnection(dbURL,
+				DBUserKeys.adminUser, DBUserKeys.adminPassword)) {
 			Statement stmt = con.createStatement();
 
 			String[] tables = TableNameKeys.getAllTableNames();
 
 			while (schemaExists(con)) {
+				// Use a barrier to prevent possible infinite loop
+				interrupt++;
+				if (interrupt >= 10) {
+					throw new SetUpException(
+							"Tables could not be torn down, maybe some necessary information for setup is missing");
+				}
+
 				for (String table : tables) {
 					try {
-						stmt.executeUpdate(String.format("DROP TABLE %s", table));
+						stmt.executeUpdate(String
+								.format("DROP TABLE %s", table));
 					} catch (SQLException e) {
 						// TODO empty by intention
 					}
 				}
 				try {
-					stmt.executeUpdate(String.format("DROP SCHEMA %s RESTRICT", TableNameKeys.SCHEMA_NAME));
+					stmt.executeUpdate(String.format("DROP SCHEMA %s RESTRICT",
+							TableNameKeys.SCHEMA_NAME));
 				} catch (Exception e) {
 					// TODO empty by intention
 				}
 			}
 			return true;
 		} catch (SQLException e) {
-			throw new SQLException("Database could not be torn down: ", e);
+			throw new SetUpException("Database could not be torn down: ", e);
 		}
 	}
 
@@ -64,6 +68,7 @@ public class TearDownTables {
 	 * schema that does not exist can not only hold any data.
 	 * 
 	 * @param con
+	 *            The {@code Connection} to the database
 	 * 
 	 * @return {@code True} if database contains this schema, {@code false}
 	 *         otherwise.
@@ -74,7 +79,8 @@ public class TearDownTables {
 	private boolean schemaExists(Connection con) throws SQLException {
 		boolean result;
 
-		PreparedStatement stmt = con.prepareStatement("SELECT * FROM sys.sysschemas WHERE SCHEMANAME=?",
+		PreparedStatement stmt = con.prepareStatement(
+				"SELECT * FROM sys.sysschemas WHERE SCHEMANAME=?",
 				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
 		stmt.setString(1, TableNameKeys.SCHEMA_NAME.toUpperCase());
 
