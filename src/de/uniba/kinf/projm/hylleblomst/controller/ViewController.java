@@ -62,7 +62,7 @@ public class ViewController implements ControllerInterface, Initializable {
 
 	private SearchController searchCtrl;
 
-	private int inputFieldCounter = 24;
+	private int inputFieldCounter = 22;
 
 	private StringProperty sourceLabelName = new SimpleStringProperty("Quelle: ");
 
@@ -734,29 +734,27 @@ public class ViewController implements ControllerInterface, Initializable {
 		String[] inputFields = new String[inputFieldCounter];
 		try {
 			inputFields[0] = searchCategory_person_anrede.getText();
-			inputFields[1] = searchCategory_person_anredenorm.getText();
-			inputFields[2] = searchCategory_person_titel.getText();
-			inputFields[3] = searchCategory_person_titelnorm.getText();
-			inputFields[4] = searchCategory_person_vornameinput.getText();
-			inputFields[5] = searchCategory_person_nachnameinput.getText();
-			inputFields[6] = String.valueOf(searchCategory_personExtended_adeliger.isSelected());
-			inputFields[7] = String.valueOf(searchCategory_personExtended_jesuit.isSelected());
-			inputFields[8] = searchCategory_personExtended_wirtschaftinput.getText();
-			inputFields[9] = searchCategory_personExtended_ortinput.getText();
-			inputFields[10] = searchCategory_study_studienfachinput.getText();
-			inputFields[11] = searchCategory_study_fakultaet.getText();
-			inputFields[12] = searchCategory_study_seminarinput.getText();
-			inputFields[13] = String.valueOf(searchCategory_study_graduiert.isSelected());
-			inputFields[14] = searchCategory_study_studienjahrVon.getText();
-			inputFields[15] = searchCategory_study_studienjahrBis.getText();
-			inputFields[16] = getEinschreibungVon();
-			inputFields[17] = getEinschreibungBis();
-			inputFields[18] = searchCategory_other_zusaetzeinput.getText();
-			inputFields[19] = searchCategory_other_fundort.getText();
-			inputFields[20] = searchCategory_other_anmerkungen.getText();
-			inputFields[21] = searchCategory_other_nummer.getText();
-			inputFields[22] = searchCategory_other_seite.getText();
-			inputFields[23] = searchCategory_other_nummerhess.getText();
+			inputFields[1] = searchCategory_person_titel.getText();
+			inputFields[2] = searchCategory_person_vornameinput.getText();
+			inputFields[3] = searchCategory_person_nachnameinput.getText();
+			inputFields[4] = String.valueOf(searchCategory_personExtended_adeliger.isSelected());
+			inputFields[5] = String.valueOf(searchCategory_personExtended_jesuit.isSelected());
+			inputFields[6] = searchCategory_personExtended_wirtschaftinput.getText();
+			inputFields[7] = searchCategory_personExtended_ortinput.getText();
+			inputFields[8] = searchCategory_study_studienfachinput.getText();
+			inputFields[9] = searchCategory_study_fakultaet.getText();
+			inputFields[10] = searchCategory_study_seminarinput.getText();
+			inputFields[11] = String.valueOf(searchCategory_study_graduiert.isSelected());
+			inputFields[12] = searchCategory_study_studienjahrVon.getText();
+			inputFields[13] = searchCategory_study_studienjahrBis.getText();
+			inputFields[14] = getEinschreibungVon();
+			inputFields[15] = getEinschreibungBis();
+			inputFields[16] = searchCategory_other_zusaetzeinput.getText();
+			inputFields[17] = searchCategory_other_fundort.getText();
+			inputFields[18] = searchCategory_other_anmerkungen.getText();
+			inputFields[19] = searchCategory_other_nummer.getText();
+			inputFields[20] = searchCategory_other_seite.getText();
+			inputFields[21] = searchCategory_other_nummerhess.getText();
 		} catch (IllegalArgumentException e) {
 			ui.showErrorMessage(e.getMessage());
 		}
@@ -821,30 +819,28 @@ public class ViewController implements ControllerInterface, Initializable {
 	private int[] generateArrayWithSourceFieldKeys() {
 		int[] inputSourceKey = new int[inputFieldCounter];
 
-		inputSourceKey[0] = SourceKeys.STANDARD;
-		inputSourceKey[1] = SourceKeys.NORM;
-		inputSourceKey[2] = SourceKeys.STANDARD;
-		inputSourceKey[3] = SourceKeys.NORM;
-		inputSourceKey[4] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
-		inputSourceKey[5] = SourceKeys.STANDARD;
-		inputSourceKey[6] = SourceKeys.NO_SOURCE;
-		inputSourceKey[7] = SourceKeys.NO_SOURCE;
+		inputSourceKey[0] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
+		inputSourceKey[1] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
+		inputSourceKey[2] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
+		inputSourceKey[3] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
+		inputSourceKey[4] = SourceKeys.NO_SOURCE;
+		inputSourceKey[5] = SourceKeys.NO_SOURCE;
+		inputSourceKey[6] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
+		inputSourceKey[7] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
 		inputSourceKey[8] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
-		inputSourceKey[9] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
+		inputSourceKey[9] = SourceKeys.NO_SOURCE;
 		inputSourceKey[10] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
 		inputSourceKey[11] = SourceKeys.NO_SOURCE;
-		inputSourceKey[12] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
+		inputSourceKey[12] = SourceKeys.NO_SOURCE;
 		inputSourceKey[13] = SourceKeys.NO_SOURCE;
 		inputSourceKey[14] = SourceKeys.NO_SOURCE;
 		inputSourceKey[15] = SourceKeys.NO_SOURCE;
-		inputSourceKey[16] = SourceKeys.NO_SOURCE;
+		inputSourceKey[16] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
 		inputSourceKey[17] = SourceKeys.NO_SOURCE;
-		inputSourceKey[18] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
+		inputSourceKey[18] = SourceKeys.NO_SOURCE;
 		inputSourceKey[19] = SourceKeys.NO_SOURCE;
 		inputSourceKey[20] = SourceKeys.NO_SOURCE;
 		inputSourceKey[21] = SourceKeys.NO_SOURCE;
-		inputSourceKey[22] = SourceKeys.NO_SOURCE;
-		inputSourceKey[23] = SourceKeys.NO_SOURCE;
 
 		return inputSourceKey;
 	}
@@ -903,9 +899,7 @@ public class ViewController implements ControllerInterface, Initializable {
 	@FXML
 	private void clearSearchInput() {
 		searchCategory_person_anrede.clear();
-		searchCategory_person_anredenorm.clear();
 		searchCategory_person_titel.clear();
-		searchCategory_person_titelnorm.clear();
 		searchCategory_person_vornameinput.clear();
 		searchCategory_person_nachnameinput.clear();
 		searchCategory_personExtended_adeliger.setSelected(false);
