@@ -10,6 +10,10 @@ import java.sql.SQLException;
 import de.uniba.kinf.projm.hylleblomst.exceptions.SetUpException;
 import de.uniba.kinf.projm.hylleblomst.keys.DBUserKeys;
 
+/**
+ * @author Simon
+ *
+ */
 public class SetUpDatabase {
 
 	public void run(String dbURL) throws SetUpException {

@@ -1,5 +1,9 @@
 package de.uniba.kinf.projm.hylleblomst.keys;
 
+/**
+ * @author Simon
+ *
+ */
 public class DBUserKeys {
 	public final static String dbURL = "jdbc:derby:./db/MyDB";
 

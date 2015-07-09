@@ -13,6 +13,10 @@ import java.util.List;
 import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
 
+/**
+ * @author Simon
+ *
+ */
 public class ImportDatabaseImpl implements ImportDatabase {
 
 	private Validation validation;
