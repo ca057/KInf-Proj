@@ -821,12 +821,12 @@ public class ViewController implements ControllerInterface, Initializable {
 	private int[] generateArrayWithSourceFieldKeys() {
 		int[] inputSourceKey = new int[inputFieldCounter];
 
-		inputSourceKey[0] = SourceKeys.NO_SOURCE;
+		inputSourceKey[0] = SourceKeys.STANDARD;
 		inputSourceKey[1] = SourceKeys.NORM;
-		inputSourceKey[2] = SourceKeys.NO_SOURCE;
+		inputSourceKey[2] = SourceKeys.STANDARD;
 		inputSourceKey[3] = SourceKeys.NORM;
 		inputSourceKey[4] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
-		inputSourceKey[5] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
+		inputSourceKey[5] = SourceKeys.STANDARD;
 		inputSourceKey[6] = SourceKeys.NO_SOURCE;
 		inputSourceKey[7] = SourceKeys.NO_SOURCE;
 		inputSourceKey[8] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
