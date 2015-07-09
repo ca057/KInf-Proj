@@ -11,8 +11,6 @@ import javax.sql.rowset.CachedRowSet;
 
 import com.sun.rowset.CachedRowSetImpl;
 
-import de.uniba.kinf.projm.hylleblomst.keys.ColumnNameKeys;
-
 public class DBAccess {
 	private String dbURL;
 	private String user;
@@ -50,8 +48,8 @@ public class DBAccess {
 			crs.populate(stmt.executeQuery());
 			con.setAutoCommit(true);
 
-			crs.getArray(ColumnNameKeys.DATUM);
-			crs.getArray(ColumnNameKeys.DATUMS_FELDER_GESETZT);
+			// crs.getArray(ColumnNameKeys.DATUM);
+			// crs.getArray(ColumnNameKeys.DATUMS_FELDER_GESETZT);
 			//
 			// ResultSetMetaData rsmd = stmt.getMetaData();
 			// int columnsNumber = rsmd.getColumnCount();
