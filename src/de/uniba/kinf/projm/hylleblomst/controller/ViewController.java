@@ -311,8 +311,10 @@ public class ViewController implements ControllerInterface, Initializable {
 				if (setupDir.isPresent()) {
 					try {
 						model.setUpDatabase(setupDir.get().getAbsoluteFile());
+						ui.showInfo("Das Anlegen der Datenbank und Tabellen im Verzeichnis " + setupDir.get().toString()
+								+ " war erfolgreich.");
 					} catch (SetUpException e) {
-						ui.showErrorMessage(e.getMessage());
+						ui.showErrorMessage("Datenbank konnte nicht angelegt werden:\n" + e.getMessage());
 						e.printStackTrace();
 					}
 				}
@@ -332,8 +334,9 @@ public class ViewController implements ControllerInterface, Initializable {
 				if (importFile.isPresent()) {
 					try {
 						model.importData(importFile.get().getAbsoluteFile());
+						ui.showInfo("Import der Datei " + importFile.get().getName() + " war erfolgreich.");
 					} catch (ImportException e) {
-						ui.showErrorMessage(e.getMessage());
+						ui.showErrorMessage("Datei konnte nicht importiert werden:\n" + e.getMessage());
 						e.printStackTrace();
 					}
 				}
@@ -345,7 +348,12 @@ public class ViewController implements ControllerInterface, Initializable {
 			@Override
 			public void handle(ActionEvent event) {
 				if (ui.getUserConfirmation("Datenbank löschen")) {
-					model.clearDatabase();
+					try {
+						model.clearDatabase();
+					} catch (SetUpException e) {
+						e.printStackTrace();
+						ui.showErrorMessage("Datenbank konnte nicht gelöscht werden:\n" + e.getMessage());
+					}
 				}
 				event.consume();
 			}
