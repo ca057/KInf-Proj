@@ -54,7 +54,7 @@ public class SearchController implements ControllerInterface {
 	 * @param inputSourceKey
 	 * @throws ViewException
 	 */
-	void executeSearch(String[] inputValues, int[] inputSourceKey, boolean isOr, boolean isOpenedSearch)
+	boolean executeSearch(String[] inputValues, int[] inputSourceKey, boolean isOr, boolean isOpenedSearch)
 			throws ViewException {
 		if (inputSearchFKey == null || inputSearchFKey.length == 0 || inputSourceKey == null
 				|| inputSourceKey.length == 0) {
@@ -71,10 +71,11 @@ public class SearchController implements ControllerInterface {
 		}
 
 		if (requestList.isEmpty()) {
-			throw new InputMismatchException("Suche kann nicht gestartet werden, da keine Eingaben vorliegen.");
+			return false;
 		}
 		try {
 			model.search(requestList);
+			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new ViewException("Ein Fehler bei der Suche ist aufgetreten:\n" + e.getMessage());
@@ -86,13 +87,14 @@ public class SearchController implements ControllerInterface {
 	 * @param id
 	 * @throws ViewException
 	 */
-	public void startSinglePersonSearch(String id) throws ViewException {
+	public boolean startSinglePersonSearch(String id) throws ViewException {
 		if (id == null || id.isEmpty()) {
 			throw new InputMismatchException(
 					"Übergebene ID ist leer oder hat keinen Wert. Personendetails können nicht gesucht werden.");
 		}
 		try {
 			model.searchPerson(id);
+			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new ViewException("Ein Fehler bei der Suche nach Person mit ID " + id + " ist aufgetreten.");
