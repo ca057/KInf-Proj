@@ -23,4 +23,8 @@ public interface UserQueries {
 	 */
 	String getWhere();
 
+	Boolean isOpenSearch();
+
+	Boolean useOrCondition();
+
 }

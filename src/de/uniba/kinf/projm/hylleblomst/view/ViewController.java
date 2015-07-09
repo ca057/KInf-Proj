@@ -2,12 +2,12 @@ package de.uniba.kinf.projm.hylleblomst.view;
 
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.InputMismatchException;
 import java.util.Observable;
 import java.util.ResourceBundle;
 
 import javax.sql.rowset.CachedRowSet;
 
+import de.uniba.kinf.projm.hylleblomst.exceptions.ViewException;
 import de.uniba.kinf.projm.hylleblomst.gui.model.Model;
 import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
@@ -41,9 +41,6 @@ import javafx.util.Callback;
 
 /**
  * Controller for the graphical user interface.
- * 
- * @author ca
- *
  */
 public class ViewController implements ControllerInterface, Initializable {
 
@@ -82,6 +79,12 @@ public class ViewController implements ControllerInterface, Initializable {
 
 	@FXML
 	private ComboBox<String> search_sourcekey_selection;
+
+	@FXML
+	private CheckBox search_useOrConjunction;
+
+	@FXML
+	private CheckBox search_useOpenSearch;
 
 	@FXML
 	private Accordion searchCategories;
@@ -221,7 +224,7 @@ public class ViewController implements ControllerInterface, Initializable {
 		initiator = new SearchInitiatorImpl();
 		model = new Model(initiator);
 		model.addObserver(this);
-		searchCtrl = new SearchController(this, model);
+		searchCtrl = new SearchController(inputFieldCounter, model);
 	}
 
 	@Override
@@ -355,114 +358,6 @@ public class ViewController implements ControllerInterface, Initializable {
 	}
 
 	/**
-	 * Builds an array of all input fields and their value at the moment of
-	 * building. The order of inputs corresponds with the order of the keys in
-	 * {@link #generateArraysWithSourceFieldKeys()}. The method does not check,
-	 * if a input was done or if the input field was left empty.
-	 * 
-	 * @return the array with all inputs
-	 */
-	private String[] generateArrayWithInputValues() {
-		String[] inputFields = new String[inputFieldCounter];
-		try {
-			inputFields[0] = searchCategory_person_anrede.getText();
-			inputFields[1] = searchCategory_person_anredenorm.getText();
-			inputFields[2] = searchCategory_person_titel.getText();
-			inputFields[3] = searchCategory_person_titelnorm.getText();
-			inputFields[4] = searchCategory_person_vornameinput.getText();
-			inputFields[5] = searchCategory_person_nachnameinput.getText();
-			inputFields[6] = String.valueOf(searchCategory_personExtended_adeliger.isSelected());
-			inputFields[7] = String.valueOf(searchCategory_personExtended_jesuit.isSelected());
-			inputFields[8] = searchCategory_personExtended_wirtschaftinput.getText();
-			inputFields[9] = searchCategory_personExtended_ortinput.getText();
-			inputFields[10] = searchCategory_study_studienfachinput.getText();
-			inputFields[11] = searchCategory_study_fakultaet.getText();
-			inputFields[12] = searchCategory_study_seminarinput.getText();
-			inputFields[13] = String.valueOf(searchCategory_study_graduiert.isSelected());
-			inputFields[14] = searchCategory_study_studienjahrVon.getText();
-			inputFields[15] = searchCategory_study_studienjahrBis.getText();
-			inputFields[16] = getEinschreibungVon();
-			inputFields[17] = searchCategory_other_zusaetzeinput.getText();
-			inputFields[18] = searchCategory_other_fundort.getText();
-			inputFields[19] = searchCategory_other_anmerkungen.getText();
-			inputFields[20] = searchCategory_other_nummer.getText();
-			inputFields[21] = searchCategory_other_seite.getText();
-			inputFields[22] = searchCategory_other_nummerhess.getText();
-		} catch (InputMismatchException | NumberFormatException e) {
-			ui.showErrorMessage(e.getMessage());
-		}
-		return inputFields;
-	}
-
-	/**
-	 * 
-	 * @return
-	 */
-	private String getEinschreibungVon() {
-		String jahr = "yyyy";
-		String monat = "mm";
-		String tag = "dd";
-
-		if (!searchCategory_study_einschreibeJahr.getText().isEmpty()) {
-			jahr = searchCategory_study_einschreibeJahr.getText();
-		}
-		if (!searchCategory_study_einschreibeMonat.getText().isEmpty()) {
-			monat = searchCategory_study_einschreibeMonat.getText();
-		}
-		if (!searchCategory_study_einschreibeTag.getText().isEmpty()) {
-			tag = searchCategory_study_einschreibeTag.getText();
-		}
-
-		return jahr + "-" + monat + "-" + tag;
-	}
-
-	private int getParsedInt(String input) {
-		if ("".equals(input) || input == null) {
-			throw new InputMismatchException("Ein Fehler bei der Verarbeitung der Zahleingabe ist aufgetreten.");
-		}
-		int result;
-		try {
-			result = Integer.parseInt(input);
-		} catch (NumberFormatException e) {
-			throw new NumberFormatException("Die Eingabe von \"" + input + "\" in einem Zahlenfeld ist nicht gültig.");
-		}
-		return result;
-	}
-
-	/**
-	 * The array with {@link SourceKeys} is generated.
-	 */
-	private int[] generateArrayWithSourceFieldKeys() {
-		int[] inputSourceKey = new int[inputFieldCounter];
-
-		inputSourceKey[0] = SourceKeys.STANDARD;
-		inputSourceKey[1] = SourceKeys.NORM;
-		inputSourceKey[2] = SourceKeys.STANDARD;
-		inputSourceKey[3] = SourceKeys.NORM;
-		inputSourceKey[4] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
-		inputSourceKey[5] = SourceKeys.STANDARD;
-		inputSourceKey[6] = SourceKeys.NO_SOURCE;
-		inputSourceKey[7] = SourceKeys.NO_SOURCE;
-		inputSourceKey[8] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
-		inputSourceKey[9] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
-		inputSourceKey[10] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
-		inputSourceKey[11] = SourceKeys.NO_SOURCE;
-		inputSourceKey[12] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
-		inputSourceKey[13] = SourceKeys.NO_SOURCE;
-		inputSourceKey[14] = SourceKeys.NO_SOURCE;
-		inputSourceKey[15] = SourceKeys.NO_SOURCE;
-		inputSourceKey[16] = SourceKeys.NO_SOURCE;
-		inputSourceKey[17] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
-		inputSourceKey[18] = SourceKeys.NO_SOURCE;
-		inputSourceKey[19] = SourceKeys.NO_SOURCE;
-		inputSourceKey[20] = SourceKeys.NO_SOURCE;
-		inputSourceKey[21] = SourceKeys.NO_SOURCE;
-		inputSourceKey[22] = SourceKeys.NO_SOURCE;
-
-		return inputSourceKey;
-	}
-
-	/**
 	 * Collects all data from the input fields and starts the search.
 	 * 
 	 * @throws IllegalArgumentException
@@ -471,14 +366,20 @@ public class ViewController implements ControllerInterface, Initializable {
 	 */
 	@FXML
 	private void startSearch() {
+		resultTable.getColumns().clear();
+		resultTable.getItems().clear();
+		String[] input = generateArrayWithInputValues();
+		int[] sources = generateArrayWithSourceFieldKeys();
 		try {
-			resultTable.getColumns().clear();
-			resultTable.getItems().clear();
-			String[] input = generateArrayWithInputValues();
-			int[] sources = generateArrayWithSourceFieldKeys();
-			searchCtrl.executeSearch(input, sources);
-			setLabelSource();
-		} catch (Exception e) {
+			boolean couldSearchBeStarted = searchCtrl.executeSearch(input, sources,
+					search_useOrConjunction.isSelected(), search_useOpenSearch.isSelected());
+
+			if (!couldSearchBeStarted) {
+				setLabelSource();
+			} else {
+				ui.showErrorMessage("Die Suche konnte nicht gestartet werden, da keine Eingaben gefunden wurden.");
+			}
+		} catch (ViewException e) {
 			e.printStackTrace();
 			if (e.getMessage().isEmpty()) {
 				ui.showErrorMessage("Bei der Suche ist ein Fehler aufgetreten.");
@@ -486,15 +387,6 @@ public class ViewController implements ControllerInterface, Initializable {
 				ui.showErrorMessage(e.getMessage());
 			}
 		}
-	}
-
-	private void setLabelSource() {
-		String labelText = search_sourcekey_selection.getValue();
-		if (labelText == null) {
-			labelText = "Keine Quelle ausgewählt.";
-		}
-		sourceLabelName.set("Quelle: " + labelText);
-		search_sourceLabel.setText(sourceLabelName.getValueSafe());
 	}
 
 	/**
@@ -511,82 +403,9 @@ public class ViewController implements ControllerInterface, Initializable {
 		}
 	}
 
-	/**
-	 * Clears all input fields of the search.
-	 */
-	@FXML
-	private void clearSearchInput() {
-		searchCategory_person_anrede.clear();
-		searchCategory_person_anredenorm.clear();
-		searchCategory_person_titel.clear();
-		searchCategory_person_titelnorm.clear();
-		searchCategory_person_vornameinput.clear();
-		searchCategory_person_nachnameinput.clear();
-		searchCategory_personExtended_adeliger.setSelected(false);
-		searchCategory_personExtended_jesuit.setSelected(false);
-		searchCategory_personExtended_wirtschaftinput.clear();
-		searchCategory_personExtended_ortinput.clear();
-		searchCategory_study_studienfachinput.clear();
-		searchCategory_study_fakultaet.clear();
-		searchCategory_study_seminarinput.clear();
-		searchCategory_study_graduiert.setSelected(false);
-		searchCategory_study_studienjahrVon.clear();
-		searchCategory_study_studienjahrBis.clear();
-		searchCategory_study_einschreibeTag.clear();
-		searchCategory_study_einschreibeMonat.clear();
-		searchCategory_study_einschreibeJahr.clear();
-		searchCategory_other_zusaetzeinput.clear();
-		searchCategory_other_fundort.clear();
-		searchCategory_other_anmerkungen.clear();
-		searchCategory_other_nummer.clear();
-		searchCategory_other_seite.clear();
-		searchCategory_other_nummerhess.clear();
-		search_sourcekey_selection.setValue(null);
-		infoArea.clear();
-	}
-
-	/**
-	 * Checks the value of the selection for the source of the first name and
-	 * returns the corresponding {@link SourceKey}.
-	 * 
-	 * @param value
-	 *            the user input as String
-	 * @return the corresponding {@link SourceKey} as {@code String}
-	 */
-	private int getSourceKeyByValueAsString(String value) {
-		if ("Standard".equals(value)) {
-			return SourceKeys.STANDARD;
-		} else if ("normalisiert".equals(value)) {
-			return SourceKeys.NORM;
-		} else if ("Abweichung normalisiert".equals(value)) {
-			return SourceKeys.ORT_NORM_AB;
-		} else if ("HS B (AUB, I 11)".equals(value)) {
-			return SourceKeys.HSB_AUB_I11;
-		} else if ("HS C (AUB, I 13/1)".equals(value)) {
-			return SourceKeys.HSC_AUB_I131;
-		} else if ("HS D (AUB, I 13/2)".equals(value)) {
-			return SourceKeys.HSD_AUB_I132;
-		} else if ("HS E (AUB, I 9)".equals(value)) {
-			return SourceKeys.HSE_AUB_I9;
-		} else if ("HS F (AUB, I 8)".equals(value)) {
-			return SourceKeys.HSF_AUB_I8;
-		} else if ("HS G (AUB, I 6)".equals(value)) {
-			return SourceKeys.HSG_AUB_I6;
-		} else if ("HS H (AEB, Rep. I, Nr. 321)".equals(value)) {
-			return SourceKeys.HSH_AEB_I321;
-		} else if ("HS I (SB Bamberg, Msc.Add.3a)".equals(value)) {
-			return SourceKeys.HSI_SB_3a;
-		} else if ("HS J (SB Bamberg, Msc.Add.3)".equals(value)) {
-			return SourceKeys.HSJ_3;
-		} else if ("AUB, V E 38".equals(value)) {
-			return SourceKeys.AUB_V_E38;
-		}
-		return SourceKeys.NO_SELECTION;
-	}
-
 	void fillResultTable(CachedRowSet result) {
 		if (result == null) {
-			throw new InputMismatchException(
+			throw new IllegalArgumentException(
 					"Das übergebene Set mit dem Tabelleninhalt ist leer oder hat keinen Wert.");
 		} else if (result.size() == 0) {
 			throw new RuntimeException("Die Suchanfrage hat kein Ergebnis geliefert.");
@@ -633,6 +452,207 @@ public class ViewController implements ControllerInterface, Initializable {
 		}
 	}
 
+	@Override
+	public void update(Observable observable, Object updateData) {
+		if (observable != null) {
+			if (observable instanceof Model && updateData instanceof CachedRowSet) {
+				fillResultTable((CachedRowSet) updateData);
+			}
+		}
+	}
+
+	/**
+	 * Builds an array of all input fields and their value at the moment of
+	 * building. The order of inputs corresponds with the order of the keys in
+	 * {@link #generateArraysWithSourceFieldKeys()}. The method does not check,
+	 * if a input was done or if the input field was left empty.
+	 * 
+	 * @return the array with all inputs
+	 */
+	private String[] generateArrayWithInputValues() {
+		String[] inputFields = new String[inputFieldCounter];
+		try {
+			inputFields[0] = searchCategory_person_anrede.getText();
+			inputFields[1] = searchCategory_person_anredenorm.getText();
+			inputFields[2] = searchCategory_person_titel.getText();
+			inputFields[3] = searchCategory_person_titelnorm.getText();
+			inputFields[4] = searchCategory_person_vornameinput.getText();
+			inputFields[5] = searchCategory_person_nachnameinput.getText();
+			inputFields[6] = String.valueOf(searchCategory_personExtended_adeliger.isSelected());
+			inputFields[7] = String.valueOf(searchCategory_personExtended_jesuit.isSelected());
+			inputFields[8] = searchCategory_personExtended_wirtschaftinput.getText();
+			inputFields[9] = searchCategory_personExtended_ortinput.getText();
+			inputFields[10] = searchCategory_study_studienfachinput.getText();
+			inputFields[11] = searchCategory_study_fakultaet.getText();
+			inputFields[12] = searchCategory_study_seminarinput.getText();
+			inputFields[13] = String.valueOf(searchCategory_study_graduiert.isSelected());
+			inputFields[14] = searchCategory_study_studienjahrVon.getText();
+			inputFields[15] = searchCategory_study_studienjahrBis.getText();
+			inputFields[16] = getEinschreibungVon();
+			inputFields[17] = searchCategory_other_zusaetzeinput.getText();
+			inputFields[18] = searchCategory_other_fundort.getText();
+			inputFields[19] = searchCategory_other_anmerkungen.getText();
+			inputFields[20] = searchCategory_other_nummer.getText();
+			inputFields[21] = searchCategory_other_seite.getText();
+			inputFields[22] = searchCategory_other_nummerhess.getText();
+		} catch (IllegalArgumentException e) {
+			ui.showErrorMessage(e.getMessage());
+		}
+		return inputFields;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	private String getEinschreibungVon() {
+		String jahr = "yyyy";
+		String monat = "mm";
+		String tag = "dd";
+
+		if (!searchCategory_study_einschreibeJahr.getText().isEmpty()) {
+			jahr = searchCategory_study_einschreibeJahr.getText();
+		}
+		if (!searchCategory_study_einschreibeMonat.getText().isEmpty()) {
+			monat = searchCategory_study_einschreibeMonat.getText();
+		}
+		if (!searchCategory_study_einschreibeTag.getText().isEmpty()) {
+			tag = searchCategory_study_einschreibeTag.getText();
+		}
+
+		return jahr + "-" + monat + "-" + tag;
+	}
+
+	private int getParsedInt(String input) {
+		if (input.isEmpty() || input == null) {
+			throw new IllegalArgumentException("Ein Fehler bei der Verarbeitung der Zahleingabe ist aufgetreten.");
+		}
+		int result;
+		try {
+			result = Integer.parseInt(input);
+		} catch (NumberFormatException e) {
+			throw new NumberFormatException("Die Eingabe von \"" + input + "\" in einem Zahlenfeld ist nicht gültig.");
+		}
+		return result;
+	}
+
+	/**
+	 * The array with {@link SourceKeys} is generated.
+	 */
+	private int[] generateArrayWithSourceFieldKeys() {
+		int[] inputSourceKey = new int[inputFieldCounter];
+
+		inputSourceKey[0] = SourceKeys.STANDARD;
+		inputSourceKey[1] = SourceKeys.NORM;
+		inputSourceKey[2] = SourceKeys.STANDARD;
+		inputSourceKey[3] = SourceKeys.NORM;
+		inputSourceKey[4] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
+		inputSourceKey[5] = SourceKeys.STANDARD;
+		inputSourceKey[6] = SourceKeys.NO_SOURCE;
+		inputSourceKey[7] = SourceKeys.NO_SOURCE;
+		inputSourceKey[8] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
+		inputSourceKey[9] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
+		inputSourceKey[10] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
+		inputSourceKey[11] = SourceKeys.NO_SOURCE;
+		inputSourceKey[12] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
+		inputSourceKey[13] = SourceKeys.NO_SOURCE;
+		inputSourceKey[14] = SourceKeys.NO_SOURCE;
+		inputSourceKey[15] = SourceKeys.NO_SOURCE;
+		inputSourceKey[16] = SourceKeys.NO_SOURCE;
+		inputSourceKey[17] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
+		inputSourceKey[18] = SourceKeys.NO_SOURCE;
+		inputSourceKey[19] = SourceKeys.NO_SOURCE;
+		inputSourceKey[20] = SourceKeys.NO_SOURCE;
+		inputSourceKey[21] = SourceKeys.NO_SOURCE;
+		inputSourceKey[22] = SourceKeys.NO_SOURCE;
+
+		return inputSourceKey;
+	}
+
+	/**
+	 * Checks the value of the selection for the source of the first name and
+	 * returns the corresponding {@link SourceKey}.
+	 * 
+	 * @param value
+	 *            the user input as String
+	 * @return the corresponding {@link SourceKey} as {@code String}
+	 */
+	private int getSourceKeyByValueAsString(String value) {
+		if ("Standard".equals(value)) {
+			return SourceKeys.STANDARD;
+		} else if ("normalisiert".equals(value)) {
+			return SourceKeys.NORM;
+		} else if ("Abweichung normalisiert".equals(value)) {
+			return SourceKeys.ORT_NORM_AB;
+		} else if ("HS B (AUB, I 11)".equals(value)) {
+			return SourceKeys.HSB_AUB_I11;
+		} else if ("HS C (AUB, I 13/1)".equals(value)) {
+			return SourceKeys.HSC_AUB_I131;
+		} else if ("HS D (AUB, I 13/2)".equals(value)) {
+			return SourceKeys.HSD_AUB_I132;
+		} else if ("HS E (AUB, I 9)".equals(value)) {
+			return SourceKeys.HSE_AUB_I9;
+		} else if ("HS F (AUB, I 8)".equals(value)) {
+			return SourceKeys.HSF_AUB_I8;
+		} else if ("HS G (AUB, I 6)".equals(value)) {
+			return SourceKeys.HSG_AUB_I6;
+		} else if ("HS H (AEB, Rep. I, Nr. 321)".equals(value)) {
+			return SourceKeys.HSH_AEB_I321;
+		} else if ("HS I (SB Bamberg, Msc.Add.3a)".equals(value)) {
+			return SourceKeys.HSI_SB_3a;
+		} else if ("HS J (SB Bamberg, Msc.Add.3)".equals(value)) {
+			return SourceKeys.HSJ_3;
+		} else if ("AUB, V E 38".equals(value)) {
+			return SourceKeys.AUB_V_E38;
+		}
+		return SourceKeys.NO_SELECTION;
+	}
+
+	private void setLabelSource() {
+		String labelText = search_sourcekey_selection.getValue();
+		if (labelText == null) {
+			labelText = "Keine Quelle ausgewählt.";
+		}
+		sourceLabelName.set("Quelle: " + labelText);
+		search_sourceLabel.setText(sourceLabelName.getValueSafe());
+	}
+
+	/**
+	 * Clears all input fields of the search.
+	 */
+	@FXML
+	private void clearSearchInput() {
+		searchCategory_person_anrede.clear();
+		searchCategory_person_anredenorm.clear();
+		searchCategory_person_titel.clear();
+		searchCategory_person_titelnorm.clear();
+		searchCategory_person_vornameinput.clear();
+		searchCategory_person_nachnameinput.clear();
+		searchCategory_personExtended_adeliger.setSelected(false);
+		searchCategory_personExtended_jesuit.setSelected(false);
+		searchCategory_personExtended_wirtschaftinput.clear();
+		searchCategory_personExtended_ortinput.clear();
+		searchCategory_study_studienfachinput.clear();
+		searchCategory_study_fakultaet.clear();
+		searchCategory_study_seminarinput.clear();
+		searchCategory_study_graduiert.setSelected(false);
+		searchCategory_study_studienjahrVon.clear();
+		searchCategory_study_studienjahrBis.clear();
+		searchCategory_study_einschreibeTag.clear();
+		searchCategory_study_einschreibeMonat.clear();
+		searchCategory_study_einschreibeJahr.clear();
+		searchCategory_other_zusaetzeinput.clear();
+		searchCategory_other_fundort.clear();
+		searchCategory_other_anmerkungen.clear();
+		searchCategory_other_nummer.clear();
+		searchCategory_other_seite.clear();
+		searchCategory_other_nummerhess.clear();
+		search_sourcekey_selection.setValue(null);
+		search_useOrConjunction.setSelected(false);
+		search_useOpenSearch.setSelected(false);
+		infoArea.clear();
+	}
+
 	/**
 	 * Closes the window when the users submits the action.
 	 */
@@ -651,14 +671,5 @@ public class ViewController implements ControllerInterface, Initializable {
 	@FXML
 	private void showInfo() {
 		ui.showInfo();
-	}
-
-	@Override
-	public void update(Observable observable, Object updateData) {
-		if (observable != null) {
-			if (observable instanceof Model && updateData instanceof CachedRowSet) {
-				fillResultTable((CachedRowSet) updateData);
-			}
-		}
 	}
 }

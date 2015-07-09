@@ -47,8 +47,7 @@ public class SearchInitiatorImpl implements SearchInitiator {
 				// FIXME Da müssen Christian und ich nochmal drüber reden, da
 				// bei der Rückgabe die ColumnNameKeys besser wären.
 				sqlQuery.append(", " + qr.getTable() + "." + ColumnNameKeys.DATUM);
-				sqlQuery.append(
-						", " + qr.getTable() + "." + ColumnNameKeys.DATUMS_FELDER_GESETZT + " AS " + "DATUM_INT");
+				sqlQuery.append(", " + qr.getTable() + "." + ColumnNameKeys.DATUMS_FELDER_GESETZT);
 			} else {
 				sqlQuery.append(", " + qr.getTable() + "." + qr.getColumn() + " AS " + qr.getSearchField());
 			}
@@ -61,9 +60,12 @@ public class SearchInitiatorImpl implements SearchInitiator {
 
 			if (sqlWhere.length() == 0) {
 				sqlWhere.append(qr.getWhere());
+			} else if (qr.useOrCondition()) {
+				sqlWhere.append(" OR " + qr.getWhere());
 			} else {
 				sqlWhere.append(" AND " + qr.getWhere());
 			}
+
 			if (!("true".equals(qr.getInput()))) {
 				inputs.add(qr.getInput());
 			}

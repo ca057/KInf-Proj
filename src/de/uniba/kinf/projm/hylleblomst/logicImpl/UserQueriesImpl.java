@@ -13,8 +13,12 @@ public class UserQueriesImpl implements UserQueries {
 	private int source;
 	private String table;
 	private String sqlWhere;
+	private Boolean isOR = false;
+	private Boolean isOpenSearch = false;
 
-	public UserQueriesImpl(SearchFieldKeys searchField, String input, int source) {
+	public UserQueriesImpl(SearchFieldKeys searchField, String input, int source, Boolean isOr, Boolean isOpenSearch) {
+		this.isOR = isOr;
+		this.isOpenSearch = isOpenSearch;
 		setInput(input);
 		setSource(source);
 		setSearchField(searchField);
@@ -62,6 +66,16 @@ public class UserQueriesImpl implements UserQueries {
 	@Override
 	public String getWhere() {
 		return sqlWhere;
+	}
+
+	@Override
+	public Boolean isOpenSearch() {
+		return isOpenSearch;
+	}
+
+	@Override
+	public Boolean useOrCondition() {
+		return isOR;
 	}
 
 	/**
@@ -250,14 +264,30 @@ public class UserQueriesImpl implements UserQueries {
 	}
 
 	private String buildSQLWhere() {
-		if (source == SourceKeys.NO_SELECTION || searchField == SearchFieldKeys.ANREDE
-				|| searchField == SearchFieldKeys.TITEL) {
-			return String.format("UPPER(%s.%s) LIKE UPPER(?) ", table, column);
+		if (isOpenSearch) {
+			// TODO % und Funktion einfügen
+			if (source == SourceKeys.NO_SELECTION || searchField == SearchFieldKeys.ANREDE
+					|| searchField == SearchFieldKeys.TITEL) {
+				return String.format("UPPER(%s.%s) LIKE %sUPPER(?)%3$s ", table, column, "%");
+			}
+			if (source == SourceKeys.NORM) {
+				return String.format("UPPER(%s_norm.%s) LIKE %sUPPER(?)%3$s ", table.substring(0, table.indexOf("_")),
+						column, "%");
+			}
+			return String.format("UPPER(%s.%s) LIKE UPPER(?) AND %1s_info.%s = %s", table, column,
+					table.substring(0, table.indexOf("_")), ColumnNameKeys.QUELLEN_ID, source);
+
+		} else {
+			if (source == SourceKeys.NO_SELECTION || searchField == SearchFieldKeys.ANREDE
+					|| searchField == SearchFieldKeys.TITEL) {
+				return String.format("UPPER(%s.%s) = UPPER(?) ", table, column);
+			}
+			if (source == SourceKeys.NORM) {
+				return String.format("UPPER(%s_norm.%s) = UPPER(?) ", table.substring(0, table.indexOf("_")), column,
+						"%");
+			}
+			return String.format("UPPER(%s.%s) = UPPER(?) AND %1s_info.%s = %s", table, column,
+					table.substring(0, table.indexOf("_")), ColumnNameKeys.QUELLEN_ID, source);
 		}
-		if (source == SourceKeys.NORM) {
-			return String.format("UPPER(%s_norm.%s) LIKE UPPER(?) ", table.substring(0, table.indexOf("_")), column);
-		}
-		return String.format("UPPER(%s.%s) LIKE UPPER(?) AND %1s_info.%s = %s", table, column,
-				table.substring(0, table.indexOf("_")), ColumnNameKeys.QUELLEN_ID, source);
 	}
 }
