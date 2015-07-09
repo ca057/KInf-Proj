@@ -39,6 +39,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -368,128 +369,180 @@ public class ViewController implements ControllerInterface, Initializable {
 
 			@Override
 			public void handle(KeyEvent ke) {
-				try {
+				if (searchCategory_study_studienjahrVon.getText().matches("[0-9]{1,4}")) {
 					if (getParsedInt(searchCategory_study_studienjahrVon.getText()) < 0
 							|| getParsedInt(searchCategory_study_studienjahrVon.getText()) > 2015) {
-						ke.consume();
-						throw new NumberFormatException();
+						ui.showErrorMessage("Studienjahr muss eine Zahl zwischen 0 und 2015 sein.");
+						searchCategory_study_studienjahrVon.clear();
 					}
-				} catch (NumberFormatException e) {
+				} else if (ke.getCode() != KeyCode.TAB) {
 					ui.showErrorMessage("Studienjahr muss eine Zahl zwischen 0 und 2015 sein.");
 					searchCategory_study_studienjahrVon.clear();
 				}
+				ke.consume();
 			}
 		});
 		searchCategory_study_studienjahrBis.setOnKeyReleased(new EventHandler<KeyEvent>() {
 
 			@Override
 			public void handle(KeyEvent ke) {
-				try {
+				if (searchCategory_study_studienjahrBis.getText().matches("[0-9]{1,4}")) {
 					if (getParsedInt(searchCategory_study_studienjahrBis.getText()) < 0
 							|| getParsedInt(searchCategory_study_studienjahrBis.getText()) > 2015) {
-						ke.consume();
-						throw new NumberFormatException();
+						ui.showErrorMessage("Studienjahr muss eine Zahl zwischen 0 und 2015 sein.");
 					}
-				} catch (NumberFormatException e) {
+				} else if (ke.getCode() != KeyCode.TAB) {
 					ui.showErrorMessage("Studienjahr muss eine Zahl zwischen 0 und 2015 sein.");
 					searchCategory_study_studienjahrBis.clear();
 				}
+				ke.consume();
 			}
 		});
 		searchCategory_study_einschreibeJahrVon.setOnKeyReleased(new EventHandler<KeyEvent>() {
 
 			@Override
 			public void handle(KeyEvent ke) {
-				try {
+				if (searchCategory_study_einschreibeJahrVon.getText().matches("[0-9]{1,4}")) {
 					if (getParsedInt(searchCategory_study_einschreibeJahrVon.getText()) < 0
 							|| getParsedInt(searchCategory_study_einschreibeJahrVon.getText()) > 2015) {
-						ke.consume();
-						throw new NumberFormatException();
+						ui.showErrorMessage("Einschreibejahr muss eine Zahl zwischen 0 und 2015 sein.");
 					}
-				} catch (NumberFormatException e) {
+				} else if (ke.getCode() != KeyCode.TAB) {
 					ui.showErrorMessage("Einschreibejahr muss eine Zahl zwischen 0 und 2015 sein.");
 					searchCategory_study_einschreibeJahrVon.clear();
 				}
+				ke.consume();
 			}
 		});
 		searchCategory_study_einschreibeMonatVon.setOnKeyReleased(new EventHandler<KeyEvent>() {
 
 			@Override
 			public void handle(KeyEvent ke) {
-				try {
+				if (searchCategory_study_einschreibeMonatVon.getText().matches("[1-9][0-2]?")) {
 					if (getParsedInt(searchCategory_study_einschreibeMonatVon.getText()) < 1
 							|| getParsedInt(searchCategory_study_einschreibeMonatVon.getText()) > 12) {
-						ke.consume();
-						throw new NumberFormatException();
+						ui.showErrorMessage("Einschreibemonat muss eine Zahl von 1 bis 12 sein.");
 					}
-				} catch (NumberFormatException e) {
+				} else if (ke.getCode() != KeyCode.TAB) {
 					ui.showErrorMessage("Einschreibemonat muss eine Zahl von 1 bis 12 sein.");
 					searchCategory_study_einschreibeMonatVon.clear();
 				}
+				ke.consume();
 			}
 		});
 		searchCategory_study_einschreibeTagVon.setOnKeyReleased(new EventHandler<KeyEvent>() {
 
 			@Override
 			public void handle(KeyEvent ke) {
-				try {
+				if (searchCategory_study_einschreibeTagVon.getText().matches("[1-3][0-9]?")) {
 					if (getParsedInt(searchCategory_study_einschreibeTagVon.getText()) < 1
 							|| getParsedInt(searchCategory_study_einschreibeTagVon.getText()) > 31) {
-						ke.consume();
-						throw new NumberFormatException();
+						ui.showErrorMessage("Einschreibetag muss eine Zahl von 1 bis 31 sein.");
 					}
-				} catch (NumberFormatException e) {
+				} else if (ke.getCode() != KeyCode.TAB) {
 					ui.showErrorMessage("Einschreibetag muss eine Zahl von 1 bis 31 sein.");
 					searchCategory_study_einschreibeTagVon.clear();
 				}
+				ke.consume();
 			}
 		});
 		searchCategory_study_einschreibeJahrBis.setOnKeyReleased(new EventHandler<KeyEvent>() {
 
 			@Override
 			public void handle(KeyEvent ke) {
-				try {
+				if (searchCategory_study_einschreibeJahrBis.getText().matches("[0-9]{1,4}")) {
 					if (getParsedInt(searchCategory_study_einschreibeJahrBis.getText()) < 0
 							|| getParsedInt(searchCategory_study_einschreibeJahrBis.getText()) > 2015) {
-						ke.consume();
-						throw new NumberFormatException();
+						ui.showErrorMessage("Einschreibejahr muss eine Zahl zwischen 0 und 2015 sein.");
 					}
-				} catch (NumberFormatException e) {
+				} else if (ke.getCode() != KeyCode.TAB) {
 					ui.showErrorMessage("Einschreibejahr muss eine Zahl zwischen 0 und 2015 sein.");
 					searchCategory_study_einschreibeJahrBis.clear();
 				}
+				ke.consume();
 			}
 		});
 		searchCategory_study_einschreibeMonatBis.setOnKeyReleased(new EventHandler<KeyEvent>() {
 
 			@Override
 			public void handle(KeyEvent ke) {
-				try {
+				if (searchCategory_study_einschreibeMonatBis.getText().matches("[1-9][0-2]?")) {
 					if (getParsedInt(searchCategory_study_einschreibeMonatBis.getText()) < 1
 							|| getParsedInt(searchCategory_study_einschreibeMonatBis.getText()) > 12) {
-						ke.consume();
-						throw new NumberFormatException();
+						ui.showErrorMessage("Einschreibemonat muss eine Zahl von 1 bis 12 sein.");
 					}
-				} catch (NumberFormatException e) {
+				} else if (ke.getCode() != KeyCode.TAB) {
 					ui.showErrorMessage("Einschreibemonat muss eine Zahl von 1 bis 12 sein.");
 					searchCategory_study_einschreibeMonatBis.clear();
 				}
+				ke.consume();
 			}
 		});
 		searchCategory_study_einschreibeTagBis.setOnKeyReleased(new EventHandler<KeyEvent>() {
 
 			@Override
 			public void handle(KeyEvent ke) {
-				try {
+				if (searchCategory_study_einschreibeTagBis.getText().matches("[1-3][0-9]?")) {
 					if (getParsedInt(searchCategory_study_einschreibeTagBis.getText()) < 1
 							|| getParsedInt(searchCategory_study_einschreibeTagBis.getText()) > 31) {
-						ke.consume();
-						throw new NumberFormatException();
+						ui.showErrorMessage("Einschreibetag muss eine Zahl von 1 bis 31 sein.");
 					}
-				} catch (NumberFormatException e) {
+				} else if (ke.getCode() != KeyCode.TAB) {
 					ui.showErrorMessage("Einschreibetag muss eine Zahl von 1 bis 31 sein.");
 					searchCategory_study_einschreibeTagBis.clear();
 				}
+				ke.consume();
+			}
+		});
+		searchCategory_other_nummer.setOnKeyReleased(new EventHandler<KeyEvent>() {
+
+			@Override
+			public void handle(KeyEvent ke) {
+				if (searchCategory_other_nummer.getText().matches("[0-9]{1,}")) {
+					if (getParsedInt(searchCategory_other_nummer.getText()) < 0) {
+						ui.showErrorMessage(
+								"Nummer muss eine nicht-negative Zahl sein und darf keine Buchstaben enthalten.");
+					}
+				} else if (ke.getCode() != KeyCode.TAB) {
+					ui.showErrorMessage(
+							"Nummer muss eine nicht-negative Zahl sein und darf keine Buchstaben enthalten.");
+					searchCategory_other_nummer.clear();
+				}
+				ke.consume();
+			}
+		});
+		searchCategory_other_nummerhess.setOnKeyReleased(new EventHandler<KeyEvent>() {
+
+			@Override
+			public void handle(KeyEvent ke) {
+				if (searchCategory_other_nummerhess.getText().matches("[0-9]{1,}")) {
+					if (getParsedInt(searchCategory_other_nummerhess.getText()) < 0) {
+						ui.showErrorMessage(
+								"Nummer Hess muss eine nicht-negative Zahl sein und darf keine Buchstaben enthalten.");
+					}
+				} else if (ke.getCode() != KeyCode.TAB) {
+					ui.showErrorMessage(
+							"Nummer Hess muss eine nicht-negative Zahl sein und darf keine Buchstaben enthalten.");
+					searchCategory_other_nummerhess.clear();
+				}
+				ke.consume();
+			}
+		});
+		searchCategory_other_seite.setOnKeyReleased(new EventHandler<KeyEvent>() {
+
+			@Override
+			public void handle(KeyEvent ke) {
+				if (searchCategory_other_seite.getText().matches("[0-9]{1,}")) {
+					if (getParsedInt(searchCategory_other_seite.getText()) < 0) {
+						ui.showErrorMessage(
+								"Seite muss eine nicht-negative Zahl sein und darf keine Buchstaben enthalten.");
+					}
+				} else if (ke.getCode() != KeyCode.TAB) {
+					ui.showErrorMessage(
+							"Seite muss eine nicht-negative Zahl sein und darf keine Buchstaben enthalten.");
+					searchCategory_other_seite.clear();
+				}
+				ke.consume();
 			}
 		});
 	}
