@@ -8,14 +8,29 @@ import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
  */
 public interface UserQueries {
 
+	/**
+	 * @return
+	 */
 	SearchFieldKeys getSearchField();
 
+	/**
+	 * @return
+	 */
 	String getInput();
 
+	/**
+	 * @return
+	 */
 	int getSource();
 
+	/**
+	 * @return
+	 */
 	String getTable();
 
+	/**
+	 * @return
+	 */
 	String getColumn();
 
 	/**
@@ -23,8 +38,14 @@ public interface UserQueries {
 	 */
 	String getWhere();
 
+	/**
+	 * @return
+	 */
 	Boolean isOpenSearch();
 
+	/**
+	 * @return
+	 */
 	Boolean useOrCondition();
 
 }

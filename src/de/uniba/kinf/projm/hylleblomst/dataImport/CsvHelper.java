@@ -10,6 +10,13 @@ import com.opencsv.CSVReader;
 
 import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 
+/**
+ * This class processes csv-files. It has rudimentary methods to get the data of
+ * the file in lines.
+ * 
+ * @author Hannes
+ *
+ */
 class CsvHelper {
 	private List<String[]> allLines;
 	private Path path;
@@ -28,8 +35,7 @@ class CsvHelper {
 	 */
 	List<String[]> getAllLines() throws ImportException {
 		try {
-			CSVReader reader = new CSVReader(new InputStreamReader(
-					new FileInputStream(path.toString()), "UTF-8"));
+			CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream(path.toString()), "UTF-8"));
 			allLines = reader.readAll();
 			reader.close();
 			return allLines;

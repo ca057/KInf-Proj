@@ -7,10 +7,15 @@ import java.util.InputMismatchException;
 import javax.sql.rowset.CachedRowSet;
 
 import de.uniba.kinf.projm.hylleblomst.keys.DBUserKeys;
-import de.uniba.kinf.projm.hylleblomst.logic.DBAccess;
 import de.uniba.kinf.projm.hylleblomst.logic.SearchInitiator;
 import de.uniba.kinf.projm.hylleblomst.logic.UserQueries;
 
+/**
+ * Implementation of {@link SearchInitiator}
+ * 
+ * @author Hannes
+ *
+ */
 public class SearchInitiatorImpl implements SearchInitiator {
 	DBAccess db = new DBAccess(DBUserKeys.dbURL, DBUserKeys.guestUser2, DBUserKeys.guestPassword2);
 	SQLBuilder sqlBuilder;

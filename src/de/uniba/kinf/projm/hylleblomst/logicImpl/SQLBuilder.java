@@ -11,6 +11,10 @@ import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.TableNameKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.UserQueries;
 
+/**
+ * @author Hannes
+ *
+ */
 public class SQLBuilder {
 
 	private Collection<UserQueries> userQueries;
@@ -19,6 +23,10 @@ public class SQLBuilder {
 	private Boolean sqlStatementIsNotEmpty = false;
 	private Boolean whereIsEmpty = true;
 
+	/**
+	 * @param userQueries
+	 * @throws SQLException
+	 */
 	public SQLBuilder(Collection<UserQueries> userQueries) throws SQLException {
 		inputs = new ArrayList<String>();
 		if (userQueries == null || userQueries.isEmpty()) {
@@ -28,6 +36,9 @@ public class SQLBuilder {
 		buildQuery();
 	}
 
+	/**
+	 * @param personID
+	 */
 	public SQLBuilder(String personID) {
 		inputs = new ArrayList<String>();
 		inputs.add(personID);
@@ -38,14 +49,24 @@ public class SQLBuilder {
 		}
 	}
 
+	/**
+	 * @return
+	 */
 	public String getSQLStatement() {
 		return sqlStatement.toString();
 	}
 
+	/**
+	 * @return
+	 */
 	public List<String> getInputs() {
 		return inputs;
 	}
 
+	/**
+	 * @return
+	 * @throws SQLException
+	 */
 	String buildQuery() throws SQLException {
 		Boolean hasSource = false;
 		StringBuilder sqlWhere = new StringBuilder();
@@ -75,6 +96,9 @@ public class SQLBuilder {
 		return sqlStatement.toString();
 	}
 
+	/*
+	 * 
+	 */
 	private String buildWhere(UserQueries qr) {
 		if (whereIsEmpty) {
 			whereIsEmpty = false;
@@ -86,13 +110,19 @@ public class SQLBuilder {
 		}
 	}
 
-	public String buildPersonSearch(String string) {
+	/*
+	 * 
+	 */
+	private String buildPersonSearch(String string) {
 		StringBuilder sqlQuery = new StringBuilder();
 		inputs.add(string);
 		return sqlQuery.append(buildSelectAll()).append(buildFrom()).append(" WHERE Person.PersonID = ?").toString();
 	}
 
-	String buildSelect(UserQueries qr) {
+	/*
+	 * 
+	 */
+	private String buildSelect(UserQueries qr) {
 		String result = "";
 		if (!sqlStatementIsNotEmpty) {
 			result = "SELECT DISTINCT " + TableNameKeys.PERSON + "." + ColumnNameKeys.PERSON_ID + " AS PersonID, "
@@ -117,11 +147,17 @@ public class SQLBuilder {
 		return result;
 	}
 
-	String buildSelectAll() {
+	/*
+	 * 
+	 */
+	private String buildSelectAll() {
 		return "SELECT * ";
 	}
 
-	String buildFrom() {
+	/*
+	 * 
+	 */
+	private String buildFrom() {
 		String vorname = TableNameKeys.PERSON + " LEFT OUTER JOIN " + TableNameKeys.VORNAME_INFO + " ON "
 				+ TableNameKeys.PERSON + "." + ColumnNameKeys.PERSON_ID + " = " + TableNameKeys.VORNAME_INFO + "."
 				+ ColumnNameKeys.PERSON_ID + " LEFT OUTER JOIN " + TableNameKeys.VORNAME_TRAD + " ON "
