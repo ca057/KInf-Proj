@@ -40,11 +40,7 @@ public class ImportDatabaseImpl implements ImportDatabase {
 	public ImportDatabaseImpl(String dbURL, String user, String password)
 			throws ImportException {
 		this.dbURL = dbURL;
-		if (!user.equals("admin")) {
-			throw new ImportException("No authorization for importing data");
-		} else {
-			this.user = user;
-		}
+		this.user = user;
 		this.password = password;
 
 		validation = new Validation(dbURL, user, password);
@@ -52,250 +48,271 @@ public class ImportDatabaseImpl implements ImportDatabase {
 
 	@Override
 	public void importData(List<String[]> rows) throws ImportException {
-		System.out.println("Kommt in ImportDatabaseImpl an");
+		try (Connection con = DriverManager
+				.getConnection(dbURL, user, password)) {
+			insertSourcesIntoDatabase(con);
 
-		for (int i = 0; i < quellen.length; i++) {
-			insertIntoTableOneAttributeNoForeignKeys("quellen", quellen[i]);
-		}
+			rows = rows.subList(1, rows.size());
 
-		rows = rows.subList(1, rows.size());
+			for (String[] strings : rows) {
+				int personID = Integer.parseInt(strings[0]);
+				int currentSourceID;
 
-		for (String[] strings : rows) {
-			int personID = Integer.parseInt(strings[0]);
-			int currentSourceID;
+				int anredeNormID = 0;
+				int anredeTradID = 0;
+				int fakultaetenID = 0;
+				int fundortID = 0;
+				int titelNormID = 0;
+				int titelTradID = 0;
+				int vornameNormID = 0;
+				int nameNormID = 0;
+				int fachNormID = 0;
+				int wirtschaftslageNormID = 0;
+				int seminarNormID = 0;
 
-			int anredeNormID = 0;
-			int anredeTradID = 0;
-			int fakultaetenID = 0;
-			int fundortID = 0;
-			int titelNormID = 0;
-			int titelTradID = 0;
-			int vornameNormID = 0;
-			int nameNormID = 0;
-			int fachNormID = 0;
-			int wirtschaftslageNormID = 0;
-			int seminarNormID = 0;
+				int vornameTradID;
+				int nameTradID;
+				int fachTradID;
+				int wirtschaftslageTradID;
+				int seminarTradID;
 
-			int vornameTradID;
-			int nameTradID;
-			int fachTradID;
-			int wirtschaftslageTradID;
-			int seminarTradID;
+				// Necessary details to insert person
+				if (!strings[4].equals("")) {
+					anredeNormID = insertIntoTableOneAttributeNoForeignKeys(
+							con, "anrede_norm", strings[4]);
+				}
+				if (!strings[3].equals("")) {
+					anredeTradID = insertIntoTableOneAttributeOneForeignKey(
+							con, "anrede_trad", strings[3], anredeNormID);
+				}
+				if (!strings[47].equals("")) {
+					fakultaetenID = insertIntoTableOneAttributeNoForeignKeys(
+							con, "fakultaeten", strings[47]);
+				}
+				if (!strings[77].equals("")) {
+					fundortID = insertIntoTableOneAttributeNoForeignKeys(con,
+							"fundorte_norm", strings[77]);
+				}
+				if (!strings[65].equals("")) {
+					titelNormID = insertIntoTableOneAttributeNoForeignKeys(con,
+							"titel_norm", strings[65]);
+				}
+				if (!strings[64].equals("")) {
+					titelTradID = insertIntoTableOneAttributeOneForeignKey(con,
+							"titel_trad", strings[64], titelNormID);
+				}
 
-			// Necessary tables for being able to insert person
-			if (!strings[4].equals("")) {
-				anredeNormID = insertIntoTableOneAttributeNoForeignKeys(
-						"anrede_norm", strings[4]);
-			}
-			if (!strings[3].equals("")) {
-				anredeTradID = insertIntoTableOneAttributeOneForeignKey(
-						"anrede_trad", strings[3], anredeNormID);
-			}
-			if (!strings[47].equals("")) {
-				fakultaetenID = insertIntoTableOneAttributeNoForeignKeys(
-						"fakultaeten", strings[47]);
-			}
-			if (!strings[77].equals("")) {
-				fundortID = insertIntoTableOneAttributeNoForeignKeys(
-						"fundorte_norm", strings[77]);
-			}
-			if (!strings[65].equals("")) {
-				titelNormID = insertIntoTableOneAttributeNoForeignKeys(
-						"titel_norm", strings[65]);
-			}
-			if (!strings[64].equals("")) {
-				titelTradID = insertIntoTableOneAttributeOneForeignKey(
-						"titel_trad", strings[64], titelNormID);
-			}
+				// Preparatory statements for inserting persons
+				Calendar tmpCalendar = new GregorianCalendar();
+				tmpCalendar.clear();
 
-			// Preparatory statements for inserting persons
-			Calendar tmpCalendar = new GregorianCalendar();
-			tmpCalendar.clear();
+				String calendarFieldsSet = "";
 
-			String calendarFieldsSet = "";
+				if (!strings[45].isEmpty()) {
+					tmpCalendar.set(Calendar.YEAR,
+							Integer.parseInt(strings[45]));
+					calendarFieldsSet = calendarFieldsSet + "0";
+				} else {
+					calendarFieldsSet = calendarFieldsSet + "1";
+				}
+				if (!strings[44].isEmpty()) {
+					// Minus one as month is 0-based (0 is January) but entries
+					// in
+					// source file are 1-based
+					tmpCalendar.set(Calendar.MONTH,
+							Integer.parseInt(strings[44]) - 1);
+					calendarFieldsSet = calendarFieldsSet + "0";
+				} else {
+					calendarFieldsSet = calendarFieldsSet + "1";
+				}
+				if (!strings[43].isEmpty()) {
+					tmpCalendar.set(Calendar.DAY_OF_MONTH,
+							Integer.parseInt(strings[43]));
+					calendarFieldsSet = calendarFieldsSet + "0";
+				} else {
+					calendarFieldsSet = calendarFieldsSet + "1";
+				}
 
-			if (!strings[45].isEmpty()) {
-				tmpCalendar.set(Calendar.YEAR, Integer.parseInt(strings[45]));
-				calendarFieldsSet = calendarFieldsSet + "0";
-			} else {
-				calendarFieldsSet = calendarFieldsSet + "1";
-			}
-			if (!strings[44].isEmpty()) {
-				// Minus one as month is 0-based (0 is January) but entries in
-				// source file are 1-based
-				tmpCalendar.set(Calendar.MONTH,
-						Integer.parseInt(strings[44]) - 1);
-				calendarFieldsSet = calendarFieldsSet + "0";
-			} else {
-				calendarFieldsSet = calendarFieldsSet + "1";
-			}
-			if (!strings[43].isEmpty()) {
-				tmpCalendar.set(Calendar.DAY_OF_MONTH,
-						Integer.parseInt(strings[43]));
-				calendarFieldsSet = calendarFieldsSet + "0";
-			} else {
-				calendarFieldsSet = calendarFieldsSet + "1";
-			}
+				Date datum;
+				if (tmpCalendar.isSet(Calendar.YEAR)
+						|| tmpCalendar.isSet(Calendar.MONTH)
+						|| tmpCalendar.isSet(Calendar.DAY_OF_MONTH)) {
+					datum = new Date(tmpCalendar.getTimeInMillis());
+				} else {
+					datum = null;
+				}
 
-			Date datum;
-			if (tmpCalendar.isSet(Calendar.YEAR)
-					|| tmpCalendar.isSet(Calendar.MONTH)
-					|| tmpCalendar.isSet(Calendar.DAY_OF_MONTH)) {
-				datum = new Date(tmpCalendar.getTimeInMillis());
-			} else {
-				datum = null;
-			}
+				int nummerHess;
+				try {
+					nummerHess = Integer.parseInt(strings[2]);
+				} catch (NumberFormatException e) {
+					nummerHess = 0;
+				}
+				// Insert persons with ID from source file
+				insertPerson(con, personID, Integer.parseInt(strings[1]),
+						nummerHess, strings[29], strings[17], datum,
+						calendarFieldsSet, strings[46], strings[63],
+						strings[78], anredeTradID, fakultaetenID, fundortID,
+						titelTradID);
 
-			int nummerHess;
-			try {
-				nummerHess = Integer.parseInt(strings[2]);
-			} catch (NumberFormatException e) {
-				nummerHess = 0;
-			}
-			// Insert persons with ID from source file
-			insertPerson(personID, Integer.parseInt(strings[1]), nummerHess,
-					strings[29], strings[17], datum, calendarFieldsSet,
-					strings[46], strings[63], strings[78], anredeTradID,
-					fakultaetenID, fundortID, titelTradID);
+				if (!strings[6].equals("")) {
+					vornameNormID = insertIntoTableOneAttributeNoForeignKeys(
+							con, "vorname_norm", strings[6]);
+				}
+				// Insert all different variations of given name
+				currentSourceID = 0;
+				for (int i = 5; i <= 16; i++) {
+					if (i != 6) {
+						if (!strings[i].equals("")) {
+							vornameTradID = insertIntoTableOneAttributeOneForeignKey(
+									con, "vorname_trad", strings[i],
+									vornameNormID);
+							insertIntoTableNoAttributesThreeForeignKeys(con,
+									"vorname_info", vornameTradID,
+									quellenID[currentSourceID], personID);
+						}
+						currentSourceID++;
+					}
+				}
 
-			if (!strings[6].equals("")) {
-				vornameNormID = insertIntoTableOneAttributeNoForeignKeys(
-						"vorname_norm", strings[6]);
-			}
-			// Insert all different variations of given name
-			currentSourceID = 0;
-			for (int i = 5; i <= 16; i++) {
-				if (i != 6) {
+				if (!strings[18].equals("")) {
+					nameNormID = insertIntoTableOneAttributeNoForeignKeys(con,
+							"name_norm", strings[18]);
+				}
+				// Insert all different variations of name
+				currentSourceID = 0;
+				for (int i = 18; i <= 28; i++) {
 					if (!strings[i].equals("")) {
-						vornameTradID = insertIntoTableOneAttributeOneForeignKey(
-								"vorname_trad", strings[i], vornameNormID);
-						insertIntoTableNoAttributesThreeForeignKeys(
-								"vorname_info", vornameTradID,
+						nameTradID = insertIntoTableOneAttributeOneForeignKey(
+								con, "name_trad", strings[i], nameNormID);
+						insertIntoTableNoAttributesThreeForeignKeys(con,
+								"name_info", nameTradID,
 								quellenID[currentSourceID], personID);
 					}
 					currentSourceID++;
 				}
-			}
 
-			if (!strings[18].equals("")) {
-				nameNormID = insertIntoTableOneAttributeNoForeignKeys(
-						"name_norm", strings[18]);
-			}
-			// Insert all different variations of name
-			currentSourceID = 0;
-			for (int i = 18; i <= 28; i++) {
-				if (!strings[i].equals("")) {
-					nameTradID = insertIntoTableOneAttributeOneForeignKey(
-							"name_trad", strings[i], nameNormID);
-					insertIntoTableNoAttributesThreeForeignKeys("name_info",
-							nameTradID, quellenID[currentSourceID], personID);
+				int ortAbweichNormID = 0;
+				if (!strings[42].equals("")) {
+					ortAbweichNormID = insertIntoOrtAbweichungNorm(con,
+							strings[42]);
 				}
-				currentSourceID++;
-			}
-
-			int ortAbweichNormID = 0;
-			if (!strings[42].equals("")) {
-				ortAbweichNormID = insertIntoOrtAbweichungNorm(strings[42]);
-			}
-			int ortNormID = 0;
-			if (!strings[41].equals("")) {
-				ortNormID = insertIntoTableOneAttributeOneForeignKey(
-						"ort_norm", strings[41], ortAbweichNormID);
-			}
-			currentSourceID = 0;
-			for (int i = 30; i <= 40; i++) {
-				if (!strings[i].equals("")) {
-					int ortTradID = insertIntoTableOneAttributeOneForeignKey(
-							"ort_trad", strings[i], ortNormID);
-
-					insertIntoTableNoAttributesThreeForeignKeys("ort_info",
-							ortTradID, quellenID[currentSourceID], personID);
+				int ortNormID = 0;
+				if (!strings[41].equals("")) {
+					ortNormID = insertIntoTableOneAttributeOneForeignKey(con,
+							"ort_norm", strings[41], ortAbweichNormID);
 				}
-				currentSourceID++;
-			}
+				currentSourceID = 0;
+				for (int i = 30; i <= 40; i++) {
+					if (!strings[i].equals("")) {
+						int ortTradID = insertIntoTableOneAttributeOneForeignKey(
+								con, "ort_trad", strings[i], ortNormID);
 
-			if (!strings[49].equals("")) {
-				fachNormID = insertIntoTableOneAttributeNoForeignKeys(
-						"fach_norm", strings[49]);
-			}
-
-			int[] tmpStudienfach = { 48, 50 };
-			currentSourceID = 0;
-			for (int i : tmpStudienfach) {
-				if (!strings[i].isEmpty()) {
-					fachTradID = insertIntoTableOneAttributeOneForeignKey(
-							"fach_trad", strings[i], fachNormID);
-					insertIntoTableNoAttributesThreeForeignKeys("fach_info",
-							fachTradID, quellenID[currentSourceID], personID);
-				}
-				if (i == 48) {
+						insertIntoTableNoAttributesThreeForeignKeys(con,
+								"ort_info", ortTradID,
+								quellenID[currentSourceID], personID);
+					}
 					currentSourceID++;
 				}
-			}
 
-			if (!strings[52].equals("")) {
-				wirtschaftslageNormID = insertIntoTableOneAttributeNoForeignKeys(
-						"wirtschaftslage_norm", strings[52]);
-			}
-
-			int[] tmpWirtschaftslage = { 51, 53, 54, 55 };
-			currentSourceID = 0;
-			for (int i : tmpWirtschaftslage) {
-				if (!strings[i].equals("")) {
-					wirtschaftslageTradID = insertIntoTableOneAttributeOneForeignKey(
-							"wirtschaftslage_trad", strings[i],
-							wirtschaftslageNormID);
-					insertIntoTableNoAttributesThreeForeignKeys(
-							"wirtschaftslage_info", wirtschaftslageTradID,
-							quellenID[currentSourceID], personID);
-
+				if (!strings[49].equals("")) {
+					fachNormID = insertIntoTableOneAttributeNoForeignKeys(con,
+							"fach_norm", strings[49]);
 				}
-				if (i == 51) {
-					currentSourceID = 1;
-				} else if (i == 53) {
-					currentSourceID = 3;
-				} else if (i == 54) {
-					currentSourceID = 9;
-				}
-			}
 
-			if (!strings[57].equals("")) {
-				seminarNormID = insertIntoTableOneAttributeNoForeignKeys(
-						"seminar_norm", strings[57]);
-			}
-
-			currentSourceID = 0;
-			int[] tmpSeminar = { 56, 58, 59, 60, 61, 62 };
-			for (int i : tmpSeminar) {
-				if (!strings[i].equals("")) {
-					seminarTradID = insertIntoTableOneAttributeOneForeignKey(
-							"seminar_trad", strings[i], seminarNormID);
-					insertIntoTableNoAttributesThreeForeignKeys("seminar_info",
-							seminarTradID, quellenID[currentSourceID], personID);
+				int[] tmpStudienfach = { 48, 50 };
+				currentSourceID = 0;
+				for (int i : tmpStudienfach) {
+					if (!strings[i].isEmpty()) {
+						fachTradID = insertIntoTableOneAttributeOneForeignKey(
+								con, "fach_trad", strings[i], fachNormID);
+						insertIntoTableNoAttributesThreeForeignKeys(con,
+								"fach_info", fachTradID,
+								quellenID[currentSourceID], personID);
+					}
+					if (i == 48) {
+						currentSourceID++;
+					}
 				}
-				if (i == 56) {
-					currentSourceID = 1;
-				} else if (i == 58) {
-					currentSourceID = 3;
-				} else if (i == 59) {
-					currentSourceID = 4;
-				} else if (i >= 60) {
+
+				if (!strings[52].equals("")) {
+					wirtschaftslageNormID = insertIntoTableOneAttributeNoForeignKeys(
+							con, "wirtschaftslage_norm", strings[52]);
+				}
+
+				int[] tmpWirtschaftslage = { 51, 53, 54, 55 };
+				currentSourceID = 0;
+				for (int i : tmpWirtschaftslage) {
+					if (!strings[i].equals("")) {
+						wirtschaftslageTradID = insertIntoTableOneAttributeOneForeignKey(
+								con, "wirtschaftslage_trad", strings[i],
+								wirtschaftslageNormID);
+						insertIntoTableNoAttributesThreeForeignKeys(con,
+								"wirtschaftslage_info", wirtschaftslageTradID,
+								quellenID[currentSourceID], personID);
+
+					}
+					if (i == 51) {
+						currentSourceID = 1;
+					} else if (i == 53) {
+						currentSourceID = 3;
+					} else if (i == 54) {
+						currentSourceID = 9;
+					}
+				}
+
+				if (!strings[57].equals("")) {
+					seminarNormID = insertIntoTableOneAttributeNoForeignKeys(
+							con, "seminar_norm", strings[57]);
+				}
+
+				currentSourceID = 0;
+				int[] tmpSeminar = { 56, 58, 59, 60, 61, 62 };
+				for (int i : tmpSeminar) {
+					if (!strings[i].equals("")) {
+						seminarTradID = insertIntoTableOneAttributeOneForeignKey(
+								con, "seminar_trad", strings[i], seminarNormID);
+						insertIntoTableNoAttributesThreeForeignKeys(con,
+								"seminar_info", seminarTradID,
+								quellenID[currentSourceID], personID);
+					}
+					if (i == 56) {
+						currentSourceID = 1;
+					} else if (i == 58) {
+						currentSourceID = 3;
+					} else if (i == 59) {
+						currentSourceID = 4;
+					} else if (i >= 60) {
+						currentSourceID++;
+					}
+				}
+
+				currentSourceID = 0;
+				for (int i = 66; i <= 76; i++) {
+					if (!strings[i].equals("")) {
+						int zusaetzeID = insertIntoTableOneAttributeNoForeignKeys(
+								con, "zusaetze", strings[i]);
+						insertIntoTableNoAttributesThreeForeignKeys(con,
+								"zusaetze_info", zusaetzeID,
+								quellenID[currentSourceID], personID);
+					}
 					currentSourceID++;
 				}
-			}
 
-			currentSourceID = 0;
-			for (int i = 66; i <= 76; i++) {
-				if (!strings[i].equals("")) {
-					int zusaetzeID = insertIntoTableOneAttributeNoForeignKeys(
-							"zusaetze", strings[i]);
-					insertIntoTableNoAttributesThreeForeignKeys(
-							"zusaetze_info", zusaetzeID,
-							quellenID[currentSourceID], personID);
-				}
-				currentSourceID++;
 			}
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
+	private void insertSourcesIntoDatabase(Connection con)
+			throws ImportException {
+		for (int i = 0; i < quellen.length; i++) {
+			insertIntoTableOneAttributeNoForeignKeys(con, "quellen", quellen[i]);
 		}
 	}
 
@@ -313,15 +330,14 @@ public class ImportDatabaseImpl implements ImportDatabase {
 	 * @throws ImportException
 	 *             If an error occurred during writing to database
 	 */
-	private int insertIntoTableOneAttributeNoForeignKeys(String table,
-			String entry) throws ImportException {
+	private int insertIntoTableOneAttributeNoForeignKeys(Connection con,
+			String table, String entry) throws ImportException {
 		table = String.format("hylleblomst.%s", table);
 		String sqlQuery = String.format("INSERT INTO %s values(?, ?)", table);
 		int id;
 
 		if (!validation.entryAlreadyInDatabase(entry, table)) {
-			try (Connection con = DriverManager.getConnection(dbURL, user,
-					password);) {
+			try {
 				PreparedStatement stmt = con.prepareStatement(sqlQuery);
 				id = validation.getMaxID(table) + 1;
 
@@ -340,15 +356,14 @@ public class ImportDatabaseImpl implements ImportDatabase {
 		return id;
 	}
 
-	private int insertIntoTableOneAttributeOneForeignKey(String table,
-			String entry, int foreignKey) throws ImportException {
+	private int insertIntoTableOneAttributeOneForeignKey(Connection con,
+			String table, String entry, int foreignKey) throws ImportException {
 		table = String.format("hylleblomst.%s", table);
 		String sqlQuery = String.format("INSERT INTO %s values(?,?,?)", table);
 		int id;
 
 		if (!validation.entryAlreadyInDatabase(entry, foreignKey, table)) {
-			try (Connection con = DriverManager.getConnection(dbURL, user,
-					password);) {
+			try {
 				PreparedStatement stmt = con.prepareStatement(sqlQuery);
 				id = validation.getMaxID(table) + 1;
 
@@ -371,15 +386,15 @@ public class ImportDatabaseImpl implements ImportDatabase {
 		return id;
 	}
 
-	private void insertIntoTableNoAttributesThreeForeignKeys(String table,
-			int tradID, int quellenID, int personID) throws ImportException {
+	private void insertIntoTableNoAttributesThreeForeignKeys(Connection con,
+			String table, int tradID, int quellenID, int personID)
+			throws ImportException {
 		table = String.format("hylleblomst.%s", table);
 		String sqlQuery = String.format("INSERT INTO %s values(?,?,?)", table);
 
 		if (!validation.entryAlreadyInDatabase(tradID, quellenID, personID,
 				table)) {
-			try (Connection con = DriverManager.getConnection(dbURL, user,
-					password);) {
+			try {
 				PreparedStatement stmt = con.prepareStatement(sqlQuery);
 
 				stmt.setInt(1, tradID);
@@ -414,11 +429,11 @@ public class ImportDatabaseImpl implements ImportDatabase {
 	 * @return
 	 * @throws ImportException
 	 */
-	private boolean insertPerson(int personID, int seite, int nummerHess,
-			String jesuit, String adlig, Date datum, String calendarFieldsSet,
-			String studienjahr, String graduiert, String anmerkung,
-			int anredeTradID, int fakultaetenID, int fundortID, int titelTradID)
-			throws ImportException {
+	private boolean insertPerson(Connection con, int personID, int seite,
+			int nummerHess, String jesuit, String adlig, Date datum,
+			String calendarFieldsSet, String studienjahr, String graduiert,
+			String anmerkung, int anredeTradID, int fakultaetenID,
+			int fundortID, int titelTradID) throws ImportException {
 
 		String sqlQuery = "INSERT INTO hylleblomst.person values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
@@ -434,9 +449,8 @@ public class ImportDatabaseImpl implements ImportDatabase {
 				indexOf1Or2InStudienjahr, indexOf1Or2InStudienjahr + 4));
 
 		if (!validation.personIDIsTaken(personID)) {
-			try (Connection con = DriverManager.getConnection(dbURL, user,
-					password);
-					PreparedStatement stmt = con.prepareStatement(sqlQuery);) {
+			try {
+				PreparedStatement stmt = con.prepareStatement(sqlQuery);
 
 				stmt.setInt(1, personID);
 				stmt.setInt(2, seite);
@@ -486,7 +500,7 @@ public class ImportDatabaseImpl implements ImportDatabase {
 		return false;
 	}
 
-	private int insertIntoOrtAbweichungNorm(String entry)
+	private int insertIntoOrtAbweichungNorm(Connection con, String entry)
 			throws ImportException {
 		String table = "hylleblomst.ort_abweichung_norm";
 		String sqlQuery = String
@@ -499,8 +513,7 @@ public class ImportDatabaseImpl implements ImportDatabase {
 		}
 
 		if (!validation.entryAlreadyInDatabase(entry, anmerkung, table)) {
-			try (Connection con = DriverManager.getConnection(dbURL, user,
-					password);) {
+			try {
 				PreparedStatement stmt = con.prepareStatement(sqlQuery);
 				id = validation.getMaxID(table) + 1;
 
