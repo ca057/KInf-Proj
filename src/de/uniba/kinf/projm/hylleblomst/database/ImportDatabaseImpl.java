@@ -12,6 +12,7 @@ import java.util.List;
 
 import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
+import de.uniba.kinf.projm.hylleblomst.keys.TableNameKeys;
 
 /**
  * @author Simon
@@ -19,11 +20,11 @@ import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
  */
 public class ImportDatabaseImpl implements ImportDatabase {
 
-	private Validation validation;
-
 	private String dbURL;
 	private String user;
 	private String password;
+
+	Validation validation;
 
 	private final int[] quellenID = { SourceKeys.STANDARD,
 			SourceKeys.HSB_AUB_I11, SourceKeys.HSC_AUB_I131,
@@ -43,13 +44,14 @@ public class ImportDatabaseImpl implements ImportDatabase {
 		this.user = user;
 		this.password = password;
 
-		validation = new Validation(dbURL, user, password);
 	}
 
 	@Override
 	public void importData(List<String[]> rows) throws ImportException {
 		try (Connection con = DriverManager
-				.getConnection(dbURL, user, password)) {
+				.getConnection(dbURL, user, password);) {
+			validation = new Validation(con);
+
 			insertSourcesIntoDatabase(con);
 
 			rows = rows.subList(1, rows.size());
@@ -79,27 +81,28 @@ public class ImportDatabaseImpl implements ImportDatabase {
 				// Necessary details to insert person
 				if (!strings[4].equals("")) {
 					anredeNormID = insertIntoTableOneAttributeNoForeignKeys(
-							con, "anrede_norm", strings[4]);
+							con, TableNameKeys.ANREDE_NORM, strings[4]);
 				}
 				if (!strings[3].equals("")) {
 					anredeTradID = insertIntoTableOneAttributeOneForeignKey(
-							con, "anrede_trad", strings[3], anredeNormID);
+							con, TableNameKeys.ANREDE_TRAD, strings[3],
+							anredeNormID);
 				}
 				if (!strings[47].equals("")) {
 					fakultaetenID = insertIntoTableOneAttributeNoForeignKeys(
-							con, "fakultaeten", strings[47]);
+							con, TableNameKeys.FAKULTAETEN, strings[47]);
 				}
 				if (!strings[77].equals("")) {
 					fundortID = insertIntoTableOneAttributeNoForeignKeys(con,
-							"fundorte_norm", strings[77]);
+							TableNameKeys.FUNDORTE, strings[77]);
 				}
 				if (!strings[65].equals("")) {
 					titelNormID = insertIntoTableOneAttributeNoForeignKeys(con,
-							"titel_norm", strings[65]);
+							TableNameKeys.TITEL_NORM, strings[65]);
 				}
 				if (!strings[64].equals("")) {
 					titelTradID = insertIntoTableOneAttributeOneForeignKey(con,
-							"titel_trad", strings[64], titelNormID);
+							TableNameKeys.TITEL_TRAD, strings[64], titelNormID);
 				}
 
 				// Preparatory statements for inserting persons
@@ -155,20 +158,20 @@ public class ImportDatabaseImpl implements ImportDatabase {
 						strings[78], anredeTradID, fakultaetenID, fundortID,
 						titelTradID);
 
-				if (!strings[6].equals("")) {
+				if (!strings[6].isEmpty()) {
 					vornameNormID = insertIntoTableOneAttributeNoForeignKeys(
-							con, "vorname_norm", strings[6]);
+							con, TableNameKeys.VORNAME_NORM, strings[6]);
 				}
 				// Insert all different variations of given name
 				currentSourceID = 0;
 				for (int i = 5; i <= 16; i++) {
 					if (i != 6) {
-						if (!strings[i].equals("")) {
+						if (!strings[i].isEmpty()) {
 							vornameTradID = insertIntoTableOneAttributeOneForeignKey(
-									con, "vorname_trad", strings[i],
-									vornameNormID);
+									con, TableNameKeys.VORNAME_TRAD,
+									strings[i], vornameNormID);
 							insertIntoTableNoAttributesThreeForeignKeys(con,
-									"vorname_info", vornameTradID,
+									TableNameKeys.VORNAME_INFO, vornameTradID,
 									quellenID[currentSourceID], personID);
 						}
 						currentSourceID++;
@@ -177,16 +180,17 @@ public class ImportDatabaseImpl implements ImportDatabase {
 
 				if (!strings[18].equals("")) {
 					nameNormID = insertIntoTableOneAttributeNoForeignKeys(con,
-							"name_norm", strings[18]);
+							TableNameKeys.NAME_NORM, strings[18]);
 				}
 				// Insert all different variations of name
 				currentSourceID = 0;
 				for (int i = 18; i <= 28; i++) {
 					if (!strings[i].equals("")) {
 						nameTradID = insertIntoTableOneAttributeOneForeignKey(
-								con, "name_trad", strings[i], nameNormID);
+								con, TableNameKeys.NAME_TRAD, strings[i],
+								nameNormID);
 						insertIntoTableNoAttributesThreeForeignKeys(con,
-								"name_info", nameTradID,
+								TableNameKeys.NAME_INFO, nameTradID,
 								quellenID[currentSourceID], personID);
 					}
 					currentSourceID++;
@@ -200,16 +204,18 @@ public class ImportDatabaseImpl implements ImportDatabase {
 				int ortNormID = 0;
 				if (!strings[41].equals("")) {
 					ortNormID = insertIntoTableOneAttributeOneForeignKey(con,
-							"ort_norm", strings[41], ortAbweichNormID);
+							TableNameKeys.ORT_NORM, strings[41],
+							ortAbweichNormID);
 				}
 				currentSourceID = 0;
 				for (int i = 30; i <= 40; i++) {
 					if (!strings[i].equals("")) {
 						int ortTradID = insertIntoTableOneAttributeOneForeignKey(
-								con, "ort_trad", strings[i], ortNormID);
+								con, TableNameKeys.ORT_TRAD, strings[i],
+								ortNormID);
 
 						insertIntoTableNoAttributesThreeForeignKeys(con,
-								"ort_info", ortTradID,
+								TableNameKeys.ORT_INFO, ortTradID,
 								quellenID[currentSourceID], personID);
 					}
 					currentSourceID++;
@@ -217,7 +223,7 @@ public class ImportDatabaseImpl implements ImportDatabase {
 
 				if (!strings[49].equals("")) {
 					fachNormID = insertIntoTableOneAttributeNoForeignKeys(con,
-							"fach_norm", strings[49]);
+							TableNameKeys.FACH_NORM, strings[49]);
 				}
 
 				int[] tmpStudienfach = { 48, 50 };
@@ -225,9 +231,10 @@ public class ImportDatabaseImpl implements ImportDatabase {
 				for (int i : tmpStudienfach) {
 					if (!strings[i].isEmpty()) {
 						fachTradID = insertIntoTableOneAttributeOneForeignKey(
-								con, "fach_trad", strings[i], fachNormID);
+								con, TableNameKeys.FACH_TRAD, strings[i],
+								fachNormID);
 						insertIntoTableNoAttributesThreeForeignKeys(con,
-								"fach_info", fachTradID,
+								TableNameKeys.FACH_INFO, fachTradID,
 								quellenID[currentSourceID], personID);
 					}
 					if (i == 48) {
@@ -237,7 +244,8 @@ public class ImportDatabaseImpl implements ImportDatabase {
 
 				if (!strings[52].equals("")) {
 					wirtschaftslageNormID = insertIntoTableOneAttributeNoForeignKeys(
-							con, "wirtschaftslage_norm", strings[52]);
+							con, TableNameKeys.WIRTSCHAFTSLAGE_NORM,
+							strings[52]);
 				}
 
 				int[] tmpWirtschaftslage = { 51, 53, 54, 55 };
@@ -245,10 +253,11 @@ public class ImportDatabaseImpl implements ImportDatabase {
 				for (int i : tmpWirtschaftslage) {
 					if (!strings[i].equals("")) {
 						wirtschaftslageTradID = insertIntoTableOneAttributeOneForeignKey(
-								con, "wirtschaftslage_trad", strings[i],
-								wirtschaftslageNormID);
+								con, TableNameKeys.WIRTSCHAFTSLAGE_TRAD,
+								strings[i], wirtschaftslageNormID);
 						insertIntoTableNoAttributesThreeForeignKeys(con,
-								"wirtschaftslage_info", wirtschaftslageTradID,
+								TableNameKeys.WIRTSCHAFTSLAGE_INFO,
+								wirtschaftslageTradID,
 								quellenID[currentSourceID], personID);
 
 					}
@@ -263,7 +272,7 @@ public class ImportDatabaseImpl implements ImportDatabase {
 
 				if (!strings[57].equals("")) {
 					seminarNormID = insertIntoTableOneAttributeNoForeignKeys(
-							con, "seminar_norm", strings[57]);
+							con, TableNameKeys.SEMINAR_NORM, strings[57]);
 				}
 
 				currentSourceID = 0;
@@ -271,9 +280,10 @@ public class ImportDatabaseImpl implements ImportDatabase {
 				for (int i : tmpSeminar) {
 					if (!strings[i].equals("")) {
 						seminarTradID = insertIntoTableOneAttributeOneForeignKey(
-								con, "seminar_trad", strings[i], seminarNormID);
+								con, TableNameKeys.SEMINAR_TRAD, strings[i],
+								seminarNormID);
 						insertIntoTableNoAttributesThreeForeignKeys(con,
-								"seminar_info", seminarTradID,
+								TableNameKeys.SEMINAR_INFO, seminarTradID,
 								quellenID[currentSourceID], personID);
 					}
 					if (i == 56) {
@@ -291,9 +301,9 @@ public class ImportDatabaseImpl implements ImportDatabase {
 				for (int i = 66; i <= 76; i++) {
 					if (!strings[i].equals("")) {
 						int zusaetzeID = insertIntoTableOneAttributeNoForeignKeys(
-								con, "zusaetze", strings[i]);
+								con, TableNameKeys.ZUSAETZE, strings[i]);
 						insertIntoTableNoAttributesThreeForeignKeys(con,
-								"zusaetze_info", zusaetzeID,
+								TableNameKeys.ZUSAETZE_INFO, zusaetzeID,
 								quellenID[currentSourceID], personID);
 					}
 					currentSourceID++;
@@ -312,7 +322,8 @@ public class ImportDatabaseImpl implements ImportDatabase {
 	private void insertSourcesIntoDatabase(Connection con)
 			throws ImportException {
 		for (int i = 0; i < quellen.length; i++) {
-			insertIntoTableOneAttributeNoForeignKeys(con, "quellen", quellen[i]);
+			insertIntoTableOneAttributeNoForeignKeys(con,
+					TableNameKeys.QUELLEN, quellen[i]);
 		}
 	}
 
@@ -332,7 +343,6 @@ public class ImportDatabaseImpl implements ImportDatabase {
 	 */
 	private int insertIntoTableOneAttributeNoForeignKeys(Connection con,
 			String table, String entry) throws ImportException {
-		table = String.format("hylleblomst.%s", table);
 		String sqlQuery = String.format("INSERT INTO %s values(?, ?)", table);
 		int id;
 
@@ -358,7 +368,6 @@ public class ImportDatabaseImpl implements ImportDatabase {
 
 	private int insertIntoTableOneAttributeOneForeignKey(Connection con,
 			String table, String entry, int foreignKey) throws ImportException {
-		table = String.format("hylleblomst.%s", table);
 		String sqlQuery = String.format("INSERT INTO %s values(?,?,?)", table);
 		int id;
 
@@ -389,7 +398,6 @@ public class ImportDatabaseImpl implements ImportDatabase {
 	private void insertIntoTableNoAttributesThreeForeignKeys(Connection con,
 			String table, int tradID, int quellenID, int personID)
 			throws ImportException {
-		table = String.format("hylleblomst.%s", table);
 		String sqlQuery = String.format("INSERT INTO %s values(?,?,?)", table);
 
 		if (!validation.entryAlreadyInDatabase(tradID, quellenID, personID,
@@ -435,7 +443,8 @@ public class ImportDatabaseImpl implements ImportDatabase {
 			String anmerkung, int anredeTradID, int fakultaetenID,
 			int fundortID, int titelTradID) throws ImportException {
 
-		String sqlQuery = "INSERT INTO hylleblomst.person values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+		String sqlQuery = "INSERT INTO " + TableNameKeys.PERSON
+				+ " values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
 		int indexOf1Or2InStudienjahr;
 		if (studienjahr.indexOf("2") != -1) {
@@ -502,7 +511,7 @@ public class ImportDatabaseImpl implements ImportDatabase {
 
 	private int insertIntoOrtAbweichungNorm(Connection con, String entry)
 			throws ImportException {
-		String table = "hylleblomst.ort_abweichung_norm";
+		String table = TableNameKeys.ORT_ABWEICHUNG_NORM;
 		String sqlQuery = String
 				.format("INSERT INTO %s values(?, ?, ?)", table);
 		int id;
