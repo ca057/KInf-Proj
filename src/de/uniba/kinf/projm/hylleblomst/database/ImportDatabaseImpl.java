@@ -310,12 +310,9 @@ public class ImportDatabaseImpl implements ImportDatabase {
 				}
 
 			}
-		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new ImportException("Connection refused: " + e.getMessage(),
+					e);
 		}
 	}
 

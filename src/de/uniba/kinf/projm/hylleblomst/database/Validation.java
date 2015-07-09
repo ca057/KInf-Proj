@@ -7,6 +7,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
+import de.uniba.kinf.projm.hylleblomst.keys.ColumnNameKeys;
 
 /**
  * Provides methods to check whether entries in database are already existent or
@@ -37,10 +38,12 @@ class Validation {
 	 */
 	boolean personIDIsTaken(int personID) throws ImportException {
 		boolean result = true;
+		String personIdColumn = ColumnNameKeys.PERSON_ID;
 
-		try (PreparedStatement stmt = con.prepareStatement(
-				"SELECT PersonID FROM hylleblomst.person WHERE PersonID=?",
-				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);) {
+		try (PreparedStatement stmt = con.prepareStatement("SELECT "
+				+ personIdColumn + " FROM hylleblomst.person WHERE "
+				+ personIdColumn + "=?", ResultSet.TYPE_SCROLL_INSENSITIVE,
+				ResultSet.CONCUR_READ_ONLY);) {
 			stmt.setInt(1, personID);
 
 			ResultSet rs = stmt.executeQuery();
@@ -53,8 +56,8 @@ class Validation {
 			con.setAutoCommit(true);
 
 		} catch (SQLException e) {
-			throw new ImportException("PersonID could not be validated: "
-					+ e.getSQLState());
+			throw new ImportException(personIdColumn
+					+ " could not be validated: " + e.getSQLState());
 		}
 		return result;
 	}
@@ -88,15 +91,14 @@ class Validation {
 			ResultSet rs = stmt.executeQuery();
 
 			con.setAutoCommit(false);
-			/*
-			 * Returns true if ResultSet is not empty, false otherwise
-			 */
+
+			// Returns true if ResultSet is not empty, false otherwise
 			result = rs.isBeforeFirst();
 			con.setAutoCommit(true);
 
 		} catch (SQLException e) {
-			throw new ImportException("PersonID could not be validated: "
-					+ e.getSQLState());
+			throw new ImportException("Could not be validated: " + entry + "in"
+					+ table + "\n" + e.getSQLState());
 		}
 
 		return result;
@@ -151,7 +153,6 @@ class Validation {
 			ResultSet rs = stmt.executeQuery();
 
 			con.setAutoCommit(false);
-
 			result = rs.isBeforeFirst();
 
 			con.setAutoCommit(true);
@@ -168,8 +169,8 @@ class Validation {
 		boolean result = true;
 
 		String columnOne = getColumnName(table, 1);
-		String columnTwo = getColumnName(table, 2);
-		String columnThree = getColumnName(table, 3);
+		String columnTwo = ColumnNameKeys.QUELLEN_ID;
+		String columnThree = ColumnNameKeys.PERSON_ID;
 		String querySql = String.format(
 				"SELECT %s, %s, %s FROM %s WHERE %1$s=? AND %2$s=? AND %3$s=?",
 				columnOne, columnTwo, columnThree, table);
