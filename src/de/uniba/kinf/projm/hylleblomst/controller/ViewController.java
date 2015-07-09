@@ -433,7 +433,7 @@ public class ViewController implements ControllerInterface, Initializable {
 								if (optionalParam.isPresent()) {
 									return new SimpleStringProperty(optionalParam.get());
 								} else {
-									return new SimpleStringProperty("");
+									return new SimpleStringProperty();
 								}
 							}
 						});

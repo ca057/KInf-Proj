@@ -70,7 +70,7 @@ public class SearchController implements ControllerInterface {
 			}
 		}
 
-		if (requestList.isEmpty()) {
+		if (requestList.size() == 0) {
 			return false;
 		}
 		try {
