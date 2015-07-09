@@ -16,7 +16,7 @@
 				<Menu fx:id="mainMenu_file" mnemonicParsing="false" text="Datei">
 					<items>
 						<MenuItem fx:id="mainMenu_file_export" mnemonicParsing="false" text="Export" />
-						<MenuItem fx:id="mainMenu_file_close" mnemonicParsing="false" onAction="#closeWindow" text="Programm beenden" />
+						<MenuItem fx:id="mainMenu_file_close" mnemonicParsing="false" text="Programm beenden" />
 					</items>
 				</Menu>
 				<Menu fx:id="mainMenu_database" mnemonicParsing="false" text="Datenbank">
