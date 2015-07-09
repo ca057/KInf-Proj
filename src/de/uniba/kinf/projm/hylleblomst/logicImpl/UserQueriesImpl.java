@@ -13,12 +13,16 @@ public class UserQueriesImpl implements UserQueries {
 	private int source;
 	private String table;
 	private String sqlWhere;
+	private Boolean isOR;
+	private Boolean isOpenSearch;
 
-	public UserQueriesImpl(SearchFieldKeys searchField, String input, int source) {
+	public UserQueriesImpl(SearchFieldKeys searchField, String input, int source, Boolean isOr, Boolean isOpenSearch) {
 		setInput(input);
 		setSource(source);
 		setSearchField(searchField);
 		searchFieldKeyToDatabaseData();
+		this.isOR = isOr;
+		this.isOpenSearch = isOpenSearch;
 	}
 
 	@Override
@@ -62,6 +66,16 @@ public class UserQueriesImpl implements UserQueries {
 	@Override
 	public String getWhere() {
 		return sqlWhere;
+	}
+
+	@Override
+	public Boolean getIsOpenSearch() {
+		return isOpenSearch;
+	}
+
+	@Override
+	public Boolean getIsOrCombination() {
+		return isOR;
 	}
 
 	/**
