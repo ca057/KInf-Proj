@@ -109,7 +109,7 @@ public class UserQueriesImpl implements UserQueries {
 			case STUDIENJAHR_VON:
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.STUDIENJAHR_INT;
-				sqlWhere = String.format("%s.%s => ?", table, column);
+				sqlWhere = String.format("%s.%s >= ?", table, column);
 				break;
 			case STUDIENJAHR_BIS:
 				table = TableNameKeys.PERSON;
@@ -119,7 +119,7 @@ public class UserQueriesImpl implements UserQueries {
 			case EINSCHREIBEDATUM_VON:
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.DATUM;
-				sqlWhere = String.format("%s.%s => ?", table, column);
+				sqlWhere = String.format("%s.%s >= ?", table, column);
 				if (input.contains("mm-dd")) {
 					input = input.substring(0, input.indexOf("-", 1)) + "-01-01";
 				} else if (input.contains("mm")) {
