@@ -72,6 +72,7 @@ public class SQLBuilder {
 		StringBuilder sqlWhere = new StringBuilder();
 
 		for (UserQueries qr : userQueries) {
+
 			sqlStatement.append(buildSelect(qr));
 
 			if (qr.getSource() != SourceKeys.NO_SOURCE) {
@@ -142,6 +143,15 @@ public class SQLBuilder {
 		if (qr.getSource() == SourceKeys.ORT_NORM_AB) {
 			result += ", " + qr.getTable() + "." + ColumnNameKeys.ANMERKUNG;
 		}
+
+		// FIXME Für Orte
+		// result += ", ( SELECT " + qr.getTable() + "." + qr.getColumn() + "
+		// FROM " + qr.getTable()
+		// + " JOIN Hylleblomst.Ort_info ON " + qr.getTable() + "." +
+		// qr.getColumn() + "="
+		// + "Hylleblomst.Ort_info." + qr.getColumn()
+		// + " WHERE Hylleblomst.Ort_info.PersonID =
+		// Hylleblomst.person.personID";
 
 		return result;
 	}
