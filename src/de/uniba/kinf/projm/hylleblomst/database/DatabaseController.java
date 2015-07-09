@@ -2,6 +2,7 @@ package de.uniba.kinf.projm.hylleblomst.database;
 
 import java.io.File;
 
+import de.uniba.kinf.projm.hylleblomst.dataImport.CsvFormatVerifier;
 import de.uniba.kinf.projm.hylleblomst.dataImport.ImportDataImpl;
 import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 import de.uniba.kinf.projm.hylleblomst.exceptions.SetUpException;
@@ -14,8 +15,6 @@ public class DatabaseController {
 	public DatabaseController(File file) {
 		this.db = new DatabaseKeys(file);
 	}
-
-	// TODO meaningful error messages
 
 	/**
 	 * Set up a database in the specified location.
@@ -65,7 +64,7 @@ public class DatabaseController {
 	 */
 	public void importDataIntoDatabase(File file) throws ImportException {
 		try {
-
+			new CsvFormatVerifier(file);
 			new ImportDataImpl().addData(file.getAbsolutePath());
 		} catch (Exception e) {
 			StringBuilder errorMessage = new StringBuilder();

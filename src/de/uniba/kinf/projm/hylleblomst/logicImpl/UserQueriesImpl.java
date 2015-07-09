@@ -6,6 +6,10 @@ import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.TableNameKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.UserQueries;
 
+/**
+ * @author Johannes
+ *
+ */
 public class UserQueriesImpl implements UserQueries {
 	private SearchFieldKeys searchField;
 	private String column;
@@ -16,6 +20,13 @@ public class UserQueriesImpl implements UserQueries {
 	private Boolean isOR = false;
 	private Boolean isOpenSearch = false;
 
+	/**
+	 * @param searchField
+	 * @param input
+	 * @param source
+	 * @param isOr
+	 * @param isOpenSearch
+	 */
 	public UserQueriesImpl(SearchFieldKeys searchField, String input, int source, Boolean isOr, Boolean isOpenSearch) {
 		this.isOR = isOr;
 		this.isOpenSearch = isOpenSearch;
@@ -78,11 +89,8 @@ public class UserQueriesImpl implements UserQueries {
 		return isOR;
 	}
 
-	/**
+	/*
 	 * Returns the name of the table the {@code SearchFieldKey} key belongs to.
-	 * 
-	 * @param key
-	 * @return
 	 */
 	private void searchFieldKeyToDatabaseData() {
 		if (source > SourceKeys.bottom && source < SourceKeys.top) {
@@ -263,10 +271,14 @@ public class UserQueriesImpl implements UserQueries {
 		}
 	}
 
+	/*
+	 * 
+	 */
 	private String buildSQLWhere() {
 		if (isOpenSearch) {
-			input = "%" + input + "%";
-			// TODO % und Funktion einfügen
+
+			updateInputForOpenSearch();
+
 			if (source == SourceKeys.NO_SELECTION || searchField == SearchFieldKeys.ANREDE
 					|| searchField == SearchFieldKeys.TITEL) {
 				return String.format("UPPER(%s.%s) LIKE UPPER(?)", table, column);
@@ -289,5 +301,18 @@ public class UserQueriesImpl implements UserQueries {
 			return String.format("UPPER(%s.%s) = UPPER(?) AND %1s_info.%s = %s", table, column,
 					table.substring(0, table.indexOf("_")), ColumnNameKeys.QUELLEN_ID, source);
 		}
+	}
+
+	/*
+	 * 
+	 */
+	private void updateInputForOpenSearch() {
+		StringBuilder newInput = new StringBuilder().append(input.substring(0, 1));
+		for (int i = 1; i < input.length(); i++) {
+			newInput.append("__" + input.substring(i, i + 1));
+		}
+		input = "%" + newInput + "%";
+		// FIXME Warum wird das hier pro Instanz 2x aufgerufen?
+		// System.out.println(newInput);
 	}
 }

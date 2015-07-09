@@ -1,11 +1,163 @@
 package de.uniba.kinf.projm.hylleblomst.logicImpl;
 
-import de.uniba.kinf.projm.hylleblomst.keys.ColumnNameKeys;
-import de.uniba.kinf.projm.hylleblomst.keys.TableNameKeys;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.InputMismatchException;
+import java.util.List;
 
+import de.uniba.kinf.projm.hylleblomst.keys.ColumnNameKeys;
+import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
+import de.uniba.kinf.projm.hylleblomst.keys.TableNameKeys;
+import de.uniba.kinf.projm.hylleblomst.logic.UserQueries;
+
+/**
+ * @author Johannes
+ *
+ */
 public class SQLBuilder {
 
-	String getFrom() {
+	private Collection<UserQueries> userQueries;
+	private ArrayList<String> inputs;
+	private StringBuilder sqlStatement = new StringBuilder();
+	private Boolean sqlStatementIsNotEmpty = false;
+	private Boolean whereIsEmpty = true;
+
+	/**
+	 * @param userQueries
+	 * @throws SQLException
+	 */
+	public SQLBuilder(Collection<UserQueries> userQueries) throws SQLException {
+		inputs = new ArrayList<String>();
+		if (userQueries == null || userQueries.isEmpty()) {
+			throw new InputMismatchException("Die übergebene Collection darf nicht leer bzw. null sein.");
+		}
+		this.userQueries = userQueries;
+		buildQuery();
+	}
+
+	/**
+	 * @param personID
+	 */
+	public SQLBuilder(String personID) {
+		inputs = new ArrayList<String>();
+		inputs.add(personID);
+		if (personID != null) {
+
+		} else {
+			throw new InputMismatchException("Die übergebene Collection darf nicht null sein.");
+		}
+	}
+
+	/**
+	 * @return
+	 */
+	public String getSQLStatement() {
+		return sqlStatement.toString();
+	}
+
+	/**
+	 * @return
+	 */
+	public List<String> getInputs() {
+		return inputs;
+	}
+
+	/**
+	 * @return
+	 * @throws SQLException
+	 */
+	String buildQuery() throws SQLException {
+		Boolean hasSource = false;
+		StringBuilder sqlWhere = new StringBuilder();
+
+		for (UserQueries qr : userQueries) {
+
+			sqlStatement.append(buildSelect(qr));
+
+			if (qr.getSource() != SourceKeys.NO_SOURCE) {
+				hasSource = true;
+			}
+
+			sqlWhere.append(buildWhere(qr));
+
+			if (!("true".equals(qr.getInput()))) {
+				inputs.add(qr.getInput());
+			}
+		}
+
+		sqlStatement.append(" FROM ").append(buildFrom());
+		if (hasSource) {
+			sqlStatement.append(", " + TableNameKeys.QUELLEN);
+		}
+
+		sqlStatement.append(" WHERE ").append(sqlWhere);
+		System.out.println(sqlStatement);
+		return sqlStatement.toString();
+	}
+
+	/*
+	 * 
+	 */
+	private String buildWhere(UserQueries qr) {
+		if (whereIsEmpty) {
+			whereIsEmpty = false;
+			return qr.getWhere();
+		} else if (qr.useOrCondition()) {
+			return " OR " + qr.getWhere();
+		} else {
+			return " AND " + qr.getWhere();
+		}
+	}
+
+	/*
+	 * 
+	 */
+	private String buildPersonSearch(String string) {
+		StringBuilder sqlQuery = new StringBuilder();
+		inputs.add(string);
+		return sqlQuery.append(buildSelectAll()).append(buildFrom()).append(" WHERE Person.PersonID = ?").toString();
+	}
+
+	/*
+	 * 
+	 */
+	private String buildSelect(UserQueries qr) {
+		String result = "";
+		if (!sqlStatementIsNotEmpty) {
+			result = "SELECT DISTINCT " + TableNameKeys.PERSON + "." + ColumnNameKeys.PERSON_ID + " AS PersonID, "
+					+ TableNameKeys.VORNAME_NORM + "." + ColumnNameKeys.VORNAME_NORM + " AS vorname_norm, "
+					+ TableNameKeys.NAME_NORM + "." + ColumnNameKeys.NAME_NORM + " AS nachname_norm, "
+					+ TableNameKeys.ORT_NORM + "." + ColumnNameKeys.ORT_NORM + " AS ort_norm, "
+					+ TableNameKeys.FAKULTAETEN + "." + ColumnNameKeys.FAKULTAETEN_NORM + " AS fakultaet_norm";
+			sqlStatementIsNotEmpty = true;
+		}
+		if (ColumnNameKeys.STUDIENJAHR_INT.equals(qr.getColumn())) {
+			result += ", " + qr.getTable() + "." + ColumnNameKeys.STUDIENJAHR + " AS " + qr.getSearchField();
+		} else if (ColumnNameKeys.DATUM.equals(qr.getColumn())) {
+			result += ", " + qr.getTable() + "." + ColumnNameKeys.DATUM + ", " + qr.getTable() + "."
+					+ ColumnNameKeys.DATUMS_FELDER_GESETZT;
+		} else {
+			result += ", " + qr.getTable() + "." + qr.getColumn() + " AS " + qr.getSearchField();
+		}
+		if (qr.getSource() == SourceKeys.ORT_NORM_AB) {
+			result += ", " + qr.getTable() + "." + ColumnNameKeys.ANMERKUNG;
+		}
+
+		return result;
+	}
+
+	/*
+	 * 
+	 */
+	private String buildSelectAll() {
+		return "SELECT * ";
+	}
+
+	/*
+	 * 
+	 */
+	private String buildFrom() {
 		String vorname = TableNameKeys.PERSON + " LEFT OUTER JOIN " + TableNameKeys.VORNAME_INFO + " ON "
 				+ TableNameKeys.PERSON + "." + ColumnNameKeys.PERSON_ID + " = " + TableNameKeys.VORNAME_INFO + "."
 				+ ColumnNameKeys.PERSON_ID + " LEFT OUTER JOIN " + TableNameKeys.VORNAME_TRAD + " ON "
@@ -13,23 +165,6 @@ public class SQLBuilder {
 				+ "." + ColumnNameKeys.VORNAME_TRAD_ID + " LEFT OUTER JOIN " + TableNameKeys.VORNAME_NORM + " ON "
 				+ TableNameKeys.VORNAME_NORM + "." + ColumnNameKeys.VORNAME_NORM_ID + " = " + TableNameKeys.VORNAME_TRAD
 				+ "." + ColumnNameKeys.VORNAME_NORM_ID;
-		// StringBuilder vorname = new StringBuilder();
-		// vorname.append(TableNameKeys.PERSON).append(" LEFT OUTER JOIN
-		// ").append(TableNameKeys.VORNAME_INFO)
-		// .append(" ON
-		// ").append(TableNameKeys.PERSON).append(".").append(ColumnNameKeys.PERSON_ID).append("
-		// = ")
-		// .append(TableNameKeys.VORNAME_INFO).append(".").append(ColumnNameKeys.PERSON_ID)
-		// .append(" LEFT OUTER JOIN
-		// ").append(TableNameKeys.VORNAME_TRAD).append(" ON ")
-		// .append(TableNameKeys.VORNAME_TRAD).append(".").append(ColumnNameKeys.VORNAME_TRAD_ID).append("
-		// = ")
-		// .append(TableNameKeys.VORNAME_INFO).append(".").append(ColumnNameKeys.VORNAME_TRAD_ID)
-		// .append(" LEFT OUTER JOIN
-		// ").append(TableNameKeys.VORNAME_NORM).append(" ON ")
-		// .append(TableNameKeys.VORNAME_NORM).append(".").append(ColumnNameKeys.VORNAME_NORM_ID).append("
-		// = ")
-		// .append(TableNameKeys.VORNAME_TRAD).append(".").append(ColumnNameKeys.VORNAME_NORM_ID);
 		String name = TableNameKeys.NAME_INFO + " ON " + TableNameKeys.PERSON + "." + ColumnNameKeys.PERSON_ID + " = "
 				+ TableNameKeys.NAME_INFO + "." + ColumnNameKeys.PERSON_ID + " LEFT OUTER JOIN "
 				+ TableNameKeys.NAME_TRAD + " ON " + TableNameKeys.NAME_TRAD + "." + ColumnNameKeys.NAME_TRAD_ID + " = "
@@ -88,15 +223,4 @@ public class SQLBuilder {
 				+ " LEFT OUTER JOIN " + fundorte;
 	}
 
-	String getSelect() {
-		return "DISTINCT " + TableNameKeys.PERSON + "." + ColumnNameKeys.PERSON_ID + " AS PersonID, "
-				+ TableNameKeys.VORNAME_NORM + "." + ColumnNameKeys.VORNAME_NORM + " AS vorname_norm, "
-				+ TableNameKeys.NAME_NORM + "." + ColumnNameKeys.NAME_NORM + " AS nachname_norm, "
-				+ TableNameKeys.ORT_NORM + "." + ColumnNameKeys.ORT_NORM + " AS ort_norm, " + TableNameKeys.FAKULTAETEN
-				+ "." + ColumnNameKeys.FAKULTAETEN_NORM + " AS fakultaet_norm";
-	}
-
-	String getSelectAll() {
-		return " * ";
-	}
 }
