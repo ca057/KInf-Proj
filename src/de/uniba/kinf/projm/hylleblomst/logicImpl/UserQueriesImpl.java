@@ -132,12 +132,13 @@ public class UserQueriesImpl implements UserQueries {
 				column = ColumnNameKeys.DATUM;
 				sqlWhere = String.format("%s.%s < ?", table, column);
 				if (input.contains("mm-dd")) {
-					input = input.substring(0, 3) + "-12-31";
+					input = input.substring(0, input.indexOf("-", 1)) + "-12-31";
 				} else if (input.contains("mm")) {
-					input = input.substring(0, 3) + "-12-" + input.substring(8, 9);
+					input = input.substring(0, input.indexOf("-", 2)) + "-12-" + input.substring(8, 9);
 				} else if (input.contains("dd")) {
-					input = input.substring(0, 6) + "-31";
+					input = input.substring(0, input.indexOf("-", 3)) + "-31";
 				}
+				System.out.println(input);
 				break;
 			case ANMERKUNGEN:
 				table = TableNameKeys.PERSON;
