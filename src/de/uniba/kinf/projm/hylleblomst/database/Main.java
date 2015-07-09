@@ -2,8 +2,7 @@ package de.uniba.kinf.projm.hylleblomst.database;
 
 import java.io.File;
 
-import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
-import de.uniba.kinf.projm.hylleblomst.exceptions.SetUpException;
+import de.uniba.kinf.projm.hylleblomst.dataImport.CsvFormatVerifier;
 
 public class Main {
 
@@ -13,23 +12,26 @@ public class Main {
 
 		DatabaseController dbController = new DatabaseController(location);
 
-		try {
-			dbController.setUpDatabase();
-		} catch (SetUpException e) {
-			System.out.println(e.getMessage());
-		}
+		CsvFormatVerifier verify = new CsvFormatVerifier(data);
+		System.out.println(verify.verifyCsv());
 
-		try {
-			dbController.setUpTables();
-		} catch (SetUpException e) {
-			System.out.println(e.getMessage());
-		}
-
-		try {
-			dbController.importDataIntoDatabase(data);
-		} catch (ImportException e) {
-			System.out.println(e.getMessage());
-		}
+		// try {
+		// dbController.setUpDatabase();
+		// } catch (SetUpException e) {
+		// System.out.println(e.getMessage());
+		// }
+		//
+		// try {
+		// dbController.setUpTables();
+		// } catch (SetUpException e) {
+		// System.out.println(e.getMessage());
+		// }
+		//
+		// try {
+		// dbController.importDataIntoDatabase(data);
+		// } catch (ImportException e) {
+		// System.out.println(e.getMessage());
+		// }
 
 	}
 }
