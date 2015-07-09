@@ -265,7 +265,12 @@ public class UserQueriesImpl implements UserQueries {
 
 	private String buildSQLWhere() {
 		if (isOpenSearch) {
-			input = "%" + input + "%";
+			String newInput = input.substring(0, 1);
+			for (int i = 1; i < input.length(); i++) {
+				newInput += "__" + input.substring(i, i + 1);
+			}
+			// input = "%" + newInput + "%";
+			System.out.println(newInput);
 			// TODO % und Funktion einfügen
 			if (source == SourceKeys.NO_SELECTION || searchField == SearchFieldKeys.ANREDE
 					|| searchField == SearchFieldKeys.TITEL) {
