@@ -277,6 +277,7 @@ public class UserQueriesImpl implements UserQueries {
 	 * 
 	 */
 	private String buildSQLWhere() {
+		// String result = String.format("UPPER(%s.%s)", table, column);
 		if (isOpenSearch) {
 
 			updateInputForOpenSearch();
@@ -285,14 +286,10 @@ public class UserQueriesImpl implements UserQueries {
 				return String.format("UPPER(%s.%s) LIKE UPPER(?) OR UPPER(%s_norm.%snorm) LIKE UPPER(?)", table, column,
 						table.substring(0, table.indexOf("_")), column.substring(0, column.lastIndexOf("t")));
 			}
-			if (source == SourceKeys.NO_SOURCE) {
-				// || searchField == SearchFieldKeys.ANREDE || searchField ==
-				// SearchFieldKeys.TITEL) {
+			if (source == SourceKeys.NO_SOURCE || source == SourceKeys.NORM) {
 				return String.format("UPPER(%s.%s) LIKE UPPER(?)", table, column);
 			}
-			if (source == SourceKeys.NORM) {
-				return String.format("UPPER(%s_norm.%s) LIKE UPPER(?)", table.substring(0, table.indexOf("_")), column);
-			}
+
 			return String.format("UPPER(%s.%s) LIKE UPPER(?) AND %1s_info.%s = %s", table, column,
 					table.substring(0, table.indexOf("_")), ColumnNameKeys.QUELLEN_ID, source);
 
@@ -301,19 +298,16 @@ public class UserQueriesImpl implements UserQueries {
 				return String.format("UPPER(%s.%s) = UPPER(?) OR UPPER(%s_norm.%snorm) = UPPER(?)", table, column,
 						table.substring(0, table.indexOf("_")), column.substring(0, column.lastIndexOf("t")));
 			}
-			if (source == SourceKeys.NO_SOURCE) {
-				// || searchField == SearchFieldKeys.ANREDE || searchField ==
-				// SearchFieldKeys.TITEL) {
+			if (source == SourceKeys.NO_SOURCE || source == SourceKeys.NORM) {
 				return String.format("UPPER(%s.%s) = UPPER(?) ", table, column);
-			}
-			if (source == SourceKeys.NORM) {
-				return String.format("UPPER(%s_norm.%s) = UPPER(?) ", table.substring(0, table.indexOf("_")), column,
-						"%");
 			}
 
 			return String.format("UPPER(%s.%s) = UPPER(?) AND %1s_info.%s = %s", table, column,
 					table.substring(0, table.indexOf("_")), ColumnNameKeys.QUELLEN_ID, source);
 		}
+		// Ort: String.format("OR UPPER(%s.%s) = UPPER(?)",
+		// TableNameKeys.ORT_ABWEICHUNG_NORM,
+		// ColumnNameKeys.ORT_ABWEICHUNG_NORM);
 	}
 
 	/*
