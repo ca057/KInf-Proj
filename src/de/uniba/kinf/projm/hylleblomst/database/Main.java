@@ -3,6 +3,7 @@ package de.uniba.kinf.projm.hylleblomst.database;
 import java.io.File;
 
 import de.uniba.kinf.projm.hylleblomst.dataImport.CsvFormatVerifier;
+import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 
 public class Main {
 
@@ -10,10 +11,16 @@ public class Main {
 		File location = new File("./db");
 		File data = new File("./doc/example_data.csv");
 
-		DatabaseController dbController = new DatabaseController(location);
+		DatabaseManagement dbController = new DatabaseManagement(location);
 
-		CsvFormatVerifier verify = new CsvFormatVerifier(data);
-		System.out.println(verify.verifyCsv());
+		CsvFormatVerifier verify;
+		try {
+			verify = new CsvFormatVerifier(data);
+			System.out.println(verify.verifyCsv());
+		} catch (ImportException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		// try {
 		// dbController.setUpDatabase();
