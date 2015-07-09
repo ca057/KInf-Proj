@@ -1,5 +1,6 @@
 package de.uniba.kinf.projm.hylleblomst.logicImpl;
 
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,6 +13,10 @@ import de.uniba.kinf.projm.hylleblomst.keys.TableNameKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.UserQueries;
 
 /**
+ * This class builds a SQL statement for all inputs the user made. It presumes
+ * that a {@link PreparedStatement} is used. For further information consult the
+ * respective Javadoc of the methods.
+ * 
  * @author Johannes
  *
  */
@@ -42,8 +47,7 @@ public class SQLBuilder {
 	public SQLBuilder(String personID) {
 		inputs = new ArrayList<String>();
 		if (personID != null) {
-			inputs.add(personID);
-			// TODO Implement this.
+			buildPersonSearch(personID);
 		} else {
 			throw new InputMismatchException("Die übergebene Collection darf nicht null sein.");
 		}
@@ -68,16 +72,16 @@ public class SQLBuilder {
 	 * @throws SQLException
 	 */
 	String buildQuery() throws SQLException {
-		Boolean hasSource = false;
+		// Boolean hasSource = false;
 		StringBuilder sqlWhere = new StringBuilder();
 
 		for (UserQueries qr : userQueries) {
 
 			sqlStatement.append(buildSelect(qr));
 
-			if (qr.getSource() != SourceKeys.NO_SOURCE) {
-				hasSource = true;
-			}
+			// if (qr.getSource() != SourceKeys.NO_SOURCE) {
+			// hasSource = true;
+			// }
 
 			sqlWhere.append(buildWhere(qr));
 
@@ -90,9 +94,9 @@ public class SQLBuilder {
 		}
 
 		sqlStatement.append(" FROM ").append(buildFrom());
-		if (hasSource) {
-			sqlStatement.append(", " + TableNameKeys.QUELLEN);
-		}
+		// if (hasSource) {
+		// sqlStatement.append(", " + TableNameKeys.QUELLEN);
+		// }
 
 		sqlStatement.append(" WHERE ").append(sqlWhere);
 		System.out.println(sqlStatement);
@@ -100,7 +104,8 @@ public class SQLBuilder {
 	}
 
 	/*
-	 * 
+	 * Builds the WHERE part of a SQL-statement, depending on what operation is
+	 * wanted.
 	 */
 	private String buildWhere(UserQueries qr) {
 		if (whereIsEmpty) {
@@ -114,11 +119,12 @@ public class SQLBuilder {
 	}
 
 	/*
-	 * 
+	 * Builds the whole SQL-statement needed to find all available information
+	 * of a person by searching with the ID of this person.
 	 */
-	private String buildPersonSearch(String string) {
+	private String buildPersonSearch(String personID) {
 		StringBuilder sqlQuery = new StringBuilder();
-		inputs.add(string);
+		inputs.add(personID);
 		return sqlQuery.append(buildSelectAll()).append(buildFrom()).append(" WHERE Person.PersonID = ?").toString();
 	}
 
@@ -160,14 +166,16 @@ public class SQLBuilder {
 	}
 
 	/*
-	 * 
+	 * If every (usefull) column of the database is wanted, this method provides
+	 * the suitable SELECT part.
 	 */
 	private String buildSelectAll() {
 		return "SELECT * ";
 	}
 
 	/*
-	 * 
+	 * This is a helper method to build the FROM-part of every SQL-statement as
+	 * string. It contains all tables of the database.
 	 */
 	private String buildFrom() {
 		String vorname = TableNameKeys.PERSON + " LEFT OUTER JOIN " + TableNameKeys.VORNAME_INFO + " ON "
@@ -232,7 +240,7 @@ public class SQLBuilder {
 		return vorname + " LEFT OUTER JOIN " + name + " LEFT OUTER JOIN " + ort + " LEFT OUTER JOIN " + seminar
 				+ " LEFT OUTER JOIN " + wirtschaftslage + " LEFT OUTER JOIN " + zusaetze + " LEFT OUTER JOIN " + fach
 				+ " LEFT OUTER JOIN " + anrede + " LEFT OUTER JOIN " + titel + " LEFT OUTER JOIN " + fakultaeten
-				+ " LEFT OUTER JOIN " + fundorte;
+				+ " LEFT OUTER JOIN " + fundorte + ", " + TableNameKeys.QUELLEN;
 	}
 
 }
