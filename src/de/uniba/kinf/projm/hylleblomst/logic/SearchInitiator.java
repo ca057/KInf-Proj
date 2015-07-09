@@ -6,11 +6,7 @@ import java.util.Collection;
 import javax.sql.rowset.CachedRowSet;
 
 /**
- * @author Hannes
- *
- */
-/**
- * @author Hannes
+ * @author Johannes
  *
  */
 public interface SearchInitiator {
