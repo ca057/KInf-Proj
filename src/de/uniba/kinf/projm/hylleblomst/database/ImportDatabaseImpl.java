@@ -145,18 +145,24 @@ public class ImportDatabaseImpl implements ImportDatabase {
 					datum = null;
 				}
 
+				int seitenZahl;
+				try {
+					seitenZahl = Integer.parseInt(strings[1]);
+				} catch (NumberFormatException e) {
+					seitenZahl = 0;
+				}
 				int nummerHess;
 				try {
 					nummerHess = Integer.parseInt(strings[2]);
 				} catch (NumberFormatException e) {
 					nummerHess = 0;
 				}
+
 				// Insert persons with ID from source file
-				insertPerson(con, personID, Integer.parseInt(strings[1]),
-						nummerHess, strings[29], strings[17], datum,
-						calendarFieldsSet, strings[46], strings[63],
-						strings[78], anredeTradID, fakultaetenID, fundortID,
-						titelTradID);
+				insertPerson(con, personID, seitenZahl, nummerHess,
+						strings[29], strings[17], datum, calendarFieldsSet,
+						strings[46], strings[63], strings[78], anredeTradID,
+						fakultaetenID, fundortID, titelTradID);
 
 				if (!strings[6].isEmpty()) {
 					vornameNormID = insertIntoTableOneAttributeNoForeignKeys(
@@ -344,8 +350,7 @@ public class ImportDatabaseImpl implements ImportDatabase {
 		int id;
 
 		if (!validation.entryAlreadyInDatabase(entry, table)) {
-			try {
-				PreparedStatement stmt = con.prepareStatement(sqlQuery);
+			try (PreparedStatement stmt = con.prepareStatement(sqlQuery);) {
 				id = validation.getMaxID(table) + 1;
 
 				stmt.setInt(1, id);

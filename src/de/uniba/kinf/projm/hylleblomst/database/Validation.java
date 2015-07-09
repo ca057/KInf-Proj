@@ -97,8 +97,8 @@ class Validation {
 			con.setAutoCommit(true);
 
 		} catch (SQLException e) {
-			throw new ImportException("Could not be validated: " + entry + "in"
-					+ table + "\n" + e.getSQLState());
+			throw new ImportException("Could not be validated: " + entry
+					+ " in " + table + "\n" + e.getSQLState());
 		}
 
 		return result;
