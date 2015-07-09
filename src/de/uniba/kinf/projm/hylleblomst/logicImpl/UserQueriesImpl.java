@@ -99,6 +99,7 @@ public class UserQueriesImpl implements UserQueries {
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.ADLIG;
 				sqlWhere = String.format("%s.%s <> ''", table, column);
+				// source = SourceKeys.NO_SOURCE;
 				break;
 			case JESUIT:
 				table = TableNameKeys.PERSON;
@@ -280,8 +281,9 @@ public class UserQueriesImpl implements UserQueries {
 
 			updateInputForOpenSearch();
 
-			if (source == SourceKeys.NO_SELECTION || searchField == SearchFieldKeys.ANREDE
-					|| searchField == SearchFieldKeys.TITEL) {
+			if (source == SourceKeys.NO_SELECTION || source == SourceKeys.NO_SOURCE) {
+				// || searchField == SearchFieldKeys.ANREDE || searchField ==
+				// SearchFieldKeys.TITEL) {
 				return String.format("UPPER(%s.%s) LIKE UPPER(?)", table, column);
 			}
 			if (source == SourceKeys.NORM) {
@@ -291,14 +293,16 @@ public class UserQueriesImpl implements UserQueries {
 					table.substring(0, table.indexOf("_")), ColumnNameKeys.QUELLEN_ID, source);
 
 		} else {
-			if (source == SourceKeys.NO_SELECTION || searchField == SearchFieldKeys.ANREDE
-					|| searchField == SearchFieldKeys.TITEL) {
+			if (source == SourceKeys.NO_SELECTION || source == SourceKeys.NO_SOURCE) {
+				// || searchField == SearchFieldKeys.ANREDE || searchField ==
+				// SearchFieldKeys.TITEL) {
 				return String.format("UPPER(%s.%s) = UPPER(?) ", table, column);
 			}
 			if (source == SourceKeys.NORM) {
 				return String.format("UPPER(%s_norm.%s) = UPPER(?) ", table.substring(0, table.indexOf("_")), column,
 						"%");
 			}
+
 			return String.format("UPPER(%s.%s) = UPPER(?) AND %1s_info.%s = %s", table, column,
 					table.substring(0, table.indexOf("_")), ColumnNameKeys.QUELLEN_ID, source);
 		}
