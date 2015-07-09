@@ -1,9 +1,9 @@
 package de.uniba.kinf.projm.hylleblomst.database;
 
 import java.io.File;
-import java.sql.SQLException;
 
 import de.uniba.kinf.projm.hylleblomst.dataImport.ImportDataImpl;
+import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 import de.uniba.kinf.projm.hylleblomst.exceptions.SetUpException;
 import de.uniba.kinf.projm.hylleblomst.keys.DatabaseKeys;
 
@@ -20,42 +20,58 @@ public class DatabaseController {
 	/**
 	 * Set up a database in the specified location.
 	 * 
-	 * @param file
-	 * @return
+	 * @param csvFile
+	 * @throws SetUpException
 	 */
-	public boolean setUpDatabase(File file) {
+	public void setUpDatabase() throws SetUpException {
 		try {
-			new SetUpDatabase().run(file);
-			return true;
-		} catch (Exception e) {
-			return false;
-		}
-	}
-
-	public boolean setUpTables() {
-		try {
-			return new SetUpTables().run(db.dbURL);
+			new SetUpDatabase().run(db.dbURL);
 		} catch (SetUpException e) {
-			e.printStackTrace();
-			return false;
+			StringBuilder errorMessage = new StringBuilder();
+			errorMessage.append("Database could not be set up: ");
+			errorMessage.append(e.getMessage());
+			throw new SetUpException(errorMessage.toString());
 		}
 	}
 
-	public boolean tearDownTables() {
+	public void setUpTables() throws SetUpException {
 		try {
-			return new TearDownTables().run();
-		} catch (SQLException e) {
-			return false;
+			new SetUpTables().run(db.dbURL);
+		} catch (SetUpException e) {
+			StringBuilder errorMessage = new StringBuilder();
+			errorMessage.append("Database could not be set up: ");
+			errorMessage.append(e.getMessage());
+			throw new SetUpException(errorMessage.toString());
 		}
 	}
 
-	public boolean importDataIntoDatabase(File file) {
+	/**
+	 * @throws SetUpException
+	 */
+	public void tearDownTables() throws SetUpException {
 		try {
+			new TearDownTables().run(db.dbURL);
+		} catch (SetUpException e) {
+			StringBuilder errorMessage = new StringBuilder();
+			errorMessage.append("Database could not be torn down: ");
+			errorMessage.append(e.getMessage());
+			throw new SetUpException(errorMessage.toString());
+		}
+	}
+
+	/**
+	 * @param file
+	 * @throws ImportException
+	 */
+	public void importDataIntoDatabase(File file) throws ImportException {
+		try {
+
 			new ImportDataImpl().addData(file.getAbsolutePath());
-			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
+			StringBuilder errorMessage = new StringBuilder();
+			errorMessage.append("Data could not be imported: ");
+			errorMessage.append(e.getMessage());
+			throw new ImportException(errorMessage.toString());
 		}
-		return false;
 	}
 }
