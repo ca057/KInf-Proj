@@ -308,10 +308,11 @@ public class UserQueriesImpl implements UserQueries {
 	 */
 	private void updateInputForOpenSearch() {
 		StringBuilder newInput = new StringBuilder().append(input.substring(0, 1));
-		for (int i = 1; i < input.length(); i++) {
+		for (int i = 1; i <= input.length(); i++) {
 			newInput.append("__" + input.substring(i, i + 1));
 		}
 		input = "%" + newInput + "%";
+		System.out.println(input);
 		// FIXME Warum wird das hier pro Instanz 2x aufgerufen?
 		// System.out.println(newInput);
 	}
