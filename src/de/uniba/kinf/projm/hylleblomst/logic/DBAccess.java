@@ -5,7 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.sql.rowset.CachedRowSet;
 
@@ -30,7 +30,7 @@ public class DBAccess {
 		this.password = password;
 	}
 
-	public CachedRowSet startQuery(String query, ArrayList<String> inputs) throws SQLException {
+	public CachedRowSet startQuery(String query, List<String> inputs) throws SQLException {
 		CachedRowSet crs = new CachedRowSetImpl();
 		// CachedRowSet crs = new RowSetFactoryImpl().createCachedRowSet();
 		try (Connection con = DriverManager.getConnection(dbURL, user, password);
