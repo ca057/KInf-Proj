@@ -2,12 +2,12 @@ package de.uniba.kinf.projm.hylleblomst.view;
 
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.InputMismatchException;
 import java.util.Observable;
 import java.util.ResourceBundle;
 
 import javax.sql.rowset.CachedRowSet;
 
+import de.uniba.kinf.projm.hylleblomst.exceptions.ViewException;
 import de.uniba.kinf.projm.hylleblomst.gui.model.Model;
 import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
@@ -84,7 +84,7 @@ public class ViewController implements ControllerInterface, Initializable {
 	private CheckBox search_useOrConjunction;
 
 	@FXML
-	private CheckBox search_useOpenedSearch;
+	private CheckBox search_useOpenSearch;
 
 	@FXML
 	private Accordion searchCategories;
@@ -366,15 +366,20 @@ public class ViewController implements ControllerInterface, Initializable {
 	 */
 	@FXML
 	private void startSearch() {
+		resultTable.getColumns().clear();
+		resultTable.getItems().clear();
+		String[] input = generateArrayWithInputValues();
+		int[] sources = generateArrayWithSourceFieldKeys();
 		try {
-			resultTable.getColumns().clear();
-			resultTable.getItems().clear();
-			String[] input = generateArrayWithInputValues();
-			int[] sources = generateArrayWithSourceFieldKeys();
-			searchCtrl.executeSearch(input, sources, search_useOrConjunction.isSelected(),
-					search_useOpenedSearch.isSelected());
-			setLabelSource();
-		} catch (Exception e) {
+			boolean couldSearchBeStarted = searchCtrl.executeSearch(input, sources,
+					search_useOrConjunction.isSelected(), search_useOpenSearch.isSelected());
+
+			if (!couldSearchBeStarted) {
+				setLabelSource();
+			} else {
+				ui.showErrorMessage("Die Suche konnte nicht gestartet werden, da keine Eingaben gefunden wurden.");
+			}
+		} catch (ViewException e) {
 			e.printStackTrace();
 			if (e.getMessage().isEmpty()) {
 				ui.showErrorMessage("Bei der Suche ist ein Fehler aufgetreten.");
@@ -400,7 +405,7 @@ public class ViewController implements ControllerInterface, Initializable {
 
 	void fillResultTable(CachedRowSet result) {
 		if (result == null) {
-			throw new InputMismatchException(
+			throw new IllegalArgumentException(
 					"Das übergebene Set mit dem Tabelleninhalt ist leer oder hat keinen Wert.");
 		} else if (result.size() == 0) {
 			throw new RuntimeException("Die Suchanfrage hat kein Ergebnis geliefert.");
@@ -490,7 +495,7 @@ public class ViewController implements ControllerInterface, Initializable {
 			inputFields[20] = searchCategory_other_nummer.getText();
 			inputFields[21] = searchCategory_other_seite.getText();
 			inputFields[22] = searchCategory_other_nummerhess.getText();
-		} catch (InputMismatchException | NumberFormatException e) {
+		} catch (IllegalArgumentException e) {
 			ui.showErrorMessage(e.getMessage());
 		}
 		return inputFields;
@@ -520,7 +525,7 @@ public class ViewController implements ControllerInterface, Initializable {
 
 	private int getParsedInt(String input) {
 		if (input.isEmpty() || input == null) {
-			throw new InputMismatchException("Ein Fehler bei der Verarbeitung der Zahleingabe ist aufgetreten.");
+			throw new IllegalArgumentException("Ein Fehler bei der Verarbeitung der Zahleingabe ist aufgetreten.");
 		}
 		int result;
 		try {
@@ -644,7 +649,7 @@ public class ViewController implements ControllerInterface, Initializable {
 		searchCategory_other_nummerhess.clear();
 		search_sourcekey_selection.setValue(null);
 		search_useOrConjunction.setSelected(false);
-		search_useOpenedSearch.setSelected(false);
+		search_useOpenSearch.setSelected(false);
 		infoArea.clear();
 	}
 

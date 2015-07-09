@@ -70,7 +70,7 @@
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                  </VBox.margin>
                               </CheckBox>
-                              <CheckBox fx:id="search_useOpenedSearch" mnemonicParsing="false" text="offenere Suche nutzen">
+                              <CheckBox fx:id="search_useOpenSearch" mnemonicParsing="false" text="offenere Suche nutzen">
                                  <VBox.margin>
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
                                  </VBox.margin>
@@ -322,7 +322,7 @@
 				</ScrollPane>
 				<SplitPane dividerPositions="0.5022288261515602" orientation="VERTICAL" prefHeight="675.0" HBox.hgrow="ALWAYS">
 					<items>
-						<AnchorPane minHeight="0.0" minWidth="50.0" prefHeight="200.0">
+						<AnchorPane minHeight="0.0" minWidth="50.0">
 							<children>
 								<VBox prefWidth="698.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 									<children>
