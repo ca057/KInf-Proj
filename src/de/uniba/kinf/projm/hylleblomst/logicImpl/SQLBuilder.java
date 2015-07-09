@@ -83,6 +83,9 @@ public class SQLBuilder {
 
 			if (!("true".equals(qr.getInput()))) {
 				inputs.add(qr.getInput());
+				if (SourceKeys.NO_SELECTION.equals(qr.getSource())) {
+					inputs.add(qr.getInput());
+				}
 			}
 		}
 
