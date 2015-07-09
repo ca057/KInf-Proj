@@ -1,9 +1,9 @@
 package de.uniba.kinf.projm.hylleblomst.main;
 
+import de.uniba.kinf.projm.hylleblomst.controller.UIHelper;
 import de.uniba.kinf.projm.hylleblomst.gui.model.Model;
 import de.uniba.kinf.projm.hylleblomst.logic.SearchInitiator;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.SearchInitiatorImpl;
-import de.uniba.kinf.projm.hylleblomst.view.UIHelper;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
