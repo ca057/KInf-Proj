@@ -9,6 +9,8 @@ import java.util.ResourceBundle;
 
 import javax.sql.rowset.CachedRowSet;
 
+import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
+import de.uniba.kinf.projm.hylleblomst.exceptions.SetUpException;
 import de.uniba.kinf.projm.hylleblomst.exceptions.ViewException;
 import de.uniba.kinf.projm.hylleblomst.gui.model.Model;
 import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
@@ -307,7 +309,12 @@ public class ViewController implements ControllerInterface, Initializable {
 				dirChooser.setTitle(ui.getAppName() + " - Pfad für Datenbank auswählen");
 				Optional<File> setupDir = Optional.ofNullable(dirChooser.showDialog(root.getScene().getWindow()));
 				if (setupDir.isPresent()) {
-					model.setUpDatabase(setupDir.get().getAbsoluteFile());
+					try {
+						model.setUpDatabase(setupDir.get().getAbsoluteFile());
+					} catch (SetUpException e) {
+						ui.showErrorMessage(e.getMessage());
+						e.printStackTrace();
+					}
 				}
 				event.consume();
 			}
@@ -317,13 +324,18 @@ public class ViewController implements ControllerInterface, Initializable {
 			@Override
 			public void handle(ActionEvent event) {
 				FileChooser fileChooser = new FileChooser();
-				fileChooser.setTitle(ui.getAppName() + " - csv-Datei für Import auswählen");
-				fileChooser.getExtensionFilters().add(new ExtensionFilter("CSV-Dateien (*.csv)", "*.csv"));
+				fileChooser.setTitle(ui.getAppName() + " - CSV-Datei für Import auswählen");
+				fileChooser.getExtensionFilters().add(new ExtensionFilter("CSV-Datei (*.csv)", "*.csv"));
 
 				Optional<File> importFile = Optional
 						.ofNullable(fileChooser.showOpenDialog(root.getScene().getWindow()));
 				if (importFile.isPresent()) {
-					model.importData(importFile.get().getAbsoluteFile());
+					try {
+						model.importData(importFile.get().getAbsoluteFile());
+					} catch (ImportException e) {
+						ui.showErrorMessage(e.getMessage());
+						e.printStackTrace();
+					}
 				}
 				event.consume();
 			}
