@@ -3,6 +3,7 @@ package de.uniba.kinf.projm.hylleblomst.view;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.Observable;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import javax.sql.rowset.CachedRowSet;
@@ -375,9 +376,9 @@ public class ViewController implements ControllerInterface, Initializable {
 					search_useOrConjunction.isSelected(), search_useOpenSearch.isSelected());
 
 			if (!couldSearchBeStarted) {
-				setLabelSource();
-			} else {
 				ui.showErrorMessage("Die Suche konnte nicht gestartet werden, da keine Eingaben gefunden wurden.");
+			} else {
+				setLabelSource();
 			}
 		} catch (ViewException e) {
 			e.printStackTrace();
@@ -428,7 +429,16 @@ public class ViewController implements ControllerInterface, Initializable {
 							@Override
 							public ObservableValue<String> call(
 									CellDataFeatures<ObservableList<String>, String> param) {
-								return new SimpleStringProperty(param.getValue().get(j).toString());
+								if (param.getValue().get(j) == null) {
+									return new SimpleStringProperty("");
+								}
+								Optional<String> optionalParam = Optional
+										.ofNullable(param.getValue().get(j).toString());
+								if (optionalParam.isPresent()) {
+									return new SimpleStringProperty(optionalParam.get());
+								} else {
+									return new SimpleStringProperty("");
+								}
 							}
 						});
 				resultTable.getColumns().add(col);
@@ -443,7 +453,6 @@ public class ViewController implements ControllerInterface, Initializable {
 				}
 				data.add(row);
 			}
-			// TODO is this needed?
 			result.close();
 			resultTable.setItems(data);
 		} catch (SQLException e) {
