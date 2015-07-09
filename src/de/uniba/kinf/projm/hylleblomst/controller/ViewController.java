@@ -293,7 +293,7 @@ public class ViewController implements ControllerInterface, Initializable {
 
 			@Override
 			public void handle(ActionEvent event) {
-				ui.functionNotAvailable();
+				model.setUpDatabase();
 				event.consume();
 			}
 		});
@@ -301,7 +301,7 @@ public class ViewController implements ControllerInterface, Initializable {
 
 			@Override
 			public void handle(ActionEvent event) {
-				ui.functionNotAvailable();
+				model.importData();
 				event.consume();
 			}
 		});
@@ -309,7 +309,7 @@ public class ViewController implements ControllerInterface, Initializable {
 
 			@Override
 			public void handle(ActionEvent event) {
-				ui.functionNotAvailable();
+				model.clearDatabase();
 				event.consume();
 			}
 		});

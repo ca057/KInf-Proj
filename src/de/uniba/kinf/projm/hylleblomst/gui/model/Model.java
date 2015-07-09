@@ -49,4 +49,16 @@ public class Model extends Observable {
 			throw new InputMismatchException("Die übergebene ID ist fehlerhaft (null)");
 		}
 	}
+
+	public void setUpDatabase() {
+
+	}
+
+	public void importData() {
+
+	}
+
+	public void clearDatabase() {
+
+	}
 }
