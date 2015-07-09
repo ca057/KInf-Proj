@@ -43,7 +43,7 @@ public class UserQueriesImpl implements UserQueries {
 
 	public void setSearchField(SearchFieldKeys searchField) {
 		this.searchField = searchField;
-		searchFieldKeyToDatabaseData();
+		// searchFieldKeyToDatabaseData();
 	}
 
 	@Override
@@ -308,8 +308,9 @@ public class UserQueriesImpl implements UserQueries {
 	 */
 	private void updateInputForOpenSearch() {
 		StringBuilder newInput = new StringBuilder().append(input.substring(0, 1));
-		for (int i = 1; i <= input.length(); i++) {
-			newInput.append("__" + input.substring(i, i + 1));
+		for (int i = 1; i < input.length(); i++) {
+			newInput.append("%" + input.substring(i, i + 1));
+			System.out.println(newInput);
 		}
 		input = "%" + newInput + "%";
 		System.out.println(input);

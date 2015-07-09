@@ -41,9 +41,9 @@ public class SQLBuilder {
 	 */
 	public SQLBuilder(String personID) {
 		inputs = new ArrayList<String>();
-		inputs.add(personID);
 		if (personID != null) {
-
+			inputs.add(personID);
+			// TODO Implement this.
 		} else {
 			throw new InputMismatchException("Die übergebene Collection darf nicht null sein.");
 		}
@@ -72,7 +72,6 @@ public class SQLBuilder {
 		StringBuilder sqlWhere = new StringBuilder();
 
 		for (UserQueries qr : userQueries) {
-
 			sqlStatement.append(buildSelect(qr));
 
 			if (qr.getSource() != SourceKeys.NO_SOURCE) {
