@@ -93,7 +93,7 @@ public class SQLBuilder {
 			}
 		}
 
-		sqlStatement.append(" FROM ").append(buildFrom());
+		sqlStatement.append(buildFrom());
 		// if (hasSource) {
 		// sqlStatement.append(", " + TableNameKeys.QUELLEN);
 		// }
@@ -125,7 +125,10 @@ public class SQLBuilder {
 	private String buildPersonSearch(String personID) {
 		StringBuilder sqlQuery = new StringBuilder();
 		inputs.add(personID);
-		return sqlQuery.append(buildSelectAll()).append(buildFrom()).append(" WHERE Person.PersonID = ?").toString();
+		String test = sqlQuery.append(buildSelectAll()).append(buildFrom())
+				.append(" WHERE Hylleblomst.Person.PersonID = ?").toString();
+		System.out.println(test);
+		return test;
 	}
 
 	/*
@@ -170,7 +173,7 @@ public class SQLBuilder {
 	 * the suitable SELECT part.
 	 */
 	private String buildSelectAll() {
-		return "SELECT * ";
+		return "SELECT Hylleblomst.Person.PersonID AS ID";
 	}
 
 	/*
@@ -237,9 +240,9 @@ public class SQLBuilder {
 		String fundorte = TableNameKeys.FUNDORTE + " ON " + TableNameKeys.PERSON + "." + ColumnNameKeys.FUNDORTE_ID
 				+ " = " + TableNameKeys.FUNDORTE + "." + ColumnNameKeys.FUNDORTE_ID;
 
-		return vorname + " LEFT OUTER JOIN " + name + " LEFT OUTER JOIN " + ort + " LEFT OUTER JOIN " + seminar
-				+ " LEFT OUTER JOIN " + wirtschaftslage + " LEFT OUTER JOIN " + zusaetze + " LEFT OUTER JOIN " + fach
-				+ " LEFT OUTER JOIN " + anrede + " LEFT OUTER JOIN " + titel + " LEFT OUTER JOIN " + fakultaeten
+		return " FROM " + vorname + " LEFT OUTER JOIN " + name + " LEFT OUTER JOIN " + ort + " LEFT OUTER JOIN "
+				+ seminar + " LEFT OUTER JOIN " + wirtschaftslage + " LEFT OUTER JOIN " + zusaetze + " LEFT OUTER JOIN "
+				+ fach + " LEFT OUTER JOIN " + anrede + " LEFT OUTER JOIN " + titel + " LEFT OUTER JOIN " + fakultaeten
 				+ " LEFT OUTER JOIN " + fundorte + ", " + TableNameKeys.QUELLEN;
 	}
 
