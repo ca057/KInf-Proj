@@ -81,6 +81,12 @@ public class ViewController implements ControllerInterface, Initializable {
 	private ComboBox<String> search_sourcekey_selection;
 
 	@FXML
+	private CheckBox search_useOrConjunction;
+
+	@FXML
+	private CheckBox search_useOpenedSearch;
+
+	@FXML
 	private Accordion searchCategories;
 
 	@FXML
@@ -636,6 +642,8 @@ public class ViewController implements ControllerInterface, Initializable {
 		searchCategory_other_seite.clear();
 		searchCategory_other_nummerhess.clear();
 		search_sourcekey_selection.setValue(null);
+		search_useOrConjunction.setSelected(false);
+		search_useOpenedSearch.setSelected(false);
 		infoArea.clear();
 	}
 
