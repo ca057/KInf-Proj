@@ -8,11 +8,11 @@ import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 import de.uniba.kinf.projm.hylleblomst.exceptions.SetUpException;
 import de.uniba.kinf.projm.hylleblomst.keys.DatabaseKeys;
 
-public class DatabaseController {
+public class DatabaseManagement {
 
 	DatabaseKeys db;
 
-	public DatabaseController(File file) {
+	public DatabaseManagement(File file) {
 		this.db = new DatabaseKeys(file);
 	}
 
