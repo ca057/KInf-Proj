@@ -405,55 +405,53 @@ public class ViewController implements ControllerInterface, Initializable {
 	}
 
 	void fillResultTable(CachedRowSet result) {
-		if (result == null) {
-			throw new IllegalArgumentException(
-					"Das übergebene Set mit dem Tabelleninhalt ist leer oder hat keinen Wert.");
-		} else if (result.size() == 0) {
-			throw new RuntimeException("Die Suchanfrage hat kein Ergebnis geliefert.");
-		}
-		ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
-		try {
-			result.first();
-			for (int i = 0; i < result.getMetaData().getColumnCount(); i++) {
-				final int j = i;
-				String columnName = result.getMetaData().getColumnName(i + 1);
-				if (columnName.contains("_")) {
-					columnName = columnName.substring(0, columnName.indexOf("_")) + " "
-							+ columnName.substring(columnName.indexOf("_") + 1);
-				}
-				TableColumn<ObservableList<String>, String> col = new TableColumn<ObservableList<String>, String>(
-						columnName);
-				col.setCellValueFactory(
-						new Callback<CellDataFeatures<ObservableList<String>, String>, ObservableValue<String>>() {
+		if (result == null || result.size() == 0) {
+			ui.showErrorMessage("Die Suche hat kein Ergebnis zurückgeliefert.");
+		} else {
+			ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
+			try {
+				result.first();
+				for (int i = 0; i < result.getMetaData().getColumnCount(); i++) {
+					final int j = i;
+					String columnName = result.getMetaData().getColumnName(i + 1);
+					if (columnName.contains("_")) {
+						columnName = columnName.substring(0, columnName.indexOf("_")) + " "
+								+ columnName.substring(columnName.indexOf("_") + 1);
+					}
+					TableColumn<ObservableList<String>, String> col = new TableColumn<ObservableList<String>, String>(
+							columnName);
+					col.setCellValueFactory(
+							new Callback<CellDataFeatures<ObservableList<String>, String>, ObservableValue<String>>() {
 
-							@Override
-							public ObservableValue<String> call(
-									CellDataFeatures<ObservableList<String>, String> param) {
-								Optional<String> optionalParam = Optional.ofNullable(param.getValue().get(j));
-								if (optionalParam.isPresent()) {
-									return new SimpleStringProperty(optionalParam.get());
-								} else {
-									return new SimpleStringProperty();
+								@Override
+								public ObservableValue<String> call(
+										CellDataFeatures<ObservableList<String>, String> param) {
+									Optional<String> optionalParam = Optional.ofNullable(param.getValue().get(j));
+									if (optionalParam.isPresent()) {
+										return new SimpleStringProperty(optionalParam.get());
+									} else {
+										return new SimpleStringProperty();
+									}
 								}
-							}
-						});
-				resultTable.getColumns().add(col);
-			}
-			// set visibility of first column with ID to false
-			resultTable.getColumns().get(0).setVisible(false);
-			result.first();
-			while (result.next()) {
-				ObservableList<String> row = FXCollections.observableArrayList();
-				for (int i = 1; i <= result.getMetaData().getColumnCount(); i++) {
-					row.add(result.getString(i));
+							});
+					resultTable.getColumns().add(col);
 				}
-				data.add(row);
+				// set visibility of first column with ID to false
+				resultTable.getColumns().get(0).setVisible(false);
+				result.first();
+				while (result.next()) {
+					ObservableList<String> row = FXCollections.observableArrayList();
+					for (int i = 1; i <= result.getMetaData().getColumnCount(); i++) {
+						row.add(result.getString(i));
+					}
+					data.add(row);
+				}
+				result.close();
+				resultTable.setItems(data);
+			} catch (SQLException e) {
+				ui.showErrorMessage("Bei der Anzeige der gefundenen Datensätze ist ein Fehler aufgetreten.");
+				e.printStackTrace();
 			}
-			result.close();
-			resultTable.setItems(data);
-		} catch (SQLException e) {
-			ui.showErrorMessage("Bei der Anzeige der gefundenen Datensätze ist ein Fehler aufgetreten.");
-			e.printStackTrace();
 		}
 	}
 
