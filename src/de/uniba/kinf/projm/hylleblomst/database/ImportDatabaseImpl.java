@@ -79,28 +79,28 @@ public class ImportDatabaseImpl implements ImportDatabase {
 				int seminarTradID;
 
 				// Necessary details to insert person
-				if (!strings[4].equals("")) {
+				if (!strings[4].isEmpty()) {
 					anredeNormID = insertIntoTableOneAttributeNoForeignKeys(
 							con, TableNameKeys.ANREDE_NORM, strings[4]);
 				}
-				if (!strings[3].equals("")) {
+				if (!strings[3].isEmpty()) {
 					anredeTradID = insertIntoTableOneAttributeOneForeignKey(
 							con, TableNameKeys.ANREDE_TRAD, strings[3],
 							anredeNormID);
 				}
-				if (!strings[47].equals("")) {
+				if (!strings[47].isEmpty()) {
 					fakultaetenID = insertIntoTableOneAttributeNoForeignKeys(
 							con, TableNameKeys.FAKULTAETEN, strings[47]);
 				}
-				if (!strings[77].equals("")) {
+				if (!strings[77].isEmpty()) {
 					fundortID = insertIntoTableOneAttributeNoForeignKeys(con,
 							TableNameKeys.FUNDORTE, strings[77]);
 				}
-				if (!strings[65].equals("")) {
+				if (!strings[65].isEmpty()) {
 					titelNormID = insertIntoTableOneAttributeNoForeignKeys(con,
 							TableNameKeys.TITEL_NORM, strings[65]);
 				}
-				if (!strings[64].equals("")) {
+				if (!strings[64].isEmpty()) {
 					titelTradID = insertIntoTableOneAttributeOneForeignKey(con,
 							TableNameKeys.TITEL_TRAD, strings[64], titelNormID);
 				}
@@ -178,14 +178,14 @@ public class ImportDatabaseImpl implements ImportDatabase {
 					}
 				}
 
-				if (!strings[18].equals("")) {
+				if (!strings[18].isEmpty()) {
 					nameNormID = insertIntoTableOneAttributeNoForeignKeys(con,
 							TableNameKeys.NAME_NORM, strings[18]);
 				}
 				// Insert all different variations of name
 				currentSourceID = 0;
 				for (int i = 18; i <= 28; i++) {
-					if (!strings[i].equals("")) {
+					if (!strings[i].isEmpty()) {
 						nameTradID = insertIntoTableOneAttributeOneForeignKey(
 								con, TableNameKeys.NAME_TRAD, strings[i],
 								nameNormID);
@@ -197,19 +197,19 @@ public class ImportDatabaseImpl implements ImportDatabase {
 				}
 
 				int ortAbweichNormID = 0;
-				if (!strings[42].equals("")) {
+				if (!strings[42].isEmpty()) {
 					ortAbweichNormID = insertIntoOrtAbweichungNorm(con,
 							strings[42]);
 				}
 				int ortNormID = 0;
-				if (!strings[41].equals("")) {
+				if (!strings[41].isEmpty()) {
 					ortNormID = insertIntoTableOneAttributeOneForeignKey(con,
 							TableNameKeys.ORT_NORM, strings[41],
 							ortAbweichNormID);
 				}
 				currentSourceID = 0;
 				for (int i = 30; i <= 40; i++) {
-					if (!strings[i].equals("")) {
+					if (!strings[i].isEmpty()) {
 						int ortTradID = insertIntoTableOneAttributeOneForeignKey(
 								con, TableNameKeys.ORT_TRAD, strings[i],
 								ortNormID);
@@ -221,7 +221,7 @@ public class ImportDatabaseImpl implements ImportDatabase {
 					currentSourceID++;
 				}
 
-				if (!strings[49].equals("")) {
+				if (!strings[49].isEmpty()) {
 					fachNormID = insertIntoTableOneAttributeNoForeignKeys(con,
 							TableNameKeys.FACH_NORM, strings[49]);
 				}
@@ -242,7 +242,7 @@ public class ImportDatabaseImpl implements ImportDatabase {
 					}
 				}
 
-				if (!strings[52].equals("")) {
+				if (!strings[52].isEmpty()) {
 					wirtschaftslageNormID = insertIntoTableOneAttributeNoForeignKeys(
 							con, TableNameKeys.WIRTSCHAFTSLAGE_NORM,
 							strings[52]);
@@ -251,7 +251,7 @@ public class ImportDatabaseImpl implements ImportDatabase {
 				int[] tmpWirtschaftslage = { 51, 53, 54, 55 };
 				currentSourceID = 0;
 				for (int i : tmpWirtschaftslage) {
-					if (!strings[i].equals("")) {
+					if (!strings[i].isEmpty()) {
 						wirtschaftslageTradID = insertIntoTableOneAttributeOneForeignKey(
 								con, TableNameKeys.WIRTSCHAFTSLAGE_TRAD,
 								strings[i], wirtschaftslageNormID);
@@ -270,7 +270,7 @@ public class ImportDatabaseImpl implements ImportDatabase {
 					}
 				}
 
-				if (!strings[57].equals("")) {
+				if (!strings[57].isEmpty()) {
 					seminarNormID = insertIntoTableOneAttributeNoForeignKeys(
 							con, TableNameKeys.SEMINAR_NORM, strings[57]);
 				}
@@ -278,7 +278,7 @@ public class ImportDatabaseImpl implements ImportDatabase {
 				currentSourceID = 0;
 				int[] tmpSeminar = { 56, 58, 59, 60, 61, 62 };
 				for (int i : tmpSeminar) {
-					if (!strings[i].equals("")) {
+					if (!strings[i].isEmpty()) {
 						seminarTradID = insertIntoTableOneAttributeOneForeignKey(
 								con, TableNameKeys.SEMINAR_TRAD, strings[i],
 								seminarNormID);
@@ -299,7 +299,7 @@ public class ImportDatabaseImpl implements ImportDatabase {
 
 				currentSourceID = 0;
 				for (int i = 66; i <= 76; i++) {
-					if (!strings[i].equals("")) {
+					if (!strings[i].isEmpty()) {
 						int zusaetzeID = insertIntoTableOneAttributeNoForeignKeys(
 								con, TableNameKeys.ZUSAETZE, strings[i]);
 						insertIntoTableNoAttributesThreeForeignKeys(con,
