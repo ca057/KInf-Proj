@@ -71,7 +71,7 @@ public class SQLBuilder {
 	 * @return
 	 * @throws SQLException
 	 */
-	String buildQuery() throws SQLException {
+	void buildQuery() throws SQLException {
 		// Boolean hasSource = false;
 		StringBuilder sqlWhere = new StringBuilder();
 
@@ -100,7 +100,6 @@ public class SQLBuilder {
 
 		sqlStatement.append(" WHERE ").append(sqlWhere);
 		System.out.println(sqlStatement);
-		return sqlStatement.toString();
 	}
 
 	/*
@@ -122,13 +121,11 @@ public class SQLBuilder {
 	 * Builds the whole SQL-statement needed to find all available information
 	 * of a person by searching with the ID of this person.
 	 */
-	private String buildPersonSearch(String personID) {
+	private void buildPersonSearch(String personID) {
 		StringBuilder sqlQuery = new StringBuilder();
 		inputs.add(personID);
-		String test = sqlQuery.append(buildSelectAll()).append(buildFrom())
-				.append(" WHERE Hylleblomst.Person.PersonID = ?").toString();
-		System.out.println(test);
-		return test;
+		sqlStatement = sqlQuery.append(buildSelectAll()).append(buildFrom()).append(" WHERE ")
+				.append(TableNameKeys.PERSON).append("." + ColumnNameKeys.PERSON_ID + " = ?");
 	}
 
 	/*
@@ -173,7 +170,8 @@ public class SQLBuilder {
 	 * the suitable SELECT part.
 	 */
 	private String buildSelectAll() {
-		return "SELECT Hylleblomst.Person.PersonID AS ID";
+		return "SELECT DISTINCT " + TableNameKeys.PERSON + "." + ColumnNameKeys.PERSON_ID + " AS "
+				+ ColumnNameKeys.PERSON_ID;
 	}
 
 	/*
