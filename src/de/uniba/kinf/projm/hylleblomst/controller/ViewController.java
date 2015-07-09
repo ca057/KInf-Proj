@@ -14,6 +14,7 @@ import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.SearchInitiator;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.SearchInitiatorImpl;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
@@ -188,6 +189,9 @@ public class ViewController implements ControllerInterface, Initializable {
 	private TextField searchCategory_study_einschreibeJahrBis;
 
 	@FXML
+	private Label searchCategory_study_einschreibeHinweis;
+
+	@FXML
 	private TitledPane searchCategory_other;
 
 	@FXML
@@ -245,6 +249,8 @@ public class ViewController implements ControllerInterface, Initializable {
 	public void initialize(URL location, ResourceBundle resources) {
 		clearResultTable();
 		setEventHandlers();
+		setUpLabels();
+		setUpBindings();
 		searchCategories.setExpandedPane(searchCategory_person);
 		search_sourceLabel.setText(sourceLabelName.getValueSafe());
 	}
@@ -461,6 +467,36 @@ public class ViewController implements ControllerInterface, Initializable {
 				event.consume();
 			}
 		});
+	}
+
+	private void setUpLabels() {
+		searchCategory_study_einschreibeHinweis
+				.setText("Hinweis: Für eine erfolgreiche Suche muss jeweils mindestens das Jahr ausgefüllt sein.");
+	}
+
+	private void setUpBindings() {
+		BooleanBinding booleanBindingEinschreibeHinweis = new BooleanBinding() {
+
+			{
+				super.bind(searchCategory_study_einschreibeTagVon.textProperty(),
+						searchCategory_study_einschreibeTagBis.textProperty(),
+						searchCategory_study_einschreibeMonatVon.textProperty(),
+						searchCategory_study_einschreibeMonatBis.textProperty(),
+						searchCategory_study_einschreibeJahrVon.textProperty(),
+						searchCategory_study_einschreibeJahrBis.textProperty());
+			}
+
+			@Override
+			protected boolean computeValue() {
+				return (!searchCategory_study_einschreibeTagVon.getText().isEmpty()
+						|| !searchCategory_study_einschreibeTagBis.getText().isEmpty()
+						|| !searchCategory_study_einschreibeMonatVon.getText().isEmpty()
+						|| !searchCategory_study_einschreibeMonatBis.getText().isEmpty())
+						&& (searchCategory_study_einschreibeJahrVon.getText().isEmpty()
+								| searchCategory_study_einschreibeJahrBis.getText().isEmpty());
+			}
+		};
+		searchCategory_study_einschreibeHinweis.visibleProperty().bind(booleanBindingEinschreibeHinweis);
 	}
 
 	/**

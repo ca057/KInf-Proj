@@ -51,14 +51,17 @@ public class Model extends Observable {
 	}
 
 	public void setUpDatabase() {
-
+		// DatabaseController --> File ist Speicherort
+		// setUpDatabase()
+		// setUpTables()
 	}
 
 	public void importData() {
+		// importDataIntoDatabase()
 
 	}
 
 	public void clearDatabase() {
-
+		// tearDownTables
 	}
 }
