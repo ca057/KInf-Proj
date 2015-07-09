@@ -52,6 +52,9 @@ public class UserQueriesImpl implements UserQueries {
 	}
 
 	public void setInput(String input) {
+		if (isOpenSearch) {
+			updateInputForOpenSearch(input);
+		}
 		this.input = input;
 	}
 
@@ -277,48 +280,57 @@ public class UserQueriesImpl implements UserQueries {
 	 * 
 	 */
 	private String buildSQLWhere() {
-		// String result = String.format("UPPER(%s.%s)", table, column);
-		if (isOpenSearch) {
+		StringBuilder result = new StringBuilder();
+		result.append(String.format("UPPER(%s.%s)", table, column));
+		result.append(insertEquationSymbol());
+		result.append("UPPER(?)");
 
-			updateInputForOpenSearch();
+		if (source == SourceKeys.NO_SELECTION || source == SourceKeys.ORT_NORM_AB) {
+			result.append(String.format(" OR UPPER(%s_norm.%snorm) ", table.substring(0, table.indexOf("_")),
+					column.substring(0, column.length() - 4)));
+			result.append(insertEquationSymbol());
+			result.append("UPPER(?)");
 
-			if (source == SourceKeys.NO_SELECTION) {
-				return String.format("UPPER(%s.%s) LIKE UPPER(?) OR UPPER(%s_norm.%snorm) LIKE UPPER(?)", table, column,
-						table.substring(0, table.indexOf("_")), column.substring(0, column.lastIndexOf("t")));
-			}
-			if (source == SourceKeys.NO_SOURCE || source == SourceKeys.NORM) {
-				return String.format("UPPER(%s.%s) LIKE UPPER(?)", table, column);
-			}
-
-			return String.format("UPPER(%s.%s) LIKE UPPER(?) AND %1s_info.%s = %s", table, column,
-					table.substring(0, table.indexOf("_")), ColumnNameKeys.QUELLEN_ID, source);
-
-		} else {
-			if (source == SourceKeys.NO_SELECTION) {
-				return String.format("UPPER(%s.%s) = UPPER(?) OR UPPER(%s_norm.%snorm) = UPPER(?)", table, column,
-						table.substring(0, table.indexOf("_")), column.substring(0, column.lastIndexOf("t")));
-			}
-			if (source == SourceKeys.NO_SOURCE || source == SourceKeys.NORM) {
-				return String.format("UPPER(%s.%s) = UPPER(?) ", table, column);
-			}
-
-			return String.format("UPPER(%s.%s) = UPPER(?) AND %1s_info.%s = %s", table, column,
-					table.substring(0, table.indexOf("_")), ColumnNameKeys.QUELLEN_ID, source);
 		}
-		// Ort: String.format("OR UPPER(%s.%s) = UPPER(?)",
-		// TableNameKeys.ORT_ABWEICHUNG_NORM,
-		// ColumnNameKeys.ORT_ABWEICHUNG_NORM);
+		if (source == SourceKeys.ORT_NORM_AB) {
+			result.append(String.format("OR UPPER(%s.%s)", TableNameKeys.ORT_ABWEICHUNG_NORM,
+					ColumnNameKeys.ORT_ABWEICHUNG_NORM));
+			result.append(insertEquationSymbol());
+			result.append("UPPER(?)");
+			return result.toString();
+		}
+
+		if (source == SourceKeys.NORM || source == SourceKeys.NO_SOURCE || source == SourceKeys.NO_SELECTION
+				|| SearchFieldKeys.ANREDE.equals(searchField) || SearchFieldKeys.TITEL.equals(searchField)) {
+			return result.toString();
+		}
+
+		return result.append(String.format(" AND %1s_info.%s = %s", table.substring(0, table.indexOf("_")),
+				ColumnNameKeys.QUELLEN_ID, source)).toString();
+		// if (!(source == SourceKeys.NO_SOURCE) || ) {
+		// result.append(String.format("%1s_info.%s = %s", table.substring(0,
+		// table.indexOf("_")),
+		// ColumnNameKeys.QUELLEN_ID, source));
+		// }
+	}
+
+	private String insertEquationSymbol() {
+		if (isOpenSearch) {
+			return (" LIKE ");
+		} else {
+			return " = ";
+		}
 	}
 
 	/*
 	 * 
 	 */
-	private void updateInputForOpenSearch() {
+	private String updateInputForOpenSearch(String input) {
 		StringBuilder newInput = new StringBuilder().append(input.substring(0, 1));
 		for (int i = 1; i < input.length(); i++) {
 			newInput.append("%" + input.substring(i, i + 1));
 			System.out.println(newInput);
 		}
-		input = "%" + newInput + "%";
+		return "%" + newInput + "%";
 	}
 }
