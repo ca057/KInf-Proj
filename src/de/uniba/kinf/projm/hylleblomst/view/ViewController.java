@@ -371,7 +371,8 @@ public class ViewController implements ControllerInterface, Initializable {
 			resultTable.getItems().clear();
 			String[] input = generateArrayWithInputValues();
 			int[] sources = generateArrayWithSourceFieldKeys();
-			searchCtrl.executeSearch(input, sources);
+			searchCtrl.executeSearch(input, sources, search_useOrConjunction.isSelected(),
+					search_useOpenedSearch.isSelected());
 			setLabelSource();
 		} catch (Exception e) {
 			e.printStackTrace();

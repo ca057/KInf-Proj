@@ -54,7 +54,8 @@ public class SearchController implements ControllerInterface {
 	 * @param inputSourceKey
 	 * @throws ViewException
 	 */
-	void executeSearch(String[] inputValues, int[] inputSourceKey) throws ViewException {
+	void executeSearch(String[] inputValues, int[] inputSourceKey, boolean isOr, boolean isOpenedSearch)
+			throws ViewException {
 		if (inputSearchFKey == null || inputSearchFKey.length == 0 || inputSourceKey == null
 				|| inputSourceKey.length == 0) {
 			throw new IllegalArgumentException("Die Liste mit Eingabefeldern ist leer oder hat keinen Wert.");
@@ -63,7 +64,8 @@ public class SearchController implements ControllerInterface {
 		List<UserQueries> requestList = new ArrayList<UserQueries>();
 		for (int i = 0; i < inputValues.length; i++) {
 			if (!inputValues[i].isEmpty() && !"false".equals(inputValues[i]) && !"yyyy-mm-dd".equals(inputValues[i])) {
-				UserQueriesImpl tmpReq = new UserQueriesImpl(inputSearchFKey[i], inputValues[i], inputSourceKey[i]);
+				UserQueriesImpl tmpReq = new UserQueriesImpl(inputSearchFKey[i], inputValues[i], inputSourceKey[i],
+						isOr, isOpenedSearch);
 				requestList.add(tmpReq);
 			}
 		}
