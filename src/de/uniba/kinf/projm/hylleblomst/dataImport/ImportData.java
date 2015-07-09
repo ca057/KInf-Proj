@@ -27,6 +27,6 @@ public interface ImportData {
 	 * 
 	 * @see {@link ImportData.Import}
 	 */
-	public void addData(String path) throws ImportException;
+	public void addData(String databaseURL, String path) throws ImportException;
 
 }
