@@ -25,7 +25,7 @@ public class SQLBuilder {
 	private Collection<UserQuery> userQuery;
 	private ArrayList<String> inputs;
 	private StringBuilder sqlStatement = new StringBuilder();
-	private Boolean sqlStatementIsNotEmpty = false;
+	private Boolean needsStandardFields = true;
 	private Boolean whereIsEmpty = true;
 
 	/**
@@ -39,8 +39,18 @@ public class SQLBuilder {
 		}
 		this.userQuery = userQuery;
 		buildQuery();
+		print();
 	}
 
+	private void print() {
+		// FIXME Delete this.
+		System.out.println(sqlStatement);
+	}
+
+	/**
+	 * @param userQuery
+	 * @throws SQLException
+	 */
 	public SQLBuilder(UserQuery userQuery) throws SQLException {
 		if (userQuery == null || userQuery.getInput().isEmpty()) {
 			throw new InputMismatchException(
@@ -48,11 +58,15 @@ public class SQLBuilder {
 		}
 		inputs = new ArrayList<String>();
 		inputs.add(userQuery.getInput());
-		if (userQuery.getTable().isEmpty() || userQuery.getColumn().isEmpty()) {
-			// buildPersonSearch();
+		if (userQuery.isPersonSearch()) {
+			buildPersonSearch();
+		} else if (!(userQuery.getInput().isEmpty())) {
+			buildNotationSearch(userQuery);
 		} else {
-			// buildNotationSearch(userQuery);
+			throw new InputMismatchException(
+					"Das übergebene Query konnte nicht verarbeitet werden. Entweder personID oder personID, SearchfieldKey und SourceKey müssen verfügbar sein");
 		}
+		print();
 	}
 
 	/**
@@ -91,7 +105,6 @@ public class SQLBuilder {
 		}
 
 		sqlStatement.append(buildFrom()).append(" WHERE ").append(sqlWhere);
-		System.out.println(sqlStatement);
 	}
 
 	/*
@@ -113,25 +126,36 @@ public class SQLBuilder {
 	 * Builds the whole SQL-statement needed to find all available information
 	 * of a person by searching with the ID of this person.
 	 */
-	private void buildPersonSearch(String personID) {
+	private void buildPersonSearch() {
 		StringBuilder sqlQuery = new StringBuilder();
-		inputs.add(personID);
-		sqlStatement = sqlQuery.append(buildSelectAll()).append(buildFrom()).append(" WHERE ")
+		sqlStatement = sqlQuery.append(buildSelectPersonDetails()).append(buildFrom()).append(" WHERE ")
 				.append(TableNameKeys.PERSON).append("." + ColumnNameKeys.PERSON_ID + " = ?");
 	}
+
+	private void buildNotationSearch(UserQuery userQuery) {
+		StringBuilder sqlQuery = new StringBuilder();
+		needsStandardFields = false;
+		sqlStatement = sqlQuery.append(buildSelect(userQuery)).append(buildFrom()).append(" WHERE ")
+				.append(TableNameKeys.PERSON).append("." + ColumnNameKeys.PERSON_ID + " = ?");
+	}
+
+	// private String buildSelectSpecific(UserQuery qr) {
+	// return "SELECT DISTINCT " + qr.getTable() + "." + qr.getColumn() + " AS "
+	// + qr.getColumn();
+	// }
 
 	/*
 	 * 
 	 */
 	private String buildSelect(UserQuery qr) {
 		String result = "";
-		if (!sqlStatementIsNotEmpty) {
+		if (needsStandardFields) {
 			result = "SELECT DISTINCT " + TableNameKeys.PERSON + "." + ColumnNameKeys.PERSON_ID + " AS PersonID, "
 					+ TableNameKeys.VORNAME_NORM + "." + ColumnNameKeys.VORNAME_NORM + " AS vorname_norm, "
 					+ TableNameKeys.NAME_NORM + "." + ColumnNameKeys.NAME_NORM + " AS nachname_norm, "
 					+ TableNameKeys.ORT_NORM + "." + ColumnNameKeys.ORT_NORM + " AS ort_norm, "
 					+ TableNameKeys.FAKULTAETEN + "." + ColumnNameKeys.FAKULTAETEN_NORM + " AS fakultaet_norm";
-			sqlStatementIsNotEmpty = true;
+			needsStandardFields = false;
 		}
 		if (ColumnNameKeys.STUDIENJAHR_INT.equals(qr.getColumn())) {
 			result += ", " + qr.getTable() + "." + ColumnNameKeys.STUDIENJAHR + " AS " + qr.getSearchField();
@@ -144,16 +168,41 @@ public class SQLBuilder {
 		if (qr.getSource() == SourceKeys.ORT_NORM_AB) {
 			result += ", " + qr.getTable() + "." + ColumnNameKeys.ANMERKUNG;
 		}
+		if (result.isEmpty()) {
+			result = "SELECT DISTINCT " + qr.getTable() + "." + qr.getColumn() + " AS " + qr.getColumn();
+		}
 		return result;
 	}
 
 	/*
-	 * If every (usefull) column of the database is wanted, this method provides
-	 * the suitable SELECT part.
+	 * If every normalized column (or other, if without normalization) of the
+	 * database is wanted, this method provides the suitable SELECT part.
 	 */
-	private String buildSelectAll() {
+	private String buildSelectPersonDetails() {
 		return "SELECT DISTINCT " + TableNameKeys.PERSON + "." + ColumnNameKeys.PERSON_ID + " AS "
-				+ ColumnNameKeys.PERSON_ID;
+				+ ColumnNameKeys.PERSON_ID + ", " + TableNameKeys.ANREDE_NORM + "." + ColumnNameKeys.ANREDE_NORM
+				+ " AS " + ColumnNameKeys.ANREDE_NORM + ", " + TableNameKeys.TITEL_NORM + "."
+				+ ColumnNameKeys.TITEL_NORM + " AS " + ColumnNameKeys.TITEL_NORM + ", " + TableNameKeys.VORNAME_NORM
+				+ "." + ColumnNameKeys.VORNAME_NORM + " AS " + ColumnNameKeys.VORNAME_NORM + ", "
+				+ TableNameKeys.NAME_NORM + "." + ColumnNameKeys.NAME_NORM + " AS " + ColumnNameKeys.NAME_NORM + ", "
+				+ TableNameKeys.PERSON + "." + ColumnNameKeys.ADLIG + " AS " + ColumnNameKeys.ADLIG + ", "
+				+ TableNameKeys.PERSON + "." + ColumnNameKeys.JESUIT + " AS " + ColumnNameKeys.JESUIT + ", "
+				+ TableNameKeys.WIRTSCHAFTSLAGE_NORM + "." + ColumnNameKeys.WIRTSCHAFTSLAGE_NORM + " AS "
+				+ ColumnNameKeys.WIRTSCHAFTSLAGE_NORM + ", " + TableNameKeys.ORT_NORM + "." + ColumnNameKeys.ORT_NORM
+				+ " AS " + ColumnNameKeys.ORT_NORM + ", " + TableNameKeys.FACH_NORM + "." + ColumnNameKeys.FACH_NORM
+				+ " AS " + ColumnNameKeys.FACH_NORM + ", " + TableNameKeys.FAKULTAETEN + "."
+				+ ColumnNameKeys.FAKULTAETEN_NORM + " AS " + ColumnNameKeys.FAKULTAETEN_NORM + ", "
+				+ TableNameKeys.SEMINAR_NORM + "." + ColumnNameKeys.SEMINAR_NORM + " AS " + ColumnNameKeys.SEMINAR_NORM
+				+ ", " + TableNameKeys.PERSON + "." + ColumnNameKeys.GRADUIERT + " AS " + ColumnNameKeys.GRADUIERT
+				+ ", " + TableNameKeys.PERSON + "." + ColumnNameKeys.STUDIENJAHR + " AS " + ColumnNameKeys.STUDIENJAHR
+				+ ", " + TableNameKeys.PERSON + "." + ColumnNameKeys.DATUM + " AS " + ColumnNameKeys.DATUM + ", "
+				+ TableNameKeys.PERSON + "." + ColumnNameKeys.DATUMS_FELDER_GESETZT + " AS "
+				+ ColumnNameKeys.DATUMS_FELDER_GESETZT + ", " + TableNameKeys.ZUSAETZE + "." + ColumnNameKeys.ZUSAETZE
+				+ " AS " + ColumnNameKeys.ZUSAETZE + ", " + TableNameKeys.FUNDORTE + "." + ColumnNameKeys.FUNDORTE_NORM
+				+ " AS " + ColumnNameKeys.FUNDORTE_NORM + ", " + TableNameKeys.PERSON + "." + ColumnNameKeys.ANMERKUNG
+				+ " AS " + ColumnNameKeys.ANMERKUNG + ", " + TableNameKeys.PERSON + "." + ColumnNameKeys.SEITE_ORIGINAL
+				+ " AS " + ColumnNameKeys.SEITE_ORIGINAL + ", " + TableNameKeys.PERSON + "."
+				+ ColumnNameKeys.NUMMER_HESS;
 	}
 
 	/*

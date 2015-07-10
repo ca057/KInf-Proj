@@ -23,6 +23,7 @@ public class UserQueryImpl implements UserQuery {
 	private String sqlWhere;
 	private Boolean isOR = false;
 	private Boolean isOpenSearch = false;
+	private Boolean isPersonSearch = false;
 
 	/**
 	 * 
@@ -53,7 +54,9 @@ public class UserQueryImpl implements UserQuery {
 	 * @param personID
 	 */
 	public UserQueryImpl(String personID) {
+		isPersonSearch = true;
 		setInput(personID);
+		source = SourceKeys.NO_SOURCE;
 		table = TableNameKeys.PERSON;
 		column = ColumnNameKeys.PERSON_ID;
 		sqlWhere = buildSQLWhere();
@@ -65,7 +68,10 @@ public class UserQueryImpl implements UserQuery {
 	 * @param source
 	 */
 	public UserQueryImpl(SearchFieldKeys searchField, String personID, int source) {
-
+		// setInput(personID);
+		// table = TableNameKeys.PERSON;
+		// column = ColumnNameKeys.PERSON_ID;
+		// sqlWhere = buildSQLWhere();
 	}
 
 	@Override
@@ -80,6 +86,11 @@ public class UserQueryImpl implements UserQuery {
 	@Override
 	public String getInput() {
 		return input;
+	}
+
+	@Override
+	public Boolean isPersonSearch() {
+		return isPersonSearch;
 	}
 
 	public void setInput(String input) {
@@ -175,7 +186,6 @@ public class UserQueryImpl implements UserQuery {
 				} else if (input.contains("dd")) {
 					input = input.substring(0, input.indexOf("-", 3)) + "-31";
 				}
-				System.out.println(input);
 				break;
 			case ANMERKUNGEN:
 				table = TableNameKeys.PERSON;

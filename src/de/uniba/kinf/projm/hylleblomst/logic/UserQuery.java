@@ -53,6 +53,12 @@ public interface UserQuery {
 	Boolean isOpenSearch();
 
 	/**
+	 * @return {@code true} - if the UserQuery was made to find all information
+	 *         of a person.
+	 */
+	Boolean isPersonSearch();
+
+	/**
 	 * @return {@code true} - if the user wishes to combine the inputs with OR
 	 *         instead of AND
 	 */
