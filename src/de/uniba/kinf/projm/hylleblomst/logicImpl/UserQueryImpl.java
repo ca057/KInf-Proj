@@ -66,9 +66,10 @@ public class UserQueryImpl implements UserQuery {
 
 	public void setInput(String input) {
 		if (isOpenSearch) {
-			updateInputForOpenSearch(input);
+			this.input = updateInputForOpenSearch(input);
+		} else {
+			this.input = input;
 		}
-		this.input = input;
 	}
 
 	@Override
@@ -339,7 +340,6 @@ public class UserQueryImpl implements UserQuery {
 		StringBuilder newInput = new StringBuilder().append(input.substring(0, 1));
 		for (int i = 1; i < input.length(); i++) {
 			newInput.append("%" + input.substring(i, i + 1));
-			System.out.println(newInput);
 		}
 		return "%" + newInput + "%";
 	}
