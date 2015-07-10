@@ -35,7 +35,6 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
@@ -241,9 +240,6 @@ public class ViewController implements ControllerInterface, Initializable {
 	private Label search_sourceLabel;
 
 	@FXML
-	private ScrollPane result_persondetails_scrollpane;
-
-	@FXML
 	private AnchorPane result_persondetails_anchorpane;
 
 	/**
@@ -265,9 +261,18 @@ public class ViewController implements ControllerInterface, Initializable {
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		clearResultTable();
+		setUpNodes();
 		setEventHandlers();
 		setUpLabels();
 		setUpBindings();
+	}
+
+	private void clearResultTable() {
+		resultTable.getColumns().clear();
+		resultTable.getItems().clear();
+	}
+
+	private void setUpNodes() {
 		searchCategories.setExpandedPane(searchCategory_person);
 		search_sourceLabel.setText(sourceLabelName.getValueSafe());
 		try {
@@ -276,11 +281,6 @@ public class ViewController implements ControllerInterface, Initializable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	private void clearResultTable() {
-		resultTable.getColumns().clear();
-		resultTable.getItems().clear();
 	}
 
 	/**
