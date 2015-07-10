@@ -36,7 +36,7 @@ public class SetUpDatabase {
 			setUserAccess(con);
 
 			// Set no access as default
-			setDefaultAccess(con);
+			// setDefaultAccess(con);
 
 		} catch (SetUpException e) {
 			throw new SetUpException(e.getMessage());
