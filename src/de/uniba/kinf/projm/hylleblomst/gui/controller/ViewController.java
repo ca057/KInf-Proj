@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 
 import javax.sql.rowset.CachedRowSet;
 
+import de.uniba.kinf.projm.hylleblomst.exceptions.ExportException;
 import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 import de.uniba.kinf.projm.hylleblomst.exceptions.SetUpException;
 import de.uniba.kinf.projm.hylleblomst.exceptions.ViewException;
@@ -304,7 +305,23 @@ public class ViewController implements ControllerInterface, Initializable {
 
 			@Override
 			public void handle(ActionEvent event) {
-				// model.exportSearchedData();
+				FileChooser fileChooser = new FileChooser();
+
+				fileChooser.setTitle(ui.getAppName() + " - Speicherort für Export auswählen");
+				fileChooser.getExtensionFilters().add(new ExtensionFilter("CSV-Datei (*.csv)", "*.csv"));
+
+				Optional<File> exportFile = Optional
+						.ofNullable(fileChooser.showOpenDialog(root.getScene().getWindow()));
+				if (exportFile.isPresent()) {
+					try {
+						model.exportSearchedData(exportFile.get());
+						ui.showInfo("Export der Daten in Datei " + exportFile.get().getName() + " war erfolgreich.");
+					} catch (ExportException e) {
+						e.printStackTrace();
+						ui.showErrorMessage("Export der Daten in Datei " + exportFile.get().getAbsolutePath()
+								+ " war nicht erfolgreich.\n" + e.getMessage());
+					}
+				}
 				event.consume();
 			}
 		});
