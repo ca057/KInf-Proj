@@ -47,5 +47,5 @@ public interface SearchInitiator {
 	 * @return A {@CachedRowSet} with the outcome of the search
 	 * @throws SQLException
 	 */
-	CachedRowSet searchPersonOrNotation(UserQuery query) throws SQLException;
+	CachedRowSet searchPerson(String id) throws SQLException;
 }

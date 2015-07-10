@@ -41,18 +41,14 @@ public class SQLBuilder {
 		buildQuery();
 	}
 
-	public SQLBuilder(UserQuery userQuery) throws SQLException {
-		if (userQuery == null || userQuery.getInput().isEmpty()) {
+	public SQLBuilder(String personID) throws SQLException {
+		if (personID == null) {
 			throw new InputMismatchException(
 					"Das übergebene Query darf nicht null sein und die Felder table, column und input müssen ausgefüllt sein.");
 		}
 		inputs = new ArrayList<String>();
-		inputs.add(userQuery.getInput());
-		if (userQuery.getTable().isEmpty() || userQuery.getColumn().isEmpty()) {
-			buildPersonSearch();
-		} else {
-			buildNotationSearch(userQuery);
-		}
+		inputs.add(personID);
+		buildPersonSearch();
 	}
 
 	/**
@@ -116,11 +112,6 @@ public class SQLBuilder {
 	private void buildPersonSearch() {
 		sqlStatement = sqlStatement.append(buildSelectAll()).append(buildFrom()).append(" WHERE ")
 				.append(TableNameKeys.PERSON).append("." + ColumnNameKeys.PERSON_ID + " = ?");
-	}
-
-	private void buildNotationSearch(UserQuery userQuery) {
-		// sqlStatement = sqlStatement.append(table + "." +
-		// column).append(buildFromSpecific()).append("");
 	}
 
 	/*
