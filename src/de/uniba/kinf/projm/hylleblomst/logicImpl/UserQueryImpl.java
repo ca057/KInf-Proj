@@ -306,7 +306,7 @@ public class UserQueryImpl implements UserQuery {
 					column.substring(0, column.length() - 4))).append(getEquationSymbol()).append("UPPER(?)");
 		}
 
-		if (source == SourceKeys.ORT_NORM_AB) {
+		if (searchField == SearchFieldKeys.ORT || source == SourceKeys.NORM) {
 			return result
 					.append(String.format("OR UPPER(%s.%s)", TableNameKeys.ORT_ABWEICHUNG_NORM,
 							ColumnNameKeys.ORT_ABWEICHUNG_NORM))
