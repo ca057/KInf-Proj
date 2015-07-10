@@ -25,7 +25,7 @@ public class SQLBuilder {
 	private Collection<UserQuery> userQuery;
 	private ArrayList<String> inputs;
 	private StringBuilder sqlStatement = new StringBuilder();
-	private Boolean sqlStatementIsNotEmpty = false;
+	private Boolean needsStandardFields = true;
 	private Boolean whereIsEmpty = true;
 
 	/**
@@ -134,22 +134,28 @@ public class SQLBuilder {
 
 	private void buildNotationSearch(UserQuery userQuery) {
 		StringBuilder sqlQuery = new StringBuilder();
-		sqlStatement = sqlQuery.append(buildSelectPersonDetails()).append(buildFrom()).append(" WHERE ")
+		needsStandardFields = false;
+		sqlStatement = sqlQuery.append(buildSelect(userQuery)).append(buildFrom()).append(" WHERE ")
 				.append(TableNameKeys.PERSON).append("." + ColumnNameKeys.PERSON_ID + " = ?");
 	}
+
+	// private String buildSelectSpecific(UserQuery qr) {
+	// return "SELECT DISTINCT " + qr.getTable() + "." + qr.getColumn() + " AS "
+	// + qr.getColumn();
+	// }
 
 	/*
 	 * 
 	 */
 	private String buildSelect(UserQuery qr) {
 		String result = "";
-		if (!sqlStatementIsNotEmpty) {
+		if (needsStandardFields) {
 			result = "SELECT DISTINCT " + TableNameKeys.PERSON + "." + ColumnNameKeys.PERSON_ID + " AS PersonID, "
 					+ TableNameKeys.VORNAME_NORM + "." + ColumnNameKeys.VORNAME_NORM + " AS vorname_norm, "
 					+ TableNameKeys.NAME_NORM + "." + ColumnNameKeys.NAME_NORM + " AS nachname_norm, "
 					+ TableNameKeys.ORT_NORM + "." + ColumnNameKeys.ORT_NORM + " AS ort_norm, "
 					+ TableNameKeys.FAKULTAETEN + "." + ColumnNameKeys.FAKULTAETEN_NORM + " AS fakultaet_norm";
-			sqlStatementIsNotEmpty = true;
+			needsStandardFields = false;
 		}
 		if (ColumnNameKeys.STUDIENJAHR_INT.equals(qr.getColumn())) {
 			result += ", " + qr.getTable() + "." + ColumnNameKeys.STUDIENJAHR + " AS " + qr.getSearchField();
@@ -161,6 +167,9 @@ public class SQLBuilder {
 		}
 		if (qr.getSource() == SourceKeys.ORT_NORM_AB) {
 			result += ", " + qr.getTable() + "." + ColumnNameKeys.ANMERKUNG;
+		}
+		if (result.isEmpty()) {
+			result = "SELECT DISTINCT " + qr.getTable() + "." + qr.getColumn() + " AS " + qr.getColumn();
 		}
 		return result;
 	}
