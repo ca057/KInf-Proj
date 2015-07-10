@@ -41,14 +41,16 @@ public class SQLBuilder {
 		buildQuery();
 	}
 
-	public SQLBuilder(String personID) throws SQLException {
-		if (personID == null) {
-			throw new InputMismatchException(
-					"Das übergebene Query darf nicht null sein und die Felder table, column und input müssen ausgefüllt sein.");
-		}
+	/**
+	 * @param personID
+	 */
+	public SQLBuilder(String personID) {
 		inputs = new ArrayList<String>();
-		inputs.add(personID);
-		buildPersonSearch();
+		if (personID != null) {
+			buildPersonSearch(personID);
+		} else {
+			throw new InputMismatchException("Die übergebene Collection darf nicht null sein.");
+		}
 	}
 
 	/**
@@ -75,6 +77,7 @@ public class SQLBuilder {
 		for (UserQuery qr : userQuery) {
 
 			sqlStatement.append(buildSelect(qr));
+
 			sqlWhere.append(buildWhere(qr));
 
 			if (!("true".equals(qr.getInput()))) {
@@ -86,7 +89,6 @@ public class SQLBuilder {
 		}
 
 		sqlStatement.append(buildFrom()).append(" WHERE ").append(sqlWhere);
-		// FIXME Delete this.
 		System.out.println(sqlStatement);
 	}
 
@@ -109,8 +111,10 @@ public class SQLBuilder {
 	 * Builds the whole SQL-statement needed to find all available information
 	 * of a person by searching with the ID of this person.
 	 */
-	private void buildPersonSearch() {
-		sqlStatement = sqlStatement.append(buildSelectAll()).append(buildFrom()).append(" WHERE ")
+	private void buildPersonSearch(String personID) {
+		StringBuilder sqlQuery = new StringBuilder();
+		inputs.add(personID);
+		sqlStatement = sqlQuery.append(buildSelectAll()).append(buildFrom()).append(" WHERE ")
 				.append(TableNameKeys.PERSON).append("." + ColumnNameKeys.PERSON_ID + " = ?");
 	}
 
@@ -138,7 +142,6 @@ public class SQLBuilder {
 		if (qr.getSource() == SourceKeys.ORT_NORM_AB) {
 			result += ", " + qr.getTable() + "." + ColumnNameKeys.ANMERKUNG;
 		}
-
 		return result;
 	}
 
@@ -214,7 +217,6 @@ public class SQLBuilder {
 				+ ColumnNameKeys.FAKULTAETEN_ID;
 		String fundorte = TableNameKeys.FUNDORTE + " ON " + TableNameKeys.PERSON + "." + ColumnNameKeys.FUNDORTE_ID
 				+ " = " + TableNameKeys.FUNDORTE + "." + ColumnNameKeys.FUNDORTE_ID;
-
 		return " FROM " + vorname + " LEFT OUTER JOIN " + name + " LEFT OUTER JOIN " + ort + " LEFT OUTER JOIN "
 				+ seminar + " LEFT OUTER JOIN " + wirtschaftslage + " LEFT OUTER JOIN " + zusaetze + " LEFT OUTER JOIN "
 				+ fach + " LEFT OUTER JOIN " + anrede + " LEFT OUTER JOIN " + titel + " LEFT OUTER JOIN " + fakultaeten
