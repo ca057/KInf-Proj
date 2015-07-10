@@ -136,7 +136,7 @@ public class DetailsViewController implements ControllerInterface, Initializable
 
 	@FXML
 	private Label result_details_nummer;
-	private StringProperty nummer = new SimpleStringProperty();
+	// label value is set with personID
 
 	@FXML
 	private Label result_details_seite;
@@ -163,10 +163,11 @@ public class DetailsViewController implements ControllerInterface, Initializable
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		setUpEventHandlers();
-		setUpBindings();
+		setUpViewBindings();
+		setUpLabelBindings();
 	}
 
-	private void setUpBindings() {
+	private void setUpViewBindings() {
 		BooleanBinding existsID = new BooleanBinding() {
 
 			{
@@ -182,6 +183,29 @@ public class DetailsViewController implements ControllerInterface, Initializable
 			}
 		};
 		root.disableProperty().bind(existsID);
+	}
+
+	private void setUpLabelBindings() {
+		result_details_adlig.textProperty().bind(adlig);
+		result_details_anmerkungen.textProperty().bind(anmerkungen);
+		result_details_anrede.textProperty().bind(anrede);
+		result_details_einschreibedatum.textProperty().bind(einschreibedatum);
+		result_details_fakultaet.textProperty().bind(fakultaet);
+		result_details_fundort.textProperty().bind(fundort);
+		result_details_graduiert.textProperty().bind(graduiert);
+		result_details_jesuit.textProperty().bind(jesuit);
+		result_details_nachname.textProperty().bind(nachname);
+		result_details_nummer.textProperty().bind(personID);
+		result_details_nummerhess.textProperty().bind(nummerhess);
+		result_details_ort.textProperty().bind(ort);
+		result_details_seite.textProperty().bind(seite);
+		result_details_seminar.textProperty().bind(seminar);
+		result_details_studienfach.textProperty().bind(studienfach);
+		result_details_studienjahr.textProperty().bind(studienjahr);
+		result_details_titel.textProperty().bind(titel);
+		result_details_vorname.textProperty().bind(vorname);
+		result_details_wirtschaft.textProperty().bind(wirtschaft);
+		result_details_zusaetze.textProperty().bind(zusaetze);
 	}
 
 	private void setUpEventHandlers() {
@@ -228,7 +252,126 @@ public class DetailsViewController implements ControllerInterface, Initializable
 				}
 				for (int i = 1; i <= crsMeta.getColumnCount(); i++) {
 					if (crsMeta.getColumnName(i).equals("PERSONID")) {
-						personID.setValue(searchResult.getString(i));
+						if (searchResult.getString(i) == null || searchResult.getString(i).isEmpty()) {
+							personID.setValue("");
+						} else {
+							personID.setValue(searchResult.getString(i));
+						}
+					} else if (crsMeta.getColumnName(i).equals("ANREDENORM")) {
+						if (searchResult.getString(i) == null || searchResult.getString(i).isEmpty()) {
+							anrede.setValue("");
+						} else {
+							anrede.setValue(searchResult.getString(i));
+						}
+					} else if (crsMeta.getColumnName(i).equals("TITELNORM")) {
+						if (searchResult.getString(i) == null || searchResult.getString(i).isEmpty()) {
+							titel.setValue("");
+						} else {
+							titel.setValue(searchResult.getString(i));
+						}
+					} else if (crsMeta.getColumnName(i).equals("VORNAMENORM")) {
+						if (searchResult.getString(i) == null || searchResult.getString(i).isEmpty()) {
+							vorname.setValue("");
+						} else {
+							vorname.setValue(searchResult.getString(i));
+						}
+					} else if (crsMeta.getColumnName(i).equals("NAMENORM")) {
+						if (searchResult.getString(i) == null || searchResult.getString(i).isEmpty()) {
+							nachname.setValue("");
+						} else {
+							nachname.setValue(searchResult.getString(i));
+						}
+					} else if (crsMeta.getColumnName(i).equals("ADLIG")) {
+						if (searchResult.getString(i) == null || searchResult.getString(i).isEmpty()) {
+							adlig.setValue("");
+						} else {
+							adlig.setValue(searchResult.getString(i));
+						}
+					} else if (crsMeta.getColumnName(i).equals("JESUIT")) {
+						if (searchResult.getString(i) == null || searchResult.getString(i).isEmpty()) {
+							jesuit.setValue("");
+						} else {
+							jesuit.setValue(searchResult.getString(i));
+						}
+					} else if (crsMeta.getColumnName(i).equals("WIRTSCHAFTSLAGENORM")) {
+						if (searchResult.getString(i) == null || searchResult.getString(i).isEmpty()) {
+							wirtschaft.setValue("");
+						} else {
+							wirtschaft.setValue(searchResult.getString(i));
+						}
+					} else if (crsMeta.getColumnName(i).equals("ORTNORM")) {
+						if (searchResult.getString(i) == null || searchResult.getString(i).isEmpty()) {
+							ort.setValue("");
+						} else {
+							ort.setValue(searchResult.getString(i));
+						}
+					} else if (crsMeta.getColumnName(i).equals("FACHNORM")) {
+						if (searchResult.getString(i) == null || searchResult.getString(i).isEmpty()) {
+							studienfach.setValue("");
+						} else {
+							studienfach.setValue(searchResult.getString(i));
+						}
+					} else if (crsMeta.getColumnName(i).equals("FAKULTAETENNORM")) {
+						if (searchResult.getString(i) == null || searchResult.getString(i).isEmpty()) {
+							fakultaet.setValue("");
+						} else {
+							fakultaet.setValue(searchResult.getString(i));
+						}
+					} else if (crsMeta.getColumnName(i).equals("SEMINARNORM")) {
+						if (searchResult.getString(i) == null || searchResult.getString(i).isEmpty()) {
+							seminar.setValue("");
+						} else {
+							seminar.setValue(searchResult.getString(i));
+						}
+					} else if (crsMeta.getColumnName(i).equals("GRADUIERT")) {
+						if (searchResult.getString(i) == null || searchResult.getString(i).isEmpty()) {
+							graduiert.setValue("");
+						} else {
+							graduiert.setValue(searchResult.getString(i));
+						}
+					} else if (crsMeta.getColumnName(i).equals("STUDIENJAHR")) {
+						if (searchResult.getString(i) == null || searchResult.getString(i).isEmpty()) {
+							studienjahr.setValue("");
+						} else {
+							studienjahr.setValue(searchResult.getString(i));
+						}
+					} else if (crsMeta.getColumnName(i).equals("DATUM")) {
+						// FIXME Datum muss überschrieben werden
+						if (searchResult.getString(i) == null || searchResult.getString(i).isEmpty()) {
+							einschreibedatum.setValue("");
+						} else {
+							einschreibedatum.setValue(searchResult.getString(i));
+						}
+					} else if (crsMeta.getColumnName(i).equals("ZUSAETZE")) {
+						if (searchResult.getString(i) == null || searchResult.getString(i).isEmpty()) {
+							zusaetze.setValue("");
+						} else {
+							zusaetze.setValue(searchResult.getString(i));
+						}
+					} else if (crsMeta.getColumnName(i).equals("FUNDORTENORM")) {
+						if (searchResult.getString(i) == null || searchResult.getString(i).isEmpty()) {
+							fundort.setValue("");
+						} else {
+							fundort.setValue(searchResult.getString(i));
+						}
+					} else if (crsMeta.getColumnName(i).equals("ANMERKUNG")) {
+						if (searchResult.getString(i) == null || searchResult.getString(i).isEmpty()) {
+							anmerkungen.setValue("");
+						} else {
+							anmerkungen.setValue(searchResult.getString(i));
+						}
+					} else if (crsMeta.getColumnName(i).equals("SEITEORIGINAL")) {
+						if (searchResult.getString(i) == null || searchResult.getString(i).isEmpty()) {
+							seite.setValue("");
+						} else {
+							seite.setValue(searchResult.getString(i));
+						}
+					} else if (crsMeta.getColumnName(i).equals("NUMMERHESS")) {
+						if (searchResult.getString(i) == null || searchResult.getString(i).isEmpty()) {
+							nummerhess.setValue("");
+						} else {
+							nummerhess.setValue(searchResult.getString(i));
+						}
 					}
 				}
 			}
