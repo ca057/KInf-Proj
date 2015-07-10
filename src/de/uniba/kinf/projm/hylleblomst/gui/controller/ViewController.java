@@ -638,9 +638,10 @@ public class ViewController implements ControllerInterface, Initializable {
 	 * 
 	 * @param string
 	 */
-	private void startSearchForSinglePerson(String string) {
+	private void startSearchForSinglePerson(String id) {
 		try {
-			searchCtrl.startSinglePersonSearch(string);
+			// TODO build query with id
+			// searchCtrl.startSinglePersonSearch(string);
 		} catch (Exception e) {
 			e.printStackTrace();
 			ui.showErrorMessage(

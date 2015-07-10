@@ -14,6 +14,7 @@ import de.uniba.kinf.projm.hylleblomst.exceptions.SetUpException;
 import de.uniba.kinf.projm.hylleblomst.gui.controller.DetailsController;
 import de.uniba.kinf.projm.hylleblomst.logic.SearchInitiator;
 import de.uniba.kinf.projm.hylleblomst.logic.UserQuery;
+import de.uniba.kinf.projm.hylleblomst.logicImpl.UserQueryImpl;
 
 /**
  * @author Christian, Johannes, Simon
@@ -48,10 +49,9 @@ public class Model extends Observable {
 		}
 	}
 
-	public void searchPerson(String id) throws SQLException {
-		if (id != null) {
-			// FIXME searchPerson muss userQuery bekommen
-			// searchResult = search.searchPerson(id);
+	public void searchPerson(UserQueryImpl userQuery) throws SQLException {
+		if (userQuery != null) {
+			searchResult = search.searchPerson(userQuery);
 			detailsController.processSearchResult(searchResult);
 
 		} else {
