@@ -137,10 +137,11 @@ public class SQLBuilder {
 		needsStandardFields = false;
 		sqlStatement.append(buildSelect(userQuery)).append(buildFrom()).append(" WHERE ").append(TableNameKeys.PERSON)
 				.append("." + ColumnNameKeys.PERSON_ID + " = ?");
-		if (userQuery.getColumn() == ColumnNameKeys.ZUSAETZE) {
-			sqlStatement.append("AND " + TableNameKeys.ZUSAETZE_INFO + "." + ColumnNameKeys.QUELLEN_ID + " = " + "("
-					+ SourceKeys.NORM + "OR" + SourceKeys.STANDARD + ")");
-		}
+		// if (userQuery.getColumn() == ColumnNameKeys.ZUSAETZE) {
+		// sqlStatement.append("AND " + TableNameKeys.ZUSAETZE_INFO + "." +
+		// ColumnNameKeys.QUELLEN_ID + " = " + "("
+		// + SourceKeys.NORM + "OR" + SourceKeys.STANDARD + ")");
+		// }
 		// FIXME Bei Zusätzen ist die Quellenangabe wichtig.
 	}
 
