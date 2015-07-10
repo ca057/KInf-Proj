@@ -5,6 +5,10 @@ import java.nio.file.Paths;
 
 import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 
+/**
+ * @author Simon
+ *
+ */
 public class CsvFormatVerifier {
 
 	public File csvFile;
@@ -15,8 +19,7 @@ public class CsvFormatVerifier {
 			this.csvFile = file;
 			referenceFile = new CsvHelper(Paths.get("./doc/reference.csv"));
 		} else {
-			throw new ImportException(
-					"Given path doesn't point to a regular csv-file");
+			throw new ImportException("Der übergebene Pfad führt nicht zu einer regulären csv-Datei");
 		}
 	}
 

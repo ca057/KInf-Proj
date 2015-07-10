@@ -6,14 +6,13 @@ import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
  * Passes rows to
  * {@link de.uniba.kinf.projm.hylleblomst.database.ImportDatabase}.
  * 
- * @author Hannes
+ * @author Johannes
  * 
  * @see {@link de.uniba.kinf.projm.hylleblomst.database.ImportDatabase}
  *
  */
 public interface ImportData {
 
-	// FIXME @see Link funktioniert nicht
 	/**
 	 * Takes the passed {@code String} path to the file and starts the import.
 	 * First, the {@code String} is validated, then the single rows are given to
@@ -24,8 +23,6 @@ public interface ImportData {
 	 * @return true - if import was successful, false - if import failed
 	 * 
 	 * @throws ImportException
-	 * 
-	 * @see {@link ImportData.Import}
 	 */
 	public void addData(String databaseURL, String path) throws ImportException;
 
