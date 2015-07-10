@@ -961,7 +961,7 @@ public class ViewController implements ControllerInterface, Initializable {
 		searchCategory_other_nummer.clear();
 		searchCategory_other_seite.clear();
 		searchCategory_other_nummerhess.clear();
-		search_sourcekey_selection.setValue(null);
+		search_sourcekey_selection.getSelectionModel().clearSelection();
 		search_useOrConjunction.setSelected(false);
 		search_useOpenSearch.setSelected(false);
 	}

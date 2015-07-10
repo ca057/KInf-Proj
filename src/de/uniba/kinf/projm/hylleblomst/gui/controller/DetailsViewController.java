@@ -12,12 +12,16 @@ import javax.sql.rowset.CachedRowSet;
 import de.uniba.kinf.projm.hylleblomst.gui.model.Model;
 import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.UserQueryImpl;
+import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
 
 /**
  * Controller for displaying the details of a person.
@@ -25,11 +29,16 @@ import javafx.scene.control.Label;
  */
 public class DetailsViewController implements ControllerInterface, Initializable {
 
-	private String personID;
+	private StringProperty personID;
 
 	private Model model;
 
 	private ViewHelper viewHelper;
+
+	final private String zusaetze = "Zusätze";
+
+	@FXML
+	private GridPane root;
 
 	@FXML
 	private ComboBox<String> result_details_anredeselection;
@@ -123,6 +132,7 @@ public class DetailsViewController implements ControllerInterface, Initializable
 
 	public DetailsViewController() {
 		viewHelper = new ViewHelper();
+		personID = new SimpleStringProperty();
 	}
 
 	public void setModel(Model model) {
@@ -137,6 +147,25 @@ public class DetailsViewController implements ControllerInterface, Initializable
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		setUpEventHandlers();
+		setUpBindings();
+	}
+
+	private void setUpBindings() {
+		BooleanBinding existsID = new BooleanBinding() {
+
+			{
+				super.bind(personID);
+			}
+
+			@Override
+			protected boolean computeValue() {
+				if (personID.getValueSafe().isEmpty()) {
+					return true;
+				}
+				return false;
+			}
+		};
+		root.disableProperty().bind(existsID);
 	}
 
 	private void setUpEventHandlers() {
@@ -144,7 +173,8 @@ public class DetailsViewController implements ControllerInterface, Initializable
 
 			@Override
 			public void handle(ActionEvent event) {
-
+				getSourceDetails(SearchFieldKeys.ZUSAETZE,
+						result_details_zusaetzeselection.getSelectionModel().getSelectedItem());
 			}
 		});
 	}
@@ -154,8 +184,14 @@ public class DetailsViewController implements ControllerInterface, Initializable
 			throw new InputMismatchException(
 					"Es können keine Tradierungen gesucht werden, da das Suchfeld oder die Quelle keinen Wert hat oder leer ist.");
 		}
-		CachedRowSet singleResult = model
-				.searchSourceDetails(new UserQueryImpl(sfk, personID, viewHelper.getSourceKeyByValueAsString(source)));
+		System.out.println("Gesucht wird nach Quelle: " + source);
+		CachedRowSet singleResult = model.searchSourceDetails(
+				new UserQueryImpl(sfk, personID.getValueSafe(), viewHelper.getSourceKeyByValueAsString(source)));
+		if (singleResult != null) {
+			System.out.println(singleResult.size());
+		} else {
+			System.out.println("Es gibt keine Detailinformationen für dieses Feld.");
+		}
 	}
 
 	/**
