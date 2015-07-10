@@ -56,6 +56,8 @@ public class ViewController implements ControllerInterface, Initializable {
 
 	private SearchInitiator initiator;
 
+	private DetailsController detailCtrl;
+
 	private Model model;
 
 	private UIHelper ui;
@@ -247,7 +249,8 @@ public class ViewController implements ControllerInterface, Initializable {
 	public ViewController() {
 		ui = new UIHelper();
 		initiator = new SearchInitiatorImpl();
-		model = new Model(initiator);
+		detailCtrl = new DetailsController();
+		model = new Model(initiator, detailCtrl);
 		model.addObserver(this);
 		searchCtrl = new SearchController(inputFieldCounter, model);
 	}
