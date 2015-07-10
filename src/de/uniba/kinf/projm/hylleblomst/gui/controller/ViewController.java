@@ -829,9 +829,14 @@ public class ViewController implements ControllerInterface, Initializable {
 	private int[] generateArrayWithSourceFieldKeys() {
 		int[] inputSourceKey = new int[inputFieldCounter];
 
-		inputSourceKey[0] = SourceKeys.STANDARD;
+		if (getSourceKeyByValueAsString(search_sourcekey_selection.getValue()) != SourceKeys.NORM) {
+			inputSourceKey[0] = SourceKeys.NO_SOURCE;
+			inputSourceKey[2] = SourceKeys.NO_SOURCE;
+		} else {
+			inputSourceKey[0] = SourceKeys.NORM;
+			inputSourceKey[2] = SourceKeys.NORM;
+		}
 		inputSourceKey[1] = SourceKeys.NORM;
-		inputSourceKey[2] = SourceKeys.STANDARD;
 		inputSourceKey[3] = SourceKeys.NORM;
 		inputSourceKey[4] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
 		inputSourceKey[5] = SourceKeys.STANDARD;
@@ -900,6 +905,8 @@ public class ViewController implements ControllerInterface, Initializable {
 		String labelText = search_sourcekey_selection.getValue();
 		if (labelText == null) {
 			labelText = "Keine Quelle ausgewählt.";
+		} else if ("normalisiert".equals(labelText)) {
+			labelText += " (Hinweis: Datensätze ohne Normalisierung werden nicht angezeigt.)";
 		}
 		sourceLabelName.set("Quelle: " + labelText);
 		search_sourceLabel.setText(sourceLabelName.getValueSafe());
