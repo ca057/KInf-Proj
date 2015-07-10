@@ -62,7 +62,7 @@ public class Model extends Observable {
 	public void searchPerson(UserQuery personIDQuery) throws SQLException {
 		if (personIDQuery != null) {
 			searchResult = search.searchPersonOrNotation(personIDQuery);
-			detailsController.processSearchResult(searchResult);
+			detailsController.processCompleteSearchResult(searchResult);
 		} else {
 			throw new InputMismatchException("Die übergebene ID ist fehlerhaft (null)");
 		}
