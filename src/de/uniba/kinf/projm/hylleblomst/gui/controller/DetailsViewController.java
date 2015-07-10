@@ -209,6 +209,41 @@ public class DetailsViewController implements ControllerInterface, Initializable
 	}
 
 	private void setUpEventHandlers() {
+		result_details_anredeselection.setOnAction((event) -> {
+			getSourceDetails(SearchFieldKeys.ANREDE,
+					result_details_anredeselection.getSelectionModel().getSelectedItem());
+		});
+		result_details_titelselection.setOnAction((event) -> {
+			getSourceDetails(SearchFieldKeys.TITEL,
+					result_details_titelselection.getSelectionModel().getSelectedItem());
+		});
+		result_details_vornameselection.setOnAction((event) -> {
+			getSourceDetails(SearchFieldKeys.VORNAME,
+					result_details_vornameselection.getSelectionModel().getSelectedItem());
+		});
+		result_details_nachnameselection.setOnAction((event) -> {
+			getSourceDetails(SearchFieldKeys.NACHNAME,
+					result_details_nachnameselection.getSelectionModel().getSelectedItem());
+		});
+		result_details_wirtschaftselection.setOnAction((event) -> {
+			getSourceDetails(SearchFieldKeys.WIRTSCHAFTSLAGE,
+					result_details_wirtschaftselection.getSelectionModel().getSelectedItem());
+		});
+		result_details_ortselection.setOnAction((event) -> {
+			getSourceDetails(SearchFieldKeys.ORT, result_details_ortselection.getSelectionModel().getSelectedItem());
+		});
+		result_details_studienfachselection.setOnAction((event) -> {
+			getSourceDetails(SearchFieldKeys.FACH,
+					result_details_studienfachselection.getSelectionModel().getSelectedItem());
+		});
+		result_details_fakultätselection.setOnAction((event) -> {
+			getSourceDetails(SearchFieldKeys.FAKULTAETEN,
+					result_details_fakultätselection.getSelectionModel().getSelectedItem());
+		});
+		result_details_seminarselection.setOnAction((event) -> {
+			getSourceDetails(SearchFieldKeys.SEMINAR,
+					result_details_seminarselection.getSelectionModel().getSelectedItem());
+		});
 		result_details_zusaetzeselection.setOnAction((event) -> {
 			getSourceDetails(SearchFieldKeys.ZUSAETZE,
 					result_details_zusaetzeselection.getSelectionModel().getSelectedItem());
