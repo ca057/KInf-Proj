@@ -304,7 +304,7 @@ public class ViewController implements ControllerInterface, Initializable {
 
 			@Override
 			public void handle(ActionEvent event) {
-				model.exportSearchedData();
+				// model.exportSearchedData();
 				event.consume();
 			}
 		});

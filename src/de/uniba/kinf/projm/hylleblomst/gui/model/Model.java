@@ -8,7 +8,9 @@ import java.util.Observable;
 
 import javax.sql.rowset.CachedRowSet;
 
+import de.uniba.kinf.projm.hylleblomst.dataExport.ExportToCSV;
 import de.uniba.kinf.projm.hylleblomst.database.DatabaseManagement;
+import de.uniba.kinf.projm.hylleblomst.exceptions.ExportException;
 import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 import de.uniba.kinf.projm.hylleblomst.exceptions.SetUpException;
 import de.uniba.kinf.projm.hylleblomst.gui.controller.DetailsViewController;
@@ -24,6 +26,7 @@ public class Model extends Observable {
 	CachedRowSet searchResult;
 	DatabaseManagement dbManagement;
 	DetailsViewController detailsController;
+	ExportToCSV export;
 
 	public CachedRowSet getSearchResult() {
 		return searchResult;
@@ -60,14 +63,22 @@ public class Model extends Observable {
 		if (personID != null) {
 			searchResult = search.searchPerson(personID);
 			detailsController.processSearchResult(searchResult);
-
 		} else {
 			throw new InputMismatchException("Die übergebene ID ist fehlerhaft (null)");
 		}
 	}
 
-	public void exportSearchedData() {
-		// TODO Simon do some stuff here
+	public void exportSearchedData(File file) throws ExportException {
+		if (file == null) {
+			throw new InputMismatchException("Der übergebene Dateipfad hat keinen Wert.");
+		}
+		export = new ExportToCSV();
+		try {
+			export.run(file);
+		} catch (ExportException e) {
+			e.printStackTrace();
+			throw new ExportException(e.getMessage());
+		}
 	}
 
 	public void setUpDatabase(File dirForSetup) throws SetUpException {

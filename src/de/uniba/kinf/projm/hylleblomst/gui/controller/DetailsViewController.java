@@ -117,8 +117,9 @@ public class DetailsViewController {
 		ResultSetMetaData crsMeta;
 		try {
 			crsMeta = searchResult.getMetaData();
-			crsMeta.getColumnCount();
-			for (int i = 0; i < crsMeta.getColumnCount(); i++) {
+			System.out.println(crsMeta.getColumnCount());
+			System.out.println(searchResult.size());
+			for (int i = 1; i <= crsMeta.getColumnCount(); i++) {
 				System.out.println(
 						"ColumnName: " + crsMeta.getColumnName(i) + " - ColumnLabel: " + crsMeta.getColumnLabel(i));
 			}
