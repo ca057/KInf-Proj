@@ -7,7 +7,11 @@ import de.uniba.kinf.projm.hylleblomst.keys.TableNameKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.UserQuery;
 
 /**
+ * This implementation of {@link UserQuery} processes the user input to a SQL
+ * statement.
+ * 
  * @author Johannes
+ * 
  *
  */
 public class UserQueryImpl implements UserQuery {
@@ -21,11 +25,20 @@ public class UserQueryImpl implements UserQuery {
 	private Boolean isOpenSearch = false;
 
 	/**
+	 * 
+	 * 
 	 * @param searchField
+	 *            the {@link SearchFieldKeys} to describe which input field was
+	 *            used
 	 * @param input
+	 *            the user generated input to the {@code searchField}
 	 * @param source
+	 *            the {@link SourceKeys} to describe the choice of source the
+	 *            user made
 	 * @param isOr
+	 *            a {@code boolean} whether open search is desired
 	 * @param isOpenSearch
+	 *            a {@code boolean} whether open search is desired
 	 */
 	public UserQueryImpl(SearchFieldKeys searchField, String input, int source, Boolean isOr, Boolean isOpenSearch) {
 		this.isOR = isOr;
@@ -93,7 +106,9 @@ public class UserQueryImpl implements UserQuery {
 	}
 
 	/*
-	 * Returns the name of the table the {@code SearchFieldKey} key belongs to.
+	 * Sets the name of the table and column the {@code SearchFieldKey} key
+	 * belongs to. Furthermore, it sets the WHERE part of a SQL statement. This
+	 * happens here to avoid further iterations.
 	 */
 	private void searchFieldKeyToDatabaseData() {
 		if (source > SourceKeys.bottom && source < SourceKeys.top) {
@@ -102,7 +117,6 @@ public class UserQueryImpl implements UserQuery {
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.ADLIG;
 				sqlWhere = String.format("%s.%s <> ''", table, column);
-				// source = SourceKeys.NO_SOURCE;
 				break;
 			case JESUIT:
 				table = TableNameKeys.PERSON;
@@ -277,7 +291,10 @@ public class UserQueryImpl implements UserQuery {
 	}
 
 	/*
-	 * 
+	 * Builds the WHERE part of the SQL statement, depending on which fields are
+	 * necessary. For example, if the user carried out no selection, the table
+	 * with normalized data has to be included. Assumed special case "Ort",
+	 * "Ort_Abweichung_Norm" has to be included in the search as well.
 	 */
 	private String buildSQLWhere() {
 		StringBuilder result = new StringBuilder();

@@ -6,7 +6,10 @@ import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.TableNameKeys;
 
 /**
- * UserQuery 
+ * A UserQuery represents one input the user made. It is used to process this
+ * data to a SQL statement, so all necessary information has to be given this
+ * userQuery. For further information, please consult the specific
+ * implementation of this interface.
  * 
  * @author Johannes
  *
