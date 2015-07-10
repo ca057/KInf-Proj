@@ -58,9 +58,6 @@ public class DetailsViewController implements ControllerInterface, Initializable
 	private ComboBox<String> result_details_studienfachselection;
 
 	@FXML
-	private ComboBox<String> result_details_fakultätselection;
-
-	@FXML
 	private ComboBox<String> result_details_seminarselection;
 
 	@FXML
@@ -235,10 +232,6 @@ public class DetailsViewController implements ControllerInterface, Initializable
 		result_details_studienfachselection.setOnAction((event) -> {
 			getSourceDetails(SearchFieldKeys.FACH,
 					result_details_studienfachselection.getSelectionModel().getSelectedItem());
-		});
-		result_details_fakultätselection.setOnAction((event) -> {
-			getSourceDetails(SearchFieldKeys.FAKULTAETEN,
-					result_details_fakultätselection.getSelectionModel().getSelectedItem());
 		});
 		result_details_seminarselection.setOnAction((event) -> {
 			getSourceDetails(SearchFieldKeys.SEMINAR,

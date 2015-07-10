@@ -154,16 +154,6 @@
             <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
          </GridPane.margin>
       </ComboBox>
-      <ComboBox fx:id="result_details_fakultätselection" prefWidth="150.0" promptText="Fakultät" GridPane.rowIndex="10">
-          	<items>
-				<FXCollections fx:factory="observableArrayList">
-					<!--  Achtung, hier gibt es gar keine Werte! -->
-				</FXCollections>
-			</items>
-         <GridPane.margin>
-            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
-         </GridPane.margin>
-      </ComboBox>
       <ComboBox fx:id="result_details_seminarselection" prefWidth="150.0" promptText="Seminar" GridPane.columnIndex="2" GridPane.rowIndex="1">
           	<items>
 				<FXCollections fx:factory="observableArrayList">
@@ -344,6 +334,11 @@
          </GridPane.margin>
       </Label>
       <Label fx:id="result_details_nummerhess" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="10">
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </Label>
+      <Label text="Fakultät" GridPane.rowIndex="10">
          <GridPane.margin>
             <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
          </GridPane.margin>
