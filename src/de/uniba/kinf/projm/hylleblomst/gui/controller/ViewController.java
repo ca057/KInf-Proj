@@ -1,6 +1,7 @@
 package de.uniba.kinf.projm.hylleblomst.gui.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.Observable;
@@ -26,6 +27,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
@@ -42,7 +44,9 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -239,6 +243,9 @@ public class ViewController implements ControllerInterface, Initializable {
 	@FXML
 	private ScrollPane result_persondetails_scrollpane;
 
+	@FXML
+	private AnchorPane result_persondetails_anchorpane;
+
 	/**
 	 * Constructor for a new Controller. When called, the array with
 	 * {@link SearchFieldKeys} and {@link SourceKeys} is build and set, the
@@ -263,6 +270,12 @@ public class ViewController implements ControllerInterface, Initializable {
 		setUpBindings();
 		searchCategories.setExpandedPane(searchCategory_person);
 		search_sourceLabel.setText(sourceLabelName.getValueSafe());
+		try {
+			result_persondetails_anchorpane.getChildren()
+					.add((GridPane) FXMLLoader.load(getClass().getResource("../view/hylleblomstViewDetails.fxml")));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void clearResultTable() {
