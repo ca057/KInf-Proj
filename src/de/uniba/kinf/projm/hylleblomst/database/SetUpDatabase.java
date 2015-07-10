@@ -47,7 +47,7 @@ public class SetUpDatabase {
 
 	private void createUsers(Connection con) throws SetUpException {
 		try (PreparedStatement stmt = con
-				.prepareStatement("CALL SYSCS_UTIL.SYSCS_CREATE_USER(?, ?)");) {
+				.prepareCall("CALL SYSCS_UTIL.SYSCS_CREATE_USER(?, ?)");) {
 			createAdminUser(stmt);
 			createGuestUser(stmt);
 		} catch (SQLException e) {
@@ -84,7 +84,7 @@ public class SetUpDatabase {
 
 	private void setUserAccess(Connection con) throws SetUpException {
 		try (PreparedStatement stmt = con
-				.prepareStatement("CALL SYSCS_UTIL.SYSCS_SET_USER_ACCESS (?, ?)");) {
+				.prepareCall("CALL SYSCS_UTIL.SYSCS_SET_USER_ACCESS (?, ?)");) {
 			setAdminUser(stmt);
 			setGuestUser(stmt);
 		} catch (SQLException e) {
