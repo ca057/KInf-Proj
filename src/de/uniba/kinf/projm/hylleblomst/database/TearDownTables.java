@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import de.uniba.kinf.projm.hylleblomst.exceptions.SetUpException;
-import de.uniba.kinf.projm.hylleblomst.keys.DBUserKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.TableNameKeys;
 
 /**
@@ -21,12 +20,12 @@ import de.uniba.kinf.projm.hylleblomst.keys.TableNameKeys;
  */
 public class TearDownTables {
 
-	public boolean run(String dbURL) throws SetUpException {
+	public boolean run(String dbURL, String adminUser, String adminPassword)
+			throws SetUpException {
 		int interrupt = 0;
 
-		try (Connection con = DriverManager.getConnection(dbURL,
-				DBUserKeys.adminUser, DBUserKeys.adminPassword)) {
-			Statement stmt = con.createStatement();
+		try (Connection con = DriverManager.getConnection(dbURL, adminUser,
+				adminPassword); Statement stmt = con.createStatement();) {
 
 			String[] tables = TableNameKeys.getAllTableNames();
 
@@ -43,14 +42,14 @@ public class TearDownTables {
 						stmt.executeUpdate(String
 								.format("DROP TABLE %s", table));
 					} catch (SQLException e) {
-						// TODO empty by intention
+						// empty by intention
 					}
 				}
 				try {
 					stmt.executeUpdate(String.format("DROP SCHEMA %s RESTRICT",
 							TableNameKeys.SCHEMA_NAME));
 				} catch (Exception e) {
-					// TODO empty by intention
+					// empty by intention
 				}
 			}
 			return true;
@@ -77,18 +76,21 @@ public class TearDownTables {
 	 *             schema in question.
 	 */
 	private boolean schemaExists(Connection con) throws SQLException {
-		boolean result;
+		boolean result = true;
 
-		PreparedStatement stmt = con.prepareStatement(
+		try (PreparedStatement stmt = con.prepareStatement(
 				"SELECT * FROM sys.sysschemas WHERE SCHEMANAME=?",
-				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
-		stmt.setString(1, TableNameKeys.SCHEMA_NAME.toUpperCase());
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);) {
 
-		ResultSet rs = stmt.executeQuery();
+			stmt.setString(1, TableNameKeys.SCHEMA_NAME.toUpperCase());
 
-		con.setAutoCommit(false);
-		result = rs.isBeforeFirst();
-		con.setAutoCommit(true);
+			try (ResultSet rs = stmt.executeQuery();) {
+
+				con.setAutoCommit(false);
+				result = rs.isBeforeFirst();
+				con.setAutoCommit(true);
+			}
+		}
 
 		return result;
 	}

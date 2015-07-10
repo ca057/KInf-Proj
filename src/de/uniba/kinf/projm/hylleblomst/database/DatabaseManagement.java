@@ -56,7 +56,8 @@ public class DatabaseManagement {
 	 */
 	public void tearDownTables() throws SetUpException {
 		try {
-			new TearDownTables().run(db.dbURL);
+			new TearDownTables().run(db.dbURL, DBUserKeys.adminUser,
+					DBUserKeys.adminPassword);
 		} catch (SetUpException e) {
 			StringBuilder errorMessage = new StringBuilder();
 			errorMessage.append("Database could not be torn down: ");

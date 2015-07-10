@@ -374,8 +374,7 @@ public class ImportDatabaseImpl implements ImportDatabase {
 		int id;
 
 		if (!validation.entryAlreadyInDatabase(entry, foreignKey, table)) {
-			try {
-				PreparedStatement stmt = con.prepareStatement(sqlQuery);
+			try (PreparedStatement stmt = con.prepareStatement(sqlQuery);) {
 				id = validation.getMaxID(table) + 1;
 
 				stmt.setInt(1, id);
@@ -404,8 +403,7 @@ public class ImportDatabaseImpl implements ImportDatabase {
 
 		if (!validation.entryAlreadyInDatabase(tradID, quellenID, personID,
 				table)) {
-			try {
-				PreparedStatement stmt = con.prepareStatement(sqlQuery);
+			try (PreparedStatement stmt = con.prepareStatement(sqlQuery);) {
 
 				stmt.setInt(1, tradID);
 				stmt.setInt(2, quellenID);
@@ -460,8 +458,7 @@ public class ImportDatabaseImpl implements ImportDatabase {
 				indexOf1Or2InStudienjahr, indexOf1Or2InStudienjahr + 4));
 
 		if (!validation.personIDIsTaken(personID)) {
-			try {
-				PreparedStatement stmt = con.prepareStatement(sqlQuery);
+			try (PreparedStatement stmt = con.prepareStatement(sqlQuery);) {
 
 				stmt.setInt(1, personID);
 				stmt.setInt(2, seite);
@@ -524,8 +521,7 @@ public class ImportDatabaseImpl implements ImportDatabase {
 		}
 
 		if (!validation.entryAlreadyInDatabase(entry, anmerkung, table)) {
-			try {
-				PreparedStatement stmt = con.prepareStatement(sqlQuery);
+			try (PreparedStatement stmt = con.prepareStatement(sqlQuery);) {
 				id = validation.getMaxID(table) + 1;
 
 				stmt.setInt(1, id);

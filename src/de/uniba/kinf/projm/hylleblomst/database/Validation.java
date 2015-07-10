@@ -46,15 +46,12 @@ class Validation {
 				ResultSet.CONCUR_READ_ONLY);) {
 			stmt.setInt(1, personID);
 
-			ResultSet rs = stmt.executeQuery();
+			try (ResultSet rs = stmt.executeQuery();) {
 
-			con.setAutoCommit(false);
-
-			// Returns true if ResultSet is not empty, false otherwise
-
-			result = rs.isBeforeFirst();
-			con.setAutoCommit(true);
-
+				con.setAutoCommit(false);
+				result = rs.isBeforeFirst();
+				con.setAutoCommit(true);
+			}
 		} catch (SQLException e) {
 			throw new ImportException(personIdColumn
 					+ " could not be validated: " + e.getSQLState());
@@ -88,14 +85,12 @@ class Validation {
 				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);) {
 			stmt.setString(1, entry);
 
-			ResultSet rs = stmt.executeQuery();
+			try (ResultSet rs = stmt.executeQuery();) {
 
-			con.setAutoCommit(false);
-
-			// Returns true if ResultSet is not empty, false otherwise
-			result = rs.isBeforeFirst();
-			con.setAutoCommit(true);
-
+				con.setAutoCommit(false);
+				result = rs.isBeforeFirst();
+				con.setAutoCommit(true);
+			}
 		} catch (SQLException e) {
 			throw new ImportException("Could not be validated: " + entry
 					+ " in " + table + "\n" + e.getSQLState());
@@ -118,14 +113,13 @@ class Validation {
 			stmt.setString(1, entry);
 			stmt.setInt(2, foreignKey);
 
-			ResultSet rs = stmt.executeQuery();
+			try (ResultSet rs = stmt.executeQuery();) {
 
-			con.setAutoCommit(false);
-
-			// Returns true if ResultSet is not empty, false otherwise
-			result = rs.isBeforeFirst();
-			con.setAutoCommit(true);
-
+				con.setAutoCommit(false);
+				// Returns true if ResultSet is not empty, false otherwise
+				result = rs.isBeforeFirst();
+				con.setAutoCommit(true);
+			}
 		} catch (SQLException e) {
 			throw new ImportException("PersonID could not be validated: "
 					+ e.getSQLState());
@@ -150,12 +144,12 @@ class Validation {
 			stmt.setString(1, entry);
 			stmt.setString(2, anmerkung);
 
-			ResultSet rs = stmt.executeQuery();
+			try (ResultSet rs = stmt.executeQuery();) {
 
-			con.setAutoCommit(false);
-			result = rs.isBeforeFirst();
-
-			con.setAutoCommit(true);
+				con.setAutoCommit(false);
+				result = rs.isBeforeFirst();
+				con.setAutoCommit(true);
+			}
 		} catch (SQLException e) {
 			throw new ImportException("Could not be validated: " + table + "\n"
 					+ e.getSQLState());
@@ -181,15 +175,12 @@ class Validation {
 			stmt.setInt(2, quellenID);
 			stmt.setInt(3, personID);
 
-			ResultSet rs = stmt.executeQuery();
+			try (ResultSet rs = stmt.executeQuery();) {
 
-			con.setAutoCommit(false);
-
-			// Returns true if ResultSet is not empty, false otherwise
-			result = rs.isBeforeFirst();
-
-			con.setAutoCommit(true);
-
+				con.setAutoCommit(false);
+				result = rs.isBeforeFirst();
+				con.setAutoCommit(true);
+			}
 		} catch (SQLException e) {
 			throw new ImportException("Could not be validated: " + table + "\n"
 					+ e.getSQLState());
@@ -214,11 +205,11 @@ class Validation {
 		try (PreparedStatement stmt = con.prepareStatement(querySql,
 				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);) {
 
-			ResultSet rs = stmt.executeQuery();
-			ResultSetMetaData rsmd = rs.getMetaData();
+			try (ResultSet rs = stmt.executeQuery();) {
+				ResultSetMetaData rsmd = rs.getMetaData();
 
-			result = rsmd.getColumnName(i);
-
+				result = rsmd.getColumnName(i);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -244,14 +235,13 @@ class Validation {
 
 		try (PreparedStatement stmt = con.prepareStatement(getMaxIDSQL,
 				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);) {
-			ResultSet rs = stmt.executeQuery();
+			try (ResultSet rs = stmt.executeQuery();) {
 
-			con.setAutoCommit(false);
-
-			rs.first();
-			result += rs.getInt(1);
-
-			con.setAutoCommit(true);
+				con.setAutoCommit(false);
+				rs.first();
+				result += rs.getInt(1);
+				con.setAutoCommit(true);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -280,15 +270,13 @@ class Validation {
 				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);) {
 
 			stmt.setString(1, entry);
-			ResultSet rs = stmt.executeQuery();
+			try (ResultSet rs = stmt.executeQuery();) {
 
-			con.setAutoCommit(false);
-
-			rs.next();
-			id = rs.getInt(1);
-
-			con.setAutoCommit(true);
-
+				con.setAutoCommit(false);
+				rs.next();
+				id = rs.getInt(1);
+				con.setAutoCommit(true);
+			}
 		} catch (SQLException e) {
 			throw new ImportException("Wasn't able to fetch ID: " + table
 					+ "\n" + e.getSQLState());
@@ -311,15 +299,13 @@ class Validation {
 			stmt.setString(1, entry);
 			stmt.setInt(2, foreignKey);
 
-			ResultSet rs = stmt.executeQuery();
+			try (ResultSet rs = stmt.executeQuery();) {
 
-			con.setAutoCommit(false);
-
-			rs.next();
-			id = rs.getInt(1);
-
-			con.setAutoCommit(true);
-
+				con.setAutoCommit(false);
+				rs.next();
+				id = rs.getInt(1);
+				con.setAutoCommit(true);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -332,25 +318,23 @@ class Validation {
 		String columnOne = getColumnName(table, 1);
 		String columnTwo = getColumnName(table, 2);
 		String columnThree = getColumnName(table, 3);
+		String sqlQuery = String.format(
+				"SELECT %2$s FROM %1$s WHERE %3$s=? AND %4$s=?", table,
+				columnOne, columnTwo, columnThree);
 
-		try {
-			String sqlQuery = String.format(
-					"SELECT %2$s FROM %1$s WHERE %3$s=? AND %4$s=?", table,
-					columnOne, columnTwo, columnThree);
-			PreparedStatement stmt = con.prepareStatement(sqlQuery,
-					ResultSet.TYPE_SCROLL_INSENSITIVE,
-					ResultSet.CONCUR_READ_ONLY);
+		try (PreparedStatement stmt = con.prepareStatement(sqlQuery,
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);) {
 
 			stmt.setString(1, entry);
 			stmt.setString(2, anmerkung);
 
-			ResultSet rs = stmt.executeQuery();
-			con.setAutoCommit(false);
+			try (ResultSet rs = stmt.executeQuery();) {
 
-			rs.next();
-			id = rs.getInt(1);
-
-			con.setAutoCommit(true);
+				con.setAutoCommit(false);
+				rs.next();
+				id = rs.getInt(1);
+				con.setAutoCommit(true);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return 0;

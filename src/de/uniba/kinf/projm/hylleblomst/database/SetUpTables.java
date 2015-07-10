@@ -24,7 +24,8 @@ public class SetUpTables {
 		int interrupt = 0;
 		try (Connection con = DriverManager.getConnection(dbURL, adminUser,
 				adminPassword);
-				PreparedStatement stmt = con.prepareStatement("",
+				PreparedStatement stmt = con.prepareStatement(
+						"SELECT * FROM Hylleblomst.Person",
 						ResultSet.TYPE_SCROLL_INSENSITIVE,
 						ResultSet.CONCUR_READ_ONLY);) {
 
@@ -35,7 +36,7 @@ public class SetUpTables {
 				interrupt++;
 				if (interrupt >= 10) {
 					throw new SetUpException(
-							"Database could not be build, maybe some necessary information for setup is missing");
+							"Tables could not be build, maybe some necessary information for setup is missing");
 				}
 				createSchema(stmt);
 
@@ -68,7 +69,8 @@ public class SetUpTables {
 
 			}
 		} catch (SQLException e) {
-			throw new SetUpException("Tables could not be build: ", e);
+			throw new SetUpException(e.getErrorCode()
+					+ ": Tables could not be build: " + e.getMessage(), e);
 		}
 	}
 
@@ -76,7 +78,6 @@ public class SetUpTables {
 	 * This method checks whether all tables that are supposed to be inserted
 	 * already exist in the database
 	 * 
-	 * @param stmt2
 	 * @param con
 	 * 
 	 * @return
