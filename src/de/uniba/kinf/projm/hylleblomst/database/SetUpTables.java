@@ -8,22 +8,22 @@ import java.sql.SQLException;
 
 import de.uniba.kinf.projm.hylleblomst.exceptions.SetUpException;
 import de.uniba.kinf.projm.hylleblomst.keys.ColumnNameKeys;
-import de.uniba.kinf.projm.hylleblomst.keys.DBUserKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.TableNameKeys;
 
 /**
- * This class has the sole purpose of setting up a database with all tables
- * required to import project-specific data.
+ * This class has the sole purpose of setting up all tables required to import
+ * project-specific data.
  * 
  * @author Simon
  *
  */
 public class SetUpTables {
 
-	public void run(String dbURL) throws SetUpException {
+	public void run(String dbURL, String adminUser, String adminPassword)
+			throws SetUpException {
 		int interrupt = 0;
-		try (Connection con = DriverManager.getConnection(dbURL,
-				DBUserKeys.adminUser, DBUserKeys.adminPassword);
+		try (Connection con = DriverManager.getConnection(dbURL, adminUser,
+				adminPassword);
 				PreparedStatement stmt = con.prepareStatement("",
 						ResultSet.TYPE_SCROLL_INSENSITIVE,
 						ResultSet.CONCUR_READ_ONLY);) {
