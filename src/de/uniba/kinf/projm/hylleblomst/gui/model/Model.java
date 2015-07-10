@@ -22,14 +22,16 @@ public class Model extends Observable {
 	SearchInitiator search;
 	CachedRowSet searchResult;
 	DatabaseManagement dbManagement;
+	DetailsController detailsController;
 
 	public CachedRowSet getSearchResult() {
 		return searchResult;
 	}
 
-	public Model(SearchInitiator search) {
-		if (search != null) {
+	public Model(SearchInitiator search, DetailsController detailsController) {
+		if (search != null && detailsController != null) {
 			this.search = search;
+			this.detailsController = detailsController;
 		} else {
 			throw new InputMismatchException("Die Logik des Programms ist fehlerhaft (null)");
 		}
@@ -47,9 +49,10 @@ public class Model extends Observable {
 
 	public void searchPerson(String id) throws SQLException {
 		if (id != null) {
-			searchResult = search.searchPersonOrNotation(id);
-			setChanged();
-			notifyObservers();
+			// FIXME searchPerson muss userQuery bekommen
+			// searchResult = search.searchPerson(id);
+			detailsController.processSearchResult(searchResult);
+
 		} else {
 			throw new InputMismatchException("Die übergebene ID ist fehlerhaft (null)");
 		}

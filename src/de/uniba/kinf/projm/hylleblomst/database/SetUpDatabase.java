@@ -14,7 +14,8 @@ import de.uniba.kinf.projm.hylleblomst.keys.DBUserKeys;
  */
 public class SetUpDatabase {
 
-	public void run(String dbURL) throws SetUpException {
+	public void run(String dbURL, String adminUser, String adminPassword)
+			throws SetUpException {
 		// if (!Files.isDirectory(Paths.get(dbURL))) {
 		// throw new SetUpException("Path is no directory");
 		// }
@@ -27,8 +28,7 @@ public class SetUpDatabase {
 		// urlStatement.append(DBUserKeys.adminPassword);
 
 		try (Connection con = DriverManager.getConnection(dbURL
-				+ "; create=true", DBUserKeys.adminUser,
-				DBUserKeys.adminPassword)) {
+				+ "; create=true", adminUser, adminPassword)) {
 			// Create users
 			// createUsers(con);
 
@@ -46,10 +46,8 @@ public class SetUpDatabase {
 	}
 
 	private void createUsers(Connection con) throws SetUpException {
-		try {
-			PreparedStatement stmt;
-			stmt = con
-					.prepareStatement("CALL SYSCS_UTIL.SYSCS_CREATE_USER(?, ?)");
+		try (PreparedStatement stmt = con
+				.prepareStatement("CALL SYSCS_UTIL.SYSCS_CREATE_USER(?, ?)");) {
 			// createAdminUser(stmt);
 			createGuestUser(stmt);
 		} catch (SQLException | SetUpException e) {
@@ -80,10 +78,8 @@ public class SetUpDatabase {
 	}
 
 	private void setUserAccess(Connection con) throws SetUpException {
-		try {
-			PreparedStatement stmt;
-			stmt = con
-					.prepareStatement("CALL SYSCS_UTIL.SYSCS_SET_USER_ACCESS (?, ?)");
+		try (PreparedStatement stmt = con
+				.prepareStatement("CALL SYSCS_UTIL.SYSCS_SET_USER_ACCESS (?, ?)");) {
 			setAdminUser(stmt);
 			setGuestUser(stmt);
 		} catch (SQLException | SetUpException e) {
@@ -114,10 +110,8 @@ public class SetUpDatabase {
 	}
 
 	private void setDefaultAccess(Connection con) throws SetUpException {
-		try {
-			PreparedStatement stmt;
-			stmt = con
-					.prepareStatement("CALL SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY('derby.database.defaultConnectionMode','readOnlyAccess')");
+		try (PreparedStatement stmt = con
+				.prepareStatement("CALL SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY('derby.database.defaultConnectionMode','readOnlyAccess')");) {
 			stmt.executeUpdate();
 		} catch (SQLException e) {
 			throw new SetUpException(e.getSQLState() + "\n" + e.getMessage());

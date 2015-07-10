@@ -6,6 +6,7 @@ import de.uniba.kinf.projm.hylleblomst.dataImport.CsvFormatVerifier;
 import de.uniba.kinf.projm.hylleblomst.dataImport.ImportDataImpl;
 import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 import de.uniba.kinf.projm.hylleblomst.exceptions.SetUpException;
+import de.uniba.kinf.projm.hylleblomst.keys.DBUserKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.DatabaseKeys;
 
 /**
@@ -28,7 +29,8 @@ public class DatabaseManagement {
 	 */
 	public void setUpDatabase() throws SetUpException {
 		try {
-			new SetUpDatabase().run(db.dbURL);
+			new SetUpDatabase().run(db.dbURL, DBUserKeys.adminUser,
+					DBUserKeys.adminPassword);
 		} catch (SetUpException e) {
 			StringBuilder errorMessage = new StringBuilder();
 			errorMessage.append("Database could not be set up: ");
@@ -39,7 +41,8 @@ public class DatabaseManagement {
 
 	public void setUpTables() throws SetUpException {
 		try {
-			new SetUpTables().run(db.dbURL);
+			new SetUpTables().run(db.dbURL, DBUserKeys.adminUser,
+					DBUserKeys.adminPassword);
 		} catch (SetUpException e) {
 			StringBuilder errorMessage = new StringBuilder();
 			errorMessage.append("Database could not be set up: ");

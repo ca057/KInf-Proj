@@ -36,12 +36,12 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -55,6 +55,8 @@ import javafx.util.Callback;
 public class ViewController implements ControllerInterface, Initializable {
 
 	private SearchInitiator initiator;
+
+	private DetailsController detailCtrl;
 
 	private Model model;
 
@@ -235,7 +237,7 @@ public class ViewController implements ControllerInterface, Initializable {
 	private Label search_sourceLabel;
 
 	@FXML
-	private TextArea infoArea;
+	private AnchorPane result_persondetails_anchorpane;
 
 	/**
 	 * Constructor for a new Controller. When called, the array with
@@ -247,7 +249,8 @@ public class ViewController implements ControllerInterface, Initializable {
 	public ViewController() {
 		ui = new UIHelper();
 		initiator = new SearchInitiatorImpl();
-		model = new Model(initiator);
+		detailCtrl = new DetailsController();
+		model = new Model(initiator, detailCtrl);
 		model.addObserver(this);
 		searchCtrl = new SearchController(inputFieldCounter, model);
 	}
@@ -645,7 +648,7 @@ public class ViewController implements ControllerInterface, Initializable {
 		}
 	}
 
-	void fillResultTable(CachedRowSet result) {
+	private void fillResultTable(CachedRowSet result) {
 		if (result == null || result.size() == 0) {
 			ui.showInfo("Die Suche hat kein Ergebnis zurückgeliefert.");
 		} else {
@@ -948,7 +951,6 @@ public class ViewController implements ControllerInterface, Initializable {
 		search_sourcekey_selection.setValue(null);
 		search_useOrConjunction.setSelected(false);
 		search_useOpenSearch.setSelected(false);
-		infoArea.clear();
 	}
 
 	/**

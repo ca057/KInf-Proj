@@ -381,11 +381,244 @@
 								</VBox>
 							</children>
 						</AnchorPane>
-						<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
-							<children>
-								<TextArea fx:id="infoArea" layoutX="229.0" layoutY="40.0" prefHeight="332.0" prefWidth="698.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-							</children>
-						</AnchorPane>
+                  <ScrollPane>
+                     <content>
+                        <GridPane prefHeight="331.0" prefWidth="698.0">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <padding>
+                              <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                           </padding>
+                           <children>
+                              <Label text="Adlig" GridPane.rowIndex="5">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label text="Jesuit" GridPane.rowIndex="6">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </Label>
+                              <ComboBox prefWidth="150.0" promptText="Anrede" GridPane.rowIndex="1">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </ComboBox>
+                              <ComboBox prefWidth="150.0" promptText="Titel" GridPane.rowIndex="2">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </ComboBox>
+                              <ComboBox prefWidth="150.0" promptText="Vorname" GridPane.rowIndex="3">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </ComboBox>
+                              <ComboBox prefWidth="150.0" promptText="Nachname" GridPane.rowIndex="4">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </ComboBox>
+                              <ComboBox prefWidth="150.0" promptText="wirtschaftl. Lage" GridPane.rowIndex="7">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </ComboBox>
+                              <ComboBox prefWidth="150.0" promptText="Ort" GridPane.rowIndex="8">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </ComboBox>
+                              <ComboBox prefWidth="150.0" promptText="Studienfach" GridPane.rowIndex="9">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </ComboBox>
+                              <ComboBox prefWidth="150.0" promptText="Fakultät" GridPane.rowIndex="10">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </ComboBox>
+                              <ComboBox prefWidth="150.0" promptText="Seminar" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </ComboBox>
+                              <Label fx:id="result_details_anrede" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="5">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="6">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="7">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="8">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="9">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label text="Label" GridPane.columnIndex="1" GridPane.rowIndex="10">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label text="Label" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </Label>
+                              <ComboBox prefWidth="150.0" promptText="Zusätze" GridPane.columnIndex="2" GridPane.rowIndex="5">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </ComboBox>
+                              <Label text="Graduiert" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label text="Studienjahr" GridPane.columnIndex="2" GridPane.rowIndex="3">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label text="Einschreibedatum" GridPane.columnIndex="2" GridPane.rowIndex="4">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label text="Fundort" GridPane.columnIndex="2" GridPane.rowIndex="6">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label text="Anmerkungen" GridPane.columnIndex="2" GridPane.rowIndex="7">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label text="Nummer" GridPane.columnIndex="2" GridPane.rowIndex="8">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label text="Seite Original" GridPane.columnIndex="2" GridPane.rowIndex="9">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label text="Nummer Hess" GridPane.columnIndex="2" GridPane.rowIndex="10">
+                                 <GridPane.margin>
+                                    <Insets />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label text="Personendetails">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Label>
+                              <Label text="Label" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label text="Label" GridPane.columnIndex="3" GridPane.rowIndex="3">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label text="Label" GridPane.columnIndex="3" GridPane.rowIndex="4">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label text="Label" GridPane.columnIndex="3" GridPane.rowIndex="5">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label text="Label" GridPane.columnIndex="3" GridPane.rowIndex="6">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label text="Label" GridPane.columnIndex="3" GridPane.rowIndex="7">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label text="Label" GridPane.columnIndex="3" GridPane.rowIndex="8">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label text="Label" GridPane.columnIndex="3" GridPane.rowIndex="9">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </Label>
+                              <Label text="Label" GridPane.columnIndex="3" GridPane.rowIndex="10">
+                                 <GridPane.margin>
+                                    <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                 </GridPane.margin>
+                              </Label>
+                           </children>
+                        </GridPane>
+                     </content>
+                  </ScrollPane>
 					</items>
 				</SplitPane>
 			</children>
