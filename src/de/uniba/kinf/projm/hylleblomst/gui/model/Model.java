@@ -11,6 +11,7 @@ import javax.sql.rowset.CachedRowSet;
 import de.uniba.kinf.projm.hylleblomst.database.DatabaseManagement;
 import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 import de.uniba.kinf.projm.hylleblomst.exceptions.SetUpException;
+import de.uniba.kinf.projm.hylleblomst.gui.controller.DetailsController;
 import de.uniba.kinf.projm.hylleblomst.logic.SearchInitiator;
 import de.uniba.kinf.projm.hylleblomst.logic.UserQuery;
 
