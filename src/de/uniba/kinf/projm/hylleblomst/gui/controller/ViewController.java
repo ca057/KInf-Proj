@@ -738,9 +738,8 @@ public class ViewController implements ControllerInterface, Initializable {
 										CellDataFeatures<ObservableList<String>, String> param) {
 									Optional<String> optionalParam = Optional.ofNullable(param.getValue().get(j));
 									if (optionalParam.isPresent() && columnNameForCheck.equals("DATUM")) {
-										return new SimpleStringProperty(
-												formatDateForDisplaying(param.getValue().get(j).toString(),
-														param.getValue().get(j + 1).toString()));
+										return new SimpleStringProperty(formatDateForDisplaying(param.getValue().get(j),
+												param.getValue().get(j + 1)));
 									} else if (optionalParam.isPresent()) {
 										return new SimpleStringProperty(optionalParam.get());
 									} else {
