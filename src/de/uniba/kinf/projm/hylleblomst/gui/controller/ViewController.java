@@ -1,7 +1,6 @@
 package de.uniba.kinf.projm.hylleblomst.gui.controller;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.Observable;
@@ -27,8 +26,8 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -45,7 +44,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -58,8 +56,6 @@ import javafx.util.Callback;
 public class ViewController implements ControllerInterface, Initializable {
 
 	private SearchInitiator initiator;
-
-	private DetailsController detailCtrl;
 
 	private Model model;
 
@@ -242,6 +238,12 @@ public class ViewController implements ControllerInterface, Initializable {
 	@FXML
 	private AnchorPane result_persondetails_anchorpane;
 
+	@FXML
+	Parent detailsView;
+
+	@FXML
+	DetailsViewController detailsViewController;
+
 	/**
 	 * Constructor for a new Controller. When called, the array with
 	 * {@link SearchFieldKeys} and {@link SourceKeys} is build and set, the
@@ -252,8 +254,7 @@ public class ViewController implements ControllerInterface, Initializable {
 	public ViewController() {
 		ui = new UIHelper();
 		initiator = new SearchInitiatorImpl();
-		detailCtrl = new DetailsController();
-		model = new Model(initiator, detailCtrl);
+		model = new Model(initiator);
 		model.addObserver(this);
 		searchCtrl = new SearchController(inputFieldCounter, model);
 	}
@@ -265,6 +266,9 @@ public class ViewController implements ControllerInterface, Initializable {
 		setEventHandlers();
 		setUpLabels();
 		setUpBindings();
+		// when import of embedded fxml is finished, set the DetailsController
+		// of the model
+		model.setDetailsController(detailsViewController);
 	}
 
 	private void clearResultTable() {
@@ -275,12 +279,6 @@ public class ViewController implements ControllerInterface, Initializable {
 	private void setUpNodes() {
 		searchCategories.setExpandedPane(searchCategory_person);
 		search_sourceLabel.setText(sourceLabelName.getValueSafe());
-		try {
-			result_persondetails_anchorpane.getChildren()
-					.add((GridPane) FXMLLoader.load(getClass().getResource("../view/hylleblomstViewDetails.fxml")));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	/**

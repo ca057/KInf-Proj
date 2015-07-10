@@ -1,5 +1,9 @@
 package de.uniba.kinf.projm.hylleblomst.gui.controller;
 
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
+import java.util.InputMismatchException;
+
 import javax.sql.rowset.CachedRowSet;
 
 import javafx.fxml.FXML;
@@ -10,7 +14,7 @@ import javafx.scene.control.Label;
  * Controller for displaying the details of a person.
  *
  */
-public class DetailsController {
+public class DetailsViewController {
 
 	@FXML
 	private ComboBox<String> result_details_anredeselection;
@@ -107,7 +111,22 @@ public class DetailsController {
 	 * @param searchResult
 	 */
 	public void processSearchResult(CachedRowSet searchResult) {
+		if (searchResult == null) {
+			throw new InputMismatchException("Das Suchergebnis für die Details einer Person hat keinen Wert.");
+		}
+		ResultSetMetaData crsMeta;
+		try {
+			crsMeta = searchResult.getMetaData();
+			crsMeta.getColumnCount();
+			for (int i = 0; i < crsMeta.getColumnCount(); i++) {
+				System.out.println(
+						"ColumnName: " + crsMeta.getColumnName(i) + " - ColumnLabel: " + crsMeta.getColumnLabel(i));
+			}
 
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

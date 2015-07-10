@@ -382,8 +382,7 @@
 							</children>
 						</AnchorPane>
 					<ScrollPane fx:id="result_persondetails_scrollpane">
-	                  <AnchorPane fx:id="result_persondetails_anchorpane">
-	                  </AnchorPane>
+	                  <fx:include fx:id="detailsView" source="hylleblomstViewDetails.fxml"/>
 					</ScrollPane>
 					</items>
 				</SplitPane>
