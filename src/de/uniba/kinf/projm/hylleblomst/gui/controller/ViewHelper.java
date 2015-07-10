@@ -2,6 +2,7 @@ package de.uniba.kinf.projm.hylleblomst.gui.controller;
 
 import java.util.Optional;
 
+import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonType;
@@ -11,7 +12,7 @@ import javafx.scene.image.ImageView;
  * Supports the creation of a lovely user interface <3.
  *
  */
-public class UIHelper {
+public class ViewHelper {
 
 	private String appName = "Hylleblomst";
 
@@ -146,5 +147,44 @@ public class UIHelper {
 			confirmationAlert.close();
 			return false;
 		}
+	}
+
+	/**
+	 * Checks the value of the selection for the source of the first name and
+	 * returns the corresponding {@link SourceKey}.
+	 * 
+	 * @param value
+	 *            the user input as String
+	 * @return the corresponding {@link SourceKey} as {@code String}
+	 */
+	int getSourceKeyByValueAsString(String value) {
+		if ("Standard".equals(value)) {
+			return SourceKeys.STANDARD;
+		} else if ("normalisiert".equals(value)) {
+			return SourceKeys.NORM;
+		} else if ("Abweichung normalisiert".equals(value)) {
+			return SourceKeys.ORT_NORM_AB;
+		} else if ("HS B (AUB, I 11)".equals(value)) {
+			return SourceKeys.HSB_AUB_I11;
+		} else if ("HS C (AUB, I 13/1)".equals(value)) {
+			return SourceKeys.HSC_AUB_I131;
+		} else if ("HS D (AUB, I 13/2)".equals(value)) {
+			return SourceKeys.HSD_AUB_I132;
+		} else if ("HS E (AUB, I 9)".equals(value)) {
+			return SourceKeys.HSE_AUB_I9;
+		} else if ("HS F (AUB, I 8)".equals(value)) {
+			return SourceKeys.HSF_AUB_I8;
+		} else if ("HS G (AUB, I 6)".equals(value)) {
+			return SourceKeys.HSG_AUB_I6;
+		} else if ("HS H (AEB, Rep. I, Nr. 321)".equals(value)) {
+			return SourceKeys.HSH_AEB_I321;
+		} else if ("HS I (SB Bamberg, Msc.Add.3a)".equals(value)) {
+			return SourceKeys.HSI_SB_3a;
+		} else if ("HS J (SB Bamberg, Msc.Add.3)".equals(value)) {
+			return SourceKeys.HSJ_3;
+		} else if ("AUB, V E 38".equals(value)) {
+			return SourceKeys.AUB_V_E38;
+		}
+		return SourceKeys.NO_SELECTION;
 	}
 }

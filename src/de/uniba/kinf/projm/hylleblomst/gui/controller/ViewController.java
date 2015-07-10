@@ -62,7 +62,7 @@ public class ViewController implements ControllerInterface, Initializable {
 
 	private Model model;
 
-	private UIHelper ui;
+	private ViewHelper viewHelper;
 
 	private SearchController searchCtrl;
 
@@ -250,12 +250,12 @@ public class ViewController implements ControllerInterface, Initializable {
 	/**
 	 * Constructor for a new Controller. When called, the array with
 	 * {@link SearchFieldKeys} and {@link SourceKeys} is build and set, the
-	 * instances of the {@link SearchInitiatorImpl}, {@link UIHelper} and
+	 * instances of the {@link SearchInitiatorImpl}, {@link ViewHelper} and
 	 * {@link SearchController} are instantiated.
 	 * 
 	 */
 	public ViewController() {
-		ui = new UIHelper();
+		viewHelper = new ViewHelper();
 		initiator = new SearchInitiatorImpl();
 		model = new Model(initiator);
 		model.addObserver(this);
@@ -272,6 +272,7 @@ public class ViewController implements ControllerInterface, Initializable {
 		// when import of embedded fxml is finished, set the DetailsController
 		// of the model
 		model.setDetailsController(detailsViewController);
+		detailsViewController.setModel(model);
 	}
 
 	private void clearResultTable() {
@@ -323,7 +324,7 @@ public class ViewController implements ControllerInterface, Initializable {
 			public void handle(ActionEvent event) {
 				FileChooser fileChooser = new FileChooser();
 
-				fileChooser.setTitle(ui.getAppName() + " - Speicherort für Export auswählen");
+				fileChooser.setTitle(viewHelper.getAppName() + " - Speicherort für Export auswählen");
 				fileChooser.getExtensionFilters().add(new ExtensionFilter("CSV-Datei (*.csv)", "*.csv"));
 
 				Optional<File> exportFile = Optional
@@ -331,10 +332,11 @@ public class ViewController implements ControllerInterface, Initializable {
 				if (exportFile.isPresent()) {
 					try {
 						model.exportSearchedData(exportFile.get());
-						ui.showInfo("Export der Daten in Datei " + exportFile.get().getName() + " war erfolgreich.");
+						viewHelper.showInfo(
+								"Export der Daten in Datei " + exportFile.get().getName() + " war erfolgreich.");
 					} catch (ExportException e) {
 						e.printStackTrace();
-						ui.showErrorMessage("Export der Daten in Datei " + exportFile.get().getAbsolutePath()
+						viewHelper.showErrorMessage("Export der Daten in Datei " + exportFile.get().getAbsolutePath()
 								+ " war nicht erfolgreich.\n" + e.getMessage());
 					}
 				}
@@ -353,7 +355,7 @@ public class ViewController implements ControllerInterface, Initializable {
 
 			@Override
 			public void handle(ActionEvent event) {
-				ui.functionNotAvailable();
+				viewHelper.functionNotAvailable();
 				event.consume();
 			}
 		});
@@ -362,15 +364,15 @@ public class ViewController implements ControllerInterface, Initializable {
 			@Override
 			public void handle(ActionEvent event) {
 				DirectoryChooser dirChooser = new DirectoryChooser();
-				dirChooser.setTitle(ui.getAppName() + " - Pfad für Datenbank auswählen");
+				dirChooser.setTitle(viewHelper.getAppName() + " - Pfad für Datenbank auswählen");
 				Optional<File> setupDir = Optional.ofNullable(dirChooser.showDialog(root.getScene().getWindow()));
 				if (setupDir.isPresent()) {
 					try {
 						model.setUpDatabase(setupDir.get().getAbsoluteFile());
-						ui.showInfo("Das Anlegen der Datenbank und Tabellen im Verzeichnis " + setupDir.get().toString()
-								+ " war erfolgreich.");
+						viewHelper.showInfo("Das Anlegen der Datenbank und Tabellen im Verzeichnis "
+								+ setupDir.get().toString() + " war erfolgreich.");
 					} catch (SetUpException e) {
-						ui.showErrorMessage("Datenbank konnte nicht angelegt werden:\n" + e.getMessage());
+						viewHelper.showErrorMessage("Datenbank konnte nicht angelegt werden:\n" + e.getMessage());
 						e.printStackTrace();
 					}
 				}
@@ -382,7 +384,7 @@ public class ViewController implements ControllerInterface, Initializable {
 			@Override
 			public void handle(ActionEvent event) {
 				FileChooser fileChooser = new FileChooser();
-				fileChooser.setTitle(ui.getAppName() + " - CSV-Datei für Import auswählen");
+				fileChooser.setTitle(viewHelper.getAppName() + " - CSV-Datei für Import auswählen");
 				fileChooser.getExtensionFilters().add(new ExtensionFilter("CSV-Datei (*.csv)", "*.csv"));
 
 				Optional<File> importFile = Optional
@@ -390,9 +392,9 @@ public class ViewController implements ControllerInterface, Initializable {
 				if (importFile.isPresent()) {
 					try {
 						model.importData(importFile.get().getAbsoluteFile());
-						ui.showInfo("Import der Datei " + importFile.get().getName() + " war erfolgreich.");
+						viewHelper.showInfo("Import der Datei " + importFile.get().getName() + " war erfolgreich.");
 					} catch (ImportException e) {
-						ui.showErrorMessage("Datei konnte nicht importiert werden:\n" + e.getMessage());
+						viewHelper.showErrorMessage("Datei konnte nicht importiert werden:\n" + e.getMessage());
 						e.printStackTrace();
 					}
 				}
@@ -403,12 +405,12 @@ public class ViewController implements ControllerInterface, Initializable {
 
 			@Override
 			public void handle(ActionEvent event) {
-				if (ui.getUserConfirmation("Datenbank löschen")) {
+				if (viewHelper.getUserConfirmation("Datenbank löschen")) {
 					try {
 						model.clearDatabase();
 					} catch (SetUpException e) {
 						e.printStackTrace();
-						ui.showErrorMessage("Datenbank konnte nicht gelöscht werden:\n" + e.getMessage());
+						viewHelper.showErrorMessage("Datenbank konnte nicht gelöscht werden:\n" + e.getMessage());
 					}
 				}
 				event.consume();
@@ -427,11 +429,11 @@ public class ViewController implements ControllerInterface, Initializable {
 				if (searchCategory_study_studienjahrVon.getText().matches("[0-9]{1,4}")) {
 					if (getParsedInt(searchCategory_study_studienjahrVon.getText()) < 0
 							|| getParsedInt(searchCategory_study_studienjahrVon.getText()) > 2015) {
-						ui.showErrorMessage("Studienjahr muss eine Zahl zwischen 0 und 2015 sein.");
+						viewHelper.showErrorMessage("Studienjahr muss eine Zahl zwischen 0 und 2015 sein.");
 						searchCategory_study_studienjahrVon.clear();
 					}
 				} else if (ke.getCode() != KeyCode.TAB) {
-					ui.showErrorMessage("Studienjahr muss eine Zahl zwischen 0 und 2015 sein.");
+					viewHelper.showErrorMessage("Studienjahr muss eine Zahl zwischen 0 und 2015 sein.");
 					searchCategory_study_studienjahrVon.clear();
 				}
 				ke.consume();
@@ -444,10 +446,10 @@ public class ViewController implements ControllerInterface, Initializable {
 				if (searchCategory_study_studienjahrBis.getText().matches("[0-9]{1,4}")) {
 					if (getParsedInt(searchCategory_study_studienjahrBis.getText()) < 0
 							|| getParsedInt(searchCategory_study_studienjahrBis.getText()) > 2015) {
-						ui.showErrorMessage("Studienjahr muss eine Zahl zwischen 0 und 2015 sein.");
+						viewHelper.showErrorMessage("Studienjahr muss eine Zahl zwischen 0 und 2015 sein.");
 					}
 				} else if (ke.getCode() != KeyCode.TAB) {
-					ui.showErrorMessage("Studienjahr muss eine Zahl zwischen 0 und 2015 sein.");
+					viewHelper.showErrorMessage("Studienjahr muss eine Zahl zwischen 0 und 2015 sein.");
 					searchCategory_study_studienjahrBis.clear();
 				}
 				ke.consume();
@@ -460,10 +462,10 @@ public class ViewController implements ControllerInterface, Initializable {
 				if (searchCategory_study_einschreibeJahrVon.getText().matches("[0-9]{1,4}")) {
 					if (getParsedInt(searchCategory_study_einschreibeJahrVon.getText()) < 0
 							|| getParsedInt(searchCategory_study_einschreibeJahrVon.getText()) > 2015) {
-						ui.showErrorMessage("Einschreibejahr muss eine Zahl zwischen 0 und 2015 sein.");
+						viewHelper.showErrorMessage("Einschreibejahr muss eine Zahl zwischen 0 und 2015 sein.");
 					}
 				} else if (ke.getCode() != KeyCode.TAB) {
-					ui.showErrorMessage("Einschreibejahr muss eine Zahl zwischen 0 und 2015 sein.");
+					viewHelper.showErrorMessage("Einschreibejahr muss eine Zahl zwischen 0 und 2015 sein.");
 					searchCategory_study_einschreibeJahrVon.clear();
 				}
 				ke.consume();
@@ -476,10 +478,10 @@ public class ViewController implements ControllerInterface, Initializable {
 				if (searchCategory_study_einschreibeMonatVon.getText().matches("[1-9][0-2]?")) {
 					if (getParsedInt(searchCategory_study_einschreibeMonatVon.getText()) < 1
 							|| getParsedInt(searchCategory_study_einschreibeMonatVon.getText()) > 12) {
-						ui.showErrorMessage("Einschreibemonat muss eine Zahl von 1 bis 12 sein.");
+						viewHelper.showErrorMessage("Einschreibemonat muss eine Zahl von 1 bis 12 sein.");
 					}
 				} else if (ke.getCode() != KeyCode.TAB) {
-					ui.showErrorMessage("Einschreibemonat muss eine Zahl von 1 bis 12 sein.");
+					viewHelper.showErrorMessage("Einschreibemonat muss eine Zahl von 1 bis 12 sein.");
 					searchCategory_study_einschreibeMonatVon.clear();
 				}
 				ke.consume();
@@ -492,10 +494,10 @@ public class ViewController implements ControllerInterface, Initializable {
 				if (searchCategory_study_einschreibeTagVon.getText().matches("[1-3][0-9]?")) {
 					if (getParsedInt(searchCategory_study_einschreibeTagVon.getText()) < 1
 							|| getParsedInt(searchCategory_study_einschreibeTagVon.getText()) > 31) {
-						ui.showErrorMessage("Einschreibetag muss eine Zahl von 1 bis 31 sein.");
+						viewHelper.showErrorMessage("Einschreibetag muss eine Zahl von 1 bis 31 sein.");
 					}
 				} else if (ke.getCode() != KeyCode.TAB) {
-					ui.showErrorMessage("Einschreibetag muss eine Zahl von 1 bis 31 sein.");
+					viewHelper.showErrorMessage("Einschreibetag muss eine Zahl von 1 bis 31 sein.");
 					searchCategory_study_einschreibeTagVon.clear();
 				}
 				ke.consume();
@@ -508,10 +510,10 @@ public class ViewController implements ControllerInterface, Initializable {
 				if (searchCategory_study_einschreibeJahrBis.getText().matches("[0-9]{1,4}")) {
 					if (getParsedInt(searchCategory_study_einschreibeJahrBis.getText()) < 0
 							|| getParsedInt(searchCategory_study_einschreibeJahrBis.getText()) > 2015) {
-						ui.showErrorMessage("Einschreibejahr muss eine Zahl zwischen 0 und 2015 sein.");
+						viewHelper.showErrorMessage("Einschreibejahr muss eine Zahl zwischen 0 und 2015 sein.");
 					}
 				} else if (ke.getCode() != KeyCode.TAB) {
-					ui.showErrorMessage("Einschreibejahr muss eine Zahl zwischen 0 und 2015 sein.");
+					viewHelper.showErrorMessage("Einschreibejahr muss eine Zahl zwischen 0 und 2015 sein.");
 					searchCategory_study_einschreibeJahrBis.clear();
 				}
 				ke.consume();
@@ -524,10 +526,10 @@ public class ViewController implements ControllerInterface, Initializable {
 				if (searchCategory_study_einschreibeMonatBis.getText().matches("[1-9][0-2]?")) {
 					if (getParsedInt(searchCategory_study_einschreibeMonatBis.getText()) < 1
 							|| getParsedInt(searchCategory_study_einschreibeMonatBis.getText()) > 12) {
-						ui.showErrorMessage("Einschreibemonat muss eine Zahl von 1 bis 12 sein.");
+						viewHelper.showErrorMessage("Einschreibemonat muss eine Zahl von 1 bis 12 sein.");
 					}
 				} else if (ke.getCode() != KeyCode.TAB) {
-					ui.showErrorMessage("Einschreibemonat muss eine Zahl von 1 bis 12 sein.");
+					viewHelper.showErrorMessage("Einschreibemonat muss eine Zahl von 1 bis 12 sein.");
 					searchCategory_study_einschreibeMonatBis.clear();
 				}
 				ke.consume();
@@ -540,10 +542,10 @@ public class ViewController implements ControllerInterface, Initializable {
 				if (searchCategory_study_einschreibeTagBis.getText().matches("[1-3][0-9]?")) {
 					if (getParsedInt(searchCategory_study_einschreibeTagBis.getText()) < 1
 							|| getParsedInt(searchCategory_study_einschreibeTagBis.getText()) > 31) {
-						ui.showErrorMessage("Einschreibetag muss eine Zahl von 1 bis 31 sein.");
+						viewHelper.showErrorMessage("Einschreibetag muss eine Zahl von 1 bis 31 sein.");
 					}
 				} else if (ke.getCode() != KeyCode.TAB) {
-					ui.showErrorMessage("Einschreibetag muss eine Zahl von 1 bis 31 sein.");
+					viewHelper.showErrorMessage("Einschreibetag muss eine Zahl von 1 bis 31 sein.");
 					searchCategory_study_einschreibeTagBis.clear();
 				}
 				ke.consume();
@@ -555,11 +557,11 @@ public class ViewController implements ControllerInterface, Initializable {
 			public void handle(KeyEvent ke) {
 				if (searchCategory_other_nummer.getText().matches("[0-9]{1,}")) {
 					if (getParsedInt(searchCategory_other_nummer.getText()) < 0) {
-						ui.showErrorMessage(
+						viewHelper.showErrorMessage(
 								"Nummer muss eine nicht-negative Zahl sein und darf keine Buchstaben enthalten.");
 					}
 				} else if (ke.getCode() != KeyCode.TAB) {
-					ui.showErrorMessage(
+					viewHelper.showErrorMessage(
 							"Nummer muss eine nicht-negative Zahl sein und darf keine Buchstaben enthalten.");
 					searchCategory_other_nummer.clear();
 				}
@@ -572,11 +574,11 @@ public class ViewController implements ControllerInterface, Initializable {
 			public void handle(KeyEvent ke) {
 				if (searchCategory_other_nummerhess.getText().matches("[0-9]{1,}")) {
 					if (getParsedInt(searchCategory_other_nummerhess.getText()) < 0) {
-						ui.showErrorMessage(
+						viewHelper.showErrorMessage(
 								"Nummer Hess muss eine nicht-negative Zahl sein und darf keine Buchstaben enthalten.");
 					}
 				} else if (ke.getCode() != KeyCode.TAB) {
-					ui.showErrorMessage(
+					viewHelper.showErrorMessage(
 							"Nummer Hess muss eine nicht-negative Zahl sein und darf keine Buchstaben enthalten.");
 					searchCategory_other_nummerhess.clear();
 				}
@@ -589,11 +591,11 @@ public class ViewController implements ControllerInterface, Initializable {
 			public void handle(KeyEvent ke) {
 				if (searchCategory_other_seite.getText().matches("[0-9]{1,}")) {
 					if (getParsedInt(searchCategory_other_seite.getText()) < 0) {
-						ui.showErrorMessage(
+						viewHelper.showErrorMessage(
 								"Seite muss eine nicht-negative Zahl sein und darf keine Buchstaben enthalten.");
 					}
 				} else if (ke.getCode() != KeyCode.TAB) {
-					ui.showErrorMessage(
+					viewHelper.showErrorMessage(
 							"Seite muss eine nicht-negative Zahl sein und darf keine Buchstaben enthalten.");
 					searchCategory_other_seite.clear();
 				}
@@ -664,16 +666,17 @@ public class ViewController implements ControllerInterface, Initializable {
 					search_useOrConjunction.isSelected(), search_useOpenSearch.isSelected());
 
 			if (!couldSearchBeStarted) {
-				ui.showErrorMessage("Die Suche konnte nicht gestartet werden, da keine Eingaben gefunden wurden.");
+				viewHelper.showErrorMessage(
+						"Die Suche konnte nicht gestartet werden, da keine Eingaben gefunden wurden.");
 			} else {
 				setLabelSource();
 			}
 		} catch (ViewException e) {
 			e.printStackTrace();
 			if (e.getMessage().isEmpty()) {
-				ui.showErrorMessage("Bei der Suche ist ein Fehler aufgetreten.");
+				viewHelper.showErrorMessage("Bei der Suche ist ein Fehler aufgetreten.");
 			} else {
-				ui.showErrorMessage(e.getMessage());
+				viewHelper.showErrorMessage(e.getMessage());
 			}
 		}
 	}
@@ -692,14 +695,14 @@ public class ViewController implements ControllerInterface, Initializable {
 			searchCtrl.startSinglePersonSearch(idQuery);
 		} catch (Exception e) {
 			e.printStackTrace();
-			ui.showErrorMessage(
+			viewHelper.showErrorMessage(
 					"Es können keine Detailinformationen für diese Person angezeigt werden.\n" + e.getMessage());
 		}
 	}
 
 	private void fillResultTable(CachedRowSet result) {
 		if (result == null || result.size() == 0) {
-			ui.showInfo("Die Suche hat kein Ergebnis zurückgeliefert.");
+			viewHelper.showInfo("Die Suche hat kein Ergebnis zurückgeliefert.");
 		} else {
 			ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
 			try {
@@ -767,7 +770,7 @@ public class ViewController implements ControllerInterface, Initializable {
 				result.close();
 				resultTable.setItems(data);
 			} catch (SQLException e) {
-				ui.showErrorMessage("Bei der Anzeige der gefundenen Datensätze ist ein Fehler aufgetreten.");
+				viewHelper.showErrorMessage("Bei der Anzeige der gefundenen Datensätze ist ein Fehler aufgetreten.");
 				e.printStackTrace();
 			}
 		}
@@ -818,7 +821,7 @@ public class ViewController implements ControllerInterface, Initializable {
 			inputFields[22] = searchCategory_other_seite.getText();
 			inputFields[23] = searchCategory_other_nummerhess.getText();
 		} catch (IllegalArgumentException e) {
-			ui.showErrorMessage(e.getMessage());
+			viewHelper.showErrorMessage(e.getMessage());
 		}
 		return inputFields;
 	}
@@ -881,7 +884,7 @@ public class ViewController implements ControllerInterface, Initializable {
 	private int[] generateArrayWithSourceFieldKeys() {
 		int[] inputSourceKey = new int[inputFieldCounter];
 
-		if (getSourceKeyByValueAsString(search_sourcekey_selection.getValue()) != SourceKeys.NORM) {
+		if (viewHelper.getSourceKeyByValueAsString(search_sourcekey_selection.getValue()) != SourceKeys.NORM) {
 			inputSourceKey[0] = SourceKeys.NO_SOURCE;
 			inputSourceKey[2] = SourceKeys.NO_SOURCE;
 		} else {
@@ -890,21 +893,21 @@ public class ViewController implements ControllerInterface, Initializable {
 		}
 		inputSourceKey[1] = SourceKeys.NORM;
 		inputSourceKey[3] = SourceKeys.NORM;
-		inputSourceKey[4] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
+		inputSourceKey[4] = viewHelper.getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
 		inputSourceKey[5] = SourceKeys.STANDARD;
 		inputSourceKey[6] = SourceKeys.NO_SOURCE;
 		inputSourceKey[7] = SourceKeys.NO_SOURCE;
-		inputSourceKey[8] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
-		inputSourceKey[9] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
-		inputSourceKey[10] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
+		inputSourceKey[8] = viewHelper.getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
+		inputSourceKey[9] = viewHelper.getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
+		inputSourceKey[10] = viewHelper.getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
 		inputSourceKey[11] = SourceKeys.NO_SOURCE;
-		inputSourceKey[12] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
+		inputSourceKey[12] = viewHelper.getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
 		inputSourceKey[13] = SourceKeys.NO_SOURCE;
 		inputSourceKey[14] = SourceKeys.NO_SOURCE;
 		inputSourceKey[15] = SourceKeys.NO_SOURCE;
 		inputSourceKey[16] = SourceKeys.NO_SOURCE;
 		inputSourceKey[17] = SourceKeys.NO_SOURCE;
-		inputSourceKey[18] = getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
+		inputSourceKey[18] = viewHelper.getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
 		inputSourceKey[19] = SourceKeys.NO_SOURCE;
 		inputSourceKey[20] = SourceKeys.NO_SOURCE;
 		inputSourceKey[21] = SourceKeys.NO_SOURCE;
@@ -912,45 +915,6 @@ public class ViewController implements ControllerInterface, Initializable {
 		inputSourceKey[23] = SourceKeys.NO_SOURCE;
 
 		return inputSourceKey;
-	}
-
-	/**
-	 * Checks the value of the selection for the source of the first name and
-	 * returns the corresponding {@link SourceKey}.
-	 * 
-	 * @param value
-	 *            the user input as String
-	 * @return the corresponding {@link SourceKey} as {@code String}
-	 */
-	private int getSourceKeyByValueAsString(String value) {
-		if ("Standard".equals(value)) {
-			return SourceKeys.STANDARD;
-		} else if ("normalisiert".equals(value)) {
-			return SourceKeys.NORM;
-		} else if ("Abweichung normalisiert".equals(value)) {
-			return SourceKeys.ORT_NORM_AB;
-		} else if ("HS B (AUB, I 11)".equals(value)) {
-			return SourceKeys.HSB_AUB_I11;
-		} else if ("HS C (AUB, I 13/1)".equals(value)) {
-			return SourceKeys.HSC_AUB_I131;
-		} else if ("HS D (AUB, I 13/2)".equals(value)) {
-			return SourceKeys.HSD_AUB_I132;
-		} else if ("HS E (AUB, I 9)".equals(value)) {
-			return SourceKeys.HSE_AUB_I9;
-		} else if ("HS F (AUB, I 8)".equals(value)) {
-			return SourceKeys.HSF_AUB_I8;
-		} else if ("HS G (AUB, I 6)".equals(value)) {
-			return SourceKeys.HSG_AUB_I6;
-		} else if ("HS H (AEB, Rep. I, Nr. 321)".equals(value)) {
-			return SourceKeys.HSH_AEB_I321;
-		} else if ("HS I (SB Bamberg, Msc.Add.3a)".equals(value)) {
-			return SourceKeys.HSI_SB_3a;
-		} else if ("HS J (SB Bamberg, Msc.Add.3)".equals(value)) {
-			return SourceKeys.HSJ_3;
-		} else if ("AUB, V E 38".equals(value)) {
-			return SourceKeys.AUB_V_E38;
-		}
-		return SourceKeys.NO_SELECTION;
 	}
 
 	private void setLabelSource() {
@@ -1008,7 +972,7 @@ public class ViewController implements ControllerInterface, Initializable {
 	@FXML
 	private void closeWindow() {
 		Stage stage = (Stage) root.getScene().getWindow();
-		if (ui.askForClosingWindow()) {
+		if (viewHelper.askForClosingWindow()) {
 			stage.close();
 			System.exit(0);
 		}
@@ -1019,6 +983,6 @@ public class ViewController implements ControllerInterface, Initializable {
 	 */
 	@FXML
 	private void showInfo() {
-		ui.showApplicationInfo();
+		viewHelper.showApplicationInfo();
 	}
 }

@@ -9,6 +9,9 @@ import java.util.ResourceBundle;
 
 import javax.sql.rowset.CachedRowSet;
 
+import de.uniba.kinf.projm.hylleblomst.gui.model.Model;
+import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
+import de.uniba.kinf.projm.hylleblomst.logicImpl.UserQueryImpl;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -23,6 +26,10 @@ import javafx.scene.control.Label;
 public class DetailsViewController implements ControllerInterface, Initializable {
 
 	private String personID;
+
+	private Model model;
+
+	private ViewHelper viewHelper;
 
 	@FXML
 	private ComboBox<String> result_details_anredeselection;
@@ -115,6 +122,16 @@ public class DetailsViewController implements ControllerInterface, Initializable
 	private Label result_details_nummerhess;
 
 	public DetailsViewController() {
+		viewHelper = new ViewHelper();
+	}
+
+	public void setModel(Model model) {
+		if (model != null) {
+			this.model = model;
+		} else {
+			throw new InputMismatchException(
+					"Model ist fehlerhaft, kann dem DetailsViewController nicht hinzugefügt werden.");
+		}
 	}
 
 	@Override
@@ -127,22 +144,25 @@ public class DetailsViewController implements ControllerInterface, Initializable
 
 			@Override
 			public void handle(ActionEvent event) {
-				ComboBox<String> source = (ComboBox<String>) event.getSource();
 
-				System.out.println(source.getSelectionModel().getSelectedItem());
 			}
 		});
 	}
 
-	private void getSourceDetails(String source) {
-
+	private void getSourceDetails(SearchFieldKeys sfk, String source) {
+		if (sfk == null || source == null || source.isEmpty()) {
+			throw new InputMismatchException(
+					"Es können keine Tradierungen gesucht werden, da das Suchfeld oder die Quelle keinen Wert hat oder leer ist.");
+		}
+		CachedRowSet singleResult = model
+				.searchSourceDetails(new UserQueryImpl(sfk, personID, viewHelper.getSourceKeyByValueAsString(source)));
 	}
 
 	/**
 	 * 
 	 * @param searchResult
 	 */
-	public void processSearchResult(CachedRowSet searchResult) {
+	public void processCompleteSearchResult(CachedRowSet searchResult) {
 		if (searchResult == null) {
 			throw new InputMismatchException("Das Suchergebnis für die Details einer Person hat keinen Wert.");
 		}
