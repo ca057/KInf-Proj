@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import de.uniba.kinf.projm.hylleblomst.exceptions.SetUpException;
 import de.uniba.kinf.projm.hylleblomst.keys.ColumnNameKeys;
@@ -25,7 +24,7 @@ public class SetUpTables {
 		int interrupt = 0;
 		try (Connection con = DriverManager.getConnection(dbURL,
 				DBUserKeys.adminUser, DBUserKeys.adminPassword);
-				Statement stmt = con.createStatement(
+				PreparedStatement stmt = con.prepareStatement("",
 						ResultSet.TYPE_SCROLL_INSENSITIVE,
 						ResultSet.CONCUR_READ_ONLY);) {
 
@@ -88,9 +87,8 @@ public class SetUpTables {
 
 		try (PreparedStatement stmt = con.prepareStatement(
 				"SELECT TABLENAME FROM sys.systables",
-				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);) {
-
-			ResultSet rs = stmt.executeQuery();
+				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+				ResultSet rs = stmt.executeQuery();) {
 
 			con.setAutoCommit(false);
 
@@ -121,8 +119,8 @@ public class SetUpTables {
 		return true;
 	}
 
-	private void setUpNormTable(Statement stmt, String[][] normTableInfo, int i)
-			throws SetUpException {
+	private void setUpNormTable(PreparedStatement stmt,
+			String[][] normTableInfo, int i) throws SetUpException {
 		String tableName = normTableInfo[i][0];
 		String tableID = normTableInfo[i][1];
 
@@ -142,32 +140,19 @@ public class SetUpTables {
 		}
 	}
 
-	private void setUpTradTable(Statement stmt, String[][] tradTableInfo, int i)
-			throws SetUpException {
+	private void setUpTradTable(PreparedStatement stmt,
+			String[][] tradTableInfo, int i) throws SetUpException {
 		String tableName = tradTableInfo[i][0];
 		String tableID = tradTableInfo[i][1];
 		String tableAttribute = tradTableInfo[i][2];
 		String tableFK = tradTableInfo[i][3];
 		String tableRef = tradTableInfo[i][4];
 
-		String sql;
-
-		if (tableName.equals(TableNameKeys.ORT_NORM)
-				|| tableName.equals(TableNameKeys.WIRTSCHAFTSLAGE_TRAD)) {
-			sql = "CREATE TABLE " + tableName + " (" + tableID
-					+ " integer PRIMARY KEY NOT NULL, " + tableAttribute
-					+ " varchar(500), " + tableFK + " integer, "
-					+ "FOREIGN KEY (" + tableFK + ") REFERENCES " + tableRef
-					+ "(" + tableFK
-					+ ") ON DELETE RESTRICT ON UPDATE RESTRICT)";
-		} else {
-			sql = "CREATE TABLE " + tableName + " (" + tableID
-					+ " integer PRIMARY KEY NOT NULL, " + tableAttribute
-					+ " varchar(500), " + tableFK + " integer, "
-					+ "FOREIGN KEY (" + tableFK + ") REFERENCES " + tableRef
-					+ "(" + tableFK
-					+ ") ON DELETE RESTRICT ON UPDATE RESTRICT)";
-		}
+		String sql = "CREATE TABLE " + tableName + " (" + tableID
+				+ " integer PRIMARY KEY NOT NULL, " + tableAttribute
+				+ " varchar(500), " + tableFK + " integer, " + "FOREIGN KEY ("
+				+ tableFK + ") REFERENCES " + tableRef + "(" + tableFK
+				+ ") ON DELETE RESTRICT ON UPDATE RESTRICT)";
 
 		try {
 			stmt.executeUpdate(sql);
@@ -177,8 +162,8 @@ public class SetUpTables {
 		}
 	}
 
-	private void setUpInfoTable(Statement stmt, String[][] infoTableInfo, int i)
-			throws SetUpException {
+	private void setUpInfoTable(PreparedStatement stmt,
+			String[][] infoTableInfo, int i) throws SetUpException {
 		String tableName = infoTableInfo[i][0];
 		String refTableID = infoTableInfo[i][1];
 		String srcTableID = ColumnNameKeys.QUELLEN_ID;
@@ -205,7 +190,7 @@ public class SetUpTables {
 		}
 	}
 
-	private void setUpTablePerson(Statement stmt) throws SetUpException {
+	private void setUpTablePerson(PreparedStatement stmt) throws SetUpException {
 		String sqlPerson = "CREATE TABLE " + TableNameKeys.PERSON + "("
 				+ ColumnNameKeys.PERSON_ID + " integer PRIMARY KEY NOT NULL, "
 				+ ColumnNameKeys.SEITE_ORIGINAL + " integer, "
@@ -244,7 +229,7 @@ public class SetUpTables {
 		}
 	}
 
-	private void setUpTaleOrtAbweichungNorm(Statement stmt)
+	private void setUpTaleOrtAbweichungNorm(PreparedStatement stmt)
 			throws SetUpException {
 		String sqlOrtAbweichungNorm = "CREATE TABLE "
 				+ TableNameKeys.ORT_ABWEICHUNG_NORM + "("
@@ -262,7 +247,7 @@ public class SetUpTables {
 		}
 	}
 
-	private void createSchema(Statement stmt) throws SetUpException {
+	private void createSchema(PreparedStatement stmt) throws SetUpException {
 		try {
 			stmt.executeUpdate("CREATE SCHEMA hylleblomst");
 		} catch (SQLException e) {
