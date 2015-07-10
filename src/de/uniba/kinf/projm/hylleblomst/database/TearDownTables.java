@@ -75,7 +75,7 @@ public class TearDownTables {
 	 *             If an error occurs while trying to query the existence of the
 	 *             schema in question.
 	 */
-	private boolean schemaExists(Connection con) throws SQLException {
+	static boolean schemaExists(Connection con) throws SQLException {
 		boolean result = true;
 
 		try (PreparedStatement stmt = con.prepareStatement(

@@ -23,13 +23,14 @@ public class SetUpTables {
 			throws SetUpException {
 		int interrupt = 0;
 		try (Connection con = DriverManager.getConnection(dbURL, adminUser,
-				adminPassword);
-				PreparedStatement stmt = con.prepareStatement(
-						"SELECT * FROM Hylleblomst.Person",
-						ResultSet.TYPE_SCROLL_INSENSITIVE,
-						ResultSet.CONCUR_READ_ONLY);) {
+				adminPassword);)
+		// PreparedStatement stmt = con.prepareStatement(
+		// "SELECT * FROM SYS.SYSTABLES",
+		// ResultSet.TYPE_SCROLL_INSENSITIVE,
+		// ResultSet.CONCUR_READ_ONLY);)
+		{
 
-			while (!allTablesExist(con)) {
+			while (!TearDownTables.schemaExists(con) && !allTablesExist(con)) {
 				con.setAutoCommit(false);
 
 				// Use a barrier to prevent possible infinite loop
@@ -38,33 +39,33 @@ public class SetUpTables {
 					throw new SetUpException(
 							"Tables could not be build, maybe some necessary information for setup is missing");
 				}
-				createSchema(stmt);
+				createSchema(con);
 
 				// Set up simple Norm-tables which only hold an ID and one
 				// attribute
 				String[][] normTableInfo = getNormTables();
 				for (int i = 0; i < normTableInfo.length; i++) {
-					setUpNormTable(stmt, normTableInfo, i);
+					setUpNormTable(con, normTableInfo, i);
 				}
 
 				// Set up table Ort_Abweichung_Norm in Hylleblomst which is
 				// also a norm table but contains one extra column
-				setUpTaleOrtAbweichungNorm(stmt);
+				setUpTaleOrtAbweichungNorm(con);
 
 				// Set up Trad-tables which hold one ID, one attribute and
 				// one FK ID
 				String[][] tradTableInfo = getTradTables();
 				for (int i = 0; i < tradTableInfo.length; i++) {
-					setUpTradTable(stmt, tradTableInfo, i);
+					setUpTradTable(con, tradTableInfo, i);
 				}
 
 				// Set up person table
-				setUpTablePerson(stmt);
+				setUpTablePerson(con);
 
 				// Set up Info-tables which represent a m:n:o relation
 				String[][] infoTableInfo = getInfoTables();
 				for (int i = 0; i < infoTableInfo.length; i++) {
-					setUpInfoTable(stmt, infoTableInfo, i);
+					setUpInfoTable(con, infoTableInfo, i);
 				}
 
 			}
@@ -112,59 +113,65 @@ public class SetUpTables {
 					con.setAutoCommit(true);
 					return false;
 				}
-
 			}
 			con.setAutoCommit(true);
 		}
-
 		return true;
 	}
 
-	private void setUpNormTable(PreparedStatement stmt,
-			String[][] normTableInfo, int i) throws SetUpException {
+	private void setUpNormTable(Connection con, String[][] normTableInfo, int i)
+			throws SetUpException {
 		String tableName = normTableInfo[i][0];
 		String tableID = normTableInfo[i][1];
+		String tableAttribute = normTableInfo[i][2];
 
-		try {
-			if (tableName.equals(TableNameKeys.ZUSAETZE)) {
-				stmt.executeUpdate("CREATE TABLE " + tableName + " (" + tableID
-						+ " integer PRIMARY KEY NOT NULL, "
-						+ normTableInfo[i][2] + " varchar(5000))");
-			} else {
-				stmt.executeUpdate("CREATE TABLE " + tableName + " (" + tableID
-						+ " integer PRIMARY KEY NOT NULL, "
-						+ normTableInfo[i][2] + " varchar(500))");
+		if (tableName.equals(TableNameKeys.ZUSAETZE)) {
+			String sqlNormTable = "CREATE TABLE " + tableName + " (" + tableID
+					+ " integer PRIMARY KEY NOT NULL, " + tableAttribute
+					+ " varchar(5000))";
+			try (PreparedStatement stmt = con.prepareStatement(sqlNormTable)) {
+				stmt.executeUpdate();
+			} catch (SQLException e) {
+				throw new SetUpException(tableName + " could not be build: "
+						+ e.getMessage(), e);
 			}
-		} catch (SQLException e) {
-			throw new SetUpException(tableName + " could not be build: "
-					+ e.getMessage(), e);
+		} else {
+			String sqlNormTable = "CREATE TABLE " + tableName + " (" + tableID
+					+ " integer PRIMARY KEY NOT NULL, " + tableAttribute
+					+ " varchar(500))";
+			try (PreparedStatement stmt = con.prepareStatement(sqlNormTable)) {
+				stmt.executeUpdate();
+			} catch (SQLException e) {
+				throw new SetUpException(tableName + " could not be build: "
+						+ e.getMessage(), e);
+			}
 		}
 	}
 
-	private void setUpTradTable(PreparedStatement stmt,
-			String[][] tradTableInfo, int i) throws SetUpException {
+	private void setUpTradTable(Connection con, String[][] tradTableInfo, int i)
+			throws SetUpException {
 		String tableName = tradTableInfo[i][0];
 		String tableID = tradTableInfo[i][1];
 		String tableAttribute = tradTableInfo[i][2];
 		String tableFK = tradTableInfo[i][3];
 		String tableRef = tradTableInfo[i][4];
 
-		String sql = "CREATE TABLE " + tableName + " (" + tableID
+		String sqlTradTable = "CREATE TABLE " + tableName + " (" + tableID
 				+ " integer PRIMARY KEY NOT NULL, " + tableAttribute
 				+ " varchar(500), " + tableFK + " integer, " + "FOREIGN KEY ("
 				+ tableFK + ") REFERENCES " + tableRef + "(" + tableFK
 				+ ") ON DELETE RESTRICT ON UPDATE RESTRICT)";
 
-		try {
-			stmt.executeUpdate(sql);
+		try (PreparedStatement stmt = con.prepareStatement(sqlTradTable)) {
+			stmt.executeUpdate();
 		} catch (SQLException e) {
 			throw new SetUpException(tableName + " could not be build: "
 					+ e.getMessage(), e);
 		}
 	}
 
-	private void setUpInfoTable(PreparedStatement stmt,
-			String[][] infoTableInfo, int i) throws SetUpException {
+	private void setUpInfoTable(Connection con, String[][] infoTableInfo, int i)
+			throws SetUpException {
 		String tableName = infoTableInfo[i][0];
 		String refTableID = infoTableInfo[i][1];
 		String srcTableID = ColumnNameKeys.QUELLEN_ID;
@@ -173,7 +180,7 @@ public class SetUpTables {
 		String srcTableName = TableNameKeys.QUELLEN;
 		String personTableName = TableNameKeys.PERSON;
 
-		String sql = "CREATE TABLE " + tableName + " (" + refTableID
+		String sqlInfoTable = "CREATE TABLE " + tableName + " (" + refTableID
 				+ " INTEGER NOT NULL, " + srcTableID + " INTEGER NOT NULL, "
 				+ personTableID + " INTEGER NOT NULL, " + "FOREIGN KEY ("
 				+ refTableID + ") REFERENCES " + refTableName + "("
@@ -183,15 +190,15 @@ public class SetUpTables {
 				+ ") ON DELETE RESTRICT ON UPDATE RESTRICT, " + "FOREIGN KEY ("
 				+ personTableID + ") REFERENCES " + personTableName + "("
 				+ personTableID + ") ON DELETE RESTRICT ON UPDATE RESTRICT) ";
-		try {
-			stmt.executeUpdate(sql);
+		try (PreparedStatement stmt = con.prepareStatement(sqlInfoTable)) {
+			stmt.executeUpdate();
 		} catch (SQLException e) {
 			throw new SetUpException(tableName + " could not be build: "
 					+ e.getMessage(), e);
 		}
 	}
 
-	private void setUpTablePerson(PreparedStatement stmt) throws SetUpException {
+	private void setUpTablePerson(Connection con) throws SetUpException {
 		String sqlPerson = "CREATE TABLE " + TableNameKeys.PERSON + "("
 				+ ColumnNameKeys.PERSON_ID + " integer PRIMARY KEY NOT NULL, "
 				+ ColumnNameKeys.SEITE_ORIGINAL + " integer, "
@@ -222,15 +229,15 @@ public class SetUpTables {
 				+ ColumnNameKeys.TITEL_TRAD_ID + ") REFERENCES "
 				+ TableNameKeys.TITEL_TRAD + "(" + ColumnNameKeys.TITEL_TRAD_ID
 				+ ") ON DELETE RESTRICT ON UPDATE RESTRICT) ";
-		try {
-			stmt.executeUpdate(sqlPerson);
+		try (PreparedStatement stmt = con.prepareStatement(sqlPerson)) {
+			stmt.executeUpdate();
 		} catch (SQLException e) {
 			throw new SetUpException("Table person could not be set up: "
 					+ e.getMessage(), e);
 		}
 	}
 
-	private void setUpTaleOrtAbweichungNorm(PreparedStatement stmt)
+	private void setUpTaleOrtAbweichungNorm(Connection con)
 			throws SetUpException {
 		String sqlOrtAbweichungNorm = "CREATE TABLE "
 				+ TableNameKeys.ORT_ABWEICHUNG_NORM + "("
@@ -239,8 +246,9 @@ public class SetUpTables {
 				+ ColumnNameKeys.ORT_ABWEICHUNG_NORM + " varchar(255), "
 				+ ColumnNameKeys.ORT_ABWEICHUNG_NORM_ANMERKUNG
 				+ " varchar(255))";
-		try {
-			stmt.executeUpdate(sqlOrtAbweichungNorm);
+		try (PreparedStatement stmt = con
+				.prepareStatement(sqlOrtAbweichungNorm)) {
+			stmt.executeUpdate();
 		} catch (SQLException e) {
 			throw new SetUpException(
 					"Table OrtAbweichungNorm could not be build: "
@@ -248,9 +256,10 @@ public class SetUpTables {
 		}
 	}
 
-	private void createSchema(PreparedStatement stmt) throws SetUpException {
-		try {
-			stmt.executeUpdate("CREATE SCHEMA hylleblomst");
+	private void createSchema(Connection con) throws SetUpException {
+		try (PreparedStatement stmt = con.prepareStatement("CREATE SCHEMA "
+				+ TableNameKeys.SCHEMA_NAME)) {
+			stmt.executeUpdate();
 		} catch (SQLException e) {
 			throw new SetUpException("Schema could not be build: "
 					+ e.getMessage(), e);
