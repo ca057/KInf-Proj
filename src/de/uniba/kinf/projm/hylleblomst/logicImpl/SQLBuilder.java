@@ -133,15 +133,21 @@ public class SQLBuilder {
 	}
 
 	private void buildNotationSearch(UserQuery userQuery) {
-		StringBuilder sqlQuery = new StringBuilder();
+		// StringBuilder sqlQuery = new StringBuilder();
 		needsStandardFields = false;
-		sqlStatement = sqlQuery.append(buildSelect(userQuery)).append(buildFrom()).append(" WHERE ")
-				.append(TableNameKeys.PERSON).append("." + ColumnNameKeys.PERSON_ID + " = ?");
+		sqlStatement.append(buildSelect(userQuery)).append(buildFrom()).append(" WHERE ").append(TableNameKeys.PERSON)
+				.append("." + ColumnNameKeys.PERSON_ID + " = ?");
+		if (userQuery.getColumn() == ColumnNameKeys.ZUSAETZE) {
+			sqlStatement.append("AND " + TableNameKeys.ZUSAETZE_INFO + "." + ColumnNameKeys.QUELLEN_ID + " = " + "("
+					+ SourceKeys.NORM + "OR" + SourceKeys.STANDARD + ")");
+		}
+		// FIXME Bei Zusätzen ist die Quellenangabe wichtig.
 	}
 
-//	private String buildSelectSpecific(UserQuery qr) {
-//		return "SELECT DISTINCT " + qr.getTable() + "." + qr.getColumn() + " AS " + qr.getColumn();
-//	}
+	// private String buildSelectSpecific(UserQuery qr) {
+	// return "SELECT DISTINCT " + qr.getTable() + "." + qr.getColumn() + " AS "
+	// + qr.getColumn();
+	// }
 
 	/*
 	 * 
