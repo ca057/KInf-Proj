@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.collections.FXCollections ?>
 
-<BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniba.kinf.projm.hylleblomst.controller.ViewController">
+<BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniba.kinf.projm.hylleblomst.gui.controller.ViewController">
 	<top>
 		<MenuBar fx:id="mainMenu" BorderPane.alignment="CENTER">
 			<menus>

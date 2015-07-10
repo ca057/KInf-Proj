@@ -1,4 +1,4 @@
-package de.uniba.kinf.projm.hylleblomst.controller;
+package de.uniba.kinf.projm.hylleblomst.gui.controller;
 
 import java.util.Optional;
 

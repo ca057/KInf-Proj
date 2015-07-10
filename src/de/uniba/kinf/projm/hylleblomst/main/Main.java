@@ -1,6 +1,6 @@
 package de.uniba.kinf.projm.hylleblomst.main;
 
-import de.uniba.kinf.projm.hylleblomst.controller.UIHelper;
+import de.uniba.kinf.projm.hylleblomst.gui.controller.UIHelper;
 import de.uniba.kinf.projm.hylleblomst.gui.model.Model;
 import de.uniba.kinf.projm.hylleblomst.logic.SearchInitiator;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.SearchInitiatorImpl;
@@ -48,7 +48,7 @@ public class Main extends Application {
 		Model model = new Model(initiator);
 		// ViewController starten und Stage übergeben
 		try {
-			BorderPane root = (BorderPane) FXMLLoader.load(getClass().getResource("../view/hylleblomstView.fxml"));
+			BorderPane root = (BorderPane) FXMLLoader.load(getClass().getResource("../gui/view/hylleblomstView.fxml"));
 			Scene scene = new Scene(root);
 			primaryStage.setScene(scene);
 			primaryStage.setTitle(new UIHelper().getAppName());
