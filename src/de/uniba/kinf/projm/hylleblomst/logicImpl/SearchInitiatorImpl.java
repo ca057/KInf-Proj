@@ -8,7 +8,7 @@ import javax.sql.rowset.CachedRowSet;
 
 import de.uniba.kinf.projm.hylleblomst.keys.DBUserKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.SearchInitiator;
-import de.uniba.kinf.projm.hylleblomst.logic.UserQueries;
+import de.uniba.kinf.projm.hylleblomst.logic.UserQuery;
 
 /**
  * Implementation of {@link SearchInitiator}
@@ -21,9 +21,9 @@ public class SearchInitiatorImpl implements SearchInitiator {
 	SQLBuilder sqlBuilder;
 
 	@Override
-	public CachedRowSet search(Collection<UserQueries> userQueries) throws SQLException {
-		if (!(userQueries == null || userQueries.isEmpty())) {
-			sqlBuilder = new SQLBuilder(userQueries);
+	public CachedRowSet search(Collection<UserQuery> userQuery) throws SQLException {
+		if (!(userQuery == null || userQuery.isEmpty())) {
+			sqlBuilder = new SQLBuilder(userQuery);
 			return db.startQuery(sqlBuilder.getSQLStatement(), sqlBuilder.getInputs());
 		} else {
 			throw new InputMismatchException("Die übergebene Collection ist fehlerhaft (null oder leer)");

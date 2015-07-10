@@ -4,13 +4,13 @@ import de.uniba.kinf.projm.hylleblomst.keys.ColumnNameKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.TableNameKeys;
-import de.uniba.kinf.projm.hylleblomst.logic.UserQueries;
+import de.uniba.kinf.projm.hylleblomst.logic.UserQuery;
 
 /**
  * @author Johannes
  *
  */
-public class UserQueriesImpl implements UserQueries {
+public class UserQueryImpl implements UserQuery {
 	private SearchFieldKeys searchField;
 	private String column;
 	private String input;
@@ -27,7 +27,7 @@ public class UserQueriesImpl implements UserQueries {
 	 * @param isOr
 	 * @param isOpenSearch
 	 */
-	public UserQueriesImpl(SearchFieldKeys searchField, String input, int source, Boolean isOr, Boolean isOpenSearch) {
+	public UserQueryImpl(SearchFieldKeys searchField, String input, int source, Boolean isOr, Boolean isOpenSearch) {
 		this.isOR = isOr;
 		this.isOpenSearch = isOpenSearch;
 		setInput(input);

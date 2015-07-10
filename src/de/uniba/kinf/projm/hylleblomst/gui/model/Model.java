@@ -12,7 +12,7 @@ import de.uniba.kinf.projm.hylleblomst.database.DatabaseManagement;
 import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 import de.uniba.kinf.projm.hylleblomst.exceptions.SetUpException;
 import de.uniba.kinf.projm.hylleblomst.logic.SearchInitiator;
-import de.uniba.kinf.projm.hylleblomst.logic.UserQueries;
+import de.uniba.kinf.projm.hylleblomst.logic.UserQuery;
 
 /**
  * @author Christian, Johannes, Simon
@@ -36,9 +36,9 @@ public class Model extends Observable {
 		}
 	}
 
-	public void search(Collection<UserQueries> userQueries) throws SQLException {
-		if (!(userQueries == null || userQueries.isEmpty())) {
-			searchResult = search.search(userQueries);
+	public void search(Collection<UserQuery> userQuery) throws SQLException {
+		if (!(userQuery == null || userQuery.isEmpty())) {
+			searchResult = search.search(userQuery);
 			setChanged();
 			notifyObservers(searchResult);
 		} else {

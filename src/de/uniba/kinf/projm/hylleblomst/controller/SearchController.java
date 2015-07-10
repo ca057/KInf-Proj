@@ -9,8 +9,8 @@ import java.util.Observable;
 import de.uniba.kinf.projm.hylleblomst.exceptions.ViewException;
 import de.uniba.kinf.projm.hylleblomst.gui.model.Model;
 import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
-import de.uniba.kinf.projm.hylleblomst.logic.UserQueries;
-import de.uniba.kinf.projm.hylleblomst.logicImpl.UserQueriesImpl;
+import de.uniba.kinf.projm.hylleblomst.logic.UserQuery;
+import de.uniba.kinf.projm.hylleblomst.logicImpl.UserQueryImpl;
 
 /**
  * Controller for executing the search.
@@ -61,10 +61,10 @@ public class SearchController implements ControllerInterface {
 			throw new IllegalArgumentException("Die Liste mit Eingabefeldern ist leer oder hat keinen Wert.");
 		}
 
-		List<UserQueries> requestList = new ArrayList<UserQueries>();
+		List<UserQuery> requestList = new ArrayList<UserQuery>();
 		for (int i = 0; i < inputValues.length; i++) {
 			if (!inputValues[i].isEmpty() && !"false".equals(inputValues[i]) && !"yyyy-mm-dd".equals(inputValues[i])) {
-				UserQueriesImpl tmpReq = new UserQueriesImpl(inputSearchFKey[i], inputValues[i], inputSourceKey[i],
+				UserQueryImpl tmpReq = new UserQueryImpl(inputSearchFKey[i], inputValues[i], inputSourceKey[i],
 						isOr, isOpenedSearch);
 				requestList.add(tmpReq);
 			}

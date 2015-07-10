@@ -10,7 +10,7 @@ import java.util.List;
 import de.uniba.kinf.projm.hylleblomst.keys.ColumnNameKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.TableNameKeys;
-import de.uniba.kinf.projm.hylleblomst.logic.UserQueries;
+import de.uniba.kinf.projm.hylleblomst.logic.UserQuery;
 
 /**
  * This class builds a SQL statement for all inputs the user made. It presumes
@@ -22,22 +22,22 @@ import de.uniba.kinf.projm.hylleblomst.logic.UserQueries;
  */
 public class SQLBuilder {
 
-	private Collection<UserQueries> userQueries;
+	private Collection<UserQuery> userQuery;
 	private ArrayList<String> inputs;
 	private StringBuilder sqlStatement = new StringBuilder();
 	private Boolean sqlStatementIsNotEmpty = false;
 	private Boolean whereIsEmpty = true;
 
 	/**
-	 * @param userQueries
+	 * @param userQuery
 	 * @throws SQLException
 	 */
-	public SQLBuilder(Collection<UserQueries> userQueries) throws SQLException {
+	public SQLBuilder(Collection<UserQuery> userQuery) throws SQLException {
 		inputs = new ArrayList<String>();
-		if (userQueries == null || userQueries.isEmpty()) {
+		if (userQuery == null || userQuery.isEmpty()) {
 			throw new InputMismatchException("Die übergebene Collection darf nicht leer bzw. null sein.");
 		}
-		this.userQueries = userQueries;
+		this.userQuery = userQuery;
 		buildQuery();
 	}
 
@@ -75,7 +75,7 @@ public class SQLBuilder {
 		// Boolean hasSource = false;
 		StringBuilder sqlWhere = new StringBuilder();
 
-		for (UserQueries qr : userQueries) {
+		for (UserQuery qr : userQuery) {
 
 			sqlStatement.append(buildSelect(qr));
 
@@ -106,7 +106,7 @@ public class SQLBuilder {
 	 * Builds the WHERE part of a SQL-statement, depending on what operation is
 	 * wanted.
 	 */
-	private String buildWhere(UserQueries qr) {
+	private String buildWhere(UserQuery qr) {
 		if (whereIsEmpty) {
 			whereIsEmpty = false;
 			return qr.getWhere();
@@ -131,7 +131,7 @@ public class SQLBuilder {
 	/*
 	 * 
 	 */
-	private String buildSelect(UserQueries qr) {
+	private String buildSelect(UserQuery qr) {
 		String result = "";
 		if (!sqlStatementIsNotEmpty) {
 			result = "SELECT DISTINCT " + TableNameKeys.PERSON + "." + ColumnNameKeys.PERSON_ID + " AS PersonID, "

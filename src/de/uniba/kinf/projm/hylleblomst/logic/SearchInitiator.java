@@ -12,6 +12,9 @@ import javax.sql.rowset.CachedRowSet;
 public interface SearchInitiator {
 
 	/**
+	 * Processes userQueries to a sqlStatement, initiates the search and returns
+	 * the outcome.
+	 * 
 	 * <b>Preconditions</b>:
 	 * <ul>
 	 * <li>
@@ -26,23 +29,22 @@ public interface SearchInitiator {
 	 * <li>Normalized surname AS nachname_norm
 	 * <li>Normalized place AS ort_norm
 	 * <li>Normalized faculty AS fakultaet_norm
-	 * <li>All fields with search entries AS their specific
-	 * {@code SearchFieldKey}
+	 * <li>All fields with user input AS their specific {@code SearchFieldKey}
 	 * </ul>
 	 * 
-	 * @param userQueries
-	 *            A {@code Collection} of {@link UserQueries} with all
-	 * @return A {@Code ResultSet} with the outcome ot the search
+	 * @param userQuery
+	 *            A {@code Collection} of {@link UserQuery} with all
+	 * @return A {@Code ChachedRowSet} with the outcome of the search
 	 * @throws SQLException
 	 */
-	CachedRowSet search(Collection<UserQueries> userQueries) throws SQLException;
+	CachedRowSet search(Collection<UserQuery> userQuery) throws SQLException;
 
 	/**
 	 * Gets all information of a person.
 	 * 
 	 * @param id
 	 *            The ID of the person
-	 * @return
+	 * @return A {@CachedRowSet} with the outcome of the search
 	 * @throws SQLException
 	 */
 	CachedRowSet searchPerson(String id) throws SQLException;
