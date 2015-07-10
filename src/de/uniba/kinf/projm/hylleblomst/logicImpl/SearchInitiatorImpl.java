@@ -31,12 +31,12 @@ public class SearchInitiatorImpl implements SearchInitiator {
 	}
 
 	@Override
-	public CachedRowSet searchPerson(String personID) throws SQLException {
-		if (personID != null) {
-			sqlBuilder = new SQLBuilder(personID);
+	public CachedRowSet searchPersonOrNotation(UserQuery userQuery) throws SQLException {
+		if (userQuery != null) {
+			sqlBuilder = new SQLBuilder(userQuery);
 			return db.startQuery(sqlBuilder.getSQLStatement(), sqlBuilder.getInputs());
 		} else {
-			throw new InputMismatchException("Die übergebene ID ist fehlerhaft (null)");
+			throw new InputMismatchException("Die übergebene UserQuery ist fehlerhaft (null)");
 		}
 	}
 }
