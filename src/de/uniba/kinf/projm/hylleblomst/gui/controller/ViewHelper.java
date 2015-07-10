@@ -160,6 +160,8 @@ public class ViewHelper {
 	int getSourceKeyByValueAsString(String value) {
 		if ("Standard".equals(value)) {
 			return SourceKeys.STANDARD;
+		} else if ("keine Quelle".equals(value)) {
+			return SourceKeys.NO_SOURCE;
 		} else if ("normalisiert".equals(value)) {
 			return SourceKeys.NORM;
 		} else if ("Abweichung normalisiert".equals(value)) {
