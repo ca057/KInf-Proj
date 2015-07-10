@@ -49,6 +49,25 @@ public class UserQueryImpl implements UserQuery {
 		searchFieldKeyToDatabaseData();
 	}
 
+	/**
+	 * @param personID
+	 */
+	public UserQueryImpl(String personID) {
+		setInput(personID);
+		table = TableNameKeys.PERSON;
+		column = ColumnNameKeys.PERSON_ID;
+		sqlWhere = buildSQLWhere();
+	}
+
+	/**
+	 * @param personID
+	 * @param searchField
+	 * @param source
+	 */
+	public UserQueryImpl(String personID, SearchFieldKeys searchField, SourceKeys source) {
+
+	}
+
 	@Override
 	public SearchFieldKeys getSearchField() {
 		return searchField;
