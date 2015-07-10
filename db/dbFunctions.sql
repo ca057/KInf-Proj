@@ -12,5 +12,12 @@ CREATE FUNCTION function-name ( [ FunctionParameter
    
    
 CREATE FUNCTION SQL_UTIL.GROUP_CONCAT 
+	( SEPARATOR CHAR, ARGS VARCHAR(255) ... )
+	RETURNS VARCHAR(2000)
+	PARAMETER STYLE DERBY
+	NO SQL LANGUAGE JAVA
+	EXTERNAL NAME 'de.uniba.kinf.projm.hylleblomst.database.sql.utils.GroupConcat.groupConcat'
+	
+DROP FUNCTION SQL_UTIL.GROUP_CONCAT
 
-EXTERNAL NAME 'de.uniba.kinf.projm.hylleblomst.database.sql.util.GroupConcat.groupConcat'
+SELECT SQL_UTIL.GROUP_CONCAT(',', 'Eins', 'Zwei') FROM HYLLEBLOMST.ANREDE_NORM

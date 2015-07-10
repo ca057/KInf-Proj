@@ -150,20 +150,19 @@ public class DetailsViewController implements ControllerInterface, Initializable
 	}
 
 	private void getSourceDetails(SearchFieldKeys sfk, String source) {
-		if (source == null || source.isEmpty()) {
+		if (sfk == null || source == null || source.isEmpty()) {
 			throw new InputMismatchException(
-					"Es können keine Tradierungen gesucht werden, da die Quelle keinen Wert hat oder leer ist.");
+					"Es können keine Tradierungen gesucht werden, da das Suchfeld oder die Quelle keinen Wert hat oder leer ist.");
 		}
-
-		UserQueryImpl sourceQuery = new UserQueryImpl(sfk, personID, viewHelper.getSourceKeyByValueAsString(source));
-
+		CachedRowSet singleResult = model
+				.searchSourceDetails(new UserQueryImpl(sfk, personID, viewHelper.getSourceKeyByValueAsString(source)));
 	}
 
 	/**
 	 * 
 	 * @param searchResult
 	 */
-	public void processSearchResult(CachedRowSet searchResult) {
+	public void processCompleteSearchResult(CachedRowSet searchResult) {
 		if (searchResult == null) {
 			throw new InputMismatchException("Das Suchergebnis für die Details einer Person hat keinen Wert.");
 		}
