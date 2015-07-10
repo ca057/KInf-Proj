@@ -155,7 +155,7 @@ public class DetailsViewController implements ControllerInterface, Initializable
 					"Es können keine Tradierungen gesucht werden, da die Quelle keinen Wert hat oder leer ist.");
 		}
 
-		UserQueryImpl sourceQuery = new UserQueryImpl();
+		UserQueryImpl sourceQuery = new UserQueryImpl(sfk, personID, viewHelper.getSourceKeyByValueAsString(source));
 
 	}
 
