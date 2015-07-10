@@ -1,6 +1,6 @@
 package de.uniba.kinf.projm.hylleblomst.main;
 
-import de.uniba.kinf.projm.hylleblomst.gui.controller.UIHelper;
+import de.uniba.kinf.projm.hylleblomst.gui.controller.ViewHelper;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -49,7 +49,7 @@ public class Main extends Application {
 			BorderPane root = (BorderPane) FXMLLoader.load(getClass().getResource("../gui/view/hylleblomstView.fxml"));
 			Scene scene = new Scene(root);
 			primaryStage.setScene(scene);
-			primaryStage.setTitle(new UIHelper().getAppName());
+			primaryStage.setTitle(new ViewHelper().getAppName());
 			primaryStage.show();
 			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 				@Override
