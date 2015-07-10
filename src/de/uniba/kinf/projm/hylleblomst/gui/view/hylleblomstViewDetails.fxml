@@ -200,7 +200,7 @@
       </Label>
       <Label text="Nummer Hess" GridPane.columnIndex="2" GridPane.rowIndex="10">
          <GridPane.margin>
-            <Insets />
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
          </GridPane.margin>
       </Label>
       <Label text="Personendetails">

@@ -22,6 +22,8 @@ import javafx.scene.control.Label;
  */
 public class DetailsViewController implements ControllerInterface, Initializable {
 
+	private String personID;
+
 	@FXML
 	private ComboBox<String> result_details_anredeselection;
 
@@ -126,9 +128,14 @@ public class DetailsViewController implements ControllerInterface, Initializable
 			@Override
 			public void handle(ActionEvent event) {
 				ComboBox<String> source = (ComboBox<String>) event.getSource();
+
 				System.out.println(source.getSelectionModel().getSelectedItem());
 			}
 		});
+	}
+
+	private void getSourceDetails(String source) {
+
 	}
 
 	/**
