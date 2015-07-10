@@ -1,9 +1,6 @@
 package de.uniba.kinf.projm.hylleblomst.main;
 
 import de.uniba.kinf.projm.hylleblomst.gui.controller.UIHelper;
-import de.uniba.kinf.projm.hylleblomst.gui.model.Model;
-import de.uniba.kinf.projm.hylleblomst.logic.SearchInitiator;
-import de.uniba.kinf.projm.hylleblomst.logicImpl.SearchInitiatorImpl;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -43,9 +40,9 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// Logik starten
-		SearchInitiator initiator = new SearchInitiatorImpl();
+		// SearchInitiator initiator = new SearchInitiatorImpl();
 		// Model starten
-		Model model = new Model(initiator);
+		// Model model = new Model(initiator);
 		// ViewController starten und Stage übergeben
 		try {
 			BorderPane root = (BorderPane) FXMLLoader.load(getClass().getResource("../gui/view/hylleblomstView.fxml"));

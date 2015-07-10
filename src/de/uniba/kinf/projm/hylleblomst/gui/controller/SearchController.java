@@ -64,8 +64,8 @@ public class SearchController implements ControllerInterface {
 		List<UserQuery> requestList = new ArrayList<UserQuery>();
 		for (int i = 0; i < inputValues.length; i++) {
 			if (!inputValues[i].isEmpty() && !"false".equals(inputValues[i]) && !"yyyy-mm-dd".equals(inputValues[i])) {
-				UserQueryImpl tmpReq = new UserQueryImpl(inputSearchFKey[i], inputValues[i], inputSourceKey[i],
-						isOr, isOpenedSearch);
+				UserQueryImpl tmpReq = new UserQueryImpl(inputSearchFKey[i], inputValues[i], inputSourceKey[i], isOr,
+						isOpenedSearch);
 				requestList.add(tmpReq);
 			}
 		}
@@ -87,14 +87,13 @@ public class SearchController implements ControllerInterface {
 	 * @param id
 	 * @throws ViewException
 	 */
-	public boolean startSinglePersonSearch(String id) throws ViewException {
+	public void startSinglePersonSearch(String id) throws ViewException {
 		if (id == null || id.isEmpty()) {
 			throw new InputMismatchException(
 					"Übergebene ID ist leer oder hat keinen Wert. Personendetails können nicht gesucht werden.");
 		}
 		try {
 			model.searchPerson(id);
-			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new ViewException("Ein Fehler bei der Suche nach Person mit ID " + id + " ist aufgetreten.");
