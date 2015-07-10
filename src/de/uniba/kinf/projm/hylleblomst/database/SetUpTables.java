@@ -130,11 +130,11 @@ public class SetUpTables {
 			if (tableName.equals(TableNameKeys.ZUSAETZE)) {
 				stmt.executeUpdate("CREATE TABLE " + tableName + " (" + tableID
 						+ " integer PRIMARY KEY NOT NULL, "
-						+ normTableInfo[i][2] + " varchar(1000))");
+						+ normTableInfo[i][2] + " varchar(5000))");
 			} else {
 				stmt.executeUpdate("CREATE TABLE " + tableName + " (" + tableID
 						+ " integer PRIMARY KEY NOT NULL, "
-						+ normTableInfo[i][2] + " varchar(255))");
+						+ normTableInfo[i][2] + " varchar(500))");
 			}
 		} catch (SQLException e) {
 			throw new SetUpException(tableName + " could not be build: "
@@ -156,14 +156,14 @@ public class SetUpTables {
 				|| tableName.equals(TableNameKeys.WIRTSCHAFTSLAGE_TRAD)) {
 			sql = "CREATE TABLE " + tableName + " (" + tableID
 					+ " integer PRIMARY KEY NOT NULL, " + tableAttribute
-					+ " varchar(255), " + tableFK + " integer, "
+					+ " varchar(500), " + tableFK + " integer, "
 					+ "FOREIGN KEY (" + tableFK + ") REFERENCES " + tableRef
 					+ "(" + tableFK
 					+ ") ON DELETE RESTRICT ON UPDATE RESTRICT)";
 		} else {
 			sql = "CREATE TABLE " + tableName + " (" + tableID
 					+ " integer PRIMARY KEY NOT NULL, " + tableAttribute
-					+ " varchar(255), " + tableFK + " integer NOT NULL, "
+					+ " varchar(500), " + tableFK + " integer, "
 					+ "FOREIGN KEY (" + tableFK + ") REFERENCES " + tableRef
 					+ "(" + tableFK
 					+ ") ON DELETE RESTRICT ON UPDATE RESTRICT)";
