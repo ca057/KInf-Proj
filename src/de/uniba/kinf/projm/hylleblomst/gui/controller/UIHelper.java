@@ -77,9 +77,10 @@ public class UIHelper {
 	void showApplicationInfo() {
 		alertInformation.setTitle(getAppName() + " - Über");
 		alertInformation.setHeaderText(getAppName() + " v1.82.02.22.3");
-		alertInformation.setGraphic(new ImageView(this.getClass().getResource("einhorn.gif").toString()));
-		String content = "Mit Liebe gemacht von\nSimon Stemper, Johannes Trepesch, Christian Ost";
-		content += "\n\u00A9 2015 WTFPL – Do What the Fuck You Want to Public License";
+		alertInformation.setGraphic(new ImageView(this.getClass().getResource("../view/einhorn.gif").toString()));
+		String content = "Mit Liebe gemacht von\nSimon Stemper, Johannes Trepesch, Christian Ost\n";
+		content += "WTFPL 2015 – Do What the Fuck You Want to Public License\n";
+		content += "Einhorn-Grafik: \u00A9 unbekannt\n";
 		alertInformation.setContentText(content);
 
 		alertInformation.showAndWait();
