@@ -75,7 +75,6 @@ public class UserQueryImpl implements UserQuery {
 
 	public void setSearchField(SearchFieldKeys searchField) {
 		this.searchField = searchField;
-		// searchFieldKeyToDatabaseData();
 	}
 
 	@Override
