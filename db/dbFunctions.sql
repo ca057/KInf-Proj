@@ -7,9 +7,7 @@ PARAMETER STYLE JAVA
 NO SQL LANGUAGE JAVA
 EXTERNAL NAME 'java.lang.Math.toDegrees'
 
-CREATE FUNCTION function-name ( [ FunctionParameter 
-   [, FunctionParameter] ] * ) RETURNS ReturnDataType [ FunctionElement ] *
-   
+SELECT SQL_UTIL.TO_DEGREES (10.0) FROM Hylleblomst.Anrede_Norm   
    
 CREATE FUNCTION SQL_UTIL.GROUP_CONCAT 
 	( SEPARATOR CHAR, ARGS VARCHAR(255) ... )
@@ -18,6 +16,27 @@ CREATE FUNCTION SQL_UTIL.GROUP_CONCAT
 	NO SQL LANGUAGE JAVA
 	EXTERNAL NAME 'de.uniba.kinf.projm.hylleblomst.database.sql.utils.GroupConcat.groupConcat'
 	
-DROP FUNCTION SQL_UTIL.GROUP_CONCAT
+CREATE procedure SQL_UTIL.GROUP_CONCAT(
+	OUT CONCATENATION VARCHAR(255),
+	IN SEPARATOR CHAR,
+	IN ARGS VARCHAR(255) ... 
+	)
+	PARAMETER STYLE DERBY
+	LANGUAGE JAVA
+	DYNAMIC RESULT SETS 0
+	EXTERNAL NAME 'de.uniba.kinf.projm.hylleblomst.database.sql.utils.GroupConcat.groupConcat'
 
-SELECT SQL_UTIL.GROUP_CONCAT(',', 'Eins', 'Zwei') FROM HYLLEBLOMST.ANREDE_NORM
+	
+DROP procedure SQL_UTIL.GROUP_CONCAT
+
+CALL SQLJ.INSTALL_JAR (
+	'C:/Users/Simon/git/KInf-Projekt/lib/groupConcat.jar','SQL_UTIL.groupConcat',0)
+CALL SQLJ.REMOVE_JAR (
+	'SQL_UTIL.groupConcat.jar',0)
+	
+CALL SQL_UTIL.GROUP_CONCAT(',',?, 'Eins', 'Zwei')
+
+
+
+
+
