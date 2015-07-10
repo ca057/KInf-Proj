@@ -381,7 +381,7 @@
 								</VBox>
 							</children>
 						</AnchorPane>
-                  <ScrollPane>
+                  <ScrollPane fx:id="result_persondetails_scrollpane">
                      <content>
                         <GridPane prefHeight="331.0" prefWidth="698.0">
                           <columnConstraints>
