@@ -11,7 +11,7 @@ import javax.sql.rowset.CachedRowSet;
 import de.uniba.kinf.projm.hylleblomst.database.DatabaseManagement;
 import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 import de.uniba.kinf.projm.hylleblomst.exceptions.SetUpException;
-import de.uniba.kinf.projm.hylleblomst.gui.controller.DetailsController;
+import de.uniba.kinf.projm.hylleblomst.gui.controller.DetailsViewController;
 import de.uniba.kinf.projm.hylleblomst.logic.SearchInitiator;
 import de.uniba.kinf.projm.hylleblomst.logic.UserQuery;
 
@@ -23,18 +23,26 @@ public class Model extends Observable {
 	SearchInitiator search;
 	CachedRowSet searchResult;
 	DatabaseManagement dbManagement;
-	DetailsController detailsController;
+	DetailsViewController detailsController;
 
 	public CachedRowSet getSearchResult() {
 		return searchResult;
 	}
 
-	public Model(SearchInitiator search, DetailsController detailsController) {
-		if (search != null && detailsController != null) {
+	public Model(SearchInitiator search) {
+		if (search != null) {
 			this.search = search;
-			this.detailsController = detailsController;
 		} else {
 			throw new InputMismatchException("Die Logik des Programms ist fehlerhaft (null)");
+		}
+	}
+
+	public void setDetailsController(DetailsViewController detailsController) {
+		if (detailsController != null) {
+			this.detailsController = detailsController;
+		} else {
+			throw new InputMismatchException(
+					"Der Controller für die Anzeige der Personendetails ist fehlerhaft (null).");
 		}
 	}
 
