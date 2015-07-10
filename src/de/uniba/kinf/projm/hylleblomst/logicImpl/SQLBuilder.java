@@ -41,15 +41,17 @@ public class SQLBuilder {
 		buildQuery();
 	}
 
-	/**
-	 * @param personID
-	 */
-	public SQLBuilder(String personID) {
+	public SQLBuilder(UserQuery userQuery) throws SQLException {
+		if (userQuery == null || userQuery.getInput().isEmpty()) {
+			throw new InputMismatchException(
+					"Das übergebene Query darf nicht null sein und die Felder table, column und input müssen ausgefüllt sein.");
+		}
 		inputs = new ArrayList<String>();
-		if (personID != null) {
-			buildPersonSearch(personID);
+		inputs.add(userQuery.getInput());
+		if (userQuery.getTable().isEmpty() || userQuery.getColumn().isEmpty()) {
+			// buildPersonSearch();
 		} else {
-			throw new InputMismatchException("Die übergebene Collection darf nicht null sein.");
+			// buildNotationSearch(userQuery);
 		}
 	}
 

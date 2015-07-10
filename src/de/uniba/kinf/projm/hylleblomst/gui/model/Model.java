@@ -59,13 +59,23 @@ public class Model extends Observable {
 		}
 	}
 
-	public void searchPerson(String personID) throws SQLException {
-		if (personID != null) {
-			searchResult = search.searchPerson(personID);
+	public void searchPerson(UserQuery personIDQuery) throws SQLException {
+		if (personIDQuery != null) {
+			searchResult = search.searchPersonOrNotation(personIDQuery);
 			detailsController.processSearchResult(searchResult);
 		} else {
 			throw new InputMismatchException("Die übergebene ID ist fehlerhaft (null)");
 		}
+	}
+
+	/**
+	 * Returns the specified spelling of one search field.
+	 * 
+	 * @param sourceDetails
+	 */
+	public CachedRowSet searchSourceDetails(UserQuery sourceDetails) {
+		// FIXME implement this
+		return null;
 	}
 
 	public void exportSearchedData(File file) throws ExportException {

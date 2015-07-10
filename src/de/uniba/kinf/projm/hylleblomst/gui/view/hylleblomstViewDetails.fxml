@@ -143,6 +143,22 @@
          </GridPane.margin>
       </Label>
       <ComboBox fx:id="result_details_zusaetzeselection" prefWidth="150.0" promptText="Zusätze" GridPane.columnIndex="2" GridPane.rowIndex="5">
+	      <items>
+			<FXCollections fx:factory="observableArrayList">
+				<String fx:value="Zusätze" />
+				<String fx:value="Standard" />
+				<String fx:value="HS B (AUB, I 11)" />
+				<String fx:value="HS C (AUB, I 13/1)" />
+				<String fx:value="HS D (AUB, I 13/2)" />
+				<String fx:value="HS E (AUB, I 9)" />
+				<String fx:value="HS F (AUB, I 8)" />
+				<String fx:value="HS G (AUB, I 6)" />
+				<String fx:value="HS H (AEB, Rep. I, Nr. 321)" />
+				<String fx:value="HS I (SB Bamberg, Msc.Add.3a)" />
+				<String fx:value="HS J (SB Bamberg, Msc.Add.3)" />
+				<String fx:value="AUB, V E 38" />
+			</FXCollections>
+		</items>
          <GridPane.margin>
             <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
          </GridPane.margin>
@@ -184,7 +200,7 @@
       </Label>
       <Label text="Nummer Hess" GridPane.columnIndex="2" GridPane.rowIndex="10">
          <GridPane.margin>
-            <Insets />
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
          </GridPane.margin>
       </Label>
       <Label text="Personendetails">

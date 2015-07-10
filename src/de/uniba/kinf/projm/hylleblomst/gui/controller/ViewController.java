@@ -3,6 +3,7 @@ package de.uniba.kinf.projm.hylleblomst.gui.controller;
 import java.io.File;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.InputMismatchException;
 import java.util.Observable;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -18,6 +19,7 @@ import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.SearchInitiator;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.SearchInitiatorImpl;
+import de.uniba.kinf.projm.hylleblomst.logicImpl.UserQueryImpl;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -295,9 +297,23 @@ public class ViewController implements ControllerInterface, Initializable {
 	 * 
 	 */
 	private void setEventHandlers() {
+		setKeyEvents();
 		setMenuEventHandlers();
 		setNumericalInputEventHandlers();
 		setTableViewEventHandlers();
+	}
+
+	private void setKeyEvents() {
+		root.setOnKeyReleased(new EventHandler<KeyEvent>() {
+
+			@Override
+			public void handle(KeyEvent ke) {
+				if (ke.getCode() == KeyCode.ENTER) {
+					startSearch();
+				}
+				ke.consume();
+			}
+		});
 	}
 
 	private void setMenuEventHandlers() {
@@ -667,8 +683,13 @@ public class ViewController implements ControllerInterface, Initializable {
 	 * @param string
 	 */
 	private void startSearchForSinglePerson(String id) {
+		if (id == null || id.isEmpty()) {
+			throw new InputMismatchException(
+					"Übergebene ID ist leer oder hat keinen Wert, es können keine Details zur Person gesucht werden.");
+		}
+		UserQueryImpl idQuery = new UserQueryImpl(id);
 		try {
-			searchCtrl.startSinglePersonSearch(id);
+			searchCtrl.startSinglePersonSearch(idQuery);
 		} catch (Exception e) {
 			e.printStackTrace();
 			ui.showErrorMessage(

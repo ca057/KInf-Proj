@@ -1,12 +1,18 @@
 package de.uniba.kinf.projm.hylleblomst.gui.controller;
 
+import java.net.URL;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.InputMismatchException;
+import java.util.Observable;
+import java.util.ResourceBundle;
 
 import javax.sql.rowset.CachedRowSet;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 
@@ -14,7 +20,9 @@ import javafx.scene.control.Label;
  * Controller for displaying the details of a person.
  *
  */
-public class DetailsViewController {
+public class DetailsViewController implements ControllerInterface, Initializable {
+
+	private String personID;
 
 	@FXML
 	private ComboBox<String> result_details_anredeselection;
@@ -106,6 +114,30 @@ public class DetailsViewController {
 	@FXML
 	private Label result_details_nummerhess;
 
+	public DetailsViewController() {
+	}
+
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		setUpEventHandlers();
+	}
+
+	private void setUpEventHandlers() {
+		result_details_zusaetzeselection.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				ComboBox<String> source = (ComboBox<String>) event.getSource();
+
+				System.out.println(source.getSelectionModel().getSelectedItem());
+			}
+		});
+	}
+
+	private void getSourceDetails(String source) {
+
+	}
+
 	/**
 	 * 
 	 * @param searchResult
@@ -128,6 +160,12 @@ public class DetailsViewController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		// TODO Auto-generated method stub
+
 	}
 
 }
