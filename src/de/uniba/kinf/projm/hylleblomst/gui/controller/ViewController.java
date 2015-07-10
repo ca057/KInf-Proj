@@ -33,6 +33,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
@@ -41,7 +42,6 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -237,7 +237,7 @@ public class ViewController implements ControllerInterface, Initializable {
 	private Label search_sourceLabel;
 
 	@FXML
-	private AnchorPane result_persondetails_anchorpane;
+	private ScrollPane result_persondetails_scrollpane;
 
 	/**
 	 * Constructor for a new Controller. When called, the array with
@@ -640,8 +640,7 @@ public class ViewController implements ControllerInterface, Initializable {
 	 */
 	private void startSearchForSinglePerson(String id) {
 		try {
-			// TODO build query with id
-			// searchCtrl.startSinglePersonSearch(string);
+			searchCtrl.startSinglePersonSearch(id);
 		} catch (Exception e) {
 			e.printStackTrace();
 			ui.showErrorMessage(
