@@ -186,7 +186,6 @@ public class UserQueryImpl implements UserQuery {
 				} else if (input.contains("dd")) {
 					input = input.substring(0, input.indexOf("-", 3)) + "-31";
 				}
-				System.out.println(input);
 				break;
 			case ANMERKUNGEN:
 				table = TableNameKeys.PERSON;

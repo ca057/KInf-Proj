@@ -39,8 +39,18 @@ public class SQLBuilder {
 		}
 		this.userQuery = userQuery;
 		buildQuery();
+		print();
 	}
 
+	private void print() {
+		// FIXME Delete this.
+		System.out.println(sqlStatement);
+	}
+
+	/**
+	 * @param userQuery
+	 * @throws SQLException
+	 */
 	public SQLBuilder(UserQuery userQuery) throws SQLException {
 		if (userQuery == null || userQuery.getInput().isEmpty()) {
 			throw new InputMismatchException(
@@ -56,6 +66,7 @@ public class SQLBuilder {
 			throw new InputMismatchException(
 					"Das übergebene Query konnte nicht verarbeitet werden. Entweder personID oder personID, SearchfieldKey und SourceKey müssen verfügbar sein");
 		}
+		print();
 	}
 
 	/**
@@ -94,7 +105,6 @@ public class SQLBuilder {
 		}
 
 		sqlStatement.append(buildFrom()).append(" WHERE ").append(sqlWhere);
-		System.out.println(sqlStatement);
 	}
 
 	/*
@@ -120,14 +130,12 @@ public class SQLBuilder {
 		StringBuilder sqlQuery = new StringBuilder();
 		sqlStatement = sqlQuery.append(buildSelectPersonDetails()).append(buildFrom()).append(" WHERE ")
 				.append(TableNameKeys.PERSON).append("." + ColumnNameKeys.PERSON_ID + " = ?");
-		System.out.println(sqlStatement);
 	}
 
 	private void buildNotationSearch(UserQuery userQuery) {
 		StringBuilder sqlQuery = new StringBuilder();
 		sqlStatement = sqlQuery.append(buildSelectPersonDetails()).append(buildFrom()).append(" WHERE ")
 				.append(TableNameKeys.PERSON).append("." + ColumnNameKeys.PERSON_ID + " = ?");
-		System.out.println(sqlStatement);
 	}
 
 	/*
