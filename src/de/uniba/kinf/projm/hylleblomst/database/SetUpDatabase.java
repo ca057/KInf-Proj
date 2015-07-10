@@ -40,8 +40,8 @@ public class SetUpDatabase {
 
 		} catch (SetUpException e) {
 			throw new SetUpException(e.getMessage());
-		} catch (SQLException e1) {
-			throw new SetUpException("Connection refused: " + e1.getMessage());
+		} catch (SQLException e) {
+			throw new SetUpException("Connection refused: " + e.getMessage());
 		}
 	}
 
