@@ -295,9 +295,23 @@ public class ViewController implements ControllerInterface, Initializable {
 	 * 
 	 */
 	private void setEventHandlers() {
+		setKeyEvents();
 		setMenuEventHandlers();
 		setNumericalInputEventHandlers();
 		setTableViewEventHandlers();
+	}
+
+	private void setKeyEvents() {
+		root.setOnKeyReleased(new EventHandler<KeyEvent>() {
+
+			@Override
+			public void handle(KeyEvent ke) {
+				if (ke.getCode() == KeyCode.ENTER) {
+					startSearch();
+				}
+				ke.consume();
+			}
+		});
 	}
 
 	private void setMenuEventHandlers() {
