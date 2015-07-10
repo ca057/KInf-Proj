@@ -36,7 +36,7 @@ public class SetUpDatabase {
 			setUserAccess(con);
 
 			// Set no access as default
-			// setDefaultAccess(con);
+			setDefaultAccess(con);
 
 		} catch (SetUpException e) {
 			throw new SetUpException(e.getMessage());
@@ -116,7 +116,7 @@ public class SetUpDatabase {
 
 	private void setDefaultAccess(Connection con) throws SetUpException {
 		try (PreparedStatement stmt = con
-				.prepareStatement("CALL SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY('derby.database.defaultConnectionMode','readOnlyAccess')");) {
+				.prepareCall("CALL SYSCS_UTIL.SYSCS_SET_DATABASE_PROPERTY('derby.database.defaultConnectionMode','readOnlyAccess')");) {
 			stmt.executeUpdate();
 		} catch (SQLException e) {
 			throw new SetUpException(e.getSQLState() + "\n" + e.getMessage());
