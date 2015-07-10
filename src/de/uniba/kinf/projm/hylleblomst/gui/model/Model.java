@@ -47,7 +47,7 @@ public class Model extends Observable {
 
 	public void searchPerson(String id) throws SQLException {
 		if (id != null) {
-			searchResult = search.searchPerson(id);
+			searchResult = search.searchPersonOrNotation(id);
 			setChanged();
 			notifyObservers();
 		} else {

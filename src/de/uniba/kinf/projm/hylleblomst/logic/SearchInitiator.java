@@ -5,9 +5,6 @@ import java.util.Collection;
 
 import javax.sql.rowset.CachedRowSet;
 
-import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
-import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
-
 /**
  * @author Johannes
  *
@@ -50,13 +47,5 @@ public interface SearchInitiator {
 	 * @return A {@CachedRowSet} with the outcome of the search
 	 * @throws SQLException
 	 */
-	CachedRowSet searchPerson(String id) throws SQLException;
-
-	/**
-	 * @param id
-	 * @param searchField
-	 * @param source
-	 * @return
-	 */
-	CachedRowSet searchNotation(String id, SearchFieldKeys searchField, SourceKeys source);
+	CachedRowSet searchPersonOrNotation(UserQuery query) throws SQLException;
 }
