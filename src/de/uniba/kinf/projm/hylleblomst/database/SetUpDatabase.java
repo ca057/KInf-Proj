@@ -30,7 +30,7 @@ public class SetUpDatabase {
 		try (Connection con = DriverManager.getConnection(dbURL
 				+ "; create=true", adminUser, adminPassword)) {
 			// Create users
-			// createUsers(con);
+			createUsers(con);
 
 			// Set access
 			setUserAccess(con);
@@ -48,9 +48,9 @@ public class SetUpDatabase {
 	private void createUsers(Connection con) throws SetUpException {
 		try (PreparedStatement stmt = con
 				.prepareStatement("CALL SYSCS_UTIL.SYSCS_CREATE_USER(?, ?)");) {
-			// createAdminUser(stmt);
+			createAdminUser(stmt);
 			createGuestUser(stmt);
-		} catch (SQLException | SetUpException e) {
+		} catch (SQLException e) {
 			throw new SetUpException(e.getMessage());
 		}
 	}
@@ -61,8 +61,11 @@ public class SetUpDatabase {
 			stmt.setString(2, DBUserKeys.adminPassword);
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			throw new SetUpException("Admin user could not be created: "
-					+ e.getMessage());
+			if (e.getErrorCode() != 30000) {
+				throw new SetUpException(e.getErrorCode()
+						+ ": Admin user could not be created: "
+						+ e.getMessage());
+			}
 		}
 	}
 
@@ -72,8 +75,10 @@ public class SetUpDatabase {
 			stmt.setString(2, DBUserKeys.guestPassword2);
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			throw new SetUpException("Admin user could not be created: "
-					+ e.getMessage());
+			if (e.getErrorCode() != 30000) {
+				throw new SetUpException("Admin user could not be created: "
+						+ e.getMessage());
+			}
 		}
 	}
 
@@ -82,7 +87,7 @@ public class SetUpDatabase {
 				.prepareStatement("CALL SYSCS_UTIL.SYSCS_SET_USER_ACCESS (?, ?)");) {
 			setAdminUser(stmt);
 			setGuestUser(stmt);
-		} catch (SQLException | SetUpException e) {
+		} catch (SQLException e) {
 			throw new SetUpException(e.getMessage());
 		}
 	}
