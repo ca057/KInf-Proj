@@ -139,10 +139,9 @@ public class SQLBuilder {
 				.append(TableNameKeys.PERSON).append("." + ColumnNameKeys.PERSON_ID + " = ?");
 	}
 
-	// private String buildSelectSpecific(UserQuery qr) {
-	// return "SELECT DISTINCT " + qr.getTable() + "." + qr.getColumn() + " AS "
-	// + qr.getColumn();
-	// }
+//	private String buildSelectSpecific(UserQuery qr) {
+//		return "SELECT DISTINCT " + qr.getTable() + "." + qr.getColumn() + " AS " + qr.getColumn();
+//	}
 
 	/*
 	 * 
