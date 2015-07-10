@@ -41,14 +41,16 @@ public class SQLBuilder {
 		buildQuery();
 	}
 
-	public SQLBuilder(String personID) throws SQLException {
-		if (personID == null) {
-			throw new InputMismatchException(
-					"Das übergebene Query darf nicht null sein und die Felder table, column und input müssen ausgefüllt sein.");
-		}
+	/**
+	 * @param personID
+	 */
+	public SQLBuilder(String personID) {
 		inputs = new ArrayList<String>();
-		inputs.add(personID);
-		buildPersonSearch();
+		if (personID != null) {
+			buildPersonSearch(personID);
+		} else {
+			throw new InputMismatchException("Die übergebene Collection darf nicht null sein.");
+		}
 	}
 
 	/**
@@ -70,11 +72,17 @@ public class SQLBuilder {
 	 * @throws SQLException
 	 */
 	void buildQuery() throws SQLException {
+		// Boolean hasSource = false;
 		StringBuilder sqlWhere = new StringBuilder();
 
 		for (UserQuery qr : userQuery) {
 
 			sqlStatement.append(buildSelect(qr));
+
+			// if (qr.getSource() != SourceKeys.NO_SOURCE) {
+			// hasSource = true;
+			// }
+
 			sqlWhere.append(buildWhere(qr));
 
 			if (!("true".equals(qr.getInput()))) {
@@ -85,8 +93,12 @@ public class SQLBuilder {
 			}
 		}
 
-		sqlStatement.append(buildFrom()).append(" WHERE ").append(sqlWhere);
-		// FIXME Delete this.
+		sqlStatement.append(buildFrom());
+		// if (hasSource) {
+		// sqlStatement.append(", " + TableNameKeys.QUELLEN);
+		// }
+
+		sqlStatement.append(" WHERE ").append(sqlWhere);
 		System.out.println(sqlStatement);
 	}
 
@@ -109,8 +121,10 @@ public class SQLBuilder {
 	 * Builds the whole SQL-statement needed to find all available information
 	 * of a person by searching with the ID of this person.
 	 */
-	private void buildPersonSearch() {
-		sqlStatement = sqlStatement.append(buildSelectAll()).append(buildFrom()).append(" WHERE ")
+	private void buildPersonSearch(String personID) {
+		StringBuilder sqlQuery = new StringBuilder();
+		inputs.add(personID);
+		sqlStatement = sqlQuery.append(buildSelectAll()).append(buildFrom()).append(" WHERE ")
 				.append(TableNameKeys.PERSON).append("." + ColumnNameKeys.PERSON_ID + " = ?");
 	}
 
@@ -138,6 +152,15 @@ public class SQLBuilder {
 		if (qr.getSource() == SourceKeys.ORT_NORM_AB) {
 			result += ", " + qr.getTable() + "." + ColumnNameKeys.ANMERKUNG;
 		}
+
+		// FIXME Für Orte
+		// result += ", ( SELECT " + qr.getTable() + "." + qr.getColumn() + "
+		// FROM " + qr.getTable()
+		// + " JOIN Hylleblomst.Ort_info ON " + qr.getTable() + "." +
+		// qr.getColumn() + "="
+		// + "Hylleblomst.Ort_info." + qr.getColumn()
+		// + " WHERE Hylleblomst.Ort_info.PersonID =
+		// Hylleblomst.person.personID";
 
 		return result;
 	}

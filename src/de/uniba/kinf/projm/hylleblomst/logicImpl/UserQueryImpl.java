@@ -49,25 +49,6 @@ public class UserQueryImpl implements UserQuery {
 		searchFieldKeyToDatabaseData();
 	}
 
-	/**
-	 * @param personID
-	 */
-	public UserQueryImpl(String personID) {
-		setInput(personID);
-		table = TableNameKeys.PERSON;
-		column = ColumnNameKeys.PERSON_ID;
-		sqlWhere = buildSQLWhere();
-	}
-
-	/**
-	 * @param personID
-	 * @param searchField
-	 * @param source
-	 */
-	public UserQueryImpl(String personID, SearchFieldKeys searchField, SourceKeys source) {
-
-	}
-
 	@Override
 	public SearchFieldKeys getSearchField() {
 		return searchField;
@@ -325,7 +306,7 @@ public class UserQueryImpl implements UserQuery {
 					column.substring(0, column.length() - 4))).append(getEquationSymbol()).append("UPPER(?)");
 		}
 
-		if (searchField == SearchFieldKeys.ORT || source == SourceKeys.NORM) {
+		if (searchField == SearchFieldKeys.ORT && source == SourceKeys.NORM) {
 			return result
 					.append(String.format("OR UPPER(%s.%s)", TableNameKeys.ORT_ABWEICHUNG_NORM,
 							ColumnNameKeys.ORT_ABWEICHUNG_NORM))
