@@ -15,8 +15,6 @@ import de.uniba.kinf.projm.hylleblomst.logicImpl.UserQueryImpl;
 import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
@@ -34,8 +32,6 @@ public class DetailsViewController implements ControllerInterface, Initializable
 	private Model model;
 
 	private ViewHelper viewHelper;
-
-	final private String zusaetze = "Zusätze";
 
 	@FXML
 	private GridPane root;
@@ -72,63 +68,83 @@ public class DetailsViewController implements ControllerInterface, Initializable
 
 	@FXML
 	private Label result_details_anrede;
+	private StringProperty anrede = new SimpleStringProperty();
 
 	@FXML
 	private Label result_details_titel;
+	private StringProperty titel = new SimpleStringProperty();
 
 	@FXML
 	private Label result_details_vorname;
+	private StringProperty vorname = new SimpleStringProperty();
 
 	@FXML
 	private Label result_details_nachname;
+	private StringProperty nachname = new SimpleStringProperty();
 
 	@FXML
 	private Label result_details_adlig;
+	private StringProperty adlig = new SimpleStringProperty();
 
 	@FXML
 	private Label result_details_jesuit;
+	private StringProperty jesuit = new SimpleStringProperty();
 
 	@FXML
 	private Label result_details_wirtschaft;
+	private StringProperty wirtschaft = new SimpleStringProperty();
 
 	@FXML
 	private Label result_details_ort;
+	private StringProperty ort = new SimpleStringProperty();
 
 	@FXML
 	private Label result_details_studienfach;
+	private StringProperty studienfach = new SimpleStringProperty();
 
 	@FXML
 	private Label result_details_fakultaet;
+	private StringProperty fakultaet = new SimpleStringProperty();
 
 	@FXML
 	private Label result_details_seminar;
+	private StringProperty seminar = new SimpleStringProperty();
 
 	@FXML
 	private Label result_details_graduiert;
+	private StringProperty graduiert = new SimpleStringProperty();
 
 	@FXML
 	private Label result_details_studienjahr;
+	private StringProperty studienjahr = new SimpleStringProperty();
 
 	@FXML
 	private Label result_details_einschreibedatum;
+	private StringProperty einschreibedatum = new SimpleStringProperty();
 
 	@FXML
 	private Label result_details_zusaetze;
+	private StringProperty zusaetze = new SimpleStringProperty();
 
 	@FXML
 	private Label result_details_fundort;
+	private StringProperty fundort = new SimpleStringProperty();
 
 	@FXML
 	private Label result_details_anmerkungen;
+	private StringProperty anmerkungen = new SimpleStringProperty();
 
 	@FXML
 	private Label result_details_nummer;
+	private StringProperty nummer = new SimpleStringProperty();
 
 	@FXML
 	private Label result_details_seite;
+	private StringProperty seite = new SimpleStringProperty();
 
 	@FXML
 	private Label result_details_nummerhess;
+	private StringProperty nummerhess = new SimpleStringProperty();
 
 	public DetailsViewController() {
 		viewHelper = new ViewHelper();
@@ -169,13 +185,9 @@ public class DetailsViewController implements ControllerInterface, Initializable
 	}
 
 	private void setUpEventHandlers() {
-		result_details_zusaetzeselection.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				getSourceDetails(SearchFieldKeys.ZUSAETZE,
-						result_details_zusaetzeselection.getSelectionModel().getSelectedItem());
-			}
+		result_details_zusaetzeselection.setOnAction((event) -> {
+			getSourceDetails(SearchFieldKeys.ZUSAETZE,
+					result_details_zusaetzeselection.getSelectionModel().getSelectedItem());
 		});
 	}
 
@@ -207,10 +219,20 @@ public class DetailsViewController implements ControllerInterface, Initializable
 			crsMeta = searchResult.getMetaData();
 			System.out.println(crsMeta.getColumnCount());
 			System.out.println(searchResult.size());
-			for (int i = 1; i <= crsMeta.getColumnCount(); i++) {
-				System.out.println(
-						"ColumnName: " + crsMeta.getColumnName(i) + " - ColumnLabel: " + crsMeta.getColumnLabel(i));
+
+			searchResult.first();
+			while (searchResult.next()) {
+				for (int i = 1; i <= crsMeta.getColumnCount(); i++) {
+					System.out.println(crsMeta.getColumnName(i));
+					System.out.print(searchResult.getString(i) + "\n---\n");
+				}
+				for (int i = 1; i <= crsMeta.getColumnCount(); i++) {
+					if (crsMeta.getColumnName(i).equals("PERSONID")) {
+						personID.setValue(searchResult.getString(i));
+					}
+				}
 			}
+			System.out.println("PersonID = " + personID.toString());
 
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
