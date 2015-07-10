@@ -72,16 +72,11 @@ public class SQLBuilder {
 	 * @throws SQLException
 	 */
 	void buildQuery() throws SQLException {
-		// Boolean hasSource = false;
 		StringBuilder sqlWhere = new StringBuilder();
 
 		for (UserQuery qr : userQuery) {
 
 			sqlStatement.append(buildSelect(qr));
-
-			// if (qr.getSource() != SourceKeys.NO_SOURCE) {
-			// hasSource = true;
-			// }
 
 			sqlWhere.append(buildWhere(qr));
 
@@ -93,12 +88,7 @@ public class SQLBuilder {
 			}
 		}
 
-		sqlStatement.append(buildFrom());
-		// if (hasSource) {
-		// sqlStatement.append(", " + TableNameKeys.QUELLEN);
-		// }
-
-		sqlStatement.append(" WHERE ").append(sqlWhere);
+		sqlStatement.append(buildFrom()).append(" WHERE ").append(sqlWhere);
 		System.out.println(sqlStatement);
 	}
 
@@ -152,16 +142,6 @@ public class SQLBuilder {
 		if (qr.getSource() == SourceKeys.ORT_NORM_AB) {
 			result += ", " + qr.getTable() + "." + ColumnNameKeys.ANMERKUNG;
 		}
-
-		// FIXME Für Orte
-		// result += ", ( SELECT " + qr.getTable() + "." + qr.getColumn() + "
-		// FROM " + qr.getTable()
-		// + " JOIN Hylleblomst.Ort_info ON " + qr.getTable() + "." +
-		// qr.getColumn() + "="
-		// + "Hylleblomst.Ort_info." + qr.getColumn()
-		// + " WHERE Hylleblomst.Ort_info.PersonID =
-		// Hylleblomst.person.personID";
-
 		return result;
 	}
 
@@ -237,7 +217,6 @@ public class SQLBuilder {
 				+ ColumnNameKeys.FAKULTAETEN_ID;
 		String fundorte = TableNameKeys.FUNDORTE + " ON " + TableNameKeys.PERSON + "." + ColumnNameKeys.FUNDORTE_ID
 				+ " = " + TableNameKeys.FUNDORTE + "." + ColumnNameKeys.FUNDORTE_ID;
-
 		return " FROM " + vorname + " LEFT OUTER JOIN " + name + " LEFT OUTER JOIN " + ort + " LEFT OUTER JOIN "
 				+ seminar + " LEFT OUTER JOIN " + wirtschaftslage + " LEFT OUTER JOIN " + zusaetze + " LEFT OUTER JOIN "
 				+ fach + " LEFT OUTER JOIN " + anrede + " LEFT OUTER JOIN " + titel + " LEFT OUTER JOIN " + fakultaeten
