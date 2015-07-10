@@ -7,8 +7,6 @@ import java.util.InputMismatchException;
 import javax.sql.rowset.CachedRowSet;
 
 import de.uniba.kinf.projm.hylleblomst.keys.DBUserKeys;
-import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
-import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.SearchInitiator;
 import de.uniba.kinf.projm.hylleblomst.logic.UserQuery;
 
@@ -40,11 +38,5 @@ public class SearchInitiatorImpl implements SearchInitiator {
 		} else {
 			throw new InputMismatchException("Die übergebene ID ist fehlerhaft (null)");
 		}
-	}
-
-	@Override
-	public CachedRowSet searchNotation(String id, SearchFieldKeys searchField, SourceKeys source) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }
