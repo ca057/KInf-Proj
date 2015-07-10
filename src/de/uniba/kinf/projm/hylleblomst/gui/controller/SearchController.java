@@ -87,16 +87,17 @@ public class SearchController implements ControllerInterface {
 	 * @param id
 	 * @throws ViewException
 	 */
-	public void startSinglePersonSearch(String id) throws ViewException {
-		if (id == null || id.isEmpty()) {
+	public void startSinglePersonSearch(UserQueryImpl detailQuery) throws ViewException {
+		if (detailQuery == null) {
 			throw new InputMismatchException(
 					"Übergebene ID ist leer oder hat keinen Wert. Personendetails können nicht gesucht werden.");
 		}
 		try {
-			model.searchPerson(id);
+			model.searchPerson(detailQuery);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new ViewException("Ein Fehler bei der Suche nach Person mit ID " + id + " ist aufgetreten.");
+			throw new ViewException(
+					"Ein Fehler bei der Suche nach Person mit ID " + detailQuery.getInput() + " ist aufgetreten.");
 		}
 	}
 
