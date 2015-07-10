@@ -64,7 +64,7 @@ public class UserQueryImpl implements UserQuery {
 	 * @param searchField
 	 * @param source
 	 */
-	public UserQueryImpl(String personID, SearchFieldKeys searchField, SourceKeys source) {
+	public UserQueryImpl(SearchFieldKeys searchField, String personID, SourceKeys source) {
 
 	}
 
