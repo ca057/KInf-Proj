@@ -10,10 +10,10 @@
 
 <GridPane fx:id="root" prefHeight="331.0" prefWidth="698.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniba.kinf.projm.hylleblomst.gui.controller.DetailsViewController">
   <columnConstraints>
-    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="174.5" minWidth="10.0" percentWidth="25.0" prefWidth="174.5" />
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="174.5" minWidth="10.0" percentWidth="25.0" prefWidth="174.5" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
   </columnConstraints>
   <rowConstraints>
     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -148,16 +148,6 @@
 					<String fx:value="Standard" />
 					<String fx:value="normalisiert" />
 					<String fx:value="HS B (AUB, I 11)" />
-				</FXCollections>
-			</items>
-         <GridPane.margin>
-            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
-         </GridPane.margin>
-      </ComboBox>
-      <ComboBox fx:id="result_details_fakultätselection" prefWidth="150.0" promptText="Fakultät" GridPane.rowIndex="10">
-          	<items>
-				<FXCollections fx:factory="observableArrayList">
-					<!--  Achtung, hier gibt es gar keine Werte! -->
 				</FXCollections>
 			</items>
          <GridPane.margin>
@@ -344,6 +334,11 @@
          </GridPane.margin>
       </Label>
       <Label fx:id="result_details_nummerhess" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="10">
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </Label>
+      <Label text="Fakultät" GridPane.rowIndex="10">
          <GridPane.margin>
             <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
          </GridPane.margin>
