@@ -14,11 +14,11 @@ public interface SearchInitiator {
 	/**
 	 * Processes userQueries to a sqlStatement, initiates the search and returns
 	 * the outcome.
+	 * <p>
 	 * 
 	 * <b>Preconditions</b>:
 	 * <ul>
-	 * <li>
-	 * <li>
+	 * <li>Have to be specified of the respective implementation
 	 * </ul>
 	 * 
 	 * <b>Postconditions</b>: <br/>
