@@ -68,8 +68,6 @@ class Validation {
 	 *            database or not
 	 * @param table
 	 *            The table in which to search for entry
-	 * @param column
-	 *            The column in which to search for entry
 	 * @return <code>True</code> if entry was found, <code>false</code>
 	 *         otherwise
 	 * @throws ImportException
@@ -99,6 +97,20 @@ class Validation {
 		return result;
 	}
 
+	/**
+	 * Checks whether or not the given combination of {@code String} and foreign
+	 * key already exists in the given table.
+	 * 
+	 * @param entry
+	 *            The attribute to search.
+	 * @param foreignKey
+	 *            The associated foreign key.
+	 * @param table
+	 *            The table in which to look.
+	 * @return <code>True</code> if combination already exists,
+	 *         <code>false</code> otherwise.
+	 * @throws ImportException
+	 */
 	boolean entryAlreadyInDatabase(String entry, int foreignKey, String table)
 			throws ImportException {
 		boolean result = true;
@@ -127,8 +139,25 @@ class Validation {
 		return result;
 	}
 
-	boolean entryAlreadyInDatabase(String entry, String anmerkung, String table)
-			throws ImportException {
+	/**
+	 * Checks whether or not the given combination of two {@code String}s is
+	 * already in the given table.
+	 * 
+	 * <b>Note</b> In our use case this method is exclusively used to check for
+	 * double entries in the table OrtAbweichungNorm.
+	 * 
+	 * @param entry
+	 *            The entry to look for.
+	 * @param additionalNote
+	 *            The sometimes occurring additional note.
+	 * @param table
+	 *            The table in which to look for.
+	 * @return <code>True</code> if combination already exists,
+	 *         <code>false</code> otherwise.
+	 * @throws ImportException
+	 */
+	boolean entryAlreadyInDatabase(String entry, String additionalNote,
+			String table) throws ImportException {
 		boolean result = true;
 
 		String columnOne = getColumnName(table, 1);
@@ -142,7 +171,7 @@ class Validation {
 				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);) {
 
 			stmt.setString(1, entry);
-			stmt.setString(2, anmerkung);
+			stmt.setString(2, additionalNote);
 
 			try (ResultSet rs = stmt.executeQuery();) {
 
@@ -158,6 +187,22 @@ class Validation {
 		return result;
 	}
 
+	/**
+	 * Checks whether or not the given combination of IDs already exists in a
+	 * m:n:o-table.
+	 * 
+	 * @param tradID
+	 *            The ID of a passed form of an entry.
+	 * @param quellenID
+	 *            The ID of the source in which to find the passed form.
+	 * @param personID
+	 *            The ID of the person with which the passed form is associated.
+	 * @param table
+	 *            The table in which to look for combination.
+	 * @return <code>True</code> if combination of IDs already exists,
+	 *         <code>false</code> otherwise.
+	 * @throws ImportException
+	 */
 	boolean entryAlreadyInDatabase(int tradID, int quellenID, int personID,
 			String table) throws ImportException {
 		boolean result = true;
@@ -190,7 +235,15 @@ class Validation {
 	}
 
 	/**
-	 * Retrieves the name of a specified column in a table
+	 * Retrieves the name of a specified column in a table.
+	 * 
+	 * <b>Note:</b>
+	 * 
+	 * This way of retrieving column names stems from early development and
+	 * would be replaced in later versions to take advantage of column name
+	 * constants and enhance possible extensions. Yet, as the program runs just
+	 * fine, we don't see enough reason to adjust the usage of this method for
+	 * the moment.
 	 * 
 	 * @param table
 	 *            The table in which the column exists
@@ -250,7 +303,7 @@ class Validation {
 	}
 
 	/**
-	 * Gets the ID of a pre-existent entry in a specified table
+	 * Gets the ID of a pre-existent entry in a specified table.
 	 * 
 	 * @param entry
 	 *            The entry which's ID is search
@@ -284,6 +337,18 @@ class Validation {
 		return id;
 	}
 
+	/**
+	 * Gets the ID of a combination of an attribute and a foreign key from a
+	 * specified table.
+	 * 
+	 * @param entry
+	 *            The attribute.
+	 * @param foreignKey
+	 *            The foreign key.
+	 * @param table
+	 *            The table in which to search.
+	 * @return
+	 */
 	int getIDOfEntry(String entry, int foreignKey, String table) {
 		int id = 0;
 
@@ -312,7 +377,20 @@ class Validation {
 		return id;
 	}
 
-	int getIDOfOrtAbweichungEntry(String entry, String anmerkung, String table) {
+	/**
+	 * Get the ID of a combination of a location and an additional note.
+	 * 
+	 * @param entry
+	 *            The entry to look for.
+	 * @param additionalNote
+	 *            The additional note that accompanies the entry.
+	 * @param table
+	 *            The table in which to look for.
+	 * @return <code>True</code> if entry already exists, <code>false</code>
+	 *         otherwise.
+	 */
+	int getIDOfOrtAbweichungEntry(String entry, String additionalNote,
+			String table) {
 		int id = 0;
 
 		String columnOne = getColumnName(table, 1);
@@ -326,7 +404,7 @@ class Validation {
 				ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);) {
 
 			stmt.setString(1, entry);
-			stmt.setString(2, anmerkung);
+			stmt.setString(2, additionalNote);
 
 			try (ResultSet rs = stmt.executeQuery();) {
 
