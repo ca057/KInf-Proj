@@ -378,7 +378,7 @@ public class UserQueryImpl implements UserQuery {
 			upperEnd = ")";
 		}
 		result.append(String.format("%s%s.%s%s", upperFront, table, column, upperEnd)).append(getEquationSymbol())
-				.append("?");
+				.append(String.format("%s?%s", upperFront, upperEnd));
 
 		if (source == SourceKeys.NO_SELECTION || source == SourceKeys.ORT_NORM_AB) {
 			result.append(String.format(" OR UPPER(%s_norm.%snorm) ", table.substring(0, table.indexOf("_")),
