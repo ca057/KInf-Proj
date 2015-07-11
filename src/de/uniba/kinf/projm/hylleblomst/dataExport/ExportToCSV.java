@@ -3,10 +3,8 @@ package de.uniba.kinf.projm.hylleblomst.dataExport;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import javax.sql.rowset.CachedRowSet;
 
@@ -42,8 +40,6 @@ public class ExportToCSV {
 		}
 
 		try (ResultSet rs = crs.getOriginal();
-				Statement stmt = rs.getStatement();
-				Connection con = stmt.getConnection();
 				CSVWriter writer = new CSVWriter(new FileWriter(
 						file.getAbsolutePath()));) {
 
