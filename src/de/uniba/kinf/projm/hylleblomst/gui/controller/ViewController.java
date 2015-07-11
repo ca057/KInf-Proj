@@ -327,25 +327,31 @@ public class ViewController implements ControllerInterface, Initializable {
 
 			@Override
 			public void handle(ActionEvent event) {
-				fileChooser.setTitle(viewHelper.getAppName() + " - Speicherort für Export auswählen");
-				fileChooser.getExtensionFilters().add(new ExtensionFilter("CSV-Datei (*.csv)", "*.csv"));
+				if (result != null) {
+					fileChooser.setTitle(viewHelper.getAppName() + " - Speicherort für Export auswählen");
+					fileChooser.getExtensionFilters().add(new ExtensionFilter("CSV-Datei (*.csv)", "*.csv"));
 
-				Optional<File> exportFile = Optional
-						.ofNullable(fileChooser.showOpenDialog(root.getScene().getWindow()));
-				if (exportFile.isPresent()) {
-					try {
-						if (result != null) {
-							model.exportSearchedData(exportFile.get(), result);
-							viewHelper.showInfo(
-									"Export der Daten in Datei " + exportFile.get().getName() + " war erfolgreich.");
-						} else {
-							viewHelper.showErrorMessage("Keine Daten vorhanden, Export ist nicht möglich.");
+					Optional<File> exportFile = Optional
+							.ofNullable(fileChooser.showOpenDialog(root.getScene().getWindow()));
+					if (exportFile.isPresent()) {
+						try {
+							if (result.getMetaData().getColumnCount() != 0) {
+								model.exportSearchedData(exportFile.get(), result);
+								viewHelper.showInfo("Export der Daten in Datei " + exportFile.get().getName()
+										+ " war erfolgreich.");
+							} else {
+								viewHelper.showErrorMessage(
+										"Suchergebnis enthält keine Daten, Export ist nicht möglich.");
+							}
+						} catch (ExportException | SQLException e) {
+							e.printStackTrace();
+							viewHelper
+									.showErrorMessage("Export der Daten in Datei " + exportFile.get().getAbsolutePath()
+											+ " war nicht erfolgreich.\n" + e.getMessage());
 						}
-					} catch (ExportException e) {
-						e.printStackTrace();
-						viewHelper.showErrorMessage("Export der Daten in Datei " + exportFile.get().getAbsolutePath()
-								+ " war nicht erfolgreich.\n" + e.getMessage());
 					}
+				} else {
+					viewHelper.showErrorMessage("Keine Suchergebnisse vorhanden, Export der Daten nicht möglich.");
 				}
 				event.consume();
 			}
@@ -698,11 +704,12 @@ public class ViewController implements ControllerInterface, Initializable {
 		}
 	}
 
-	private void fillResultTable(CachedRowSet result) {
-		if (result == null || result.size() == 0) {
+	private void fillResultTable(CachedRowSet resultCachedRowSet) {
+		if (resultCachedRowSet == null || resultCachedRowSet.size() == 0) {
 			viewHelper.showInfo("Die Suche hat kein Ergebnis zurückgeliefert.");
 		} else {
 			ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
+			result = resultCachedRowSet;
 			try {
 				result.first();
 				for (int i = 0; i < result.getMetaData().getColumnCount(); i++) {
@@ -765,7 +772,7 @@ public class ViewController implements ControllerInterface, Initializable {
 					}
 					data.add(row);
 				}
-				result.close();
+				result.first();
 				resultTable.setItems(data);
 			} catch (SQLException e) {
 				viewHelper.showErrorMessage("Bei der Anzeige der gefundenen Datensätze ist ein Fehler aufgetreten.");
