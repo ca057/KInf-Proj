@@ -32,25 +32,30 @@ public class ExportToCSV {
 	 * @throws ExportException
 	 */
 	public void run(File file, CachedRowSet crs) throws ExportException {
-		if (file != null) {
-			try (ResultSet rs = crs.getOriginal();
-					Statement stmt = rs.getStatement();
-					Connection con = stmt.getConnection();
-					CSVWriter writer = new CSVWriter(new FileWriter(
-							file.getAbsolutePath()));) {
-
-				writer.writeAll(rs, true);
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				throw new ExportException(e.getErrorCode()
-						+ ": Could not handle this result: " + e.getMessage());
+		if (!file.exists()) {
+			try {
+				file.createNewFile();
 			} catch (IOException e) {
-				throw new ExportException("Could not handle this file: "
+				throw new ExportException("File could not be created: "
 						+ e.getMessage());
 			}
-		} else {
-			throw new ExportException("No suitable file to save to");
+		}
+
+		try (ResultSet rs = crs.getOriginal();
+				Statement stmt = rs.getStatement();
+				Connection con = stmt.getConnection();
+				CSVWriter writer = new CSVWriter(new FileWriter(
+						file.getAbsolutePath()));) {
+
+			writer.writeAll(rs, true);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			throw new ExportException(e.getErrorCode()
+					+ ": Could not handle this result: " + e.getMessage());
+		} catch (IOException e) {
+			throw new ExportException("Could not handle this file: "
+					+ e.getMessage());
 		}
 	}
 }
