@@ -737,7 +737,7 @@ public class ViewController implements ControllerInterface, Initializable {
 			ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
 			result = resultCachedRowSet;
 			try {
-				result.first();
+				result.beforeFirst();
 				for (int i = 0; i < result.getMetaData().getColumnCount(); i++) {
 					String columnName = result.getMetaData().getColumnName(i + 1);
 					if (columnName.contains("_")) {
@@ -772,7 +772,7 @@ public class ViewController implements ControllerInterface, Initializable {
 				}
 				// set visibility of first column with ID to false
 				resultTable.getColumns().get(0).setVisible(false);
-				result.first();
+				result.beforeFirst();
 				while (result.next()) {
 					ObservableList<String> row = FXCollections.observableArrayList();
 					for (int i = 1; i <= result.getMetaData().getColumnCount(); i++) {
