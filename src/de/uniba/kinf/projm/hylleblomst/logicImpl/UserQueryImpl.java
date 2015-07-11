@@ -149,7 +149,7 @@ public class UserQueryImpl implements UserQuery {
 	 * happens here to avoid further iterations.
 	 */
 	private void searchFieldKeyToDatabaseData() {
-		if (source > SourceKeys.bottom && source < SourceKeys.top) {
+		if (source >= SourceKeys.bottom && source <= SourceKeys.top) {
 			switch (searchField) {
 			case ADLIG:
 				table = TableNameKeys.PERSON;
