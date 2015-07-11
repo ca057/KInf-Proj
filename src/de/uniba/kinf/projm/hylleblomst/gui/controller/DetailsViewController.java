@@ -252,7 +252,7 @@ public class DetailsViewController implements ControllerInterface, Initializable
 		result_details_adlig.setTooltip(adligTooltip);
 
 		Tooltip anmerkungenTooltip = new Tooltip();
-		adligTooltip.textProperty().bind(anmerkungen);
+		anmerkungenTooltip.textProperty().bind(anmerkungen);
 		result_details_anmerkungen.setTooltip(anmerkungenTooltip);
 
 		Tooltip anredeTooltip = new Tooltip();
@@ -490,7 +490,8 @@ public class DetailsViewController implements ControllerInterface, Initializable
 				while (sourceResult.next()) {
 					for (int i = 1; i <= sourceResult.getMetaData().getColumnCount(); i++) {
 						if (!sfk.toString().equals(sourceResult.getMetaData().getColumnName(i))) {
-							viewHelper.showErrorMessage("Ein Fehler bei der Auswertung der Quelle ist aufgetreten.");
+							viewHelper.showErrorMessage(
+									"Die Detailinformationen konnten nicht ausgewertet werden, da ein unbekannter Spaltenname zurückgegeben wurde.");
 							break;
 						}
 						result = sourceResult.getString(i);

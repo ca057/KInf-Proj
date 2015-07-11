@@ -17,6 +17,7 @@ import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 import de.uniba.kinf.projm.hylleblomst.exceptions.SetUpException;
 import de.uniba.kinf.projm.hylleblomst.exceptions.ViewException;
 import de.uniba.kinf.projm.hylleblomst.gui.controller.DetailsViewController;
+import de.uniba.kinf.projm.hylleblomst.keys.DatabaseKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.SearchInitiator;
 import de.uniba.kinf.projm.hylleblomst.logic.UserQuery;
 
@@ -104,6 +105,7 @@ public class Model extends Observable {
 			try {
 				dbManagement.setUpDatabase();
 				dbManagement.setUpTables();
+				search.setDbKey(new DatabaseKeys(dirForSetup));
 			} catch (SetUpException e) {
 				e.printStackTrace();
 				throw new SetUpException(e.getMessage());
