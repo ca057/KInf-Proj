@@ -59,6 +59,8 @@ public class Main extends Application {
 				}
 			});
 		} catch (Exception e) {
+			// TODO wenn hier eine Exception ankommt, müsste diese kritsch sein:
+			// Programm beenden und neu starten
 			exceptionCounter++;
 			System.out.println("Excpetions in Main: " + exceptionCounter);
 			e.printStackTrace();
