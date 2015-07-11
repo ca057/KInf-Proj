@@ -33,9 +33,36 @@ public class SearchInitiatorImpl implements SearchInitiator {
 	private String password;
 
 	public SearchInitiatorImpl(DatabaseKeys dbKey) {
-		this.dbKey = dbKey.dbURL;
+		setDbKey(dbKey);
 		user = DBUserKeys.guestUser2;
 		password = DBUserKeys.guestPassword2;
+	}
+
+	@Override
+	public void setDbKey(DatabaseKeys dbKey) {
+		if (dbKey != null) {
+			this.dbKey = dbKey.dbURL;
+		} else {
+			throw new InputMismatchException("Der Pfad zur Datenbank darf nicht null sein.");
+		}
+	}
+
+	@Override
+	public void setUser(String user) {
+		if (user != null) {
+			this.user = user;
+		} else {
+			throw new InputMismatchException("Der Nutzer*innenname für die Datenbank darf nicht null sein.");
+		}
+	}
+
+	@Override
+	public void setPassword(String password) {
+		if (password != null) {
+			this.password = password;
+		} else {
+			throw new InputMismatchException("Das Passwort für die Datenbank darf nicht null sein.");
+		}
 	}
 
 	@Override
