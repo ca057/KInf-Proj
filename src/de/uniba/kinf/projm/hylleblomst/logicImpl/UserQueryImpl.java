@@ -368,11 +368,12 @@ public class UserQueryImpl implements UserQuery {
 						ColumnNameKeys.QUELLEN_ID, source));
 			}
 		} else {
+			result.append(String.format("%s.%s = ?", TableNameKeys.PERSON, ColumnNameKeys.PERSON_ID));
 			if (!(source == SourceKeys.NORM || source == SourceKeys.NO_SOURCE || source == SourceKeys.NO_SELECTION
 					|| SearchFieldKeys.ANREDE.equals(searchField) || SearchFieldKeys.TITEL.equals(searchField))) {
-				result.append(
-						String.format(" %s_info.%s = %s AND %1$s_info.%s = ?", table.substring(0, table.indexOf("_")),
-								ColumnNameKeys.QUELLEN_ID, source, ColumnNameKeys.PERSON_ID));
+				result.append(String.format(" AND %s_info.%s = %s", table.substring(0, table.indexOf("_")),
+						ColumnNameKeys.QUELLEN_ID, source));
+
 			}
 		}
 		return result.toString();
