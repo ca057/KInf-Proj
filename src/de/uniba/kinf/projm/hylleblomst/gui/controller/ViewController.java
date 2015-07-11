@@ -16,7 +16,6 @@ import de.uniba.kinf.projm.hylleblomst.exceptions.SetUpException;
 import de.uniba.kinf.projm.hylleblomst.exceptions.ViewException;
 import de.uniba.kinf.projm.hylleblomst.gui.model.Model;
 import de.uniba.kinf.projm.hylleblomst.keys.DatabaseKeys;
-import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.SearchInitiator;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.SearchInitiatorImpl;
@@ -55,7 +54,8 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 
 /**
- * Controller for the graphical user interface.
+ * Controller for the main graphical user interface. The ViewController manages
+ * all the nodes of the layout and several more important classes.
  */
 public class ViewController implements ControllerInterface, Initializable {
 
@@ -255,24 +255,13 @@ public class ViewController implements ControllerInterface, Initializable {
 	DetailsViewController detailsViewController;
 
 	/**
-	 * Constructor for a new Controller. When called, the array with
-	 * {@link SearchFieldKeys} and {@link SourceKeys} is build and set, the
-	 * instances of the {@link SearchInitiatorImpl}, {@link ViewHelper} and
-	 * {@link SearchController} are instantiated.
+	 * Constructor for a new Controller. The constructor initiates all
+	 * variables, inititates the {@link Model} and {@link SearchController}.
+	 * {@link DatabaseKeys} are set to a default value.
 	 * 
 	 */
 	public ViewController() {
 		dbKey = new DatabaseKeys("./db");
-		viewHelper = new ViewHelper();
-		initiator = new SearchInitiatorImpl(dbKey);
-		fileChooser = new FileChooser();
-		model = new Model(initiator);
-		model.addObserver(this);
-		searchCtrl = new SearchController(inputFieldCounter, model);
-	}
-
-	public ViewController(File databasePath) {
-		dbKey = new DatabaseKeys(databasePath);
 		viewHelper = new ViewHelper();
 		initiator = new SearchInitiatorImpl(dbKey);
 		fileChooser = new FileChooser();

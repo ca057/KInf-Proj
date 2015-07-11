@@ -45,7 +45,6 @@ public class Main extends Application {
 		// Model starten
 		// Model model = new Model(initiator);
 		// ViewController starten und Stage übergeben
-		int exceptionCounter = 0;
 		try {
 			BorderPane root = (BorderPane) FXMLLoader.load(getClass().getResource("../gui/view/hylleblomstView.fxml"));
 			Scene scene = new Scene(root);
@@ -61,10 +60,6 @@ public class Main extends Application {
 				}
 			});
 		} catch (Exception e) {
-			// TODO wenn hier eine Exception ankommt, müsste diese kritsch sein:
-			// Programm beenden und neu starten
-			exceptionCounter++;
-			System.out.println("Excpetions in Main: " + exceptionCounter);
 			e.printStackTrace();
 		}
 	}
