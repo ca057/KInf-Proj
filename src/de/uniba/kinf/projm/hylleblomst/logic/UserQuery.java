@@ -62,6 +62,6 @@ public interface UserQuery {
 	 * @return {@code true} - if the user wishes to combine the inputs with OR
 	 *         instead of AND
 	 */
-	Boolean useOrCondition();
+	Boolean isOrCondition();
 
 }
