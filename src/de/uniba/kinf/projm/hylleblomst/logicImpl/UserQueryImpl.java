@@ -357,20 +357,22 @@ public class UserQueryImpl implements UserQuery {
 
 			if (searchField == SearchFieldKeys.ORT && source == SourceKeys.NORM) {
 				return result
-						.append(String.format("OR UPPER(%s.%s)", TableNameKeys.ORT_ABWEICHUNG_NORM,
+						.append(String.format(" OR UPPER(%s.%s)", TableNameKeys.ORT_ABWEICHUNG_NORM,
 								ColumnNameKeys.ORT_ABWEICHUNG_NORM))
 						.append(getEquationSymbol()).append("UPPER(?)").toString();
 			}
 
 			if (!(source == SourceKeys.NORM || source == SourceKeys.NO_SOURCE || source == SourceKeys.NO_SELECTION
-					|| SearchFieldKeys.ANREDE.equals(searchField) || SearchFieldKeys.TITEL.equals(searchField))) {
+					|| source == SourceKeys.ORT_NORM_AB || SearchFieldKeys.ANREDE.equals(searchField)
+					|| SearchFieldKeys.TITEL.equals(searchField))) {
 				result.append(String.format(" AND %1s_info.%s = %s", table.substring(0, table.indexOf("_")),
 						ColumnNameKeys.QUELLEN_ID, source));
 			}
 		} else {
 			result.append(String.format("%s.%s = ?", TableNameKeys.PERSON, ColumnNameKeys.PERSON_ID));
 			if (!(source == SourceKeys.NORM || source == SourceKeys.NO_SOURCE || source == SourceKeys.NO_SELECTION
-					|| SearchFieldKeys.ANREDE.equals(searchField) || SearchFieldKeys.TITEL.equals(searchField))) {
+					|| source == SourceKeys.ORT_NORM_AB || SearchFieldKeys.ANREDE.equals(searchField)
+					|| SearchFieldKeys.TITEL.equals(searchField))) {
 				result.append(String.format(" AND %s_info.%s = %s", table.substring(0, table.indexOf("_")),
 						ColumnNameKeys.QUELLEN_ID, source));
 
