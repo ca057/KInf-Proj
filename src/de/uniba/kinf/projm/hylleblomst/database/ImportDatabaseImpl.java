@@ -515,10 +515,11 @@ public class ImportDatabaseImpl implements ImportDatabase {
 				.format("INSERT INTO %s values(?, ?, ?)", table);
 		int id;
 		String anmerkung = "";
-		if (entry.contains("*")) {
-			int indexOfStar = entry.indexOf("*");
-			anmerkung = entry.substring(indexOfStar + 1);
-		}
+		// if (entry.contains("*")) {
+		// int indexOfStar = entry.indexOf("*");
+		// anmerkung = entry.substring(indexOfStar + 1);
+		// entry=entry.substring(0,indexOfStar);
+		// }
 
 		if (!validation.entryAlreadyInDatabase(entry, anmerkung, table)) {
 			try (PreparedStatement stmt = con.prepareStatement(sqlQuery);) {
