@@ -11,26 +11,21 @@ import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
  */
 public class CsvFormatVerifier {
 
-	public File csvFile;
-	CsvHelper referenceFile;
-
-	public CsvFormatVerifier(File file) throws ImportException {
-		if (file.isFile() && file.getAbsolutePath().endsWith(".csv")) {
-			this.csvFile = file;
-			referenceFile = new CsvHelper(Paths.get("./doc/reference.csv"));
-		} else {
-			throw new ImportException("Der übergebene Pfad führt nicht zu einer regulären csv-Datei");
+	public static boolean verifyCsv(File csvFile) throws ImportException {
+		if (!csvFile.isFile() || !csvFile.getAbsolutePath().endsWith(".csv")) {
+			throw new ImportException(
+					"Der übergebene Pfad führt nicht zu einer regulären csv-Datei");
 		}
-	}
 
-	public boolean verifyCsv() {
+		CsvHelper referenceFile = new CsvHelper(
+				Paths.get("./doc/reference.csv"));
 		CsvHelper fileToVerify = new CsvHelper(csvFile.toPath());
 
 		try {
 			String[] tmp1 = fileToVerify.getLine(-1);
 			String[] tmp2 = referenceFile.getLine(-1);
 
-			for (int i = 0; i < Math.min(tmp1.length, tmp2.length); i++) {
+			for (int i = 0; i < Math.max(tmp1.length, tmp2.length); i++) {
 				if (!tmp1[i].equals(tmp2[i])) {
 					return false;
 				}
