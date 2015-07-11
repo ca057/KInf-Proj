@@ -1,8 +1,11 @@
 /bin/
+
 /MyTestingDB
+
 .gitignore
+
 
 .log
 
+
 /derby.log
-/doc/
