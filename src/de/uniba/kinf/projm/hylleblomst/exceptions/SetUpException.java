@@ -1,6 +1,15 @@
 package de.uniba.kinf.projm.hylleblomst.exceptions;
 
+/**
+ * This exception is thrown when an error occurs during the setup of the
+ * database.
+ * 
+ * @author Simon
+ *
+ */
 public class SetUpException extends Exception {
+
+	private static final long serialVersionUID = 2925012631241306505L;
 
 	public SetUpException() {
 	}

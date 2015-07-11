@@ -17,8 +17,8 @@ public class HelpFrame extends Stage {
 	}
 
 	private BorderPane createContentPane() {
-
-		return null;
+		BorderPane contentPane = new BorderPane();
+		return contentPane;
 	}
 
 	private void setEventHandlers() {

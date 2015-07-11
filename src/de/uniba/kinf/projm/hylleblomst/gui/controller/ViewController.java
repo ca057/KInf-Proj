@@ -434,6 +434,16 @@ public class ViewController implements ControllerInterface, Initializable {
 				event.consume();
 			}
 		});
+
+		mainMenu_help_help.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				HelpFrameController helpFrameController = new HelpFrameController();
+				helpFrameController.showView();
+				event.consume();
+			}
+		});
 	}
 
 	/**
