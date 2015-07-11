@@ -83,6 +83,9 @@ public class UserQueryImpl implements UserQuery {
 	}
 
 	public void setSearchField(SearchFieldKeys searchField) {
+		if (searchField == null) {
+			throw new InputMismatchException("Das übergebene searchField darf nicht null sein.");
+		}
 		this.searchField = searchField;
 	}
 
@@ -109,6 +112,9 @@ public class UserQueryImpl implements UserQuery {
 	}
 
 	public void setSource(int source) {
+		if (source < SourceKeys.bottom || source > SourceKeys.top) {
+			throw new InputMismatchException("Der übergebene Wert für source muss einem SourceKey entsprechen.");
+		}
 		this.source = source;
 	}
 
