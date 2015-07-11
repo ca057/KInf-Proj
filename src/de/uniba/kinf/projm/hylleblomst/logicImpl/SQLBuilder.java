@@ -134,9 +134,6 @@ public class SQLBuilder {
 	private void buildNotationSearch(UserQuery userQuery) {
 		needsStandardFields = false;
 		sqlStatement.append(buildSelect(userQuery)).append(buildFrom()).append(" WHERE ").append(userQuery.getWhere());
-		// append(" WHERE ").append(String.format(" %1s_info.%s = ?",
-		// userQuery.getTable().substring(0, userQuery.getTable().indexOf("_")),
-		// ColumnNameKeys.QUELLEN_ID)
 	}
 
 	/*
