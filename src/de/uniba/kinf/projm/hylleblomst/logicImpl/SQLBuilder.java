@@ -88,14 +88,11 @@ public class SQLBuilder {
 	 * @throws SQLException
 	 */
 	void buildQuery() throws SQLException {
+
 		StringBuilder sqlWhere = new StringBuilder();
-
 		for (UserQuery qr : userQuery) {
-
 			sqlStatement.append(buildSelect(qr));
-
 			sqlWhere.append(buildWhere(qr));
-
 			if (!("true".equals(qr.getInput()))) {
 				inputs.add(qr.getInput());
 				if (SourceKeys.NO_SELECTION.equals(qr.getSource())) {
@@ -103,7 +100,6 @@ public class SQLBuilder {
 				}
 			}
 		}
-
 		sqlStatement.append(buildFrom()).append(" WHERE ").append(sqlWhere);
 	}
 
@@ -129,19 +125,24 @@ public class SQLBuilder {
 	private void buildPersonSearch() {
 		StringBuilder sqlQuery = new StringBuilder();
 		sqlStatement = sqlQuery.append(buildSelectPersonDetails()).append(buildFrom()).append(" WHERE ")
-				.append(TableNameKeys.PERSON).append("." + ColumnNameKeys.PERSON_ID + " = ?");
-	}
-
-	private void buildNotationSearch(UserQuery userQuery) {
-		needsStandardFields = false;
-		sqlStatement.append(buildSelect(userQuery)).append(buildFrom()).append(" WHERE ").append(TableNameKeys.PERSON)
-				.append("." + ColumnNameKeys.PERSON_ID + " = ?");
+				.append(TableNameKeys.PERSON).append(".").append(ColumnNameKeys.PERSON_ID).append(" = ?");
 	}
 
 	/*
 	 * 
 	 */
-	private String buildSelect(UserQuery qr) {
+	private void buildNotationSearch(UserQuery userQuery) {
+		needsStandardFields = false;
+		sqlStatement.append(buildSelect(userQuery)).append(buildFrom()).append(" WHERE ")
+				.append(String.format(" %1s_info.%s = ?",
+						userQuery.getTable().substring(0, userQuery.getTable().indexOf("_")),
+						ColumnNameKeys.QUELLEN_ID));
+	}
+
+	/*
+	 * 
+	 */
+	private String buildSelect(UserQuery userQuery) {
 		String result = "";
 		if (needsStandardFields) {
 			result = "SELECT DISTINCT " + TableNameKeys.PERSON + "." + ColumnNameKeys.PERSON_ID + " AS PersonID, "
@@ -151,19 +152,21 @@ public class SQLBuilder {
 					+ TableNameKeys.FAKULTAETEN + "." + ColumnNameKeys.FAKULTAETEN_NORM + " AS fakultaet_norm";
 			needsStandardFields = false;
 		}
-		if (ColumnNameKeys.STUDIENJAHR_INT.equals(qr.getColumn())) {
-			result += ", " + qr.getTable() + "." + ColumnNameKeys.STUDIENJAHR + " AS " + qr.getSearchField();
-		} else if (ColumnNameKeys.DATUM.equals(qr.getColumn())) {
-			result += ", " + qr.getTable() + "." + ColumnNameKeys.DATUM + ", " + qr.getTable() + "."
+		if (ColumnNameKeys.STUDIENJAHR_INT.equals(userQuery.getColumn())) {
+			result += ", " + userQuery.getTable() + "." + ColumnNameKeys.STUDIENJAHR + " AS "
+					+ userQuery.getSearchField();
+		} else if (ColumnNameKeys.DATUM.equals(userQuery.getColumn())) {
+			result += ", " + userQuery.getTable() + "." + ColumnNameKeys.DATUM + ", " + userQuery.getTable() + "."
 					+ ColumnNameKeys.DATUMS_FELDER_GESETZT;
 		} else {
-			result += ", " + qr.getTable() + "." + qr.getColumn() + " AS " + qr.getSearchField();
+			result += ", " + userQuery.getTable() + "." + userQuery.getColumn() + " AS " + userQuery.getSearchField();
 		}
-		if (qr.getSource() == SourceKeys.ORT_NORM_AB) {
-			result += ", " + qr.getTable() + "." + ColumnNameKeys.ANMERKUNG;
+		if (userQuery.getSource() == SourceKeys.ORT_NORM_AB) {
+			result += ", " + userQuery.getTable() + "." + ColumnNameKeys.ANMERKUNG;
 		}
 		if (result.startsWith(",")) {
-			result = "SELECT DISTINCT " + qr.getTable() + "." + qr.getColumn() + " AS " + qr.getColumn();
+			result = "SELECT DISTINCT " + userQuery.getTable() + "." + userQuery.getColumn() + " AS "
+					+ userQuery.getColumn();
 		}
 		return result;
 	}
