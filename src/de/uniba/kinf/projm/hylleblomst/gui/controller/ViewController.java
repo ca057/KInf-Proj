@@ -728,31 +728,13 @@ public class ViewController implements ControllerInterface, Initializable {
 					col.setCellValueFactory(
 							new Callback<CellDataFeatures<ObservableList<String>, String>, ObservableValue<String>>() {
 
-								private String formatDateForDisplaying(String oldDate, String key) {
-									String[] dateArray = oldDate.split("-");
-									if ("1".equals(key.substring(2))) {
-										dateArray[2] = "*";
-									}
-									if ("1".equals(key.substring(1, 2))) {
-										dateArray[1] = "*";
-									}
-									if ("1".equals(key.substring(0, 1))) {
-										dateArray[0] = "*";
-									}
-									String newDate = dateArray[0] + "-" + dateArray[1] + "-" + dateArray[2];
-									if ("-*-*".equals(newDate.substring(4))) {
-										return dateArray[0];
-									}
-									return newDate;
-								}
-
 								@Override
 								public ObservableValue<String> call(
 										CellDataFeatures<ObservableList<String>, String> param) {
 									Optional<String> optionalParam = Optional.ofNullable(param.getValue().get(j));
 									if (optionalParam.isPresent() && columnNameForCheck.equals("DATUM")) {
-										return new SimpleStringProperty(formatDateForDisplaying(param.getValue().get(j),
-												param.getValue().get(j + 1)));
+										return new SimpleStringProperty(viewHelper.formatDateForDisplaying(
+												param.getValue().get(j), param.getValue().get(j + 1)));
 									} else if (optionalParam.isPresent()) {
 										return new SimpleStringProperty(optionalParam.get());
 									} else {

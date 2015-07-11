@@ -11,7 +11,6 @@ import javax.sql.rowset.CachedRowSet;
 
 import com.sun.rowset.CachedRowSetImpl;
 
-import de.uniba.kinf.projm.hylleblomst.exceptions.ViewException;
 import de.uniba.kinf.projm.hylleblomst.gui.model.Model;
 import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.UserQueryImpl;
@@ -249,7 +248,6 @@ public class DetailsViewController implements ControllerInterface, Initializable
 	/**
 	 * 
 	 * @param searchResult
-	 * @throws ViewException
 	 */
 	public void processCompleteSearchResult(CachedRowSet searchResult) {
 		if (searchResult == null) {
@@ -261,7 +259,6 @@ public class DetailsViewController implements ControllerInterface, Initializable
 			System.out.println(crsMeta.getColumnCount());
 			System.out.println(searchResult.size());
 
-			searchResult.first();
 			while (searchResult.next()) {
 				for (int i = 1; i <= crsMeta.getColumnCount(); i++) {
 					System.out.println(crsMeta.getColumnName(i));
@@ -353,11 +350,11 @@ public class DetailsViewController implements ControllerInterface, Initializable
 							studienjahr.setValue(searchResult.getString(i));
 						}
 					} else if (crsMeta.getColumnName(i).equals("DATUM")) {
-						// FIXME Datum muss überschrieben werden
 						if (searchResult.getString(i) == null || searchResult.getString(i).isEmpty()) {
 							einschreibedatum.setValue("");
 						} else {
-							einschreibedatum.setValue(searchResult.getString(i));
+							einschreibedatum.setValue(viewHelper.formatDateForDisplaying(searchResult.getString(i),
+									searchResult.getString(i + 1)));
 						}
 					} else if (crsMeta.getColumnName(i).equals("ZUSAETZE")) {
 						if (searchResult.getString(i) == null || searchResult.getString(i).isEmpty()) {

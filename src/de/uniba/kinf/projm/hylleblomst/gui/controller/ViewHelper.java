@@ -154,6 +154,10 @@ public class ViewHelper {
 		}
 	}
 
+	void showMoreInformation(String infosToShow) {
+		// TODO show more information in window
+	}
+
 	/**
 	 * Checks the value of the selection for the source of the first name and
 	 * returns the corresponding {@link SourceKey}.
@@ -193,5 +197,22 @@ public class ViewHelper {
 			return SourceKeys.AUB_V_E38;
 		}
 		return SourceKeys.NO_SELECTION;
+	}
+
+	String formatDateForDisplaying(String oldDate, String key) {
+		String[] dateArray = oldDate.split("-");
+		if ("1".equals(key.substring(2))) {
+			dateArray[2] = "*";
+		}
+		if ("1".equals(key.substring(1, 2))) {
+			dateArray[1] = "*";
+		}
+		if ("1".equals(key.substring(0, 1))) {
+			dateArray[0] = "*";
+		}
+		if ("-*-*".equals("-" + dateArray[1] + "-" + dateArray[2])) {
+			return dateArray[0];
+		}
+		return dateArray[0] + "-" + dateArray[1] + "-" + dateArray[2];
 	}
 }
