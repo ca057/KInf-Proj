@@ -68,7 +68,11 @@ public class ViewController implements ControllerInterface, Initializable {
 
 	private int inputFieldCounter = 24;
 
+	FileChooser fileChooser;
+
 	private StringProperty sourceLabelName = new SimpleStringProperty("Quelle: ");
+
+	CachedRowSet result;
 
 	@FXML
 	private BorderPane root;
@@ -257,6 +261,7 @@ public class ViewController implements ControllerInterface, Initializable {
 	public ViewController() {
 		viewHelper = new ViewHelper();
 		initiator = new SearchInitiatorImpl();
+		fileChooser = new FileChooser();
 		model = new Model(initiator);
 		model.addObserver(this);
 		searchCtrl = new SearchController(inputFieldCounter, model);
@@ -322,8 +327,6 @@ public class ViewController implements ControllerInterface, Initializable {
 
 			@Override
 			public void handle(ActionEvent event) {
-				FileChooser fileChooser = new FileChooser();
-
 				fileChooser.setTitle(viewHelper.getAppName() + " - Speicherort für Export auswählen");
 				fileChooser.getExtensionFilters().add(new ExtensionFilter("CSV-Datei (*.csv)", "*.csv"));
 
@@ -331,9 +334,13 @@ public class ViewController implements ControllerInterface, Initializable {
 						.ofNullable(fileChooser.showOpenDialog(root.getScene().getWindow()));
 				if (exportFile.isPresent()) {
 					try {
-						model.exportSearchedData(exportFile.get());
-						viewHelper.showInfo(
-								"Export der Daten in Datei " + exportFile.get().getName() + " war erfolgreich.");
+						if (result != null) {
+							model.exportSearchedData(exportFile.get(), result);
+							viewHelper.showInfo(
+									"Export der Daten in Datei " + exportFile.get().getName() + " war erfolgreich.");
+						} else {
+							viewHelper.showErrorMessage("Keine Daten vorhanden, Export ist nicht möglich.");
+						}
 					} catch (ExportException e) {
 						e.printStackTrace();
 						viewHelper.showErrorMessage("Export der Daten in Datei " + exportFile.get().getAbsolutePath()
@@ -375,7 +382,6 @@ public class ViewController implements ControllerInterface, Initializable {
 
 			@Override
 			public void handle(ActionEvent event) {
-				FileChooser fileChooser = new FileChooser();
 				fileChooser.setTitle(viewHelper.getAppName() + " - CSV-Datei für Import auswählen");
 				fileChooser.getExtensionFilters().add(new ExtensionFilter("CSV-Datei (*.csv)", "*.csv"));
 

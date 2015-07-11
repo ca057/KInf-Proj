@@ -9,6 +9,9 @@ import java.util.ResourceBundle;
 
 import javax.sql.rowset.CachedRowSet;
 
+import com.sun.rowset.CachedRowSetImpl;
+
+import de.uniba.kinf.projm.hylleblomst.exceptions.ViewException;
 import de.uniba.kinf.projm.hylleblomst.gui.model.Model;
 import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.UserQueryImpl;
@@ -243,24 +246,10 @@ public class DetailsViewController implements ControllerInterface, Initializable
 		});
 	}
 
-	private void getSourceDetails(SearchFieldKeys sfk, String source) {
-		if (sfk == null || source == null || source.isEmpty()) {
-			throw new InputMismatchException(
-					"Es können keine Tradierungen gesucht werden, da das Suchfeld oder die Quelle keinen Wert hat oder leer ist.");
-		}
-		System.out.println("Gesucht wird nach Quelle: " + source);
-		CachedRowSet singleResult = model.searchSourceDetails(
-				new UserQueryImpl(sfk, personID.getValueSafe(), viewHelper.getSourceKeyByValueAsString(source)));
-		if (singleResult != null) {
-			System.out.println(singleResult.size());
-		} else {
-			System.out.println("Es gibt keine Detailinformationen für dieses Feld.");
-		}
-	}
-
 	/**
 	 * 
 	 * @param searchResult
+	 * @throws ViewException
 	 */
 	public void processCompleteSearchResult(CachedRowSet searchResult) {
 		if (searchResult == null) {
@@ -406,8 +395,30 @@ public class DetailsViewController implements ControllerInterface, Initializable
 			System.out.println("PersonID = " + personID.toString());
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			viewHelper.showErrorMessage(
+					"Es können keine Detailinformationen für diese Person angezeigt werden.\n" + e.getMessage());
+		}
+	}
+
+	private void getSourceDetails(SearchFieldKeys sfk, String source) {
+		if (sfk == null || source == null || source.isEmpty()) {
+			throw new InputMismatchException(
+					"Es können keine Tradierungen gesucht werden, da das Suchfeld oder die Quelle keinen Wert hat oder leer ist.");
+		}
+		try {
+			CachedRowSet singleResult = new CachedRowSetImpl();
+			singleResult = model.searchSourceDetails(
+					new UserQueryImpl(sfk, personID.getValueSafe(), viewHelper.getSourceKeyByValueAsString(source)));
+			if (singleResult != null) {
+				System.out.println(singleResult.size());
+			} else {
+				System.out.println("Es gibt keine Detailinformationen für dieses Feld.");
+			}
+			singleResult.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			viewHelper.showErrorMessage("Es konnten keine Tradierungen gefunden werden.\n" + e.getMessage());
 		}
 	}
 
