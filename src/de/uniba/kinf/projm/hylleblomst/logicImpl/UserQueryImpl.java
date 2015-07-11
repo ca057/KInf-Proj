@@ -27,6 +27,7 @@ public class UserQueryImpl implements UserQuery {
 	private Boolean isOpenSearch = false;
 	private Boolean isPersonSearch = false;
 	private Boolean isNotationSearch = false;
+	private Boolean isInt = false;
 	private int numberOfInputs = 0;
 
 	/**
@@ -127,8 +128,16 @@ public class UserQueryImpl implements UserQuery {
 	}
 
 	@Override
-	public String getInput() {
+	public Object getInput() {
+		if (isInt) {
+			return Integer.parseInt(input);
+		}
 		return input;
+	}
+
+	@Override
+	public Boolean isInt() {
+		return isInt;
 	}
 
 	@Override
@@ -174,17 +183,20 @@ public class UserQueryImpl implements UserQuery {
 				column = ColumnNameKeys.STUDIENJAHR_INT;
 				sqlWhere = String.format("%s.%s >= ?", table, column);
 				isOpenSearch = false;
+				isInt = true;
 				break;
 			case STUDIENJAHR_BIS:
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.STUDIENJAHR_INT;
 				sqlWhere = String.format("%s.%s <= ?", table, column);
 				isOpenSearch = false;
+				isInt = true;
 				break;
 			case EINSCHREIBEDATUM_VON:
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.DATUM;
 				isOpenSearch = false;
+				isInt = true;
 				sqlWhere = String.format("%s.%s >= ?", table, column);
 				if (input.contains("mm-dd")) {
 					input = input.substring(0, input.indexOf("-", 1)) + "-01-01";
@@ -198,6 +210,7 @@ public class UserQueryImpl implements UserQuery {
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.DATUM;
 				isOpenSearch = false;
+				isInt = true;
 				sqlWhere = String.format("%s.%s <= ?", table, column);
 				if (input.contains("mm-dd")) {
 					input = input.substring(0, input.indexOf("-", 1)) + "-12-31";
@@ -213,22 +226,25 @@ public class UserQueryImpl implements UserQuery {
 				sqlWhere = buildSQLWhere();
 				break;
 			case NUMMER:
+				isOpenSearch = false;
+				isInt = true;
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.PERSON_ID;
 				sqlWhere = buildSQLWhere();
-				isOpenSearch = false;
 				break;
 			case SEITE_ORIGINALE:
+				isOpenSearch = false;
+				isInt = true;
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.SEITE_ORIGINAL;
 				sqlWhere = buildSQLWhere();
-				isOpenSearch = false;
 				break;
 			case NUMMER_HESS:
+				isOpenSearch = false;
+				isInt = true;
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.NUMMER_HESS;
 				sqlWhere = buildSQLWhere();
-				isOpenSearch = false;
 				break;
 			case ANREDE:
 				if (source == SourceKeys.NORM) {
@@ -341,9 +357,8 @@ public class UserQueryImpl implements UserQuery {
 					+ source + " konnten keiner Tabelle und Spalte zugeordnet werden.");
 		}
 		if (isOpenSearch) {
-			this.input = updateInputForOpenSearch(input);
+			updateInputForOpenSearch();
 		}
-		numberOfInputs++;
 	}
 
 	/*
@@ -355,8 +370,13 @@ public class UserQueryImpl implements UserQuery {
 	private String buildSQLWhere() {
 		StringBuilder result = new StringBuilder();
 		if (!isNotationSearch) {
-			result.append(String.format("(UPPER(%s.%s)", table, column)).append(getEquationSymbol()).append("UPPER(?)");
-
+			if (isInt) {
+				result.append(String.format("(%s.%s", table, column)).append(getEquationSymbol()).append("?");
+			} else {
+				result.append(String.format("(UPPER(CAST(%s.%s AS CHAR(10)))", table, column))
+						.append(getEquationSymbol()).append("UPPER(?)");
+			}
+			numberOfInputs++;
 			if (source == SourceKeys.NO_SELECTION || source == SourceKeys.ORT_NORM_AB) {
 				result.append(String.format(" OR UPPER(%s_norm.%snorm) ", table.substring(0, table.indexOf("_")),
 						column.substring(0, column.length() - 4))).append(getEquationSymbol()).append("UPPER(?))");
@@ -381,16 +401,15 @@ public class UserQueryImpl implements UserQuery {
 			}
 		} else {
 			result.append(String.format("%s.%s = ?", TableNameKeys.PERSON, ColumnNameKeys.PERSON_ID));
+			numberOfInputs++;
 			if (!(source == SourceKeys.NORM || source == SourceKeys.NO_SOURCE || source == SourceKeys.NO_SELECTION
 					|| source == SourceKeys.ORT_NORM_AB || SearchFieldKeys.ANREDE.equals(searchField)
 					|| SearchFieldKeys.TITEL.equals(searchField))) {
 				result.append(String.format(" AND %s_info.%s = %s", table.substring(0, table.indexOf("_")),
 						ColumnNameKeys.QUELLEN_ID, source));
-
 			}
 		}
 		return result.toString();
-
 	}
 
 	/*
@@ -408,11 +427,11 @@ public class UserQueryImpl implements UserQuery {
 	 * This method updates the input, if open search is selected. It inserts "%"
 	 * before/after every character.
 	 */
-	private String updateInputForOpenSearch(String input) {
+	private void updateInputForOpenSearch() {
 		StringBuilder newInput = new StringBuilder().append(input.substring(0, 1));
 		for (int i = 1; i < input.length(); i++) {
 			newInput.append("%" + input.substring(i, i + 1));
 		}
-		return "%" + newInput + "%";
+		this.input = "%" + newInput + "%";
 	}
 }

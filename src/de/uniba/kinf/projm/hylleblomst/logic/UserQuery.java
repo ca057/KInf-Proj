@@ -24,7 +24,7 @@ public interface UserQuery {
 	/**
 	 * @return the input of the user
 	 */
-	String getInput();
+	Object getInput();
 
 	/**
 	 * @return the {@link SourceKeys} of this UserQuery
@@ -65,4 +65,6 @@ public interface UserQuery {
 	Boolean isOrCondition();
 
 	int getNumberOfInputs();
+
+	Boolean isInt();
 }
