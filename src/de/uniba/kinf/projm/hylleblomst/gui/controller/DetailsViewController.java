@@ -171,6 +171,7 @@ public class DetailsViewController implements ControllerInterface, Initializable
 			getSourceDetails(SearchFieldKeys.ANREDE,
 					result_details_anredeselection.getSelectionModel().getSelectedItem());
 		});
+
 		result_details_titelselection.setOnAction((event) -> {
 			getSourceDetails(SearchFieldKeys.TITEL,
 					result_details_titelselection.getSelectionModel().getSelectedItem());
@@ -478,12 +479,45 @@ public class DetailsViewController implements ControllerInterface, Initializable
 					"Es können keine Tradierungen gesucht werden, da das Suchfeld oder die Quelle keinen Wert hat oder leer ist.");
 		}
 		try {
-			CachedRowSet singleResult = model.searchSourceDetails(
+			CachedRowSet sourceResult = model.searchSourceDetails(
 					new UserQueryImpl(sfk, personID.getValueSafe(), viewHelper.getSourceKeyByValueAsString(source)));
-			if (singleResult != null) {
-				System.out.println(singleResult.size());
+			if (sourceResult == null) {
+				viewHelper.showErrorMessage(
+						"Bei der Suche nach Detailinformationen ist ein Fehler aufgetreten. Das Ergebnis hat keinen Wert.");
+			}
+			String result = "";
+			if (sourceResult.size() != 0) {
+				while (sourceResult.next()) {
+					for (int i = 1; i <= sourceResult.getMetaData().getColumnCount(); i++) {
+						if (!sfk.toString().equals(sourceResult.getMetaData().getColumnName(i))) {
+							viewHelper.showErrorMessage("Ein Fehler bei der Auswertung der Quelle ist aufgetreten.");
+							break;
+						}
+						result = sourceResult.getString(i);
+					}
+				}
+			}
+			if ("ANREDE".equals(sfk.toString())) {
+				anrede.setValue(result);
+			} else if ("TITEL".equals(sfk.toString())) {
+				titel.setValue(result);
+			} else if ("VORNAME".equals(sfk.toString())) {
+				vorname.setValue(result);
+			} else if ("NACHNAME".equals(sfk.toString())) {
+				nachname.setValue(result);
+			} else if ("WIRTSCHAFTSLAGE".equals(sfk.toString())) {
+				wirtschaft.setValue(result);
+			} else if ("ORT".equals(sfk.toString())) {
+				ort.setValue(result);
+			} else if ("FACH".equals(sfk.toString())) {
+				studienfach.setValue(result);
+			} else if ("SEMINAR".equals(sfk.toString())) {
+				seminar.setValue(result);
+			} else if ("ZUSAETZE".equals(sfk.toString())) {
+				zusaetze.setValue(result);
 			} else {
-				System.out.println("Es gibt keine Detailinformationen für dieses Feld.");
+				viewHelper.showErrorMessage("Der Wert '" + result + "' der Spalte " + sfk.toString()
+						+ " konnte keinem Feld zugeordnet werden.");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

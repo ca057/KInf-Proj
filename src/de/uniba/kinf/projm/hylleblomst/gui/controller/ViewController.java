@@ -626,10 +626,12 @@ public class ViewController implements ControllerInterface, Initializable {
 		resultTable.setOnMousePressed(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent event) {
-				if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
-					System.out.println(
-							"Suche Details von ID " + resultTable.getSelectionModel().getSelectedItem().get(0));
-					startSearchForSinglePerson(resultTable.getSelectionModel().getSelectedItem().get(0));
+				if (resultTable.getSelectionModel().getSelectedItem() != null) {
+					if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+						System.out.println(
+								"Suche Details von ID " + resultTable.getSelectionModel().getSelectedItem().get(0));
+						startSearchForSinglePerson(resultTable.getSelectionModel().getSelectedItem().get(0));
+					}
 				}
 				event.consume();
 			}
