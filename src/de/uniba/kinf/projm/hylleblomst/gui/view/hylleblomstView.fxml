@@ -21,7 +21,7 @@
 				</Menu>
 				<Menu fx:id="mainMenu_database" mnemonicParsing="false" text="Datenbank">
 					<items>
-						<MenuItem fx:id="mainMenu_database_setupDatabase" mnemonicParsing="false" text="Datenbank und Tabellen anlegen" />
+						<MenuItem fx:id="mainMenu_database_setupDatabase" mnemonicParsing="false" text="Datenbank anlegen/verbinden" />
 						<MenuItem fx:id="mainMenu_database_importData" mnemonicParsing="false" text="Daten importieren" />
 						<MenuItem fx:id="mainMenu_database_clearDatabase" mnemonicParsing="false" text="Datenbank löschen" />
 					</items>

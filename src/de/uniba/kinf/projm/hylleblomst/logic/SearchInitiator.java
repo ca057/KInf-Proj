@@ -5,11 +5,28 @@ import java.util.Collection;
 
 import javax.sql.rowset.CachedRowSet;
 
+import de.uniba.kinf.projm.hylleblomst.keys.DatabaseKeys;
+
 /**
  * @author Johannes
  *
  */
 public interface SearchInitiator {
+
+	/**
+	 * @param user
+	 */
+	void setUser(String user);
+
+	/**
+	 * @param password
+	 */
+	void setPassword(String password);
+
+	/**
+	 * @param dbKey
+	 */
+	void setDbKey(DatabaseKeys dbKey);
 
 	/**
 	 * Processes userQueries to a sqlStatement, initiates the search and returns
@@ -48,4 +65,5 @@ public interface SearchInitiator {
 	 * @throws SQLException
 	 */
 	CachedRowSet searchPersonOrNotation(UserQuery userQuery) throws SQLException;
+
 }
