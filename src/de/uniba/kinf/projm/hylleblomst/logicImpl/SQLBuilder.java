@@ -96,8 +96,8 @@ public class SQLBuilder {
 			sqlWhere.append(buildWhere(qr));
 			if (!("true".equals(qr.getInput()))) {
 				inputs.add(qr.getInput());
-				if (SourceKeys.NO_SELECTION.equals(qr.getSource()) || SourceKeys.NORM.equals(qr.getSource())
-						|| SourceKeys.ORT_NORM_AB.equals(qr.getSource())) {
+				if (needsStandardFields && (SourceKeys.NO_SELECTION.equals(qr.getSource())
+						|| SourceKeys.NORM.equals(qr.getSource()) || SourceKeys.ORT_NORM_AB.equals(qr.getSource()))) {
 					inputs.add(qr.getInput());
 				}
 			}
@@ -135,7 +135,16 @@ public class SQLBuilder {
 	 */
 	private void buildNotationSearch(UserQuery userQuery) {
 		needsStandardFields = false;
-		sqlStatement.append(buildSelect(userQuery)).append(buildFrom()).append(" WHERE ").append(userQuery.getWhere());
+		sqlStatement.append(buildSelectNotation(userQuery)).append(buildFrom()).append(" WHERE ")
+				.append(userQuery.getWhere());
+	}
+
+	/*
+	 * 
+	 */
+	private Object buildSelectNotation(UserQuery userQuery) {
+		return "SELECT DISTINCT " + userQuery.getTable() + "." + userQuery.getColumn() + " AS "
+				+ userQuery.getSearchField();
 	}
 
 	/*
@@ -164,10 +173,6 @@ public class SQLBuilder {
 				&& userQuery.getSource() == SourceKeys.NORM)) {
 			result += ", " + TableNameKeys.ORT_ABWEICHUNG_NORM + "." + ColumnNameKeys.ORT_ABWEICHUNG_NORM + " AS "
 					+ ColumnNameKeys.ORT_ABWEICHUNG_NORM;
-		}
-		if (result.startsWith(",")) {
-			result = "SELECT DISTINCT " + userQuery.getTable() + "." + userQuery.getColumn() + " AS "
-					+ userQuery.getSearchField();
 		}
 		return result;
 	}
