@@ -14,4 +14,8 @@ public class DatabaseKeys {
 		this.dbURL = "jdbc:derby:" + file.getAbsolutePath() + "/MyDB";
 	}
 
+	public DatabaseKeys(String path) {
+		this.dbURL = "jdbc:derby:" + path + "/MyDB";
+	}
+
 }

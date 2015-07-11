@@ -15,6 +15,7 @@ import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 import de.uniba.kinf.projm.hylleblomst.exceptions.SetUpException;
 import de.uniba.kinf.projm.hylleblomst.exceptions.ViewException;
 import de.uniba.kinf.projm.hylleblomst.gui.model.Model;
+import de.uniba.kinf.projm.hylleblomst.keys.DatabaseKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.SearchInitiator;
@@ -73,6 +74,8 @@ public class ViewController implements ControllerInterface, Initializable {
 	private StringProperty sourceLabelName = new SimpleStringProperty("Quelle: ");
 
 	CachedRowSet result;
+
+	DatabaseKeys dbKey;
 
 	@FXML
 	private BorderPane root;
@@ -259,8 +262,19 @@ public class ViewController implements ControllerInterface, Initializable {
 	 * 
 	 */
 	public ViewController() {
+		dbKey = new DatabaseKeys("./db");
 		viewHelper = new ViewHelper();
-		initiator = new SearchInitiatorImpl();
+		initiator = new SearchInitiatorImpl(dbKey);
+		fileChooser = new FileChooser();
+		model = new Model(initiator);
+		model.addObserver(this);
+		searchCtrl = new SearchController(inputFieldCounter, model);
+	}
+
+	public ViewController(File databasePath) {
+		dbKey = new DatabaseKeys(databasePath);
+		viewHelper = new ViewHelper();
+		initiator = new SearchInitiatorImpl(dbKey);
 		fileChooser = new FileChooser();
 		model = new Model(initiator);
 		model.addObserver(this);
