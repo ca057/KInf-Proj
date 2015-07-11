@@ -69,13 +69,13 @@ public class ViewController implements ControllerInterface, Initializable {
 
 	private int inputFieldCounter = 24;
 
-	FileChooser fileChooser;
+	private FileChooser fileChooser;
 
 	private StringProperty sourceLabelName = new SimpleStringProperty("Quelle: ");
 
-	CachedRowSet result;
+	private CachedRowSet result;
 
-	DatabaseKeys dbKey;
+	private DatabaseKeys dbKey;
 
 	@FXML
 	private BorderPane root;
