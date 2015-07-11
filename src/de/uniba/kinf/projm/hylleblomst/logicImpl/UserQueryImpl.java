@@ -26,7 +26,6 @@ public class UserQueryImpl implements UserQuery {
 	private Boolean isOR = false;
 	private Boolean isOpenSearch = false;
 	private Boolean isPersonSearch = false;
-	private Boolean isNotationSearch = false;
 	private Boolean isInt = false;
 	private int numberOfInputs = 0;
 
@@ -73,12 +72,11 @@ public class UserQueryImpl implements UserQuery {
 	 * @param source
 	 */
 	public UserQueryImpl(SearchFieldKeys searchField, String personID, int source) {
-		isNotationSearch = true;
 		setSearchField(searchField);
 		setInput(personID);
 		setSource(source);
 		searchFieldKeyToDatabaseData();
-		sqlWhere = buildSQLWhere();
+		sqlWhere = buildSQLWhereNotation();
 	}
 
 	public void setSearchField(SearchFieldKeys searchField) {
@@ -129,9 +127,9 @@ public class UserQueryImpl implements UserQuery {
 
 	@Override
 	public Object getInput() {
-		if (isInt) {
-			return Integer.parseInt(input);
-		}
+		// if (isInt) {
+		// return Integer.parseInt(input);
+		// }
 		return input;
 	}
 
@@ -369,45 +367,52 @@ public class UserQueryImpl implements UserQuery {
 	 */
 	private String buildSQLWhere() {
 		StringBuilder result = new StringBuilder();
-		if (!isNotationSearch) {
-			if (isInt) {
-				result.append(String.format("(%s.%s", table, column)).append(getEquationSymbol()).append("?");
-			} else {
-				result.append(String.format("(UPPER(CAST(%s.%s AS CHAR(10)))", table, column))
-						.append(getEquationSymbol()).append("UPPER(?)");
-			}
-			numberOfInputs++;
-			if (source == SourceKeys.NO_SELECTION || source == SourceKeys.ORT_NORM_AB) {
-				result.append(String.format(" OR UPPER(%s_norm.%snorm) ", table.substring(0, table.indexOf("_")),
-						column.substring(0, column.length() - 4))).append(getEquationSymbol()).append("UPPER(?))");
-				numberOfInputs++;
-			} else {
-				result.append(")");
-			}
+		result.append("(");
+		String upperFront = "";
+		String upperEnd = "";
+		if (!isInt) {
+			// upperFront = "UPPER(CAST(";
+			// upperEnd = " AS CHAR(10)))";
+			upperFront = "UPPER(";
+			upperEnd = ")";
+		}
+		result.append(String.format("%s%s.%s%s", upperFront, table, column, upperEnd)).append(getEquationSymbol())
+				.append("?");
+		numberOfInputs++;
 
-			if (searchField == SearchFieldKeys.ORT && source == SourceKeys.NORM) {
-				numberOfInputs++;
-				return result
-						.append(String.format(" OR UPPER(%s.%s)", TableNameKeys.ORT_ABWEICHUNG_NORM,
-								ColumnNameKeys.ORT_ABWEICHUNG_NORM))
-						.append(getEquationSymbol()).append("UPPER(?)").toString();
-			}
-
-			if (!(source == SourceKeys.NORM || source == SourceKeys.NO_SOURCE || source == SourceKeys.NO_SELECTION
-					|| source == SourceKeys.ORT_NORM_AB || SearchFieldKeys.ANREDE.equals(searchField)
-					|| SearchFieldKeys.TITEL.equals(searchField))) {
-				result.append(String.format(" AND %1s_info.%s = %s", table.substring(0, table.indexOf("_")),
-						ColumnNameKeys.QUELLEN_ID, source));
-			}
-		} else {
-			result.append(String.format("%s.%s = ?", TableNameKeys.PERSON, ColumnNameKeys.PERSON_ID));
+		if (source == SourceKeys.NO_SELECTION || source == SourceKeys.ORT_NORM_AB) {
+			result.append(String.format(" OR UPPER(%s_norm.%snorm) ", table.substring(0, table.indexOf("_")),
+					column.substring(0, column.length() - 4))).append(getEquationSymbol()).append("UPPER(?)");
 			numberOfInputs++;
-			if (!(source == SourceKeys.NORM || source == SourceKeys.NO_SOURCE || source == SourceKeys.NO_SELECTION
-					|| source == SourceKeys.ORT_NORM_AB || SearchFieldKeys.ANREDE.equals(searchField)
-					|| SearchFieldKeys.TITEL.equals(searchField))) {
-				result.append(String.format(" AND %s_info.%s = %s", table.substring(0, table.indexOf("_")),
-						ColumnNameKeys.QUELLEN_ID, source));
-			}
+		}
+		result.append(")");
+
+		if (searchField == SearchFieldKeys.ORT && source == SourceKeys.NORM) {
+			numberOfInputs++;
+			return result
+					.append(String.format(" OR UPPER(%s.%s)", TableNameKeys.ORT_ABWEICHUNG_NORM,
+							ColumnNameKeys.ORT_ABWEICHUNG_NORM))
+					.append(getEquationSymbol()).append("UPPER(?)").toString();
+		}
+
+		if (!(source == SourceKeys.NORM || source == SourceKeys.NO_SOURCE || source == SourceKeys.NO_SELECTION
+				|| source == SourceKeys.ORT_NORM_AB || SearchFieldKeys.ANREDE.equals(searchField)
+				|| SearchFieldKeys.TITEL.equals(searchField))) {
+			result.append(String.format(" AND %1s_info.%s = %s", table.substring(0, table.indexOf("_")),
+					ColumnNameKeys.QUELLEN_ID, source));
+		}
+		return result.toString();
+	}
+
+	private String buildSQLWhereNotation() {
+		StringBuilder result = new StringBuilder();
+		result.append(String.format("%s.%s = ?", TableNameKeys.PERSON, ColumnNameKeys.PERSON_ID));
+		numberOfInputs++;
+		if (!(source == SourceKeys.NORM || source == SourceKeys.NO_SOURCE || source == SourceKeys.NO_SELECTION
+				|| source == SourceKeys.ORT_NORM_AB || SearchFieldKeys.ANREDE.equals(searchField)
+				|| SearchFieldKeys.TITEL.equals(searchField))) {
+			result.append(String.format(" AND %s_info.%s = %s", table.substring(0, table.indexOf("_")),
+					ColumnNameKeys.QUELLEN_ID, source));
 		}
 		return result.toString();
 	}
