@@ -72,7 +72,7 @@ public class DatabaseManagement {
 	 */
 	public void importDataIntoDatabase(File file) throws ImportException {
 		try {
-			if (new CsvFormatVerifier(file).verifyCsv()) {
+			if (CsvFormatVerifier.verifyCsv(file)) {
 				new ImportDataImpl().addData(db.dbURL, file.getAbsolutePath());
 			} else {
 				throw new ImportException("Chosen file is not in valid format");

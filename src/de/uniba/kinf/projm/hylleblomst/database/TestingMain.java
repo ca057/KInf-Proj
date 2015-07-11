@@ -19,8 +19,7 @@ public class TestingMain {
 
 		CsvFormatVerifier verify;
 		try {
-			verify = new CsvFormatVerifier(data);
-			System.out.println(verify.verifyCsv());
+			new CsvFormatVerifier().verifyCsv(data);
 		} catch (ImportException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
