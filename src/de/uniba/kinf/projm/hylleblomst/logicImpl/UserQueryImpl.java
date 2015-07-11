@@ -26,6 +26,7 @@ public class UserQueryImpl implements UserQuery {
 	private Boolean isOR = false;
 	private Boolean isOpenSearch = false;
 	private Boolean isPersonSearch = false;
+	private Boolean isNotationSearch = false;
 
 	/**
 	 * 
@@ -70,6 +71,7 @@ public class UserQueryImpl implements UserQuery {
 	 * @param source
 	 */
 	public UserQueryImpl(SearchFieldKeys searchField, String personID, int source) {
+		isNotationSearch = true;
 		setSearchField(searchField);
 		setInput(personID);
 		setSource(source);
@@ -345,26 +347,36 @@ public class UserQueryImpl implements UserQuery {
 	 */
 	private String buildSQLWhere() {
 		StringBuilder result = new StringBuilder();
-		result.append(String.format("UPPER(%s.%s)", table, column)).append(getEquationSymbol()).append("UPPER(?)");
+		if (!isNotationSearch) {
+			result.append(String.format("UPPER(%s.%s)", table, column)).append(getEquationSymbol()).append("UPPER(?)");
 
-		if (source == SourceKeys.NO_SELECTION || source == SourceKeys.ORT_NORM_AB) {
-			result.append(String.format(" OR UPPER(%s_norm.%snorm) ", table.substring(0, table.indexOf("_")),
-					column.substring(0, column.length() - 4))).append(getEquationSymbol()).append("UPPER(?)");
-		}
+			if (source == SourceKeys.NO_SELECTION || source == SourceKeys.ORT_NORM_AB) {
+				result.append(String.format(" OR UPPER(%s_norm.%snorm) ", table.substring(0, table.indexOf("_")),
+						column.substring(0, column.length() - 4))).append(getEquationSymbol()).append("UPPER(?)");
+			}
 
-		if (searchField == SearchFieldKeys.ORT && source == SourceKeys.NORM) {
-			return result
-					.append(String.format("OR UPPER(%s.%s)", TableNameKeys.ORT_ABWEICHUNG_NORM,
-							ColumnNameKeys.ORT_ABWEICHUNG_NORM))
-					.append(getEquationSymbol()).append("UPPER(?)").toString();
-		}
+			if (searchField == SearchFieldKeys.ORT && source == SourceKeys.NORM) {
+				return result
+						.append(String.format("OR UPPER(%s.%s)", TableNameKeys.ORT_ABWEICHUNG_NORM,
+								ColumnNameKeys.ORT_ABWEICHUNG_NORM))
+						.append(getEquationSymbol()).append("UPPER(?)").toString();
+			}
 
-		if (!(source == SourceKeys.NORM || source == SourceKeys.NO_SOURCE || source == SourceKeys.NO_SELECTION
-				|| SearchFieldKeys.ANREDE.equals(searchField) || SearchFieldKeys.TITEL.equals(searchField))) {
-			result.append(String.format(" AND %1s_info.%s = %s", table.substring(0, table.indexOf("_")),
-					ColumnNameKeys.QUELLEN_ID, source));
+			if (!(source == SourceKeys.NORM || source == SourceKeys.NO_SOURCE || source == SourceKeys.NO_SELECTION
+					|| SearchFieldKeys.ANREDE.equals(searchField) || SearchFieldKeys.TITEL.equals(searchField))) {
+				result.append(String.format(" AND %1s_info.%s = %s", table.substring(0, table.indexOf("_")),
+						ColumnNameKeys.QUELLEN_ID, source));
+			}
+		} else {
+			if (!(source == SourceKeys.NORM || source == SourceKeys.NO_SOURCE || source == SourceKeys.NO_SELECTION
+					|| SearchFieldKeys.ANREDE.equals(searchField) || SearchFieldKeys.TITEL.equals(searchField))) {
+				result.append(
+						String.format(" %s_info.%s = %s AND %1$s_info.%s = ?", table.substring(0, table.indexOf("_")),
+								ColumnNameKeys.QUELLEN_ID, source, ColumnNameKeys.PERSON_ID));
+			}
 		}
 		return result.toString();
+
 	}
 
 	/*
