@@ -115,7 +115,7 @@ public class SQLBuilder {
 		if (whereIsEmpty) {
 			whereIsEmpty = false;
 			return qr.getWhere();
-		} else if (qr.useOrCondition()) {
+		} else if (qr.isOrCondition()) {
 			return " OR " + qr.getWhere();
 		} else {
 			return " AND " + qr.getWhere();

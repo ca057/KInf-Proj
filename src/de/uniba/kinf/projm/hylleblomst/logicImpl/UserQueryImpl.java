@@ -77,11 +77,6 @@ public class UserQueryImpl implements UserQuery {
 		sqlWhere = buildSQLWhere();
 	}
 
-	@Override
-	public SearchFieldKeys getSearchField() {
-		return searchField;
-	}
-
 	public void setSearchField(SearchFieldKeys searchField) {
 		if (searchField == null) {
 			throw new InputMismatchException("Das übergebene searchField darf nicht null sein.");
@@ -89,21 +84,16 @@ public class UserQueryImpl implements UserQuery {
 		this.searchField = searchField;
 	}
 
-	@Override
-	public String getInput() {
-		return input;
-	}
-
-	@Override
-	public Boolean isPersonSearch() {
-		return isPersonSearch;
-	}
-
 	public void setInput(String input) {
 		if (input == null) {
 			throw new InputMismatchException("Der übergebene Wert für input darf nicht null sein.");
 		}
 		this.input = input;
+	}
+
+	@Override
+	public SearchFieldKeys getSearchField() {
+		return searchField;
 	}
 
 	@Override
@@ -134,12 +124,22 @@ public class UserQueryImpl implements UserQuery {
 	}
 
 	@Override
+	public String getInput() {
+		return input;
+	}
+
+	@Override
+	public Boolean isPersonSearch() {
+		return isPersonSearch;
+	}
+
+	@Override
 	public Boolean isOpenSearch() {
 		return isOpenSearch;
 	}
 
 	@Override
-	public Boolean useOrCondition() {
+	public Boolean isOrCondition() {
 		return isOR;
 	}
 
