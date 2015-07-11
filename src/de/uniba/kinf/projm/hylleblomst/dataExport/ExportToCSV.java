@@ -19,17 +19,20 @@ import de.uniba.kinf.projm.hylleblomst.exceptions.ExportException;
 public class ExportToCSV {
 
 	public ExportToCSV() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
 	 * Export ResultSets to a CSV-file in file system
 	 * 
 	 * @param file
+	 *            The location in the file system
 	 * @param crs
+	 *            The CachedRowSet containing the result of a query
 	 * @throws ExportException
+	 *             If the file could not be created in the loation or if the
+	 *             file could not be written to
 	 */
-	public void run(File file, CachedRowSet crs) throws ExportException {
+	public void exportToCsv(File file, CachedRowSet crs) throws ExportException {
 		if (!file.exists()) {
 			try {
 				file.createNewFile();
@@ -45,7 +48,6 @@ public class ExportToCSV {
 
 			writer.writeAll(rs, true);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new ExportException(e.getErrorCode()
 					+ ": Could not handle this result: " + e.getMessage());

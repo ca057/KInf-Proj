@@ -91,7 +91,7 @@ public class Model extends Observable {
 		}
 		export = new ExportToCSV();
 		try {
-			export.run(file, cachedRowSet);
+			export.exportToCsv(file, cachedRowSet);
 		} catch (ExportException e) {
 			e.printStackTrace();
 			throw new ExportException(e.getMessage());
