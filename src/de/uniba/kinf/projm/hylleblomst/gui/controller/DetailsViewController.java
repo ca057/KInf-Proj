@@ -9,8 +9,6 @@ import java.util.ResourceBundle;
 
 import javax.sql.rowset.CachedRowSet;
 
-import com.sun.rowset.CachedRowSetImpl;
-
 import de.uniba.kinf.projm.hylleblomst.gui.model.Model;
 import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.UserQueryImpl;
@@ -21,6 +19,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
 
 /**
@@ -164,6 +163,45 @@ public class DetailsViewController implements ControllerInterface, Initializable
 		setUpEventHandlers();
 		setUpViewBindings();
 		setUpLabelBindings();
+		setUpTooltips();
+	}
+
+	private void setUpEventHandlers() {
+		result_details_anredeselection.setOnAction((event) -> {
+			getSourceDetails(SearchFieldKeys.ANREDE,
+					result_details_anredeselection.getSelectionModel().getSelectedItem());
+		});
+		result_details_titelselection.setOnAction((event) -> {
+			getSourceDetails(SearchFieldKeys.TITEL,
+					result_details_titelselection.getSelectionModel().getSelectedItem());
+		});
+		result_details_vornameselection.setOnAction((event) -> {
+			getSourceDetails(SearchFieldKeys.VORNAME,
+					result_details_vornameselection.getSelectionModel().getSelectedItem());
+		});
+		result_details_nachnameselection.setOnAction((event) -> {
+			getSourceDetails(SearchFieldKeys.NACHNAME,
+					result_details_nachnameselection.getSelectionModel().getSelectedItem());
+		});
+		result_details_wirtschaftselection.setOnAction((event) -> {
+			getSourceDetails(SearchFieldKeys.WIRTSCHAFTSLAGE,
+					result_details_wirtschaftselection.getSelectionModel().getSelectedItem());
+		});
+		result_details_ortselection.setOnAction((event) -> {
+			getSourceDetails(SearchFieldKeys.ORT, result_details_ortselection.getSelectionModel().getSelectedItem());
+		});
+		result_details_studienfachselection.setOnAction((event) -> {
+			getSourceDetails(SearchFieldKeys.FACH,
+					result_details_studienfachselection.getSelectionModel().getSelectedItem());
+		});
+		result_details_seminarselection.setOnAction((event) -> {
+			getSourceDetails(SearchFieldKeys.SEMINAR,
+					result_details_seminarselection.getSelectionModel().getSelectedItem());
+		});
+		result_details_zusaetzeselection.setOnAction((event) -> {
+			getSourceDetails(SearchFieldKeys.ZUSAETZE,
+					result_details_zusaetzeselection.getSelectionModel().getSelectedItem());
+		});
 	}
 
 	private void setUpViewBindings() {
@@ -207,42 +245,86 @@ public class DetailsViewController implements ControllerInterface, Initializable
 		result_details_zusaetze.textProperty().bind(zusaetze);
 	}
 
-	private void setUpEventHandlers() {
-		result_details_anredeselection.setOnAction((event) -> {
-			getSourceDetails(SearchFieldKeys.ANREDE,
-					result_details_anredeselection.getSelectionModel().getSelectedItem());
-		});
-		result_details_titelselection.setOnAction((event) -> {
-			getSourceDetails(SearchFieldKeys.TITEL,
-					result_details_titelselection.getSelectionModel().getSelectedItem());
-		});
-		result_details_vornameselection.setOnAction((event) -> {
-			getSourceDetails(SearchFieldKeys.VORNAME,
-					result_details_vornameselection.getSelectionModel().getSelectedItem());
-		});
-		result_details_nachnameselection.setOnAction((event) -> {
-			getSourceDetails(SearchFieldKeys.NACHNAME,
-					result_details_nachnameselection.getSelectionModel().getSelectedItem());
-		});
-		result_details_wirtschaftselection.setOnAction((event) -> {
-			getSourceDetails(SearchFieldKeys.WIRTSCHAFTSLAGE,
-					result_details_wirtschaftselection.getSelectionModel().getSelectedItem());
-		});
-		result_details_ortselection.setOnAction((event) -> {
-			getSourceDetails(SearchFieldKeys.ORT, result_details_ortselection.getSelectionModel().getSelectedItem());
-		});
-		result_details_studienfachselection.setOnAction((event) -> {
-			getSourceDetails(SearchFieldKeys.FACH,
-					result_details_studienfachselection.getSelectionModel().getSelectedItem());
-		});
-		result_details_seminarselection.setOnAction((event) -> {
-			getSourceDetails(SearchFieldKeys.SEMINAR,
-					result_details_seminarselection.getSelectionModel().getSelectedItem());
-		});
-		result_details_zusaetzeselection.setOnAction((event) -> {
-			getSourceDetails(SearchFieldKeys.ZUSAETZE,
-					result_details_zusaetzeselection.getSelectionModel().getSelectedItem());
-		});
+	private void setUpTooltips() {
+		Tooltip adligTooltip = new Tooltip();
+		adligTooltip.textProperty().bind(adlig);
+		result_details_adlig.setTooltip(adligTooltip);
+
+		Tooltip anmerkungenTooltip = new Tooltip();
+		adligTooltip.textProperty().bind(anmerkungen);
+		result_details_anmerkungen.setTooltip(anmerkungenTooltip);
+
+		Tooltip anredeTooltip = new Tooltip();
+		anredeTooltip.textProperty().bind(anrede);
+		result_details_anrede.setTooltip(anredeTooltip);
+
+		Tooltip einschreibedatumTooltip = new Tooltip();
+		einschreibedatumTooltip.textProperty().bind(einschreibedatum);
+		result_details_einschreibedatum.setTooltip(einschreibedatumTooltip);
+
+		Tooltip fakultaetTooltip = new Tooltip();
+		fakultaetTooltip.textProperty().bind(fakultaet);
+		result_details_fakultaet.setTooltip(fakultaetTooltip);
+
+		Tooltip fundortTooltip = new Tooltip();
+		fundortTooltip.textProperty().bind(fundort);
+		result_details_fundort.setTooltip(fundortTooltip);
+
+		Tooltip graduiertTooltip = new Tooltip();
+		graduiertTooltip.textProperty().bind(graduiert);
+		result_details_graduiert.setTooltip(graduiertTooltip);
+
+		Tooltip jesuitTooltip = new Tooltip();
+		jesuitTooltip.textProperty().bind(jesuit);
+		result_details_jesuit.setTooltip(jesuitTooltip);
+
+		Tooltip nachnameTooltip = new Tooltip();
+		nachnameTooltip.textProperty().bind(nachname);
+		result_details_nachname.setTooltip(nachnameTooltip);
+
+		Tooltip nummerTooltip = new Tooltip();
+		nummerTooltip.textProperty().bind(personID);
+		result_details_nummer.setTooltip(nummerTooltip);
+
+		Tooltip nummerhessTooltip = new Tooltip();
+		nummerhessTooltip.textProperty().bind(nummerhess);
+		result_details_nummerhess.setTooltip(nummerhessTooltip);
+
+		Tooltip ortTooltip = new Tooltip();
+		ortTooltip.textProperty().bind(ort);
+		result_details_ort.setTooltip(ortTooltip);
+
+		Tooltip seiteTooltip = new Tooltip();
+		seiteTooltip.textProperty().bind(seite);
+		result_details_seite.setTooltip(seiteTooltip);
+
+		Tooltip seminarTooltip = new Tooltip();
+		seminarTooltip.textProperty().bind(seminar);
+		result_details_seminar.setTooltip(seminarTooltip);
+
+		Tooltip studienfachTooltip = new Tooltip();
+		studienfachTooltip.textProperty().bind(studienfach);
+		result_details_studienfach.setTooltip(studienfachTooltip);
+
+		Tooltip studienjahrTooltip = new Tooltip();
+		studienjahrTooltip.textProperty().bind(studienjahr);
+		result_details_studienjahr.setTooltip(studienjahrTooltip);
+
+		Tooltip titelTooltip = new Tooltip();
+		titelTooltip.textProperty().bind(titel);
+		result_details_titel.setTooltip(titelTooltip);
+
+		Tooltip vornameTooltip = new Tooltip();
+		vornameTooltip.textProperty().bind(vorname);
+		result_details_vorname.setTooltip(vornameTooltip);
+
+		Tooltip wirtschaftTooltip = new Tooltip();
+		wirtschaftTooltip.textProperty().bind(wirtschaft);
+		result_details_wirtschaft.setTooltip(wirtschaftTooltip);
+
+		Tooltip zusaetzeTooltip = new Tooltip();
+		zusaetzeTooltip.textProperty().bind(zusaetze);
+		result_details_zusaetze.setTooltip(zusaetzeTooltip);
 	}
 
 	/**
@@ -256,14 +338,8 @@ public class DetailsViewController implements ControllerInterface, Initializable
 		ResultSetMetaData crsMeta;
 		try {
 			crsMeta = searchResult.getMetaData();
-			System.out.println(crsMeta.getColumnCount());
-			System.out.println(searchResult.size());
 
 			while (searchResult.next()) {
-				for (int i = 1; i <= crsMeta.getColumnCount(); i++) {
-					System.out.println(crsMeta.getColumnName(i));
-					System.out.print(searchResult.getString(i) + "\n---\n");
-				}
 				for (int i = 1; i <= crsMeta.getColumnCount(); i++) {
 					if (crsMeta.getColumnName(i).equals("PERSONID")) {
 						if (searchResult.getString(i) == null || searchResult.getString(i).isEmpty()) {
@@ -389,8 +465,6 @@ public class DetailsViewController implements ControllerInterface, Initializable
 					}
 				}
 			}
-			System.out.println("PersonID = " + personID.toString());
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 			viewHelper.showErrorMessage(
@@ -404,8 +478,7 @@ public class DetailsViewController implements ControllerInterface, Initializable
 					"Es können keine Tradierungen gesucht werden, da das Suchfeld oder die Quelle keinen Wert hat oder leer ist.");
 		}
 		try {
-			CachedRowSet singleResult = new CachedRowSetImpl();
-			singleResult = model.searchSourceDetails(
+			CachedRowSet singleResult = model.searchSourceDetails(
 					new UserQueryImpl(sfk, personID.getValueSafe(), viewHelper.getSourceKeyByValueAsString(source)));
 			if (singleResult != null) {
 				System.out.println(singleResult.size());
