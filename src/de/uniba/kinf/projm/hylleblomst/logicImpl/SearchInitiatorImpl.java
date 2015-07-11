@@ -102,11 +102,9 @@ public class SearchInitiatorImpl implements SearchInitiator {
 					parameterIndex++;
 				}
 			}
-
 			con.setAutoCommit(false);
 			crs.populate(stmt.executeQuery());
 			con.setAutoCommit(true);
-
 		}
 		return crs;
 	}
