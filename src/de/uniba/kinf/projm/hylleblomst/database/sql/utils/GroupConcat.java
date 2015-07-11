@@ -19,17 +19,13 @@ public final class GroupConcat {
 	 * @param arguments
 	 * @return A String in the format "arg0, arg1, ..., argN"
 	 */
-	public static String groupConcat(String[] args, String separator,
-			String... arguments) {
+	public static String groupConcat(String separator, String... arguments) {
 		StringBuilder result = new StringBuilder("");
-
 		for (String arg : arguments) {
-			result.append(arg + separator + " ");
+			result.append(arg + separator);
 		}
-		result.delete(result.length() - 2, result.length());
-
+		result.delete(result.length() - separator.length(), result.length());
 		return result.toString();
-
 	}
 
 	public static void main(String[] args) {
