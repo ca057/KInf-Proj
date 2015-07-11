@@ -163,14 +163,14 @@ public class SQLBuilder {
 		if (userQuery.getSource() == SourceKeys.ORT_NORM_AB || (SearchFieldKeys.ORT.equals(userQuery.getSearchField())
 				&& userQuery.getSource() == SourceKeys.NORM)) {
 			result += ", " + TableNameKeys.ORT_ABWEICHUNG_NORM + "." + ColumnNameKeys.ORT_ABWEICHUNG_NORM + " AS "
-					+ ColumnNameKeys.ORT_ABWEICHUNG_NORM;// + ", " +
-															// TableNameKeys.ORT_ABWEICHUNG_NORM
-															// + "."
-			// + ColumnNameKeys.ANMERKUNG + " AS " + ColumnNameKeys.ANMERKUNG;
+					+ ColumnNameKeys.ORT_ABWEICHUNG_NORM;
 		}
 		if (result.startsWith(",")) {
 			result = "SELECT DISTINCT " + userQuery.getTable() + "." + userQuery.getColumn() + " AS "
 					+ userQuery.getSearchField();
+			if (userQuery.getSource() == SourceKeys.ORT_NORM_AB) {
+				result += ", " + TableNameKeys.ORT_ABWEICHUNG_NORM + "." + ColumnNameKeys.ORT_ABWEICHUNG_NORM_ANMERKUNG;
+			}
 		}
 		return result;
 	}
