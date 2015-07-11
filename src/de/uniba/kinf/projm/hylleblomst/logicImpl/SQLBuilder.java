@@ -8,6 +8,7 @@ import java.util.InputMismatchException;
 import java.util.List;
 
 import de.uniba.kinf.projm.hylleblomst.keys.ColumnNameKeys;
+import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.TableNameKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.UserQuery;
@@ -95,7 +96,8 @@ public class SQLBuilder {
 			sqlWhere.append(buildWhere(qr));
 			if (!("true".equals(qr.getInput()))) {
 				inputs.add(qr.getInput());
-				if (SourceKeys.NO_SELECTION.equals(qr.getSource())) {
+				if (SourceKeys.NO_SELECTION.equals(qr.getSource()) || SourceKeys.NORM.equals(qr.getSource())
+						|| SourceKeys.ORT_NORM_AB.equals(qr.getSource())) {
 					inputs.add(qr.getInput());
 				}
 			}
@@ -158,8 +160,13 @@ public class SQLBuilder {
 		} else {
 			result += ", " + userQuery.getTable() + "." + userQuery.getColumn() + " AS " + userQuery.getSearchField();
 		}
-		if (userQuery.getSource() == SourceKeys.ORT_NORM_AB) {
-			result += ", " + userQuery.getTable() + "." + ColumnNameKeys.ANMERKUNG;
+		if (userQuery.getSource() == SourceKeys.ORT_NORM_AB || (SearchFieldKeys.ORT.equals(userQuery.getSearchField())
+				&& userQuery.getSource() == SourceKeys.NORM)) {
+			result += ", " + TableNameKeys.ORT_ABWEICHUNG_NORM + "." + ColumnNameKeys.ORT_ABWEICHUNG_NORM + " AS "
+					+ ColumnNameKeys.ORT_ABWEICHUNG_NORM;// + ", " +
+															// TableNameKeys.ORT_ABWEICHUNG_NORM
+															// + "."
+			// + ColumnNameKeys.ANMERKUNG + " AS " + ColumnNameKeys.ANMERKUNG;
 		}
 		if (result.startsWith(",")) {
 			result = "SELECT DISTINCT " + userQuery.getTable() + "." + userQuery.getColumn() + " AS "

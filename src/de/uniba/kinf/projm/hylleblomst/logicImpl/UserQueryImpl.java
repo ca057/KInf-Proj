@@ -357,7 +357,7 @@ public class UserQueryImpl implements UserQuery {
 
 			if (searchField == SearchFieldKeys.ORT && source == SourceKeys.NORM) {
 				return result
-						.append(String.format("OR UPPER(%s.%s)", TableNameKeys.ORT_ABWEICHUNG_NORM,
+						.append(String.format(" OR UPPER(%s.%s)", TableNameKeys.ORT_ABWEICHUNG_NORM,
 								ColumnNameKeys.ORT_ABWEICHUNG_NORM))
 						.append(getEquationSymbol()).append("UPPER(?)").toString();
 			}
