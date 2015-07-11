@@ -1,7 +1,6 @@
 package de.uniba.kinf.projm.hylleblomst.database;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,12 +19,10 @@ import de.uniba.kinf.projm.hylleblomst.keys.TableNameKeys;
  */
 public class TearDownTables {
 
-	public boolean run(String dbURL, String adminUser, String adminPassword)
-			throws SetUpException {
+	public boolean tearDownTables(Connection con) throws SetUpException {
 		int interrupt = 0;
 
-		try (Connection con = DriverManager.getConnection(dbURL, adminUser,
-				adminPassword); Statement stmt = con.createStatement();) {
+		try (Statement stmt = con.createStatement();) {
 
 			String[] tables = TableNameKeys.getAllTableNames();
 
