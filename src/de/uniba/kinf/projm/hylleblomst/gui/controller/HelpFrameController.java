@@ -9,11 +9,15 @@ public class HelpFrameController implements ControllerInterface {
 	private HelpFrame helpFrame;
 
 	public HelpFrameController() {
-		helpFrame = new HelpFrame();
+		helpFrame = new HelpFrame(this);
 	}
 
 	public void showView() {
 		helpFrame.show();
+	}
+
+	public void closeView() {
+		helpFrame.close();
 	}
 
 	@Override

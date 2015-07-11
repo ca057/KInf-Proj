@@ -907,7 +907,7 @@ public class ViewController implements ControllerInterface, Initializable {
 		inputSourceKey[1] = SourceKeys.NORM;
 		inputSourceKey[3] = SourceKeys.NORM;
 		inputSourceKey[4] = viewHelper.getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
-		inputSourceKey[5] = SourceKeys.STANDARD;
+		inputSourceKey[5] = viewHelper.getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
 		inputSourceKey[6] = SourceKeys.NO_SOURCE;
 		inputSourceKey[7] = SourceKeys.NO_SOURCE;
 		inputSourceKey[8] = viewHelper.getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
