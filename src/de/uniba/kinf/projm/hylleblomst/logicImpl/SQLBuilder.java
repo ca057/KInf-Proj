@@ -115,7 +115,7 @@ public class SQLBuilder {
 		if (whereIsEmpty) {
 			whereIsEmpty = false;
 			return qr.getWhere();
-		} else if (qr.useOrCondition()) {
+		} else if (qr.isOrCondition()) {
 			return " OR " + qr.getWhere();
 		} else {
 			return " AND " + qr.getWhere();
@@ -133,22 +133,10 @@ public class SQLBuilder {
 	}
 
 	private void buildNotationSearch(UserQuery userQuery) {
-		// StringBuilder sqlQuery = new StringBuilder();
 		needsStandardFields = false;
 		sqlStatement.append(buildSelect(userQuery)).append(buildFrom()).append(" WHERE ").append(TableNameKeys.PERSON)
 				.append("." + ColumnNameKeys.PERSON_ID + " = ?");
-		// if (userQuery.getColumn() == ColumnNameKeys.ZUSAETZE) {
-		// sqlStatement.append("AND " + TableNameKeys.ZUSAETZE_INFO + "." +
-		// ColumnNameKeys.QUELLEN_ID + " = " + "("
-		// + SourceKeys.NORM + "OR" + SourceKeys.STANDARD + ")");
-		// }
-		// FIXME Bei Zusätzen ist die Quellenangabe wichtig.
 	}
-
-	// private String buildSelectSpecific(UserQuery qr) {
-	// return "SELECT DISTINCT " + qr.getTable() + "." + qr.getColumn() + " AS "
-	// + qr.getColumn();
-	// }
 
 	/*
 	 * 
@@ -174,7 +162,7 @@ public class SQLBuilder {
 		if (qr.getSource() == SourceKeys.ORT_NORM_AB) {
 			result += ", " + qr.getTable() + "." + ColumnNameKeys.ANMERKUNG;
 		}
-		if (result.isEmpty()) {
+		if (result.startsWith(",")) {
 			result = "SELECT DISTINCT " + qr.getTable() + "." + qr.getColumn() + " AS " + qr.getColumn();
 		}
 		return result;

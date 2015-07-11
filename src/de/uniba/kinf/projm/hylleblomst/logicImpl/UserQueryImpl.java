@@ -1,5 +1,7 @@
 package de.uniba.kinf.projm.hylleblomst.logicImpl;
 
+import java.util.InputMismatchException;
+
 import de.uniba.kinf.projm.hylleblomst.keys.ColumnNameKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
@@ -75,31 +77,23 @@ public class UserQueryImpl implements UserQuery {
 		sqlWhere = buildSQLWhere();
 	}
 
-	@Override
-	public SearchFieldKeys getSearchField() {
-		return searchField;
-	}
-
 	public void setSearchField(SearchFieldKeys searchField) {
+		if (searchField == null) {
+			throw new InputMismatchException("Das übergebene searchField darf nicht null sein.");
+		}
 		this.searchField = searchField;
 	}
 
-	@Override
-	public String getInput() {
-		return input;
-	}
-
-	@Override
-	public Boolean isPersonSearch() {
-		return isPersonSearch;
-	}
-
 	public void setInput(String input) {
-		if (isOpenSearch) {
-			this.input = updateInputForOpenSearch(input);
-		} else {
-			this.input = input;
+		if (input == null) {
+			throw new InputMismatchException("Der übergebene Wert für input darf nicht null sein.");
 		}
+		this.input = input;
+	}
+
+	@Override
+	public SearchFieldKeys getSearchField() {
+		return searchField;
 	}
 
 	@Override
@@ -108,6 +102,9 @@ public class UserQueryImpl implements UserQuery {
 	}
 
 	public void setSource(int source) {
+		if (source < SourceKeys.bottom || source > SourceKeys.top) {
+			throw new InputMismatchException("Der übergebene Wert für source muss einem SourceKey entsprechen.");
+		}
 		this.source = source;
 	}
 
@@ -127,12 +124,22 @@ public class UserQueryImpl implements UserQuery {
 	}
 
 	@Override
+	public String getInput() {
+		return input;
+	}
+
+	@Override
+	public Boolean isPersonSearch() {
+		return isPersonSearch;
+	}
+
+	@Override
 	public Boolean isOpenSearch() {
 		return isOpenSearch;
 	}
 
 	@Override
-	public Boolean useOrCondition() {
+	public Boolean isOrCondition() {
 		return isOR;
 	}
 
@@ -158,15 +165,18 @@ public class UserQueryImpl implements UserQuery {
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.STUDIENJAHR_INT;
 				sqlWhere = String.format("%s.%s >= ?", table, column);
+				isOpenSearch = false;
 				break;
 			case STUDIENJAHR_BIS:
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.STUDIENJAHR_INT;
 				sqlWhere = String.format("%s.%s <= ?", table, column);
+				isOpenSearch = false;
 				break;
 			case EINSCHREIBEDATUM_VON:
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.DATUM;
+				isOpenSearch = false;
 				sqlWhere = String.format("%s.%s >= ?", table, column);
 				if (input.contains("mm-dd")) {
 					input = input.substring(0, input.indexOf("-", 1)) + "-01-01";
@@ -179,6 +189,7 @@ public class UserQueryImpl implements UserQuery {
 			case EINSCHREIBEDATUM_BIS:
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.DATUM;
+				isOpenSearch = false;
 				sqlWhere = String.format("%s.%s <= ?", table, column);
 				if (input.contains("mm-dd")) {
 					input = input.substring(0, input.indexOf("-", 1)) + "-12-31";
@@ -197,16 +208,19 @@ public class UserQueryImpl implements UserQuery {
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.PERSON_ID;
 				sqlWhere = buildSQLWhere();
+				isOpenSearch = false;
 				break;
 			case SEITE_ORIGINALE:
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.SEITE_ORIGINAL;
 				sqlWhere = buildSQLWhere();
+				isOpenSearch = false;
 				break;
 			case NUMMER_HESS:
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.NUMMER_HESS;
 				sqlWhere = buildSQLWhere();
+				isOpenSearch = false;
 				break;
 			case ANREDE:
 				if (source == SourceKeys.NORM) {
@@ -317,6 +331,9 @@ public class UserQueryImpl implements UserQuery {
 		} else {
 			throw new IllegalArgumentException("Die Werte für Suchfeld " + searchField.toString() + " und Quelle "
 					+ source + " konnten keiner Tabelle und Spalte zugeordnet werden.");
+		}
+		if (isOpenSearch) {
+			this.input = updateInputForOpenSearch(input);
 		}
 	}
 
