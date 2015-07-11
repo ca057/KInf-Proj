@@ -4,9 +4,12 @@ import java.util.InputMismatchException;
 
 import de.uniba.kinf.projm.hylleblomst.gui.controller.HelpFrameController;
 import de.uniba.kinf.projm.hylleblomst.gui.controller.ViewHelper;
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -26,6 +29,9 @@ public class HelpFrame extends Stage {
 	private ViewHelper viewHelper;
 	private HelpFrameController helpFrameController;
 
+	private DoubleProperty width = new SimpleDoubleProperty(700);
+	private DoubleProperty height = new SimpleDoubleProperty(300);
+
 	private Font titleFont;
 
 	private BorderPane rootPane;
@@ -37,15 +43,16 @@ public class HelpFrame extends Stage {
 		this.helpFrameController = helpFrameController;
 		viewHelper = new ViewHelper();
 
-		titleFont = Font.font(Font.getDefault().toString(), FontWeight.BOLD, 20);
+		titleFont = Font.font(Font.getDefault().toString(), FontWeight.LIGHT, 20);
 
 		rootPane = createContentPane();
-		Scene scene = new Scene(rootPane, 700, 300);
+		Scene scene = new Scene(rootPane, width.get(), height.get());
 		this.setScene(scene);
 		this.getIcons().add(new Image(getClass().getResourceAsStream("unicorn-icon.png")));
 		this.setTitle(viewHelper.getAppName() + " - Hilfe");
 
 		setEventHandlers();
+		setWindowChangeListener();
 	}
 
 	private BorderPane createContentPane() {
@@ -67,27 +74,42 @@ public class HelpFrame extends Stage {
 		return helpTabs;
 	}
 
-	private Node createSearchTabContent() {
+	private VBox createSearchTabContent() {
 		VBox searchBox = new VBox();
 		searchBox.setPadding(new Insets(5.0));
 		Text title = new Text("Suche");
 		title.setFont(titleFont);
-
-		Text secondText = new Text("Hier steht der Hilfetext für die Suche.");
-
-		searchBox.getChildren().addAll(title, secondText);
-
+		Text mainText = new Text("Hier steht der Hilfetext für die Suche.");
+		searchBox.getChildren().addAll(title, mainText);
 		return searchBox;
 	}
 
-	private Node createDatabaseTabContent() {
-		// TODO Auto-generated method stub
-		return null;
+	private VBox createDatabaseTabContent() {
+		VBox databaseBox = new VBox();
+		databaseBox.setPadding(new Insets(5.0));
+		Text title = new Text("Datenbank");
+		title.setFont(titleFont);
+		Text mainText = new Text("Hier steht der Hilfetext für die Datenbank.");
+		databaseBox.getChildren().addAll(title, mainText);
+		return databaseBox;
 	}
 
-	private Node createExportTabContent() {
-		// TODO Auto-generated method stub
-		return null;
+	private VBox createExportTabContent() {
+		VBox exportBox = new VBox();
+		exportBox.setPadding(new Insets(5.0));
+		Text title = new Text("Export");
+		title.setFont(titleFont);
+		Text mainText = new Text("Fehlt im Ausgangsdatensatz Einschreibedatumsfeldern ein Tag oder Monat, "
+				+ "werden diese beim Import in die Datenbank mit zufälligen Werten ersetzt. "
+				+ "Die entsprechende Veränderung wird in der Spalte DATUMSFELDERGESETZT gespeichert, "
+				+ "die sich bei einer Suche nach dem Einschreibedatum im Export-Ergebnis wiederfindet.\n"
+				+ "Der dreistellige Code kann wie folgt gelesen werden:\n"
+				+ "- eine 0 steht für eine unveränderte Stelle, eine 1 für eine veränderte Stelle\n"
+				+ "- die erste der drei Stellen steht für das Jahr, die zweite für den Monat, die dritte für den Tag"
+				+ "- Beispiel: 011 bedeutet, dass das Jahr unverändert blieb und Monat und Tag für den Import angepasst wurden");
+		mainText.wrappingWidthProperty().bind(width);
+		exportBox.getChildren().addAll(title, mainText);
+		return exportBox;
 	}
 
 	private void setEventHandlers() {
@@ -99,6 +121,24 @@ public class HelpFrame extends Stage {
 					helpFrameController.closeView();
 				}
 				event.consume();
+			}
+		});
+
+	}
+
+	private void setWindowChangeListener() {
+		rootPane.getScene().widthProperty().addListener(new ChangeListener<Number>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				width.setValue(newValue);
+			}
+		});
+		rootPane.getScene().heightProperty().addListener(new ChangeListener<Number>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				height.setValue(newValue);
 			}
 		});
 	}
