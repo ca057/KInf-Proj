@@ -24,7 +24,7 @@ import de.uniba.kinf.projm.hylleblomst.logic.UserQuery;
 public class SQLBuilder {
 
 	private Collection<UserQuery> userQuery;
-	private ArrayList<String> inputs;
+	private ArrayList<Object> inputs;
 	private StringBuilder sqlStatement = new StringBuilder();
 	private Boolean needsStandardFields = true;
 	private Boolean whereIsEmpty = true;
@@ -34,7 +34,7 @@ public class SQLBuilder {
 	 * @throws SQLException
 	 */
 	public SQLBuilder(Collection<UserQuery> userQuery) throws SQLException {
-		inputs = new ArrayList<String>();
+		inputs = new ArrayList<Object>();
 		if (userQuery == null || userQuery.isEmpty()) {
 			throw new InputMismatchException("Die übergebene Collection darf nicht leer bzw. null sein.");
 		}
@@ -53,19 +53,15 @@ public class SQLBuilder {
 	 * @throws SQLException
 	 */
 	public SQLBuilder(UserQuery userQuery) throws SQLException {
-		if (userQuery == null || userQuery.getInput().isEmpty()) {
-			throw new InputMismatchException(
-					"Das übergebene Query darf nicht null sein und die Felder table, column und input müssen ausgefüllt sein.");
+		if (userQuery == null) {
+			throw new InputMismatchException("Das übergebene Query darf nicht null sein.");
 		}
-		inputs = new ArrayList<String>();
+		inputs = new ArrayList<Object>();
 		inputs.add(userQuery.getInput());
 		if (userQuery.isPersonSearch()) {
 			buildPersonSearch();
-		} else if (!(userQuery.getInput().isEmpty())) {
-			buildNotationSearch(userQuery);
 		} else {
-			throw new InputMismatchException(
-					"Das übergebene Query konnte nicht verarbeitet werden. Entweder personID oder personID, SearchfieldKey und SourceKey müssen verfügbar sein");
+			buildNotationSearch(userQuery);
 		}
 		print();
 	}
@@ -80,7 +76,7 @@ public class SQLBuilder {
 	/**
 	 * @return
 	 */
-	public List<String> getInputs() {
+	public List<Object> getInputs() {
 		return inputs;
 	}
 
@@ -94,18 +90,11 @@ public class SQLBuilder {
 		for (UserQuery query : userQuery) {
 			sqlStatement.append(buildSelect(query));
 			sqlWhere.append(buildWhere(query));
-			if (!("true".equals(query.getInput()))) {
-				// inputs.add(query.getInput());
-				// if (SourceKeys.NO_SELECTION.equals(query.getSource()) ||
-				// SourceKeys.NORM.equals(query.getSource())
-				// || SourceKeys.ORT_NORM_AB.equals(query.getSource())) {
-				// inputs.add(query.getInput());
-				// }
-				for (int i = 1; i <= query.getNumberOfInputs(); i++) {
-					inputs.add(query.getInput());
-				}
 
+			for (int i = 1; i <= query.getNumberOfInputs(); i++) {
+				inputs.add(query.getInput());
 			}
+
 		}
 		sqlStatement.append(buildFrom()).append(" WHERE ").append(sqlWhere);
 	}
@@ -163,12 +152,17 @@ public class SQLBuilder {
 					+ TableNameKeys.FAKULTAETEN + "." + ColumnNameKeys.FAKULTAETEN_NORM + " AS fakultaet_norm";
 			needsStandardFields = false;
 		}
-		if (ColumnNameKeys.STUDIENJAHR_INT.equals(userQuery.getColumn())) {
-			result += ", " + userQuery.getTable() + "." + ColumnNameKeys.STUDIENJAHR + " AS "
-					+ userQuery.getSearchField();
-		} else if (ColumnNameKeys.DATUM.equals(userQuery.getColumn())) {
-			result += ", " + userQuery.getTable() + "." + ColumnNameKeys.DATUM + ", " + userQuery.getTable() + "."
-					+ ColumnNameKeys.DATUMS_FELDER_GESETZT;
+		if (userQuery.isInt()) {
+			if (ColumnNameKeys.STUDIENJAHR_INT.equals(userQuery.getColumn())) {
+				result += ", " + userQuery.getTable() + "." + ColumnNameKeys.STUDIENJAHR + " AS "
+						+ userQuery.getSearchField();
+			} else if (ColumnNameKeys.DATUM.equals(userQuery.getColumn())) {
+				result += ", " + userQuery.getTable() + "." + ColumnNameKeys.DATUM + ", " + userQuery.getTable() + "."
+						+ ColumnNameKeys.DATUMS_FELDER_GESETZT;
+			} else {
+				result += ", CAST(" + userQuery.getTable() + "." + userQuery.getColumn() + " AS INTEGER) AS "
+						+ userQuery.getSearchField();
+			}
 		} else {
 			result += ", " + userQuery.getTable() + "." + userQuery.getColumn() + " AS " + userQuery.getSearchField();
 		}

@@ -85,15 +85,21 @@ public class SearchInitiatorImpl implements SearchInitiator {
 		}
 	}
 
-	private CachedRowSet startQuery(String sqlStatement, List<String> inputs) throws SQLException {
+	private CachedRowSet startQuery(String sqlStatement, List<Object> inputs) throws SQLException {
 		CachedRowSet crs = new CachedRowSetImpl();
 		try (Connection con = DriverManager.getConnection(dbKey, user, password);
 				PreparedStatement stmt = con.prepareStatement(sqlStatement, ResultSet.TYPE_SCROLL_INSENSITIVE,
 						ResultSet.CONCUR_READ_ONLY);) {
 			int parameterIndex = 1;
 			if (inputs != null) {
-				for (String input : inputs) {
-					stmt.setString(parameterIndex, input);
+				for (Object input : inputs) {
+					if (input instanceof String) {
+						stmt.setString(parameterIndex, (String) input);
+					} else if (input instanceof Integer) {
+						stmt.setInt(parameterIndex, (Integer) input);
+
+					}
+
 					parameterIndex++;
 				}
 			}
