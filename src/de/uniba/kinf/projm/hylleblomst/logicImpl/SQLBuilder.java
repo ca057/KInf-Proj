@@ -168,9 +168,6 @@ public class SQLBuilder {
 		if (result.startsWith(",")) {
 			result = "SELECT DISTINCT " + userQuery.getTable() + "." + userQuery.getColumn() + " AS "
 					+ userQuery.getSearchField();
-			if (userQuery.getSource() == SourceKeys.ORT_NORM_AB) {
-				result += ", " + TableNameKeys.ORT_ABWEICHUNG_NORM + "." + ColumnNameKeys.ORT_ABWEICHUNG_NORM_ANMERKUNG;
-			}
 		}
 		return result;
 	}
