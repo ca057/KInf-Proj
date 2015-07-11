@@ -332,7 +332,7 @@ public class ViewController implements ControllerInterface, Initializable {
 					fileChooser.getExtensionFilters().add(new ExtensionFilter("CSV-Datei (*.csv)", "*.csv"));
 
 					Optional<File> exportFile = Optional
-							.ofNullable(fileChooser.showOpenDialog(root.getScene().getWindow()));
+							.ofNullable(fileChooser.showSaveDialog(root.getScene().getWindow()));
 					if (exportFile.isPresent()) {
 						try {
 							if (result.getMetaData().getColumnCount() != 0) {
