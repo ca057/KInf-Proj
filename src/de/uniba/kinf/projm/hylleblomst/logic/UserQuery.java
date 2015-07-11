@@ -63,4 +63,6 @@ public interface UserQuery {
 	 *         instead of AND
 	 */
 	Boolean isOrCondition();
+
+	int getNumberOfInputs();
 }

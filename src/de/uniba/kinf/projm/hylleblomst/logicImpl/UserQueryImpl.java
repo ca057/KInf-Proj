@@ -27,6 +27,7 @@ public class UserQueryImpl implements UserQuery {
 	private Boolean isOpenSearch = false;
 	private Boolean isPersonSearch = false;
 	private Boolean isNotationSearch = false;
+	private int numberOfInputs = 0;
 
 	/**
 	 * 
@@ -143,6 +144,11 @@ public class UserQueryImpl implements UserQuery {
 	@Override
 	public Boolean isOrCondition() {
 		return isOR;
+	}
+
+	@Override
+	public int getNumberOfInputs() {
+		return numberOfInputs;
 	}
 
 	/*
@@ -337,6 +343,7 @@ public class UserQueryImpl implements UserQuery {
 		if (isOpenSearch) {
 			this.input = updateInputForOpenSearch(input);
 		}
+		numberOfInputs++;
 	}
 
 	/*
@@ -348,14 +355,18 @@ public class UserQueryImpl implements UserQuery {
 	private String buildSQLWhere() {
 		StringBuilder result = new StringBuilder();
 		if (!isNotationSearch) {
-			result.append(String.format("UPPER(%s.%s)", table, column)).append(getEquationSymbol()).append("UPPER(?)");
+			result.append(String.format("(UPPER(%s.%s)", table, column)).append(getEquationSymbol()).append("UPPER(?)");
 
 			if (source == SourceKeys.NO_SELECTION || source == SourceKeys.ORT_NORM_AB) {
 				result.append(String.format(" OR UPPER(%s_norm.%snorm) ", table.substring(0, table.indexOf("_")),
-						column.substring(0, column.length() - 4))).append(getEquationSymbol()).append("UPPER(?)");
+						column.substring(0, column.length() - 4))).append(getEquationSymbol()).append("UPPER(?))");
+				numberOfInputs++;
+			} else {
+				result.append(")");
 			}
 
 			if (searchField == SearchFieldKeys.ORT && source == SourceKeys.NORM) {
+				numberOfInputs++;
 				return result
 						.append(String.format(" OR UPPER(%s.%s)", TableNameKeys.ORT_ABWEICHUNG_NORM,
 								ColumnNameKeys.ORT_ABWEICHUNG_NORM))

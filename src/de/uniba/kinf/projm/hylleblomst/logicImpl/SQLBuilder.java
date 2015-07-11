@@ -91,15 +91,20 @@ public class SQLBuilder {
 	void buildQuery() throws SQLException {
 
 		StringBuilder sqlWhere = new StringBuilder();
-		for (UserQuery qr : userQuery) {
-			sqlStatement.append(buildSelect(qr));
-			sqlWhere.append(buildWhere(qr));
-			if (!("true".equals(qr.getInput()))) {
-				inputs.add(qr.getInput());
-				if (needsStandardFields && (SourceKeys.NO_SELECTION.equals(qr.getSource())
-						|| SourceKeys.NORM.equals(qr.getSource()) || SourceKeys.ORT_NORM_AB.equals(qr.getSource()))) {
-					inputs.add(qr.getInput());
+		for (UserQuery query : userQuery) {
+			sqlStatement.append(buildSelect(query));
+			sqlWhere.append(buildWhere(query));
+			if (!("true".equals(query.getInput()))) {
+				// inputs.add(query.getInput());
+				// if (SourceKeys.NO_SELECTION.equals(query.getSource()) ||
+				// SourceKeys.NORM.equals(query.getSource())
+				// || SourceKeys.ORT_NORM_AB.equals(query.getSource())) {
+				// inputs.add(query.getInput());
+				// }
+				for (int i = 1; i <= query.getNumberOfInputs(); i++) {
+					inputs.add(query.getInput());
 				}
+
 			}
 		}
 		sqlStatement.append(buildFrom()).append(" WHERE ").append(sqlWhere);
@@ -109,14 +114,14 @@ public class SQLBuilder {
 	 * Builds the WHERE part of a SQL-statement, depending on what operation is
 	 * wanted.
 	 */
-	private String buildWhere(UserQuery qr) {
+	private String buildWhere(UserQuery query) {
 		if (whereIsEmpty) {
 			whereIsEmpty = false;
-			return qr.getWhere();
-		} else if (qr.isOrCondition()) {
-			return " OR " + qr.getWhere();
+			return query.getWhere();
+		} else if (query.isOrCondition()) {
+			return " OR " + query.getWhere();
 		} else {
-			return " AND " + qr.getWhere();
+			return " AND " + query.getWhere();
 		}
 	}
 
@@ -133,18 +138,16 @@ public class SQLBuilder {
 	/*
 	 * 
 	 */
-	private void buildNotationSearch(UserQuery userQuery) {
+	private void buildNotationSearch(UserQuery query) {
 		needsStandardFields = false;
-		sqlStatement.append(buildSelectNotation(userQuery)).append(buildFrom()).append(" WHERE ")
-				.append(userQuery.getWhere());
+		sqlStatement.append(buildSelectNotation(query)).append(buildFrom()).append(" WHERE ").append(query.getWhere());
 	}
 
 	/*
 	 * 
 	 */
-	private Object buildSelectNotation(UserQuery userQuery) {
-		return "SELECT DISTINCT " + userQuery.getTable() + "." + userQuery.getColumn() + " AS "
-				+ userQuery.getSearchField();
+	private Object buildSelectNotation(UserQuery query) {
+		return "SELECT DISTINCT " + query.getTable() + "." + query.getColumn() + " AS " + query.getSearchField();
 	}
 
 	/*
