@@ -8,14 +8,24 @@ import java.sql.SQLException;
 import de.uniba.kinf.projm.hylleblomst.exceptions.SetUpException;
 
 public class SetUpDatabaseFunctions {
-
-	public void run(String dbURL, String user, String password)
-			throws SetUpException {
+	/**
+	 * Sets up all defined functions in this class to enhance functionality of
+	 * the chosen database.
+	 * 
+	 * @param dbURL
+	 *            The URL to the database which contains the driver definition
+	 *            and further options.
+	 * @param user
+	 *            The user, typically the admin.
+	 * @param password
+	 *            The password of the user.
+	 * @throws SetUpException
+	 *             If one or more of the functions could not be set up.
+	 */
+	public void setUpUserDefinedFunctions(String dbURL, String user,
+			String password) throws SetUpException {
 		try (Connection con = DriverManager
-				.getConnection(dbURL, user, password);
-				PreparedStatement stmt = con
-						.prepareStatement("CREATE SCHEMA SQL_UTIL");) {
-			stmt.executeUpdate();
+				.getConnection(dbURL, user, password);) {
 
 			setUpGroupConcat(con);
 
@@ -26,8 +36,7 @@ public class SetUpDatabaseFunctions {
 	}
 
 	void setUpGroupConcat(Connection con) throws SetUpException {
-		// TODO
-		String sqlGroupConcat = "CREATE FUNCTION SQL_UTIL.GROUP_CONCAT " + "()";
+		String sqlGroupConcat = "CREATE FUNCTION HYLLEBLOMST.GROUP_CONCAT ( SEPARATOR CHAR, ARGS VARCHAR(255) ... ) RETURNS VARCHAR(2000) PARAMETER STYLE DERBY NO SQL LANGUAGE JAVA EXTERNAL NAME 'de.uniba.kinf.projm.hylleblomst.database.utils.GroupConcat.groupConcat'";
 
 		try (PreparedStatement stmt = con.prepareStatement(sqlGroupConcat);) {
 			stmt.executeUpdate();
