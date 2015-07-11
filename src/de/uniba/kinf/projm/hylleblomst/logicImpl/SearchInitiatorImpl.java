@@ -93,13 +93,12 @@ public class SearchInitiatorImpl implements SearchInitiator {
 			int parameterIndex = 1;
 			if (inputs != null) {
 				for (Object input : inputs) {
-					if (input instanceof String) {
-						stmt.setString(parameterIndex, (String) input);
-					} else if (input instanceof Integer) {
-						stmt.setInt(parameterIndex, (Integer) input);
-
-					}
-
+					// if (input instanceof String) {
+					stmt.setString(parameterIndex, (String) input);
+					// } else if (input instanceof Integer) {
+					// stmt.setInt(parameterIndex, (Integer) input);
+					//
+					// }
 					parameterIndex++;
 				}
 			}
