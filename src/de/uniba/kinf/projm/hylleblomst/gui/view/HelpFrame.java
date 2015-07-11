@@ -43,7 +43,7 @@ public class HelpFrame extends Stage {
 		this.helpFrameController = helpFrameController;
 		viewHelper = new ViewHelper();
 
-		titleFont = Font.font(Font.getDefault().toString(), FontWeight.LIGHT, 20);
+		titleFont = Font.font(Font.getDefault().toString(), FontWeight.LIGHT, 16);
 
 		rootPane = createContentPane();
 		Scene scene = new Scene(rootPane, width.get(), height.get());
@@ -89,7 +89,11 @@ public class HelpFrame extends Stage {
 		databaseBox.setPadding(new Insets(5.0));
 		Text title = new Text("Datenbank");
 		title.setFont(titleFont);
-		Text mainText = new Text("Hier steht der Hilfetext für die Datenbank.");
+		Text mainText = new Text("Eine Datenbank kann über das Menu 'Datenbank > Datenbank anlegen/verbinden'\n"
+				+ "\t- neu angelegt werden\n" + "\t- mit dem Programm verbunden werden.\n"
+				+ "In beiden Fällen muss ein Zielverzeichnis ausgewählt werden, an dem die Datenbank erstellt werden soll"
+				+ "oder die bereits vorhandene Datenbank liegt.\n"
+				+ "Wichtig: Das Verzeichnis der Datenbank muss 'MyDB' heißen.");
 		databaseBox.getChildren().addAll(title, mainText);
 		return databaseBox;
 	}
@@ -104,9 +108,9 @@ public class HelpFrame extends Stage {
 				+ "Die entsprechende Veränderung wird in der Spalte DATUMSFELDERGESETZT gespeichert, "
 				+ "die sich bei einer Suche nach dem Einschreibedatum im Export-Ergebnis wiederfindet.\n"
 				+ "Der dreistellige Code kann wie folgt gelesen werden:\n"
-				+ "- eine 0 steht für eine unveränderte Stelle, eine 1 für eine veränderte Stelle\n"
-				+ "- die erste der drei Stellen steht für das Jahr, die zweite für den Monat, die dritte für den Tag"
-				+ "- Beispiel: 011 bedeutet, dass das Jahr unverändert blieb und Monat und Tag für den Import angepasst wurden");
+				+ "\t- eine 0 steht für eine unveränderte Stelle, eine 1 für eine veränderte Stelle\n"
+				+ "\t- die erste der drei Stellen steht für das Jahr, die zweite für den Monat, die dritte für den Tag\n"
+				+ "\t- Beispiel: 011 bedeutet, dass Monat und Tag für den Import angepasst wurden");
 		mainText.wrappingWidthProperty().bind(width);
 		exportBox.getChildren().addAll(title, mainText);
 		return exportBox;
