@@ -415,7 +415,6 @@ public class DetailsViewController implements ControllerInterface, Initializable
 			} else {
 				System.out.println("Es gibt keine Detailinformationen für dieses Feld.");
 			}
-			singleResult.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			viewHelper.showErrorMessage("Es konnten keine Tradierungen gefunden werden.\n" + e.getMessage());

@@ -366,13 +366,13 @@
 							<children>
 								<VBox prefWidth="698.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 									<children>
-										<TableView fx:id="resultTable" prefWidth="698.0">
+										<TableView fx:id="resultTable" maxHeight="1.7976931348623157E308" prefWidth="698.0">
 											<columns>
 												<TableColumn prefWidth="75.0" text="C1" />
 												<TableColumn prefWidth="75.0" text="C2" />
 											</columns>
 										</TableView>
-										<Label fx:id="search_sourceLabel" text="" wrapText="true">
+										<Label fx:id="search_sourceLabel" maxHeight="17.0" minHeight="17.0" prefHeight="17.0" text="" wrapText="true">
 											<VBox.margin>
 												<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
 											</VBox.margin>

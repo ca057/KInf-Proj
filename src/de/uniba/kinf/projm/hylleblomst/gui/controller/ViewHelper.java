@@ -16,7 +16,14 @@ public class ViewHelper {
 
 	private String appName = "Hylleblomst";
 
-	private Alert alertInformation = new Alert(AlertType.INFORMATION);
+	private Alert alertInformation;
+
+	private Alert alertConfirmation;
+
+	public ViewHelper() {
+		alertInformation = new Alert(AlertType.INFORMATION);
+		alertConfirmation = new Alert(AlertType.CONFIRMATION);
+	}
 
 	/**
 	 * Returns the name of the application.
@@ -40,23 +47,22 @@ public class ViewHelper {
 	 *         otherwise
 	 */
 	boolean askForClosingWindow() {
-		Alert alert = new Alert(AlertType.CONFIRMATION);
-		alert.setTitle(appName + " - Programm beenden");
-		alert.setHeaderText("Programm beenden");
-		alert.setContentText("Möchten Sie das Programm wirklich beenden?");
+		alertConfirmation.setTitle(appName + " - Programm beenden");
+		alertConfirmation.setHeaderText("Programm beenden");
+		alertConfirmation.setContentText("Möchten Sie das Programm wirklich beenden?");
 
 		ButtonType btnJa = new ButtonType("Ja");
 		ButtonType btnNein = new ButtonType("Nein");
 
-		alert.getButtonTypes().setAll(btnJa, btnNein);
+		alertConfirmation.getButtonTypes().setAll(btnJa, btnNein);
 
-		Optional<ButtonType> result = alert.showAndWait();
+		Optional<ButtonType> result = alertConfirmation.showAndWait();
 
 		if (result.isPresent() && result.get() == btnJa) {
-			alert.close();
+			alertConfirmation.close();
 			return true;
 		} else {
-			alert.close();
+			alertConfirmation.close();
 			return false;
 		}
 	}
@@ -76,8 +82,8 @@ public class ViewHelper {
 	 * Shows an alert window with some random information about the application.
 	 */
 	void showApplicationInfo() {
-		alertInformation.setTitle(getAppName() + " - Über");
-		alertInformation.setHeaderText(getAppName() + " v1.82.02.22.3");
+		alertInformation.setTitle(appName + " - Über");
+		alertInformation.setHeaderText(appName + " v1.82.02.22.3");
 		alertInformation.setGraphic(new ImageView(this.getClass().getResource("../view/einhorn.gif").toString()));
 		String content = "Mit Liebe gemacht von\nSimon Stemper, Johannes 'Git-Gott' Trepesch, Christian Ost\n";
 		content += "WTFPL 2015 – Do What the Fuck You Want to Public License\n";
@@ -133,18 +139,17 @@ public class ViewHelper {
 			throw new IllegalArgumentException(
 					"Bestätigungsfenster kann nicht angezeigt werden, da keine Informationen übergeben wurden.");
 		}
-		Alert confirmationAlert = new Alert(AlertType.CONFIRMATION);
-		confirmationAlert.setTitle(appName + " - Achtung");
-		confirmationAlert.setHeaderText(nameOfAction);
-		confirmationAlert.setContentText("Möchten Sie diese Aktion wirklich durchführen?");
+		alertConfirmation.setTitle(appName + " - Achtung");
+		alertConfirmation.setHeaderText(nameOfAction);
+		alertConfirmation.setContentText("Möchten Sie diese Aktion wirklich durchführen?");
 
-		Optional<ButtonType> result = confirmationAlert.showAndWait();
+		Optional<ButtonType> result = alertConfirmation.showAndWait();
 
 		if (result.isPresent() && result.get() == ButtonType.OK) {
-			confirmationAlert.close();
+			alertConfirmation.close();
 			return true;
 		} else {
-			confirmationAlert.close();
+			alertConfirmation.close();
 			return false;
 		}
 	}
