@@ -270,6 +270,12 @@ public class ViewController implements ControllerInterface, Initializable {
 		searchCtrl = new SearchController(inputFieldCounter, model);
 	}
 
+	/**
+	 * Implemented from Initializable, this method initializes all
+	 * FXML-variables. It makes different default setups, like clearing the
+	 * result table or setting up the event handlers. The execution of these
+	 * setups is delegated to helper functions.
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		clearResultTable();
@@ -283,11 +289,18 @@ public class ViewController implements ControllerInterface, Initializable {
 		detailsViewController.setModel(model);
 	}
 
+	/**
+	 * Clears the {@link TableView}.
+	 */
 	private void clearResultTable() {
 		resultTable.getColumns().clear();
 		resultTable.getItems().clear();
 	}
 
+	/**
+	 * Makes default setups for different nodes, like setting the default
+	 * expanded pane for the accordion or label names.
+	 */
 	private void setUpNodes() {
 		searchCategories.setExpandedPane(searchCategory_person);
 		search_sourceLabel.setText(sourceLabelName.getValueSafe());
@@ -303,7 +316,9 @@ public class ViewController implements ControllerInterface, Initializable {
 	}
 
 	/**
-	 * 
+	 * Function sets up event handlers for key input, numerical input in input
+	 * fields, for the menu and the table view. Setting up the different
+	 * handlers is delegated to different helper functions.
 	 */
 	private void setEventHandlers() {
 		setKeyEvents();
@@ -312,6 +327,9 @@ public class ViewController implements ControllerInterface, Initializable {
 		setTableViewEventHandlers();
 	}
 
+	/**
+	 * Sets up all key events.
+	 */
 	private void setKeyEvents() {
 		root.setOnKeyReleased(new EventHandler<KeyEvent>() {
 
@@ -325,6 +343,9 @@ public class ViewController implements ControllerInterface, Initializable {
 		});
 	}
 
+	/**
+	 * Sets up all event handlers belonging to the main menu.
+	 */
 	private void setMenuEventHandlers() {
 		mainMenu_file_export.setOnAction(new EventHandler<ActionEvent>() {
 
