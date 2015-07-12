@@ -863,5 +863,6 @@ public class ViewController implements ControllerInterface, Initializable {
 		search_sourcekey_selection.getSelectionModel().clearSelection();
 		search_useOrConjunction.setSelected(false);
 		search_useOpenSearch.setSelected(false);
+		System.out.println("");
 	}
 }
