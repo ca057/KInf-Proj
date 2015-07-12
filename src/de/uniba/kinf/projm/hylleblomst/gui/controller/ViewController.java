@@ -1,6 +1,5 @@
 package de.uniba.kinf.projm.hylleblomst.gui.controller;
 
-import java.io.File;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.InputMismatchException;
@@ -10,9 +9,6 @@ import java.util.ResourceBundle;
 
 import javax.sql.rowset.CachedRowSet;
 
-import de.uniba.kinf.projm.hylleblomst.exceptions.ExportException;
-import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
-import de.uniba.kinf.projm.hylleblomst.exceptions.SetUpException;
 import de.uniba.kinf.projm.hylleblomst.exceptions.ViewException;
 import de.uniba.kinf.projm.hylleblomst.gui.model.Model;
 import de.uniba.kinf.projm.hylleblomst.keys.DatabaseKeys;
@@ -26,7 +22,6 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -36,7 +31,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
@@ -47,10 +41,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
-import javafx.stage.Stage;
 import javafx.util.Callback;
 
 /**
@@ -69,8 +59,6 @@ public class ViewController implements ControllerInterface, Initializable {
 
 	private int inputFieldCounter = 24;
 
-	private FileChooser fileChooser;
-
 	private StringProperty sourceLabelName = new SimpleStringProperty("Quelle: ");
 
 	private CachedRowSet result;
@@ -79,27 +67,6 @@ public class ViewController implements ControllerInterface, Initializable {
 
 	@FXML
 	private BorderPane root;
-
-	@FXML
-	private MenuItem mainMenu_file_export;
-
-	@FXML
-	private MenuItem mainMenu_file_close;
-
-	@FXML
-	private MenuItem mainMenu_database_setupDatabase;
-
-	@FXML
-	private MenuItem mainMenu_database_importData;
-
-	@FXML
-	private MenuItem mainMenu_database_clearDatabase;
-
-	@FXML
-	private MenuItem mainMenu_help_help;
-
-	@FXML
-	private MenuItem mainMenu_help_about;
 
 	@FXML
 	private ComboBox<String> search_sourcekey_selection;
@@ -249,10 +216,16 @@ public class ViewController implements ControllerInterface, Initializable {
 	private AnchorPane result_persondetails_anchorpane;
 
 	@FXML
-	Parent detailsView;
+	private Parent detailsView;
 
 	@FXML
-	DetailsViewController detailsViewController;
+	private DetailsViewController detailsViewController;
+
+	@FXML
+	private Parent mainMenu;
+
+	@FXML
+	private MenuController mainMenuController;
 
 	/**
 	 * Constructor for a new Controller. The constructor initiates all
@@ -264,7 +237,6 @@ public class ViewController implements ControllerInterface, Initializable {
 		dbKey = new DatabaseKeys("./db");
 		viewHelper = new ViewHelper();
 		initiator = new SearchInitiatorImpl(dbKey);
-		fileChooser = new FileChooser();
 		model = new Model(initiator);
 		model.addObserver(this);
 		searchCtrl = new SearchController(inputFieldCounter, model);
@@ -286,6 +258,8 @@ public class ViewController implements ControllerInterface, Initializable {
 		// of the model
 		model.setDetailsController(detailsViewController);
 		detailsViewController.setModel(model);
+		mainMenuController.setModel(model);
+		mainMenuController.setViewController(this);
 	}
 
 	/**
@@ -317,19 +291,27 @@ public class ViewController implements ControllerInterface, Initializable {
 	}
 
 	/**
+	 * 
+	 * @return
+	 */
+	CachedRowSet getResult() {
+		return result;
+	}
+
+	/**
 	 * Function sets up event handlers for key input, numerical input in input
 	 * fields, for the menu and the table view. Setting up the different
 	 * handlers is delegated to different helper functions.
 	 */
 	private void setEventHandlers() {
 		setKeyEvents();
-		setMenuEventHandlers();
 		setNumericalInputEventHandlers();
 		setTableViewEventHandlers();
 	}
 
 	/**
-	 * Sets up all key events.
+	 * Sets up all 'global' key events. At the moment, this is only the ENTER
+	 * key starting the search when a valid input was done.
 	 */
 	private void setKeyEvents() {
 		root.setOnKeyReleased(new EventHandler<KeyEvent>() {
@@ -340,119 +322,6 @@ public class ViewController implements ControllerInterface, Initializable {
 					startSearch();
 				}
 				ke.consume();
-			}
-		});
-	}
-
-	/**
-	 * Sets up all event handlers belonging to the main menu.
-	 */
-	private void setMenuEventHandlers() {
-		mainMenu_file_export.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				if (result != null) {
-					fileChooser.setTitle(viewHelper.getAppName() + " - Speicherort für Export auswählen");
-					fileChooser.getExtensionFilters().add(new ExtensionFilter("CSV-Datei (*.csv)", "*.csv"));
-
-					Optional<File> exportFile = Optional
-							.ofNullable(fileChooser.showSaveDialog(root.getScene().getWindow()));
-					if (exportFile.isPresent()) {
-						try {
-							if (result.getMetaData().getColumnCount() != 0) {
-								model.exportSearchedData(exportFile.get(), result);
-								viewHelper.showInfo("Export der Daten in Datei " + exportFile.get().getName()
-										+ " war erfolgreich.");
-							} else {
-								viewHelper.showErrorMessage(
-										"Suchergebnis enthält keine Daten, Export ist nicht möglich.");
-							}
-						} catch (ExportException | SQLException e) {
-							e.printStackTrace();
-							viewHelper
-									.showErrorMessage("Export der Daten in Datei " + exportFile.get().getAbsolutePath()
-											+ " war nicht erfolgreich.\n" + e.getMessage());
-						}
-					}
-				} else {
-					viewHelper.showErrorMessage("Keine Suchergebnisse vorhanden, Export der Daten nicht möglich.");
-				}
-				event.consume();
-			}
-		});
-		mainMenu_file_close.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				closeWindow();
-				event.consume();
-			}
-		});
-		mainMenu_database_setupDatabase.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				DirectoryChooser dirChooser = new DirectoryChooser();
-				dirChooser.setTitle(viewHelper.getAppName() + " - Pfad für Datenbank auswählen");
-				Optional<File> setupDir = Optional.ofNullable(dirChooser.showDialog(root.getScene().getWindow()));
-				if (setupDir.isPresent()) {
-					try {
-						model.setUpDatabase(setupDir.get().getAbsoluteFile());
-						viewHelper.showInfo("Das Anlegen der Datenbank und Tabellen im Verzeichnis "
-								+ setupDir.get().toString() + " war erfolgreich.");
-					} catch (SetUpException e) {
-						viewHelper.showErrorMessage("Datenbank konnte nicht angelegt werden:\n" + e.getMessage());
-						e.printStackTrace();
-					}
-				}
-				event.consume();
-			}
-		});
-		mainMenu_database_importData.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				fileChooser.setTitle(viewHelper.getAppName() + " - CSV-Datei für Import auswählen");
-				fileChooser.getExtensionFilters().add(new ExtensionFilter("CSV-Datei (*.csv)", "*.csv"));
-
-				Optional<File> importFile = Optional
-						.ofNullable(fileChooser.showOpenDialog(root.getScene().getWindow()));
-				if (importFile.isPresent()) {
-					try {
-						model.importData(importFile.get().getAbsoluteFile());
-						viewHelper.showInfo("Import der Datei " + importFile.get().getName() + " war erfolgreich.");
-					} catch (ImportException e) {
-						viewHelper.showErrorMessage("Datei konnte nicht importiert werden:\n" + e.getMessage());
-						e.printStackTrace();
-					}
-				}
-				event.consume();
-			}
-		});
-		mainMenu_database_clearDatabase.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				if (viewHelper.getUserConfirmation("Datenbank löschen")) {
-					try {
-						model.clearDatabase();
-					} catch (SetUpException e) {
-						e.printStackTrace();
-						viewHelper.showErrorMessage("Datenbank konnte nicht gelöscht werden:\n" + e.getMessage());
-					}
-				}
-				event.consume();
-			}
-		});
-
-		mainMenu_help_help.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				HelpFrameController helpFrameController = new HelpFrameController();
-				helpFrameController.showView();
-				event.consume();
 			}
 		});
 	}
@@ -994,25 +863,5 @@ public class ViewController implements ControllerInterface, Initializable {
 		search_sourcekey_selection.getSelectionModel().clearSelection();
 		search_useOrConjunction.setSelected(false);
 		search_useOpenSearch.setSelected(false);
-	}
-
-	/**
-	 * Closes the window when the users submits the action.
-	 */
-	@FXML
-	private void closeWindow() {
-		Stage stage = (Stage) root.getScene().getWindow();
-		if (viewHelper.askForClosingWindow()) {
-			stage.close();
-			System.exit(0);
-		}
-	}
-
-	/**
-	 * Opens an alert window with some random information.
-	 */
-	@FXML
-	private void showInfo() {
-		viewHelper.showApplicationInfo();
 	}
 }
