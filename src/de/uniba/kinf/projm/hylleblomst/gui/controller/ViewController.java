@@ -281,7 +281,6 @@ public class ViewController implements ControllerInterface, Initializable {
 		clearResultTable();
 		setUpNodes();
 		setEventHandlers();
-		setUpLabels();
 		setUpBindings();
 		// when import of embedded fxml is finished, set the DetailsController
 		// of the model
@@ -304,6 +303,8 @@ public class ViewController implements ControllerInterface, Initializable {
 	private void setUpNodes() {
 		searchCategories.setExpandedPane(searchCategory_person);
 		search_sourceLabel.setText(sourceLabelName.getValueSafe());
+		searchCategory_study_einschreibeHinweis
+				.setText("Hinweis: Für eine erfolgreiche Suche muss jeweils mindestens das Jahr ausgefüllt sein.");
 	}
 
 	/**
@@ -667,11 +668,6 @@ public class ViewController implements ControllerInterface, Initializable {
 				event.consume();
 			}
 		});
-	}
-
-	private void setUpLabels() {
-		searchCategory_study_einschreibeHinweis
-				.setText("Hinweis: Für eine erfolgreiche Suche muss jeweils mindestens das Jahr ausgefüllt sein.");
 	}
 
 	private void setUpBindings() {
