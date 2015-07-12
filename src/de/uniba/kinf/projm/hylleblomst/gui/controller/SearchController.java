@@ -6,7 +6,7 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Observable;
 
-import de.uniba.kinf.projm.hylleblomst.exceptions.ViewException;
+import de.uniba.kinf.projm.hylleblomst.exceptions.SearchException;
 import de.uniba.kinf.projm.hylleblomst.gui.model.Model;
 import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.UserQuery;
@@ -52,10 +52,10 @@ public class SearchController implements ControllerInterface {
 	 * 
 	 * @param inputValues
 	 * @param inputSourceKey
-	 * @throws ViewException
+	 * @throws SearchException
 	 */
 	boolean executeSearch(String[] inputValues, int[] inputSourceKey, boolean isOr, boolean isOpenedSearch)
-			throws ViewException {
+			throws SearchException {
 		if (inputSearchFKey == null || inputSearchFKey.length == 0 || inputSourceKey == null
 				|| inputSourceKey.length == 0) {
 			throw new IllegalArgumentException("Die Liste mit Eingabefeldern ist leer oder hat keinen Wert.");
@@ -78,16 +78,16 @@ public class SearchController implements ControllerInterface {
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new ViewException("Ein Fehler bei der Suche ist aufgetreten:\n" + e.getMessage());
+			throw new SearchException("Ein Fehler bei der Suche ist aufgetreten:\n" + e.getMessage());
 		}
 	}
 
 	/**
 	 * 
 	 * @param id
-	 * @throws ViewException
+	 * @throws SearchException
 	 */
-	public void startSinglePersonSearch(UserQuery personIDQuery) throws ViewException {
+	public void startSinglePersonSearch(UserQuery personIDQuery) throws SearchException {
 		if (personIDQuery == null) {
 			throw new InputMismatchException(
 					"Übergebene ID ist leer oder hat keinen Wert. Personendetails können nicht gesucht werden.");
@@ -96,7 +96,7 @@ public class SearchController implements ControllerInterface {
 			model.searchPerson(personIDQuery);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			throw new ViewException(
+			throw new SearchException(
 					"Ein Fehler bei der Suche nach Person mit ID " + personIDQuery + " ist aufgetreten.");
 		}
 	}

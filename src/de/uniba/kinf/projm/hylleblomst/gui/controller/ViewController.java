@@ -9,7 +9,7 @@ import java.util.ResourceBundle;
 
 import javax.sql.rowset.CachedRowSet;
 
-import de.uniba.kinf.projm.hylleblomst.exceptions.ViewException;
+import de.uniba.kinf.projm.hylleblomst.exceptions.SearchException;
 import de.uniba.kinf.projm.hylleblomst.gui.model.Model;
 import de.uniba.kinf.projm.hylleblomst.keys.DatabaseKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
@@ -587,7 +587,7 @@ public class ViewController implements ControllerInterface, Initializable {
 			} else {
 				setLabelSource();
 			}
-		} catch (ViewException e) {
+		} catch (SearchException e) {
 			e.printStackTrace();
 			if (e.getMessage().isEmpty()) {
 				viewHelper.showErrorMessage("Bei der Suche ist ein Fehler aufgetreten.");
@@ -609,7 +609,7 @@ public class ViewController implements ControllerInterface, Initializable {
 		UserQueryImpl idQuery = new UserQueryImpl(id);
 		try {
 			searchCtrl.startSinglePersonSearch(idQuery);
-		} catch (ViewException e) {
+		} catch (SearchException e) {
 			e.printStackTrace();
 			viewHelper.showErrorMessage(
 					"Es können keine Detailinformationen für diese Person angezeigt werden.\n" + e.getMessage());
