@@ -400,7 +400,7 @@ public class UserQueryImpl implements UserQuery {
 
 		if (!(source == SourceKeys.NORM || source == SourceKeys.NO_SOURCE || source == SourceKeys.NO_SELECTION
 				|| source == SourceKeys.ORT_NORM_AB || SearchFieldKeys.ANREDE.equals(searchField)
-				|| SearchFieldKeys.TITEL.equals(searchField))) {
+				|| SearchFieldKeys.TITEL.equals(searchField) || SearchFieldKeys.ZUSAETZE.equals(searchField))) {
 			result.append(String.format(" AND %1s_info.%s = %s", table.substring(0, table.indexOf("_")),
 					ColumnNameKeys.QUELLEN_ID, source));
 		}
@@ -414,7 +414,9 @@ public class UserQueryImpl implements UserQuery {
 		StringBuilder result = new StringBuilder();
 		result.append(String.format("%s.%s = ?", TableNameKeys.PERSON, ColumnNameKeys.PERSON_ID));
 		numberOfInputs++;
-		if (!(source == SourceKeys.NORM || source == SourceKeys.NO_SOURCE || source == SourceKeys.NO_SELECTION
+		if (SearchFieldKeys.ZUSAETZE.equals(searchField)) {
+			result.append(String.format(" AND %s_info.%s = %s", table, ColumnNameKeys.QUELLEN_ID, source));
+		} else if (!(source == SourceKeys.NORM || source == SourceKeys.NO_SOURCE || source == SourceKeys.NO_SELECTION
 				|| source == SourceKeys.ORT_NORM_AB || SearchFieldKeys.ANREDE.equals(searchField)
 				|| SearchFieldKeys.TITEL.equals(searchField))) {
 			result.append(String.format(" AND %s_info.%s = %s", table.substring(0, table.indexOf("_")),
