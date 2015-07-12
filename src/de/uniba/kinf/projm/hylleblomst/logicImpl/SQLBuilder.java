@@ -87,10 +87,14 @@ public class SQLBuilder {
 	void buildQuery() throws SQLException {
 
 		StringBuilder sqlWhere = new StringBuilder();
+		StringBuilder sqlGroup = new StringBuilder();
 		for (UserQuery query : userQuery) {
 			sqlStatement.append(buildSelect(query));
 			sqlWhere.append(buildWhere(query));
-
+			sqlGroup.append("," + query.getColumn());
+			if (query.getColumn() == ColumnNameKeys.DATUM) {
+				sqlGroup.append(", " + ColumnNameKeys.DATUMS_FELDER_GESETZT);
+			}
 			for (int i = 1; i <= query.getNumberOfInputs(); i++) {
 				inputs.add(query.getInput());
 			}
@@ -100,7 +104,8 @@ public class SQLBuilder {
 				.append(sqlWhere + " GROUP BY " + TableNameKeys.PERSON + "." + ColumnNameKeys.PERSON_ID + ","
 						+ TableNameKeys.VORNAME_NORM + "." + ColumnNameKeys.VORNAME_NORM + "," + TableNameKeys.NAME_NORM
 						+ "." + ColumnNameKeys.NAME_NORM + "," + TableNameKeys.ORT_NORM + "." + ColumnNameKeys.ORT_NORM
-						+ "," + TableNameKeys.FAKULTAETEN + "." + ColumnNameKeys.FAKULTAETEN_NORM);
+						+ "," + TableNameKeys.FAKULTAETEN + "." + ColumnNameKeys.FAKULTAETEN_NORM)
+				.append(sqlGroup);
 	}
 
 	/*
@@ -156,19 +161,14 @@ public class SQLBuilder {
 					+ TableNameKeys.FAKULTAETEN + "." + ColumnNameKeys.FAKULTAETEN_NORM + " AS fakultaet_norm";
 			needsStandardFields = false;
 		}
-		if (userQuery.isInt()) {
-			if (ColumnNameKeys.STUDIENJAHR_INT.equals(userQuery.getColumn())) {
-				result += ", " + userQuery.getTable() + "." + ColumnNameKeys.STUDIENJAHR + userQuery.getSearchField();
-			} else if (ColumnNameKeys.DATUM.equals(userQuery.getColumn())) {
-				result += ", " + userQuery.getTable() + "." + ColumnNameKeys.DATUM + userQuery.getTable() + "."
-						+ ColumnNameKeys.DATUMS_FELDER_GESETZT;
-				// } else {
-				// result += ", " + " Hylleblomst.GROUP_CONCAT(', ', max(" +
-				// userQuery.getTable() + "."
-				// + userQuery.getColumn() + ") " + userQuery.getSearchField() +
-				// ")";
-				// }
-			}
+
+		if (ColumnNameKeys.STUDIENJAHR_INT.equals(userQuery.getColumn())) {
+			result += ", " + userQuery.getTable() + "." + ColumnNameKeys.STUDIENJAHR + " AS "
+					+ ColumnNameKeys.STUDIENJAHR;
+		} else if (ColumnNameKeys.DATUM.equals(userQuery.getColumn())) {
+			result += ", " + userQuery.getTable() + "." + ColumnNameKeys.DATUM + ", " + userQuery.getTable() + "."
+					+ ColumnNameKeys.DATUMS_FELDER_GESETZT + " AS " + ColumnNameKeys.STUDIENJAHR;
+
 		} else {
 			result += ", " + " Hylleblomst.GROUP_CONCAT(', ', max(" + userQuery.getTable() + "." + userQuery.getColumn()
 					+ "))";

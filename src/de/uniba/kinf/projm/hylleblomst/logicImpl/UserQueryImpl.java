@@ -180,6 +180,7 @@ public class UserQueryImpl implements UserQuery {
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.STUDIENJAHR_INT;
 				sqlWhere = String.format("%s.%s >= ?", table, column);
+				numberOfInputs++;
 				isOpenSearch = false;
 				isInt = true;
 				break;
@@ -187,6 +188,7 @@ public class UserQueryImpl implements UserQuery {
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.STUDIENJAHR_INT;
 				sqlWhere = String.format("%s.%s <= ?", table, column);
+				numberOfInputs++;
 				isOpenSearch = false;
 				isInt = true;
 				break;
@@ -196,6 +198,7 @@ public class UserQueryImpl implements UserQuery {
 				isOpenSearch = false;
 				isInt = true;
 				sqlWhere = String.format("%s.%s >= ?", table, column);
+				numberOfInputs++;
 				if (input.contains("mm-dd")) {
 					input = input.substring(0, input.indexOf("-", 1)) + "-01-01";
 				} else if (input.contains("mm")) {
@@ -210,6 +213,7 @@ public class UserQueryImpl implements UserQuery {
 				isOpenSearch = false;
 				isInt = true;
 				sqlWhere = String.format("%s.%s <= ?", table, column);
+				numberOfInputs++;
 				if (input.contains("mm-dd")) {
 					input = input.substring(0, input.indexOf("-", 1)) + "-12-31";
 				} else if (input.contains("mm")) {
@@ -357,7 +361,6 @@ public class UserQueryImpl implements UserQuery {
 		if (isOpenSearch) {
 			updateInputForOpenSearch();
 		}
-		numberOfInputs++;
 	}
 
 	/*
@@ -367,6 +370,7 @@ public class UserQueryImpl implements UserQuery {
 	 * "Ort_Abweichung_Norm" has to be included in the search as well.
 	 */
 	private String buildSQLWhere() {
+		numberOfInputs++;
 		StringBuilder result = new StringBuilder();
 		result.append("(");
 		String upperFront = "";
