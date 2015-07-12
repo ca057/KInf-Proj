@@ -164,7 +164,10 @@ public class UserQueryImpl implements UserQuery {
 	 * happens here to avoid further iterations.
 	 */
 	private void searchFieldKeyToDatabaseData() {
-		if (source >= SourceKeys.bottom && source <= SourceKeys.top) {
+		if (source < SourceKeys.bottom && source > SourceKeys.top) {
+			throw new IllegalArgumentException("Die Werte für Suchfeld " + searchField.toString() + " und Quelle "
+					+ source + " konnten keiner Tabelle und Spalte zugeordnet werden.");
+		} else {
 			switch (searchField) {
 			case ADLIG:
 				table = TableNameKeys.PERSON;
@@ -354,9 +357,6 @@ public class UserQueryImpl implements UserQuery {
 				throw new IllegalArgumentException(
 						"Das zugehörige Tabellenelement für Suchfeld " + searchField.name() + " ist nicht definiert.");
 			}
-		} else {
-			throw new IllegalArgumentException("Die Werte für Suchfeld " + searchField.toString() + " und Quelle "
-					+ source + " konnten keiner Tabelle und Spalte zugeordnet werden.");
 		}
 		if (isOpenSearch) {
 			updateInputForOpenSearch();
@@ -383,7 +383,6 @@ public class UserQueryImpl implements UserQuery {
 		}
 		result.append(String.format("%s%s.%s%s", upperFront, table, column, upperEnd)).append(getEquationSymbol())
 				.append(String.format("%s?%s", upperFront, upperEnd));
-
 		if (source == SourceKeys.NO_SELECTION || source == SourceKeys.ORT_NORM_AB) {
 			result.append(String.format(" OR UPPER(%s_norm.%snorm) ", table.substring(0, table.indexOf("_")),
 					column.substring(0, column.length() - 4))).append(getEquationSymbol()).append("UPPER(?)");
@@ -408,6 +407,9 @@ public class UserQueryImpl implements UserQuery {
 		return result.toString();
 	}
 
+	/*
+	 * Sets the WHERE part, if a notation of a field (i.e. name) is searched.
+	 */
 	private String buildSQLWhereNotation() {
 		StringBuilder result = new StringBuilder();
 		result.append(String.format("%s.%s = ?", TableNameKeys.PERSON, ColumnNameKeys.PERSON_ID));
