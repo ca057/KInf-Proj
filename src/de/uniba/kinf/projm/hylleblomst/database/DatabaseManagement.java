@@ -1,9 +1,6 @@
 package de.uniba.kinf.projm.hylleblomst.database;
 
 import java.io.File;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
 
 import de.uniba.kinf.projm.hylleblomst.dataImport.CsvFormatVerifier;
 import de.uniba.kinf.projm.hylleblomst.dataImport.ImportDataImpl;
@@ -42,18 +39,10 @@ public class DatabaseManagement {
 		}
 	}
 
-	/**
-	 * Set up defined tables that are able to hold the data from
-	 * project-specific sources.
-	 * 
-	 * @throws SetUpException
-	 */
 	public void setUpTables() throws SetUpException {
 		try {
 			new SetUpTables().run(db.dbURL, DBUserKeys.adminUser,
 					DBUserKeys.adminPassword);
-			new SetUpDatabaseFunctions().setUpUserDefinedFunctions(db.dbURL,
-					DBUserKeys.adminUser, DBUserKeys.adminPassword);
 		} catch (SetUpException e) {
 			StringBuilder errorMessage = new StringBuilder();
 			errorMessage.append("Database could not be set up: ");
@@ -63,16 +52,13 @@ public class DatabaseManagement {
 	}
 
 	/**
-	 * Tear down defined tables and functions.
-	 * 
 	 * @throws SetUpException
 	 */
 	public void tearDownTables() throws SetUpException {
-		try (Connection con = DriverManager.getConnection(db.dbURL,
-				DBUserKeys.adminUser, DBUserKeys.adminPassword)) {
-			new TearDownFunctions().tearDownFunctions(con);
-			new TearDownTables().tearDownTables(con);
-		} catch (SQLException | SetUpException e) {
+		try {
+			new TearDownTables().run(db.dbURL, DBUserKeys.adminUser,
+					DBUserKeys.adminPassword);
+		} catch (SetUpException e) {
 			StringBuilder errorMessage = new StringBuilder();
 			errorMessage.append("Database could not be torn down: ");
 			errorMessage.append(e.getMessage());
@@ -81,12 +67,8 @@ public class DatabaseManagement {
 	}
 
 	/**
-	 * Import data from file to database.
-	 * 
 	 * @param file
-	 *            The file containing the data to import.
 	 * @throws ImportException
-	 *             If an error occurs during import.
 	 */
 	public void importDataIntoDatabase(File file) throws ImportException {
 		try {
