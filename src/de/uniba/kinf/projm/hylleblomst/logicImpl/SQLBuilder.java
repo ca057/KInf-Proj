@@ -158,15 +158,16 @@ public class SQLBuilder {
 		}
 		if (userQuery.isInt()) {
 			if (ColumnNameKeys.STUDIENJAHR_INT.equals(userQuery.getColumn())) {
-				result += ", " + " Hylleblomst.GROUP_CONCAT(', ', max(case when columnname = " + userQuery.getTable()
-						+ "." + ColumnNameKeys.STUDIENJAHR + " then value end) " + userQuery.getSearchField();
+				result += ", " + userQuery.getTable() + "." + ColumnNameKeys.STUDIENJAHR + userQuery.getSearchField();
 			} else if (ColumnNameKeys.DATUM.equals(userQuery.getColumn())) {
-				result += ", " + " Hylleblomst.GROUP_CONCAT(', ', max(case when columnname = " + userQuery.getTable()
-						+ "." + ColumnNameKeys.DATUM + " then value end) DATUM, " + userQuery.getTable() + "."
-						+ ColumnNameKeys.DATUMS_FELDER_GESETZT + ")";
-			} else {
-				result += ", " + " Hylleblomst.GROUP_CONCAT(', ', max(" + userQuery.getTable() + "."
-						+ userQuery.getColumn() + ") " + userQuery.getSearchField() + ")";
+				result += ", " + userQuery.getTable() + "." + ColumnNameKeys.DATUM + userQuery.getTable() + "."
+						+ ColumnNameKeys.DATUMS_FELDER_GESETZT;
+				// } else {
+				// result += ", " + " Hylleblomst.GROUP_CONCAT(', ', max(" +
+				// userQuery.getTable() + "."
+				// + userQuery.getColumn() + ") " + userQuery.getSearchField() +
+				// ")";
+				// }
 			}
 		} else {
 			result += ", " + " Hylleblomst.GROUP_CONCAT(', ', max(" + userQuery.getTable() + "." + userQuery.getColumn()
