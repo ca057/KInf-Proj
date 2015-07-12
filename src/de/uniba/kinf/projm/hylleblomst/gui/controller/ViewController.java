@@ -356,6 +356,7 @@ public class ViewController implements ControllerInterface, Initializable {
 					if (getParsedInt(searchCategory_study_studienjahrBis.getText()) < 0
 							|| getParsedInt(searchCategory_study_studienjahrBis.getText()) > 2015) {
 						viewHelper.showErrorMessage("Studienjahr muss eine Zahl zwischen 0 und 2015 sein.");
+						searchCategory_study_studienjahrBis.clear();
 					}
 				} else if (ke.getCode() != KeyCode.TAB && ke.getCode() != KeyCode.BACK_SPACE
 						&& ke.getCode() != KeyCode.SHIFT && ke.getCode() != KeyCode.DELETE) {
@@ -372,11 +373,14 @@ public class ViewController implements ControllerInterface, Initializable {
 				if (searchCategory_study_einschreibeJahrVon.getText().matches("[0-9]{1,4}")) {
 					if (getParsedInt(searchCategory_study_einschreibeJahrVon.getText()) < 0
 							|| getParsedInt(searchCategory_study_einschreibeJahrVon.getText()) > 2015) {
-						viewHelper.showErrorMessage("Einschreibejahr muss eine Zahl zwischen 0 und 2015 sein.");
+						viewHelper.showErrorMessage(
+								"Einschreibejahr muss eine vierstellige Eingabe zwischen 0 und 2015 sein.");
+						searchCategory_study_einschreibeJahrVon.clear();
 					}
 				} else if (ke.getCode() != KeyCode.TAB && ke.getCode() != KeyCode.BACK_SPACE
 						&& ke.getCode() != KeyCode.SHIFT && ke.getCode() != KeyCode.DELETE) {
-					viewHelper.showErrorMessage("Einschreibejahr muss eine Zahl zwischen 0 und 2015 sein.");
+					viewHelper.showErrorMessage(
+							"Einschreibejahr muss eine vierstellige Eingabe zwischen 0 und 2015 sein.");
 					searchCategory_study_einschreibeJahrVon.clear();
 				}
 				ke.consume();
@@ -386,10 +390,11 @@ public class ViewController implements ControllerInterface, Initializable {
 
 			@Override
 			public void handle(KeyEvent ke) {
-				if (searchCategory_study_einschreibeMonatVon.getText().matches("[1-9][0-2]?")) {
+				if (searchCategory_study_einschreibeMonatVon.getText().matches("[0-9][0-2]?")) {
 					if (getParsedInt(searchCategory_study_einschreibeMonatVon.getText()) < 1
 							|| getParsedInt(searchCategory_study_einschreibeMonatVon.getText()) > 12) {
 						viewHelper.showErrorMessage("Einschreibemonat muss eine Zahl von 1 bis 12 sein.");
+						searchCategory_study_einschreibeMonatVon.clear();
 					}
 				} else if (ke.getCode() != KeyCode.TAB && ke.getCode() != KeyCode.BACK_SPACE
 						&& ke.getCode() != KeyCode.SHIFT && ke.getCode() != KeyCode.DELETE) {
@@ -403,10 +408,11 @@ public class ViewController implements ControllerInterface, Initializable {
 
 			@Override
 			public void handle(KeyEvent ke) {
-				if (searchCategory_study_einschreibeTagVon.getText().matches("[1-3][0-9]?")) {
+				if (searchCategory_study_einschreibeTagVon.getText().matches("[0-9][0-9]?")) {
 					if (getParsedInt(searchCategory_study_einschreibeTagVon.getText()) < 1
 							|| getParsedInt(searchCategory_study_einschreibeTagVon.getText()) > 31) {
 						viewHelper.showErrorMessage("Einschreibetag muss eine Zahl von 1 bis 31 sein.");
+						searchCategory_study_einschreibeTagVon.clear();
 					}
 				} else if (ke.getCode() != KeyCode.TAB && ke.getCode() != KeyCode.BACK_SPACE
 						&& ke.getCode() != KeyCode.SHIFT && ke.getCode() != KeyCode.DELETE) {
@@ -423,11 +429,14 @@ public class ViewController implements ControllerInterface, Initializable {
 				if (searchCategory_study_einschreibeJahrBis.getText().matches("[0-9]{1,4}")) {
 					if (getParsedInt(searchCategory_study_einschreibeJahrBis.getText()) < 0
 							|| getParsedInt(searchCategory_study_einschreibeJahrBis.getText()) > 2015) {
-						viewHelper.showErrorMessage("Einschreibejahr muss eine Zahl zwischen 0 und 2015 sein.");
+						viewHelper.showErrorMessage(
+								"Einschreibejahr muss eine vierstellige Eingabe zwischen 0 und 2015 sein.");
+						searchCategory_study_einschreibeJahrBis.clear();
 					}
 				} else if (ke.getCode() != KeyCode.TAB && ke.getCode() != KeyCode.BACK_SPACE
 						&& ke.getCode() != KeyCode.SHIFT && ke.getCode() != KeyCode.DELETE) {
-					viewHelper.showErrorMessage("Einschreibejahr muss eine Zahl zwischen 0 und 2015 sein.");
+					viewHelper.showErrorMessage(
+							"Einschreibejahr muss eine vierstellige Eingabe zwischen 0 und 2015 sein.");
 					searchCategory_study_einschreibeJahrBis.clear();
 				}
 				ke.consume();
@@ -437,10 +446,11 @@ public class ViewController implements ControllerInterface, Initializable {
 
 			@Override
 			public void handle(KeyEvent ke) {
-				if (searchCategory_study_einschreibeMonatBis.getText().matches("[1-9][0-2]?")) {
+				if (searchCategory_study_einschreibeMonatBis.getText().matches("[0-9][0-2]?")) {
 					if (getParsedInt(searchCategory_study_einschreibeMonatBis.getText()) < 1
 							|| getParsedInt(searchCategory_study_einschreibeMonatBis.getText()) > 12) {
 						viewHelper.showErrorMessage("Einschreibemonat muss eine Zahl von 1 bis 12 sein.");
+						searchCategory_study_einschreibeMonatBis.clear();
 					}
 				} else if (ke.getCode() != KeyCode.TAB && ke.getCode() != KeyCode.BACK_SPACE
 						&& ke.getCode() != KeyCode.SHIFT && ke.getCode() != KeyCode.DELETE) {
@@ -454,10 +464,11 @@ public class ViewController implements ControllerInterface, Initializable {
 
 			@Override
 			public void handle(KeyEvent ke) {
-				if (searchCategory_study_einschreibeTagBis.getText().matches("[1-3][0-9]?")) {
+				if (searchCategory_study_einschreibeTagBis.getText().matches("[0-9][0-9]?")) {
 					if (getParsedInt(searchCategory_study_einschreibeTagBis.getText()) < 1
 							|| getParsedInt(searchCategory_study_einschreibeTagBis.getText()) > 31) {
 						viewHelper.showErrorMessage("Einschreibetag muss eine Zahl von 1 bis 31 sein.");
+						searchCategory_study_einschreibeTagBis.clear();
 					}
 				} else if (ke.getCode() != KeyCode.TAB && ke.getCode() != KeyCode.BACK_SPACE
 						&& ke.getCode() != KeyCode.SHIFT && ke.getCode() != KeyCode.DELETE) {
@@ -565,11 +576,11 @@ public class ViewController implements ControllerInterface, Initializable {
 	}
 
 	/**
-	 * Collects all data from the input fields and starts the search.
-	 * 
-	 * @throws IllegalArgumentException
-	 *             if the list with all input fields could not be generated or
-	 *             is null
+	 * Collects all data from the input, gets all source keys and starts the
+	 * search by calling the corresponding function of the
+	 * {@link SearchContoller}. If the search could not be started, a error
+	 * message is shown to the user. If an exception occurs while the search is
+	 * executed, again an error message is shown.
 	 */
 	@FXML
 	private void startSearch() {
@@ -598,8 +609,19 @@ public class ViewController implements ControllerInterface, Initializable {
 	}
 
 	/**
+	 * Starts the search for a single person, which then will be shown in the
+	 * details view, therefore a {@link DetailsViewController} is used. To start
+	 * the search for a single person, the id ("Nummer") of this person is
+	 * needed.
+	 * <p>
+	 * <b>Precondition</b>
+	 * <ul>
+	 * <li>the {@code id} must not be null or an empty string</li>
+	 * </ul>
+	 * </p>
 	 * 
 	 * @param string
+	 *            the id of the person
 	 */
 	private void startSearchForSinglePerson(String id) {
 		if (id == null || id.isEmpty()) {
@@ -616,6 +638,25 @@ public class ViewController implements ControllerInterface, Initializable {
 		}
 	}
 
+	/**
+	 * Using the passed {@link CachedRowSet}, the {@link TableView} of the user
+	 * interface is filled with the search result. Depending on the number of
+	 * columns, the {@link TableView} is generated dynamically. Several columns
+	 * with additional information (like person id or if date fields were
+	 * manipulated while importing the data) are hidden, the user gets the data
+	 * displayed in the original state.
+	 * 
+	 * <p>
+	 * <b>Precondition</b>
+	 * <ul>
+	 * <li>the {@link CachedRowSet} must not be null or empty (
+	 * {@code size != 0})</li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param resultCachedRowSet
+	 *            the {@link CachedRowSet} with the search result
+	 */
 	private void fillResultTable(CachedRowSet resultCachedRowSet) {
 		if (resultCachedRowSet == null || resultCachedRowSet.size() == 0) {
 			viewHelper.showInfo("Die Suche hat kein Ergebnis zurückgeliefert.");
@@ -675,6 +716,10 @@ public class ViewController implements ControllerInterface, Initializable {
 		}
 	}
 
+	/**
+	 * Implemented by the {@link ControllerInterface}, this method is needed to
+	 * get the data from the model for filling the result table.
+	 */
 	@Override
 	public void update(Observable observable, Object updateData) {
 		if (observable != null) {
@@ -711,8 +756,10 @@ public class ViewController implements ControllerInterface, Initializable {
 			inputFields[13] = String.valueOf(searchCategory_study_graduiert.isSelected());
 			inputFields[14] = searchCategory_study_studienjahrVon.getText();
 			inputFields[15] = searchCategory_study_studienjahrBis.getText();
-			inputFields[16] = getEinschreibungVon();
-			inputFields[17] = getEinschreibungBis();
+			inputFields[16] = getEinschreibungAsFormattedString(searchCategory_study_einschreibeJahrVon,
+					searchCategory_study_einschreibeMonatVon, searchCategory_study_einschreibeTagVon);
+			inputFields[17] = getEinschreibungAsFormattedString(searchCategory_study_einschreibeJahrBis,
+					searchCategory_study_einschreibeMonatBis, searchCategory_study_einschreibeTagBis);
 			inputFields[18] = searchCategory_other_zusaetzeinput.getText();
 			inputFields[19] = searchCategory_other_fundort.getText();
 			inputFields[20] = searchCategory_other_anmerkungen.getText();
@@ -726,44 +773,59 @@ public class ViewController implements ControllerInterface, Initializable {
 	}
 
 	/**
+	 * Gets the input of years of "Einschreibung" as formatted string as needed
+	 * for a correct search. The given input fields are checked if an input is
+	 * done. If true, the input is used to build the return string. The year
+	 * needs to have 4 characters, so if there are less, the first postions are
+	 * filled with 0 until the year has a length of 4.
 	 * 
-	 * @return
+	 * <p>
+	 * <b>Precondition</b>
+	 * <ul>
+	 * <li>the {@link TextFields} must not be null but can be empty</li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param inputYear
+	 *            the {@link TextField} with the input of the year
+	 * @param inputMonth
+	 *            the {@link TextField} with the input of the year
+	 * @param inputDay
+	 *            the {@link TextField} with the input of the year
+	 * @return the string with the input in the form {@code yyyy-mm-dd}
 	 */
-	private String getEinschreibungVon() {
-		String jahr = "yyyy";
-		String monat = "mm";
-		String tag = "dd";
+	private String getEinschreibungAsFormattedString(TextField inputYear, TextField inputMonth, TextField inputDay) {
+		if (inputYear == null || inputMonth == null || inputDay == null) {
+			throw new InputMismatchException(
+					"Die Eingabe in den Feldern Einschreibung konnte nicht verarbeitet werden, da eines der Felder keinen Wert hat.");
+		}
+		String year = "yyyy";
+		String month = "mm";
+		String day = "dd";
 
-		if (!searchCategory_study_einschreibeJahrVon.getText().isEmpty()) {
-			jahr = searchCategory_study_einschreibeJahrVon.getText();
-			if (!searchCategory_study_einschreibeMonatVon.getText().isEmpty()) {
-				monat = searchCategory_study_einschreibeMonatVon.getText();
+		if (!inputYear.getText().isEmpty()) {
+			year = "0000" + inputYear.getText();
+			year = year.substring(year.length() - 4);
+			if (!inputMonth.getText().isEmpty()) {
+				month = inputMonth.getText();
 			}
-			if (!searchCategory_study_einschreibeTagVon.getText().isEmpty()) {
-				tag = searchCategory_study_einschreibeTagVon.getText();
+			if (!inputDay.getText().isEmpty()) {
+				day = inputDay.getText();
 			}
 		}
-
-		return jahr + "-" + monat + "-" + tag;
+		System.out.println(year + "-" + month + "-" + day);
+		return year + "-" + month + "-" + day;
 	}
 
-	private String getEinschreibungBis() {
-		String jahr = "yyyy";
-		String monat = "mm";
-		String tag = "dd";
-
-		if (!searchCategory_study_einschreibeJahrBis.getText().isEmpty()) {
-			jahr = searchCategory_study_einschreibeJahrBis.getText();
-			if (!searchCategory_study_einschreibeMonatBis.getText().isEmpty()) {
-				monat = searchCategory_study_einschreibeMonatBis.getText();
-			}
-			if (!searchCategory_study_einschreibeTagBis.getText().isEmpty()) {
-				tag = searchCategory_study_einschreibeTagBis.getText();
-			}
-		}
-		return jahr + "-" + monat + "-" + tag;
-	}
-
+	/**
+	 * Gets a string and returns it if possible as a parsed {@code int}. If the
+	 * parsing could not be done, an exception is thrown with a problem
+	 * description.
+	 * 
+	 * @param input
+	 *            the string which needs to be parsed
+	 * @return the parsed string as {@code int}
+	 */
 	private int getParsedInt(String input) {
 		if (input == null || input.isEmpty()) {
 			throw new IllegalArgumentException("Ein Fehler bei der Verarbeitung der Zahleingabe ist aufgetreten.");
@@ -778,7 +840,10 @@ public class ViewController implements ControllerInterface, Initializable {
 	}
 
 	/**
+	 * 
 	 * The array with {@link SourceKeys} is generated.
+	 *
+	 * @return the array with all {@link SourceKeys}
 	 */
 	private int[] generateArrayWithSourceFieldKeys() {
 		int[] inputSourceKey = new int[inputFieldCounter];
@@ -816,6 +881,11 @@ public class ViewController implements ControllerInterface, Initializable {
 		return inputSourceKey;
 	}
 
+	/**
+	 * When the search was started and the user selected a source, the name of
+	 * the search is shown beneath the {@link TableView}. This methods sets the
+	 * {@link Label} which displays the source.
+	 */
 	private void setLabelSource() {
 		String labelText = search_sourcekey_selection.getValue();
 		if (labelText == null) {
@@ -863,6 +933,5 @@ public class ViewController implements ControllerInterface, Initializable {
 		search_sourcekey_selection.getSelectionModel().clearSelection();
 		search_useOrConjunction.setSelected(false);
 		search_useOpenSearch.setSelected(false);
-		System.out.println("");
 	}
 }
