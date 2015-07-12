@@ -470,7 +470,8 @@ public class ViewController implements ControllerInterface, Initializable {
 						viewHelper.showErrorMessage("Studienjahr muss eine Zahl zwischen 0 und 2015 sein.");
 						searchCategory_study_studienjahrVon.clear();
 					}
-				} else if (ke.getCode() != KeyCode.TAB) {
+				} else if (ke.getCode() != KeyCode.TAB && ke.getCode() != KeyCode.BACK_SPACE
+						&& ke.getCode() != KeyCode.SHIFT && ke.getCode() != KeyCode.DELETE) {
 					viewHelper.showErrorMessage("Studienjahr muss eine Zahl zwischen 0 und 2015 sein.");
 					searchCategory_study_studienjahrVon.clear();
 				}
@@ -486,7 +487,8 @@ public class ViewController implements ControllerInterface, Initializable {
 							|| getParsedInt(searchCategory_study_studienjahrBis.getText()) > 2015) {
 						viewHelper.showErrorMessage("Studienjahr muss eine Zahl zwischen 0 und 2015 sein.");
 					}
-				} else if (ke.getCode() != KeyCode.TAB) {
+				} else if (ke.getCode() != KeyCode.TAB && ke.getCode() != KeyCode.BACK_SPACE
+						&& ke.getCode() != KeyCode.SHIFT && ke.getCode() != KeyCode.DELETE) {
 					viewHelper.showErrorMessage("Studienjahr muss eine Zahl zwischen 0 und 2015 sein.");
 					searchCategory_study_studienjahrBis.clear();
 				}
@@ -502,7 +504,8 @@ public class ViewController implements ControllerInterface, Initializable {
 							|| getParsedInt(searchCategory_study_einschreibeJahrVon.getText()) > 2015) {
 						viewHelper.showErrorMessage("Einschreibejahr muss eine Zahl zwischen 0 und 2015 sein.");
 					}
-				} else if (ke.getCode() != KeyCode.TAB) {
+				} else if (ke.getCode() != KeyCode.TAB && ke.getCode() != KeyCode.BACK_SPACE
+						&& ke.getCode() != KeyCode.SHIFT && ke.getCode() != KeyCode.DELETE) {
 					viewHelper.showErrorMessage("Einschreibejahr muss eine Zahl zwischen 0 und 2015 sein.");
 					searchCategory_study_einschreibeJahrVon.clear();
 				}
@@ -518,7 +521,8 @@ public class ViewController implements ControllerInterface, Initializable {
 							|| getParsedInt(searchCategory_study_einschreibeMonatVon.getText()) > 12) {
 						viewHelper.showErrorMessage("Einschreibemonat muss eine Zahl von 1 bis 12 sein.");
 					}
-				} else if (ke.getCode() != KeyCode.TAB) {
+				} else if (ke.getCode() != KeyCode.TAB && ke.getCode() != KeyCode.BACK_SPACE
+						&& ke.getCode() != KeyCode.SHIFT && ke.getCode() != KeyCode.DELETE) {
 					viewHelper.showErrorMessage("Einschreibemonat muss eine Zahl von 1 bis 12 sein.");
 					searchCategory_study_einschreibeMonatVon.clear();
 				}
@@ -534,7 +538,8 @@ public class ViewController implements ControllerInterface, Initializable {
 							|| getParsedInt(searchCategory_study_einschreibeTagVon.getText()) > 31) {
 						viewHelper.showErrorMessage("Einschreibetag muss eine Zahl von 1 bis 31 sein.");
 					}
-				} else if (ke.getCode() != KeyCode.TAB) {
+				} else if (ke.getCode() != KeyCode.TAB && ke.getCode() != KeyCode.BACK_SPACE
+						&& ke.getCode() != KeyCode.SHIFT && ke.getCode() != KeyCode.DELETE) {
 					viewHelper.showErrorMessage("Einschreibetag muss eine Zahl von 1 bis 31 sein.");
 					searchCategory_study_einschreibeTagVon.clear();
 				}
@@ -550,7 +555,8 @@ public class ViewController implements ControllerInterface, Initializable {
 							|| getParsedInt(searchCategory_study_einschreibeJahrBis.getText()) > 2015) {
 						viewHelper.showErrorMessage("Einschreibejahr muss eine Zahl zwischen 0 und 2015 sein.");
 					}
-				} else if (ke.getCode() != KeyCode.TAB) {
+				} else if (ke.getCode() != KeyCode.TAB && ke.getCode() != KeyCode.BACK_SPACE
+						&& ke.getCode() != KeyCode.SHIFT && ke.getCode() != KeyCode.DELETE) {
 					viewHelper.showErrorMessage("Einschreibejahr muss eine Zahl zwischen 0 und 2015 sein.");
 					searchCategory_study_einschreibeJahrBis.clear();
 				}
@@ -566,7 +572,8 @@ public class ViewController implements ControllerInterface, Initializable {
 							|| getParsedInt(searchCategory_study_einschreibeMonatBis.getText()) > 12) {
 						viewHelper.showErrorMessage("Einschreibemonat muss eine Zahl von 1 bis 12 sein.");
 					}
-				} else if (ke.getCode() != KeyCode.TAB) {
+				} else if (ke.getCode() != KeyCode.TAB && ke.getCode() != KeyCode.BACK_SPACE
+						&& ke.getCode() != KeyCode.SHIFT && ke.getCode() != KeyCode.DELETE) {
 					viewHelper.showErrorMessage("Einschreibemonat muss eine Zahl von 1 bis 12 sein.");
 					searchCategory_study_einschreibeMonatBis.clear();
 				}
@@ -582,7 +589,8 @@ public class ViewController implements ControllerInterface, Initializable {
 							|| getParsedInt(searchCategory_study_einschreibeTagBis.getText()) > 31) {
 						viewHelper.showErrorMessage("Einschreibetag muss eine Zahl von 1 bis 31 sein.");
 					}
-				} else if (ke.getCode() != KeyCode.TAB) {
+				} else if (ke.getCode() != KeyCode.TAB && ke.getCode() != KeyCode.BACK_SPACE
+						&& ke.getCode() != KeyCode.SHIFT && ke.getCode() != KeyCode.DELETE) {
 					viewHelper.showErrorMessage("Einschreibetag muss eine Zahl von 1 bis 31 sein.");
 					searchCategory_study_einschreibeTagBis.clear();
 				}
@@ -598,7 +606,8 @@ public class ViewController implements ControllerInterface, Initializable {
 						viewHelper.showErrorMessage(
 								"Nummer muss eine nicht-negative Zahl sein und darf keine Buchstaben enthalten.");
 					}
-				} else if (ke.getCode() != KeyCode.TAB) {
+				} else if (ke.getCode() != KeyCode.TAB && ke.getCode() != KeyCode.BACK_SPACE
+						&& ke.getCode() != KeyCode.SHIFT && ke.getCode() != KeyCode.DELETE) {
 					viewHelper.showErrorMessage(
 							"Nummer muss eine nicht-negative Zahl sein und darf keine Buchstaben enthalten.");
 					searchCategory_other_nummer.clear();
@@ -615,7 +624,8 @@ public class ViewController implements ControllerInterface, Initializable {
 						viewHelper.showErrorMessage(
 								"Nummer Hess muss eine nicht-negative Zahl sein und darf keine Buchstaben enthalten.");
 					}
-				} else if (ke.getCode() != KeyCode.TAB) {
+				} else if (ke.getCode() != KeyCode.TAB && ke.getCode() != KeyCode.BACK_SPACE
+						&& ke.getCode() != KeyCode.SHIFT && ke.getCode() != KeyCode.DELETE) {
 					viewHelper.showErrorMessage(
 							"Nummer Hess muss eine nicht-negative Zahl sein und darf keine Buchstaben enthalten.");
 					searchCategory_other_nummerhess.clear();
@@ -632,7 +642,8 @@ public class ViewController implements ControllerInterface, Initializable {
 						viewHelper.showErrorMessage(
 								"Seite muss eine nicht-negative Zahl sein und darf keine Buchstaben enthalten.");
 					}
-				} else if (ke.getCode() != KeyCode.TAB) {
+				} else if (ke.getCode() != KeyCode.TAB && ke.getCode() != KeyCode.BACK_SPACE
+						&& ke.getCode() != KeyCode.SHIFT && ke.getCode() != KeyCode.DELETE) {
 					viewHelper.showErrorMessage(
 							"Seite muss eine nicht-negative Zahl sein und darf keine Buchstaben enthalten.");
 					searchCategory_other_seite.clear();
