@@ -12,7 +12,6 @@ import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.UserQuery;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.UserQueryImpl;
-import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.EventHandler;
@@ -26,9 +25,15 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
+/**
+ * 
+ * @author Christian
+ *
+ */
 public class InputController implements Initializable {
 
 	private Model model;
@@ -176,12 +181,19 @@ public class InputController implements Initializable {
 	@FXML
 	private Button searchMenu_search;
 
+	/**
+	 * 
+	 */
 	public InputController() {
 		viewHelper = new ViewHelper();
 		searchFieldKeys = generateSearchFieldKeyArray();
 		selectedSourceProperty = new SimpleStringProperty("");
 	}
 
+	/**
+	 * 
+	 * @param model
+	 */
 	public void setModel(Model model) {
 		if (model == null) {
 			throw new IllegalArgumentException("Übergebener SearchController hat keinen Wert.");
@@ -189,24 +201,29 @@ public class InputController implements Initializable {
 		this.model = model;
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		setUpNodes();
 		setNumericalInputEventHandlers();
 		setUpBindings();
+		setUpTooltips();
 	}
 
-	/**
+	/*
 	 * Makes default setups for different nodes, like setting the default
 	 * expanded pane for the accordion or label names.
 	 */
 	private void setUpNodes() {
 		searchCategories.setExpandedPane(searchCategory_person);
-		searchCategory_study_einschreibeHinweis
-				.setText("Hinweis: Für eine erfolgreiche Suche muss jeweils mindestens das Jahr ausgefüllt sein.");
+		// searchCategory_study_einschreibeHinweis.setText("Hinweis: Für eine
+		// erfolgreiche Suche muss jeweils mindestens das Jahr ausgefüllt
+		// sein.");
 	}
 
-	/**
+	/*
 	 * 
 	 */
 	private void setNumericalInputEventHandlers() {
@@ -414,32 +431,32 @@ public class InputController implements Initializable {
 		});
 	}
 
+	/*
+	 * 
+	 */
 	private void setUpBindings() {
-		BooleanBinding booleanBindingEinschreibeHinweis = new BooleanBinding() {
-
-			{
-				super.bind(searchCategory_study_einschreibeTagVon.textProperty(),
-						searchCategory_study_einschreibeTagBis.textProperty(),
-						searchCategory_study_einschreibeMonatVon.textProperty(),
-						searchCategory_study_einschreibeMonatBis.textProperty(),
-						searchCategory_study_einschreibeJahrVon.textProperty(),
-						searchCategory_study_einschreibeJahrBis.textProperty());
-			}
-
-			@Override
-			protected boolean computeValue() {
-				return (!searchCategory_study_einschreibeTagVon.getText().isEmpty()
-						|| !searchCategory_study_einschreibeTagBis.getText().isEmpty()
-						|| !searchCategory_study_einschreibeMonatVon.getText().isEmpty()
-						|| !searchCategory_study_einschreibeMonatBis.getText().isEmpty())
-						&& (searchCategory_study_einschreibeJahrVon.getText().isEmpty()
-								|| searchCategory_study_einschreibeJahrBis.getText().isEmpty());
-			}
-		};
-		searchCategory_study_einschreibeHinweis.visibleProperty().bind(booleanBindingEinschreibeHinweis);
 		selectedSourceProperty.bind(search_sourcekey_selection.valueProperty());
 	}
 
+	/*
+	 * 
+	 */
+	private void setUpTooltips() {
+		Tooltip einschreibeHinweis = new Tooltip();
+		einschreibeHinweis
+				.setText("Hinweis: Für eine erfolgreiche Suche muss jeweils mindestens das Jahr ausgefüllt sein.");
+		searchCategory_study_einschreibeTagVon.tooltipProperty().set(einschreibeHinweis);
+		searchCategory_study_einschreibeTagBis.tooltipProperty().set(einschreibeHinweis);
+		searchCategory_study_einschreibeMonatVon.tooltipProperty().set(einschreibeHinweis);
+		searchCategory_study_einschreibeMonatBis.tooltipProperty().set(einschreibeHinweis);
+		searchCategory_study_einschreibeJahrVon.tooltipProperty().set(einschreibeHinweis);
+		searchCategory_study_einschreibeJahrBis.tooltipProperty().set(einschreibeHinweis);
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
 	public StringProperty getSelectedSourceProperty() {
 		if (selectedSourceProperty == null) {
 			return new SimpleStringProperty();
@@ -448,11 +465,7 @@ public class InputController implements Initializable {
 	}
 
 	/**
-	 * Collects all data from the input, gets all source keys and starts the
-	 * search by calling the corresponding function of the
-	 * {@link SearchContoller}. If the search could not be started, a error
-	 * message is shown to the user. If an exception occurs while the search is
-	 * executed, again an error message is shown.
+	 * 
 	 */
 	@FXML
 	void startSearch() {
@@ -491,10 +504,6 @@ public class InputController implements Initializable {
 	}
 
 	/**
-	 * After the user had clicked on a single row in the {@link TableView}, a
-	 * {@link UserQuery} is created and passed as parameter to this function. If
-	 * its a valid {@link UserQuery}, it is passed to the model to finally
-	 * execute the search.
 	 * 
 	 * <p>
 	 * <b>Precondition</b>
@@ -705,7 +714,7 @@ public class InputController implements Initializable {
 		return sfkArray;
 	}
 
-	/**
+	/*
 	 * Clears all input fields of the search.
 	 */
 	@FXML
@@ -740,5 +749,4 @@ public class InputController implements Initializable {
 		search_useOrConjunction.setSelected(false);
 		search_useOpenSearch.setSelected(false);
 	}
-
 }

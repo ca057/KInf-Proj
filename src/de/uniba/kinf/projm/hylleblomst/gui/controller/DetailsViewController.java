@@ -37,39 +37,30 @@ public class DetailsViewController implements Initializable {
 
 	@FXML
 	private ComboBox<String> result_details_anredeselection;
-	private StringProperty result_details_anredeselection_prompt;
 
 	@FXML
 	private ComboBox<String> result_details_titelselection;
-	private StringProperty result_details_titelselection_prompt;
 
 	@FXML
 	private ComboBox<String> result_details_vornameselection;
-	private StringProperty result_details_vornameselection_prompt;
 
 	@FXML
 	private ComboBox<String> result_details_nachnameselection;
-	private StringProperty result_details_nachnameselection_prompt;
 
 	@FXML
 	private ComboBox<String> result_details_wirtschaftselection;
-	private StringProperty result_details_wirtschaftselection_prompt;
 
 	@FXML
 	private ComboBox<String> result_details_ortselection;
-	private StringProperty result_details_ortselection_prompt;
 
 	@FXML
 	private ComboBox<String> result_details_studienfachselection;
-	private StringProperty result_details_studienfachselection_prompt;
 
 	@FXML
 	private ComboBox<String> result_details_seminarselection;
-	private StringProperty result_details_seminarselection_prompt;
 
 	@FXML
 	private ComboBox<String> result_details_zusaetzeselection;
-	private StringProperty result_details_zusaetzeselection_prompt;
 
 	@FXML
 	private Label result_details_anrede;

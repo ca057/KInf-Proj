@@ -21,6 +21,13 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 
+/**
+ * The controller for the main menu on top of the application. It provides
+ * several actions to import and export data and to set up a new database.
+ * 
+ * @author Christian
+ *
+ */
 public class MenuController implements Initializable {
 
 	private Model model;
@@ -53,7 +60,8 @@ public class MenuController implements Initializable {
 	private MenuItem mainMenu_help_about;
 
 	/**
-	 * 
+	 * The default constructor. The {@link ViewHelper} and {@link FileChooser}
+	 * is initialized.
 	 */
 	public MenuController() {
 		viewHelper = new ViewHelper();
@@ -61,8 +69,17 @@ public class MenuController implements Initializable {
 	}
 
 	/**
+	 * The function sets the {@link Model}.
+	 * 
+	 * <p>
+	 * <b>Precondition</b>
+	 * <ul>
+	 * <li>the {@link Model} must not be {@code null}</li>
+	 * </ul>
+	 * </p>
 	 * 
 	 * @param model
+	 *            the {@link Model} to set
 	 */
 	public void setModel(Model model) {
 		if (model != null) {
@@ -73,7 +90,8 @@ public class MenuController implements Initializable {
 	}
 
 	/**
-	 * 
+	 * Implemented from interface {@link Initializable}. After all FXML-elements
+	 * are initialized, the event handlers are set.
 	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -81,8 +99,17 @@ public class MenuController implements Initializable {
 	}
 
 	/**
+	 * The function sets the {@link MainController}.
+	 * 
+	 * <p>
+	 * <b>Precondition</b>
+	 * <ul>
+	 * <li>the {@link MainController} must not be {@code null}</li>
+	 * </ul>
+	 * </p>
 	 * 
 	 * @param mainController
+	 *            the {@link MainController} to set
 	 */
 	public void setMainController(MainController mainController) {
 		if (mainController != null) {
@@ -93,7 +120,7 @@ public class MenuController implements Initializable {
 		}
 	}
 
-	/**
+	/*
 	 * Sets up all event handlers belonging to the main menu. If an action could
 	 * not be performed, an alert window with information on the error is shown.
 	 */
@@ -195,8 +222,9 @@ public class MenuController implements Initializable {
 		});
 	}
 
-	/**
-	 * Closes the window when the users submits the action.
+	/*
+	 * Closes the window. A window is shown, asking the user for submitting the
+	 * action. If the user submits, the window is closed.
 	 */
 	private void closeWindow() {
 		if (viewHelper.askForClosingWindow()) {
