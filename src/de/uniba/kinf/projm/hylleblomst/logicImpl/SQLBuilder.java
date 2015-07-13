@@ -157,7 +157,7 @@ public class SQLBuilder {
 	}
 
 	/*
-	 * Build the SELECT part of the SQL statement needed for queries hit by the
+	 * Builds the SELECT part of the SQL statement needed for queries hit by the
 	 * search mask.
 	 */
 	private String buildNestedSelect(UserQuery userQuery) {
@@ -186,7 +186,7 @@ public class SQLBuilder {
 	}
 
 	/*
-	 * If every normalized column (or other, if without normalization) of the
+	 * If every normalized column (or other, without normalization) of the
 	 * database is wanted, this method provides the suitable SELECT part.
 	 */
 	private String buildSelectPersonDetails() {
