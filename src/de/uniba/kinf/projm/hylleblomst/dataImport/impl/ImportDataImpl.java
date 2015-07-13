@@ -1,11 +1,13 @@
-package de.uniba.kinf.projm.hylleblomst.dataImport;
+package de.uniba.kinf.projm.hylleblomst.dataImport.impl;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-import de.uniba.kinf.projm.hylleblomst.dataImport.impl.ImportDatabaseImpl;
+import de.uniba.kinf.projm.hylleblomst.dataImport.CsvHelper;
+import de.uniba.kinf.projm.hylleblomst.dataImport.ImportData;
+import de.uniba.kinf.projm.hylleblomst.dataImport.ImportDatabase;
 import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 import de.uniba.kinf.projm.hylleblomst.keys.DBUserKeys;
 
