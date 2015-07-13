@@ -468,7 +468,8 @@ public class InputController implements Initializable {
 
 			List<UserQuery> requestList = new ArrayList<UserQuery>();
 			for (int i = 0; i < input.length; i++) {
-				if (!input[i].isEmpty() && !"false".equals(input[i]) && !"yyyy-mm-dd".equals(input[i])) {
+				if (input[i] != null && !input[i].isEmpty() && !"false".equals(input[i])
+						&& !"yyyy-mm-dd".equals(input[i])) {
 					UserQueryImpl tmpReq = new UserQueryImpl(searchFieldKeys[i], input[i], sources[i],
 							search_useOrConjunction.isSelected(), search_useOpenSearch.isSelected());
 					requestList.add(tmpReq);
