@@ -31,8 +31,9 @@ public class DatabaseManagement {
 	 * @throws SetUpException
 	 */
 	public void setUpDatabase() throws SetUpException {
-		try (Connection con = DriverManager.getConnection(db.dbURL,
-				DBUserKeys.adminUser, DBUserKeys.adminPassword)) {
+		try (Connection con = DriverManager.getConnection(db.dbURL
+				+ "; create=true", DBUserKeys.adminUser,
+				DBUserKeys.adminPassword)) {
 			new SetUpDatabase().setUpDatabase(con);
 		} catch (SQLException | SetUpException e) {
 			StringBuilder errorMessage = new StringBuilder();

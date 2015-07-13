@@ -2,6 +2,7 @@ package de.uniba.kinf.projm.hylleblomst.database;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -41,13 +42,13 @@ public class SetUpDatabaseFunctions {
 	void setUpGroupConcat(Connection con) throws SetUpException {
 		String sqlGroupConcat = "CREATE FUNCTION HYLLEBLOMST.GROUP_CONCAT ( SEPARATOR CHAR, ARGS VARCHAR(255) ... ) RETURNS VARCHAR(2000) PARAMETER STYLE DERBY NO SQL LANGUAGE JAVA EXTERNAL NAME 'de.uniba.kinf.projm.hylleblomst.database.utils.GroupConcat.groupConcat'";
 
-		Files file = null;
+		Path file = Paths.get("./lib/groupconcat.jar");
 
 		try {
 			String dbLocation = con.getMetaData().getURL()
-					.replaceFirst("jdbc:derby:", "");
-
-			file.move(Paths.get("./lib/groupconcat.jar"), Paths.get(dbLocation));
+					.replaceFirst("jdbc:derby:", "").replaceFirst("MyDB", "");
+			dbLocation += "/groupconcat.jar";
+			Files.copy(file, Paths.get(dbLocation));
 		} catch (IOException | SQLException e) {
 			throw new SetUpException(e);
 		}
@@ -59,9 +60,11 @@ public class SetUpDatabaseFunctions {
 			stmt.executeUpdate();
 			stmtCall.executeUpdate();
 		} catch (SQLException e) {
-			throw new SetUpException(e.getErrorCode()
-					+ ": Function Group_Concat could not be set up: "
-					+ e.getMessage(), e);
+			if (e.getErrorCode() != 30000) {
+				throw new SetUpException(e.getErrorCode()
+						+ ": Function Group_Concat could not be set up: "
+						+ e.getMessage(), e);
+			}
 		}
 	}
 }
