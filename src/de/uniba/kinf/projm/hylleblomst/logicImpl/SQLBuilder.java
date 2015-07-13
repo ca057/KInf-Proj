@@ -85,8 +85,9 @@ public class SQLBuilder {
 	 */
 	private void buildSearchMask() throws SQLException {
 		StringBuilder sqlWhere = new StringBuilder();
+		sqlStatement.append("SELECT DISTINCT * FROM( ");
 		for (UserQuery query : userQuery) {
-			sqlStatement.append("SELECT DISTINCT *").append(" FROM (").append(buildSelectMask(query));
+			sqlStatement.append(buildSelectMask(query));
 			sqlWhere.append(buildWhere(query));
 			for (int i = 1; i <= query.getNumberOfInputs(); i++) {
 				inputs.add(query.getInput());
@@ -122,7 +123,7 @@ public class SQLBuilder {
 	private String buildSelectMask(UserQuery userQuery) {
 		String result = "";
 		if (needsStandardFields) {
-			result = "SELECT DISTINCT " + TableNameKeys.PERSON + "." + ColumnNameKeys.PERSON_ID + " AS PersonID, "
+			result = "SELECT " + TableNameKeys.PERSON + "." + ColumnNameKeys.PERSON_ID + " AS PersonID, "
 					+ TableNameKeys.VORNAME_NORM + "." + ColumnNameKeys.VORNAME_NORM + " AS vorname_norm, "
 					+ TableNameKeys.NAME_NORM + "." + ColumnNameKeys.NAME_NORM + " AS nachname_norm, "
 					+ TableNameKeys.ORT_NORM + "." + ColumnNameKeys.ORT_NORM + " AS ort_norm, "
