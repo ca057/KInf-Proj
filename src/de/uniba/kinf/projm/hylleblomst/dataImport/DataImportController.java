@@ -4,11 +4,11 @@ import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 
 /**
  * Passes rows to
- * {@link de.uniba.kinf.projm.hylleblomst.dataImport.ImportDatabase}.
+ * {@link de.uniba.kinf.projm.hylleblomst.dataImport.DataImport}.
  * 
  * @author Johannes
  * 
- * @see {@link de.uniba.kinf.projm.hylleblomst.dataImport.ImportDatabase}
+ * @see {@link de.uniba.kinf.projm.hylleblomst.dataImport.DataImport}
  *
  */
 public interface DataImportController {

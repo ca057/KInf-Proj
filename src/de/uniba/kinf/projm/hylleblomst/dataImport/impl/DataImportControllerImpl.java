@@ -7,7 +7,7 @@ import java.util.List;
 
 import de.uniba.kinf.projm.hylleblomst.dataImport.CsvHelper;
 import de.uniba.kinf.projm.hylleblomst.dataImport.DataImportController;
-import de.uniba.kinf.projm.hylleblomst.dataImport.ImportDatabase;
+import de.uniba.kinf.projm.hylleblomst.dataImport.DataImport;
 import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 import de.uniba.kinf.projm.hylleblomst.keys.DBUserKeys;
 
@@ -48,7 +48,7 @@ public class DataImportControllerImpl implements DataImportController {
 		CsvHelper csvhelper = new CsvHelper(path);
 		List<String[]> rows = csvhelper.getAllLines();
 		try {
-			ImportDatabase database = new ImportDatabaseImpl(databaseURL, DBUserKeys.adminUser,
+			DataImport database = new DataImportImpl(databaseURL, DBUserKeys.adminUser,
 					DBUserKeys.adminPassword);
 			database.importData(rows);
 		} catch (ImportException e) {

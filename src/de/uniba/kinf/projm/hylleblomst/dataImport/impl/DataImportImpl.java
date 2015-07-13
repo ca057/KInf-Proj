@@ -10,7 +10,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import de.uniba.kinf.projm.hylleblomst.dataImport.ImportDatabase;
+import de.uniba.kinf.projm.hylleblomst.dataImport.DataImport;
 import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.TableNameKeys;
@@ -19,7 +19,7 @@ import de.uniba.kinf.projm.hylleblomst.keys.TableNameKeys;
  * @author Simon
  *
  */
-public class ImportDatabaseImpl implements ImportDatabase {
+public class DataImportImpl implements DataImport {
 
 	private String dbURL;
 	private String user;
@@ -39,7 +39,7 @@ public class ImportDatabaseImpl implements ImportDatabase {
 			"HS H (AEB, Rep. I, Nr. 321)", "HS I (SB Bamberg, Msc.Add.3a)",
 			"HS J (SB Bamberg, Msc.Add.3)", "AUB, V E 38" };
 
-	public ImportDatabaseImpl(String dbURL, String user, String password)
+	public DataImportImpl(String dbURL, String user, String password)
 			throws ImportException {
 		this.dbURL = dbURL;
 		this.user = user;
