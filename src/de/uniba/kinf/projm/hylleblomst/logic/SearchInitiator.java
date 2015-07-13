@@ -5,23 +5,29 @@ import java.util.Collection;
 
 import javax.sql.rowset.CachedRowSet;
 
+import de.uniba.kinf.projm.hylleblomst.keys.ColumnNameKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.DatabaseKeys;
 
 /**
+ * A SearchInitiator is the interface between UI and database. It receives all
+ * relevant data from the Ui and returns the results of a query. Also, it sets
+ * the login to the database.
+ * 
  * @author Johannes
  *
  */
 public interface SearchInitiator {
 
 	/**
+	 * 
 	 * @param user
 	 */
-	void setUser(String user);
+	void setDbUser(String user);
 
 	/**
 	 * @param password
 	 */
-	void setPassword(String password);
+	void setDbPassword(String password);
 
 	/**
 	 * @param dbKey
@@ -35,32 +41,40 @@ public interface SearchInitiator {
 	 * 
 	 * <b>Preconditions</b>:
 	 * <ul>
-	 * <li>Have to be specified of the respective implementation
+	 * <li>Have to be specified by the respective implementation
 	 * </ul>
 	 * 
 	 * <b>Postconditions</b>: <br/>
-	 * The return value resultSet contains
+	 * The returned CachedRowSet contains
 	 * <ul>
-	 * <li>Person.PersonID AS PersonID
-	 * <li>Normalized name AS vorname_norm
-	 * <li>Normalized surname AS nachname_norm
-	 * <li>Normalized place AS ort_norm
-	 * <li>Normalized faculty AS fakultaet_norm
-	 * <li>All fields with user input AS their specific {@code SearchFieldKey}
+	 * <li>All fields AS their specific value of {@link ColumnNameKeys}
 	 * </ul>
 	 * 
 	 * @param userQuery
-	 *            A {@code Collection} of {@link UserQuery} with all
+	 *            A {@code Collection} of {@link UserQuery} with all inputs the
+	 *            user made.
 	 * @return A {@Code ChachedRowSet} with the outcome of the search
 	 * @throws SQLException
 	 */
 	CachedRowSet search(Collection<UserQuery> userQuery) throws SQLException;
 
 	/**
-	 * Gets all information of a person.
+	 * Gets all information of a person or of a specific field in a specific
+	 * source and returns it.
+	 * <P>
 	 * 
-	 * @param id
-	 *            The ID of the person
+	 * <b>Preconditions:</b><br/>
+	 * <ul>
+	 * <li>Have to be specified by the respective implementation.
+	 * <ul>
+	 * 
+	 * <b>Postconditions<b><br/>
+	 * <ul>
+	 * <li>
+	 * </ul>
+	 * 
+	 * @param userQuery
+	 *            with information to build the SQL Statement
 	 * @return A {@CachedRowSet} with the outcome of the search
 	 * @throws SQLException
 	 */
