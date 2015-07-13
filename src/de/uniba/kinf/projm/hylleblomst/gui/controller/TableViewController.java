@@ -102,21 +102,6 @@ public class TableViewController implements Initializable, Observer {
 		});
 	}
 
-	// private void setSourceLabelListener() {
-	// sourceLabelName.addListener(new ChangeListener<String>() {
-	//
-	// @Override
-	// public void changed(ObservableValue<? extends String> observable, String
-	// oldValue, String newValue) {
-	// if ("null".equals(newValue)) {
-	// search_sourceLabel.textProperty().set("Quelle: Keine Quelle
-	// ausgewählt.");
-	// }
-	// search_sourceLabel.textProperty().set("Quelle: " + newValue);
-	// }
-	// });
-	// }
-
 	private void setBindingsWithMainController() {
 		sourceLabelName = new SimpleStringProperty();
 		sourceLabelName.bind(mainController.getSelectedSourceProperty());
@@ -124,10 +109,11 @@ public class TableViewController implements Initializable, Observer {
 
 			@Override
 			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				if ("null".equals(newValue)) {
+				if (observable == null || newValue == null) {
 					search_sourceLabel.textProperty().set("Quelle: Keine Quelle ausgewählt.");
+				} else {
+					search_sourceLabel.textProperty().set("Quelle: " + newValue);
 				}
-				search_sourceLabel.textProperty().set("Quelle: " + newValue);
 			}
 		});
 	}
