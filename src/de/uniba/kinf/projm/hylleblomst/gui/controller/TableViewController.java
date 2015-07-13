@@ -29,6 +29,11 @@ import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 
+/**
+ * 
+ * @author Christian
+ *
+ */
 public class TableViewController implements Initializable, Observer {
 
 	private Model model;
@@ -47,10 +52,17 @@ public class TableViewController implements Initializable, Observer {
 	@FXML
 	private Label search_sourceLabel;
 
+	/**
+	 * 
+	 */
 	public TableViewController() {
 		viewHelper = new ViewHelper();
 	}
 
+	/**
+	 * 
+	 * @param model
+	 */
 	public void setModel(Model model) {
 		if (model == null) {
 			throw new IllegalArgumentException("Das übergebene Model hat keinen Wert.");
@@ -70,6 +82,9 @@ public class TableViewController implements Initializable, Observer {
 		setBindingsWithMainController();
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		clearResultTable();
@@ -102,6 +117,9 @@ public class TableViewController implements Initializable, Observer {
 		});
 	}
 
+	/*
+	 * 
+	 */
 	private void setBindingsWithMainController() {
 		sourceLabelName = new SimpleStringProperty();
 		sourceLabelName.bind(mainController.getSelectedSourceProperty());
@@ -118,6 +136,10 @@ public class TableViewController implements Initializable, Observer {
 		});
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public CachedRowSet getResult() {
 		return result;
 	}

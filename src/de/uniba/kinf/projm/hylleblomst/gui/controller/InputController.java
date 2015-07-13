@@ -29,6 +29,11 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
+/**
+ * 
+ * @author Christian
+ *
+ */
 public class InputController implements Initializable {
 
 	private Model model;
@@ -176,12 +181,19 @@ public class InputController implements Initializable {
 	@FXML
 	private Button searchMenu_search;
 
+	/**
+	 * 
+	 */
 	public InputController() {
 		viewHelper = new ViewHelper();
 		searchFieldKeys = generateSearchFieldKeyArray();
 		selectedSourceProperty = new SimpleStringProperty("");
 	}
 
+	/**
+	 * 
+	 * @param model
+	 */
 	public void setModel(Model model) {
 		if (model == null) {
 			throw new IllegalArgumentException("Übergebener SearchController hat keinen Wert.");
@@ -189,6 +201,9 @@ public class InputController implements Initializable {
 		this.model = model;
 	}
 
+	/**
+	 * 
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		setUpNodes();
@@ -196,7 +211,7 @@ public class InputController implements Initializable {
 		setUpBindings();
 	}
 
-	/**
+	/*
 	 * Makes default setups for different nodes, like setting the default
 	 * expanded pane for the accordion or label names.
 	 */
@@ -206,7 +221,7 @@ public class InputController implements Initializable {
 				.setText("Hinweis: Für eine erfolgreiche Suche muss jeweils mindestens das Jahr ausgefüllt sein.");
 	}
 
-	/**
+	/*
 	 * 
 	 */
 	private void setNumericalInputEventHandlers() {
@@ -414,6 +429,9 @@ public class InputController implements Initializable {
 		});
 	}
 
+	/*
+	 * 
+	 */
 	private void setUpBindings() {
 		BooleanBinding booleanBindingEinschreibeHinweis = new BooleanBinding() {
 
@@ -440,6 +458,10 @@ public class InputController implements Initializable {
 		selectedSourceProperty.bind(search_sourcekey_selection.valueProperty());
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public StringProperty getSelectedSourceProperty() {
 		if (selectedSourceProperty == null) {
 			return new SimpleStringProperty();
@@ -448,11 +470,7 @@ public class InputController implements Initializable {
 	}
 
 	/**
-	 * Collects all data from the input, gets all source keys and starts the
-	 * search by calling the corresponding function of the
-	 * {@link SearchContoller}. If the search could not be started, a error
-	 * message is shown to the user. If an exception occurs while the search is
-	 * executed, again an error message is shown.
+	 * 
 	 */
 	@FXML
 	void startSearch() {
@@ -491,10 +509,6 @@ public class InputController implements Initializable {
 	}
 
 	/**
-	 * After the user had clicked on a single row in the {@link TableView}, a
-	 * {@link UserQuery} is created and passed as parameter to this function. If
-	 * its a valid {@link UserQuery}, it is passed to the model to finally
-	 * execute the search.
 	 * 
 	 * <p>
 	 * <b>Precondition</b>
@@ -705,7 +719,7 @@ public class InputController implements Initializable {
 		return sfkArray;
 	}
 
-	/**
+	/*
 	 * Clears all input fields of the search.
 	 */
 	@FXML
@@ -740,5 +754,4 @@ public class InputController implements Initializable {
 		search_useOrConjunction.setSelected(false);
 		search_useOpenSearch.setSelected(false);
 	}
-
 }

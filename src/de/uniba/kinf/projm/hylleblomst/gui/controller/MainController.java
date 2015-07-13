@@ -81,7 +81,7 @@ public class MainController implements Initializable {
 	 * @param model
 	 *            the {@link MainModel} to set
 	 */
-	public void setModel(Model model) {
+	void setModel(Model model) {
 		if (model == null) {
 			throw new IllegalArgumentException("Das übergene Model ist ungültig und hat keinen Wert.");
 		}
@@ -105,7 +105,20 @@ public class MainController implements Initializable {
 		tableViewController.setMainController(this);
 	}
 
-	public void setStartController(StartController startController) {
+	/**
+	 * Sets the {@link StartController}.
+	 * 
+	 * <p>
+	 * <b>Precondition</b>
+	 * <ul>
+	 * <li>the {@link StartController} must not be {@code null}</li>
+	 * </ul>
+	 * </b>
+	 * 
+	 * @param startController
+	 *            the {@link StartController} to set
+	 */
+	void setStartController(StartController startController) {
 		if (startController == null) {
 			throw new IllegalArgumentException(
 					"Der übergebene StartController hat keinen Wert und kann nicht gesetzt werden.");
@@ -113,10 +126,8 @@ public class MainController implements Initializable {
 		this.startController = startController;
 	}
 
-	/**
-	 * Function sets up event handlers for key input, numerical input in input
-	 * fields, for the menu and the table view. Setting up the different
-	 * handlers is delegated to different helper functions.
+	/*
+	 * Function sets up event handlers for key input.
 	 */
 	private void setEventHandlers() {
 		root.setOnKeyReleased(new EventHandler<KeyEvent>() {
@@ -132,23 +143,27 @@ public class MainController implements Initializable {
 	}
 
 	/**
+	 * The function calls the {@link TableViewController} to return the
+	 * {@link CachedRowSet} with the result and returns it.
 	 * 
-	 * @return
+	 * @return the {@link CachedRowSet} with the search results
 	 */
 	CachedRowSet getResult() {
 		return tableViewController.getResult();
 	}
 
 	/**
-	 * 
+	 * The {@link StartController} is called to close the window.
 	 */
 	void closeWindow() {
 		startController.closeView();
 	}
 
 	/**
+	 * The function calls the {@link InputController} to returns the selected
+	 * source as property.
 	 * 
-	 * @return
+	 * @return the selected source as {@link StringProperty}
 	 */
 	StringProperty getSelectedSourceProperty() {
 		return inputViewController.getSelectedSourceProperty();
