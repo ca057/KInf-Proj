@@ -22,6 +22,8 @@ import de.uniba.kinf.projm.hylleblomst.logic.SearchInitiator;
 import de.uniba.kinf.projm.hylleblomst.logic.UserQuery;
 
 /**
+ * This class serves as the model to the underlying MVC-pattern.
+ * 
  * @author Christian, Johannes, Simon
  *
  */
@@ -33,8 +35,11 @@ public class Model extends Observable {
 	ExportDataToFile export;
 
 	/**
+	 * The constructor to the model.
 	 * 
 	 * @param search
+	 *            {@code SearchInitiator} that holds the underlying logic. Must
+	 *            not be <code>null</code>.
 	 */
 	public Model(SearchInitiator search) {
 		if (search != null) {
@@ -46,14 +51,15 @@ public class Model extends Observable {
 	}
 
 	/**
-	 * 
-	 * @return
+	 * @return {@code CachedRowSet} holding the results of the search and
+	 *         relevant metadata.
 	 */
 	public CachedRowSet getSearchResult() {
 		return searchResult;
 	}
 
 	/**
+	 * 
 	 * 
 	 * @param detailsController
 	 */
@@ -67,9 +73,12 @@ public class Model extends Observable {
 	}
 
 	/**
+	 * Initiates a search on the data with the specified query.
 	 * 
 	 * @param userQuery
+	 *            a collection of queries by the user
 	 * @throws SQLException
+	 *             if an error occurs handling the user queries
 	 */
 	public void search(Collection<UserQuery> userQuery) throws SQLException {
 		if (!(userQuery == null || userQuery.isEmpty())) {
@@ -83,10 +92,15 @@ public class Model extends Observable {
 	}
 
 	/**
+	 * Search for a specific person.
 	 * 
 	 * @param personIDQuery
+	 *            The query containing information about the specific person,
+	 *            typically its ID
 	 * @throws SQLException
+	 *             if an error occurs executing the query
 	 * @throws SearchException
+	 *             if an error occurs during the search process
 	 */
 	public void searchPerson(UserQuery personIDQuery) throws SQLException,
 			SearchException {
@@ -115,10 +129,16 @@ public class Model extends Observable {
 	}
 
 	/**
+	 * Export the current result data to a specified file which will be created
+	 * if not yet existent. Existing files will be overwritten.
 	 * 
 	 * @param file
+	 *            The file to which to save the data.
 	 * @param cachedRowSet
+	 *            The result data
 	 * @throws ExportException
+	 *             thrown when an error occurs during the export process, e.g.
+	 *             missing user rights
 	 */
 	public void exportSearchedData(File file, CachedRowSet cachedRowSet)
 			throws ExportException {
@@ -156,9 +176,13 @@ public class Model extends Observable {
 	}
 
 	/**
+	 * Import data from file. Only CSV supported at the moment.
 	 * 
 	 * @param importFile
+	 *            The {@code File} from which to import the data from
 	 * @throws ImportException
+	 *             Thrown if an error occurs during importing the data, e.g. a
+	 *             mismatch in format
 	 */
 	public void importData(File importFile) throws ImportException {
 		if (importFile != null) {
@@ -174,8 +198,12 @@ public class Model extends Observable {
 	}
 
 	/**
+	 * Clear the current database of all data related to this program.
 	 * 
 	 * @throws SetUpException
+	 *             Thrown if an error occurs during deletion of content, e.g.
+	 *             containment of data that cannot be modified or accessed by
+	 *             program
 	 */
 	public void clearDatabase() throws SetUpException {
 		try {
