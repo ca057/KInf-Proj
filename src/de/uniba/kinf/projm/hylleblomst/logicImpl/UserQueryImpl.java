@@ -30,7 +30,7 @@ public class UserQueryImpl implements UserQuery {
 	private int numberOfInputs = 0;
 
 	/**
-	 * 
+	 * Use this constructor to
 	 * 
 	 * @param searchField
 	 *            the {@link SearchFieldKeys} to describe which input field was
@@ -38,8 +38,8 @@ public class UserQueryImpl implements UserQuery {
 	 * @param input
 	 *            the user generated input to the {@code searchField}
 	 * @param source
-	 *            the {@link SourceKeys} to describe the choice of source the
-	 *            user made
+	 *            an {@code int} value from {@link SourceKeys} to describe the
+	 *            choice of source the user made
 	 * @param isOr
 	 *            a {@code boolean} whether open search is desired
 	 * @param isOpenSearch
@@ -55,7 +55,11 @@ public class UserQueryImpl implements UserQuery {
 	}
 
 	/**
+	 * This constructor initiates a UserQuery to find all information about a
+	 * person.
+	 * 
 	 * @param personID
+	 *            the ID of the person.
 	 */
 	public UserQueryImpl(String personID) {
 		isPersonSearch = true;
@@ -67,9 +71,15 @@ public class UserQueryImpl implements UserQuery {
 	}
 
 	/**
+	 * This constructor initiates a UserQuery to find information for a person
+	 * about a specific search field with specific source.
+	 * 
 	 * @param personID
+	 *            the ID of the person
 	 * @param searchField
+	 *            the relevant search field
 	 * @param source
+	 *            the source wanted as {@code int} value of {@link SourceKeys}
 	 */
 	public UserQueryImpl(SearchFieldKeys searchField, String personID, int source) {
 		setSearchField(searchField);
@@ -127,9 +137,6 @@ public class UserQueryImpl implements UserQuery {
 
 	@Override
 	public Object getInput() {
-		// if (isInt) {
-		// return Integer.parseInt(input);
-		// }
 		return input;
 	}
 
@@ -376,8 +383,6 @@ public class UserQueryImpl implements UserQuery {
 		String upperFront = "";
 		String upperEnd = "";
 		if (!isInt) {
-			// upperFront = "UPPER(CAST(";
-			// upperEnd = " AS CHAR(10)))";
 			upperFront = "UPPER(";
 			upperEnd = ")";
 		}

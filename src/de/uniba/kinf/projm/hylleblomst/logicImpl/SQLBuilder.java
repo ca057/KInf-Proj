@@ -30,6 +30,9 @@ public class SQLBuilder {
 	private Boolean whereIsEmpty = true;
 
 	/**
+	 * With this constructor, the sql-Statement to execute a search hit by the
+	 * search mask is created.
+	 * 
 	 * @param userQuery
 	 * @throws SQLException
 	 */
@@ -39,7 +42,7 @@ public class SQLBuilder {
 			throw new InputMismatchException("Die übergebene Collection darf nicht leer bzw. null sein.");
 		}
 		this.userQuery = userQuery;
-		buildNormalSearch();
+		buildSearchMask();
 		print();
 	}
 
@@ -49,6 +52,9 @@ public class SQLBuilder {
 	}
 
 	/**
+	 * With this constructor, the sql-Statement to execute a search of a person
+	 * or a notation of a specific search field related to a person
+	 * 
 	 * @param userQuery
 	 * @throws SQLException
 	 */
@@ -66,33 +72,25 @@ public class SQLBuilder {
 		print();
 	}
 
-	/**
-	 * @return
-	 */
 	public String getSQLStatement() {
 		return sqlStatement.toString();
 	}
 
-	/**
-	 * @return
-	 */
 	public List<Object> getInputs() {
 		return inputs;
 	}
 
-	/**
-	 * @return
-	 * @throws SQLException
+	/*
+	 * Builds the SQL-statement for a search hit by the search mask
 	 */
-	private void buildNormalSearch() throws SQLException {
+	private void buildSearchMask() throws SQLException {
 		StringBuilder sqlWhere = new StringBuilder();
 		for (UserQuery query : userQuery) {
-			sqlStatement.append("SELECT DISTINCT *").append(" FROM (").append(buildSelect(query));
+			sqlStatement.append("SELECT DISTINCT *").append(" FROM (").append(buildSelectMask(query));
 			sqlWhere.append(buildWhere(query));
 			for (int i = 1; i <= query.getNumberOfInputs(); i++) {
 				inputs.add(query.getInput());
 			}
-
 		}
 		sqlStatement.append(buildFrom()).append(" WHERE ").append(sqlWhere).append(") T");
 
@@ -109,7 +107,8 @@ public class SQLBuilder {
 	}
 
 	/*
-	 * 
+	 * Builds the SQL-statement needed to find a notation of a person data with
+	 * specific source.
 	 */
 	private void buildNotationSearch(UserQuery query) {
 		needsStandardFields = false;
@@ -117,16 +116,10 @@ public class SQLBuilder {
 	}
 
 	/*
-	 * 
+	 * Build the SELECT part of the SQL statement needed for queries hit by the
+	 * search mask.
 	 */
-	private Object buildSelectNotation(UserQuery query) {
-		return "SELECT DISTINCT " + query.getTable() + "." + query.getColumn() + " AS " + query.getSearchField();
-	}
-
-	/*
-	 * 
-	 */
-	private String buildSelect(UserQuery userQuery) {
+	private String buildSelectMask(UserQuery userQuery) {
 		String result = "";
 		if (needsStandardFields) {
 			result = "SELECT DISTINCT " + TableNameKeys.PERSON + "." + ColumnNameKeys.PERSON_ID + " AS PersonID, "
@@ -180,6 +173,14 @@ public class SQLBuilder {
 				+ " AS " + ColumnNameKeys.ANMERKUNG + ", " + TableNameKeys.PERSON + "." + ColumnNameKeys.SEITE_ORIGINAL
 				+ " AS " + ColumnNameKeys.SEITE_ORIGINAL + ", " + TableNameKeys.PERSON + "."
 				+ ColumnNameKeys.NUMMER_HESS;
+	}
+
+	/*
+	 * Builds the SELECT part for a SQL statement which searches for a notation
+	 * with a specific source
+	 */
+	private Object buildSelectNotation(UserQuery query) {
+		return "SELECT DISTINCT " + query.getTable() + "." + query.getColumn() + " AS " + query.getSearchField();
 	}
 
 	/*
