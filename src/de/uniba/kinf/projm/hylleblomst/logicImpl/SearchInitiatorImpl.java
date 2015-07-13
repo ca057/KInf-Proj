@@ -32,8 +32,8 @@ public class SearchInitiatorImpl implements SearchInitiator {
 
 	public SearchInitiatorImpl(DatabaseKeys dbKey) {
 		setDbKey(dbKey);
-		user = DBUserKeys.guestUser2;
-		password = DBUserKeys.guestPassword2;
+		user = DBUserKeys.guestUser;
+		password = DBUserKeys.guestPassword;
 	}
 
 	@Override

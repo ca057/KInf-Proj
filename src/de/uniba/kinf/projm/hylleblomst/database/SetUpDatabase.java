@@ -66,8 +66,8 @@ public class SetUpDatabase {
 
 	private void createGuestUser(PreparedStatement stmt) throws SetUpException {
 		try {
-			stmt.setString(1, DBUserKeys.guestUser2);
-			stmt.setString(2, DBUserKeys.guestPassword2);
+			stmt.setString(1, DBUserKeys.guestUser);
+			stmt.setString(2, DBUserKeys.guestPassword);
 			stmt.executeUpdate();
 		} catch (SQLException e) {
 			if (e.getErrorCode() != 30000) {
@@ -100,7 +100,7 @@ public class SetUpDatabase {
 
 	private void setGuestUser(PreparedStatement stmt) throws SetUpException {
 		try {
-			stmt.setString(1, DBUserKeys.guestUser2);
+			stmt.setString(1, DBUserKeys.guestUser);
 			stmt.setString(2, "READONLYACCESS");
 			stmt.executeUpdate();
 		} catch (SQLException e) {

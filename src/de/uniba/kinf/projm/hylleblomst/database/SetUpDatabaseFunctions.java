@@ -40,18 +40,16 @@ public class SetUpDatabaseFunctions {
 	}
 
 	void setUpGroupConcat(Connection con) throws SetUpException {
-		String sqlGroupConcat = "CREATE DERBY AGGREGATE HYLLEBLOMST.AGGREGATE_VARCHAR FOR VARCHAR(255) "
-				+ "RETURNS VARCHAR(2000) "
-				+ "EXTERNAL NAME 'de.uniba.kinf.projm.hylleblomst.database.utils.GroupConcat'";
-
-		Path file = Paths.get("./lib/groupconcat.jar");
-		String dbLocation = "";
+		Path pathToInstallationJar = Paths.get("./lib/groupconcat.jar");
+		String installationPath = "";
 
 		try {
-			dbLocation = con.getMetaData().getURL()
+			installationPath = con.getMetaData().getURL()
 					.replaceFirst("jdbc:derby:", "").replaceFirst("/MyDB", "");
-			dbLocation += "/groupconcat.jar";
-			Files.copy(file, Paths.get(dbLocation));
+			installationPath += "/groupconcat.jar";
+			if (!Files.exists(Paths.get(installationPath))) {
+				Files.copy(pathToInstallationJar, Paths.get(installationPath));
+			}
 		} catch (SQLException e) {
 			if (e.getErrorCode() != 30000) {
 				throw new SetUpException(e);
@@ -60,23 +58,26 @@ public class SetUpDatabaseFunctions {
 			throw new SetUpException(e);
 		}
 
-		String sqlCall = "CALL SQLJ.INSTALL_JAR ('" + dbLocation
+		String sqlGroupConcat = "CREATE DERBY AGGREGATE HYLLEBLOMST.AGGREGATE_VARCHAR FOR VARCHAR(255) "
+				+ "RETURNS VARCHAR(2000) "
+				+ "EXTERNAL NAME 'de.uniba.kinf.projm.hylleblomst.database.utils.GroupConcat'";
+		String sqlCall = "CALL SQLJ.INSTALL_JAR ('" + installationPath
 				+ "','groupconcat',0)";
 
 		try (PreparedStatement stmt = con.prepareStatement(sqlGroupConcat);
 				PreparedStatement stmtCall = con.prepareCall(sqlCall);) {
 			stmt.executeUpdate();
 			stmtCall.executeUpdate();
-			Files.delete(Paths.get(dbLocation));
+			Files.delete(Paths.get(installationPath));
 		} catch (SQLException e) {
 			if (e.getErrorCode() != 30000) {
 				throw new SetUpException(e.getErrorCode()
-						+ ": Function Group_Concat could not be set up: "
+						+ ": Function AGGREGATE_VARCHAR could not be set up: "
 						+ e.getMessage(), e);
 			}
 		} catch (IOException e) {
 			throw new SetUpException(
-					"Function Group_Concat could not be set up: "
+					"Function AGGREGATE_VARCHAR could not be set up: "
 							+ e.getMessage(), e);
 		}
 	}
