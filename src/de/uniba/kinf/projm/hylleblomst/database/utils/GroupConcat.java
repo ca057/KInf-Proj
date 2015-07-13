@@ -1,5 +1,10 @@
 package de.uniba.kinf.projm.hylleblomst.database.utils;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * @author Simon
@@ -23,20 +28,20 @@ public final class GroupConcat {
 		return result.toString();
 	}
 
-	// public static void main(String[] args) {
-	// try (Connection con = DriverManager
-	// .getConnection("jdbc:derby:./db/MyDB;user=admin;password=r+l=j")) {
-	//
-	// PreparedStatement stmt = con
-	// .prepareStatement("SELECT HYLLEBLOMST.GROUP_CONCAT (', ',QuellenName,FakultaetenNorm) FROM HYLLEBLOMST.quellen, HYLLEBLOMST.fakultaeten WHERE	 Hylleblomst.quellen.quellenID<=3 AND	 Hylleblomst.fakultaeten.fakultaetenID<=3");
-	// ResultSet string = stmt.executeQuery();
-	// for (; string.next();) {
-	// System.out.println(string.getString(1));
-	// }
-	//
-	// } catch (SQLException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	// }
+	public static void main(String[] args) {
+		try (Connection con = DriverManager
+				.getConnection("jdbc:derby:./db/MyDB;user=admin;password=r+l=j")) {
+
+			PreparedStatement stmt = con
+					.prepareStatement("SELECT HYLLEBLOMST.GROUP_CONCAT (', ',QuellenName,FakultaetenNorm) FROM HYLLEBLOMST.quellen, HYLLEBLOMST.fakultaeten WHERE	 Hylleblomst.quellen.quellenID<=3 AND	 Hylleblomst.fakultaeten.fakultaetenID<=3");
+			ResultSet string = stmt.executeQuery();
+			for (; string.next();) {
+				System.out.println(string.getString(1));
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }
