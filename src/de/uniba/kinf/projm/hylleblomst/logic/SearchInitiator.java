@@ -53,8 +53,7 @@ public interface SearchInitiator {
 	 * </ul>
 	 * </ul>
 	 * 
-	 * <b>Postconditions</b>: <br/>
-	 * The returned CachedRowSet contains
+	 * <b>Postconditions:</b> The returned CachedRowSet contains
 	 * <ul>
 	 * <li>All fields AS their specific value of {@link ColumnNameKeys}
 	 * <li>If searched for {@link SearchFieldKeys#EINSCHREIBEDATUM_BIS} or
