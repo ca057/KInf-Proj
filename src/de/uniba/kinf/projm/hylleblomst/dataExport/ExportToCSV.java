@@ -1,8 +1,11 @@
 package de.uniba.kinf.projm.hylleblomst.dataExport;
 
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -43,10 +46,11 @@ public class ExportToCSV {
 		}
 
 		try (ResultSet rs = crs.getOriginal();
-				CSVWriter writer = new CSVWriter(new FileWriter(
-						file.getAbsolutePath()));) {
+				Writer writer = new OutputStreamWriter(new FileOutputStream(
+						file), StandardCharsets.UTF_8);
+				CSVWriter csvWriter = new CSVWriter(writer);) {
 
-			writer.writeAll(rs, true);
+			csvWriter.writeAll(rs, true);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new ExportException(e.getErrorCode()
