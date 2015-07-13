@@ -1,7 +1,5 @@
 package de.uniba.kinf.projm.hylleblomst.logicImpl;
 
-import java.util.InputMismatchException;
-
 import de.uniba.kinf.projm.hylleblomst.keys.ColumnNameKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
@@ -23,11 +21,11 @@ public class UserQueryImpl implements UserQuery {
 	private int source;
 	private String table;
 	private String sqlWhere;
+	private int numberOfInputs = 0;
 	private Boolean isOR = false;
 	private Boolean isOpenSearch = false;
 	private Boolean isPersonSearch = false;
 	private Boolean isInt = false;
-	private int numberOfInputs = 0;
 
 	/**
 	 * Use this constructor to
@@ -91,14 +89,14 @@ public class UserQueryImpl implements UserQuery {
 
 	public void setSearchField(SearchFieldKeys searchField) {
 		if (searchField == null) {
-			throw new InputMismatchException("Das übergebene searchField darf nicht null sein.");
+			throw new IllegalArgumentException("Das übergebene searchField darf nicht null sein.");
 		}
 		this.searchField = searchField;
 	}
 
 	public void setInput(String input) {
 		if (input == null) {
-			throw new InputMismatchException("Der übergebene Wert für input darf nicht null sein.");
+			throw new IllegalArgumentException("Der übergebene Wert für input darf nicht null sein.");
 		}
 		this.input = input;
 	}
@@ -115,7 +113,7 @@ public class UserQueryImpl implements UserQuery {
 
 	public void setSource(int source) {
 		if (source < SourceKeys.bottom || source > SourceKeys.top) {
-			throw new InputMismatchException("Der übergebene Wert für source muss einem SourceKey entsprechen.");
+			throw new IllegalArgumentException("Der übergebene Wert für source muss einem SourceKey entsprechen.");
 		}
 		this.source = source;
 	}
@@ -338,6 +336,7 @@ public class UserQueryImpl implements UserQuery {
 			case FAKULTAETEN:
 				table = TableNameKeys.FAKULTAETEN;
 				column = ColumnNameKeys.FAKULTAETEN_NORM;
+				sqlWhere = buildSQLWhere();
 				break;
 			case SEMINAR:
 				if (source == SourceKeys.NORM) {

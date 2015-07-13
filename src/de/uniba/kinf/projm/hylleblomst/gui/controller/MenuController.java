@@ -20,8 +20,14 @@ import javafx.scene.control.MenuItem;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-import javafx.stage.Stage;
 
+/**
+ * The controller for the main menu on top of the application. It provides
+ * several actions to import and export data and to set up a new database.
+ * 
+ * @author Christian
+ *
+ */
 public class MenuController implements Initializable {
 
 	private Model model;
@@ -36,7 +42,7 @@ public class MenuController implements Initializable {
 	private MenuBar menuRoot;
 
 	@FXML
-	private MenuItem mainMenu_file_export;
+	private MenuItem mainMenu_file_exportSearchResult;
 
 	@FXML
 	private MenuItem mainMenu_file_close;
@@ -53,16 +59,28 @@ public class MenuController implements Initializable {
 	@FXML
 	private MenuItem mainMenu_help_about;
 
+	/**
+	 * The default constructor. The {@link ViewHelper} and {@link FileChooser}
+	 * is initialized.
+	 */
 	public MenuController() {
 		viewHelper = new ViewHelper();
 		fileChooser = new FileChooser();
 	}
 
-	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
-		setMenuEventHandlers();
-	}
-
+	/**
+	 * The function sets the {@link Model}.
+	 * 
+	 * <p>
+	 * <b>Precondition</b>
+	 * <ul>
+	 * <li>the {@link Model} must not be {@code null}</li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param model
+	 *            the {@link Model} to set
+	 */
 	public void setModel(Model model) {
 		if (model != null) {
 			this.model = model;
@@ -71,21 +89,43 @@ public class MenuController implements Initializable {
 		}
 	}
 
-	public void setViewController(MainController viewController) {
-		if (viewController != null) {
-			this.mainController = viewController;
+	/**
+	 * Implemented from interface {@link Initializable}. After all FXML-elements
+	 * are initialized, the event handlers are set.
+	 */
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		setMenuEventHandlers();
+	}
+
+	/**
+	 * The function sets the {@link MainController}.
+	 * 
+	 * <p>
+	 * <b>Precondition</b>
+	 * <ul>
+	 * <li>the {@link MainController} must not be {@code null}</li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param mainController
+	 *            the {@link MainController} to set
+	 */
+	public void setMainController(MainController mainController) {
+		if (mainController != null) {
+			this.mainController = mainController;
 		} else {
 			throw new InputMismatchException(
 					"Der übergebene ViewController ist fehlerhaft und kann nicht gesetzt werden.");
 		}
 	}
 
-	/**
+	/*
 	 * Sets up all event handlers belonging to the main menu. If an action could
 	 * not be performed, an alert window with information on the error is shown.
 	 */
 	private void setMenuEventHandlers() {
-		mainMenu_file_export.setOnAction(new EventHandler<ActionEvent>() {
+		mainMenu_file_exportSearchResult.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
@@ -182,14 +222,13 @@ public class MenuController implements Initializable {
 		});
 	}
 
-	/**
-	 * Closes the window when the users submits the action.
+	/*
+	 * Closes the window. A window is shown, asking the user for submitting the
+	 * action. If the user submits, the window is closed.
 	 */
 	private void closeWindow() {
-		Stage stage = (Stage) menuRoot.getScene().getWindow();
 		if (viewHelper.askForClosingWindow()) {
-			stage.close();
-			System.exit(0);
+			mainController.closeWindow();
 		}
 	}
 

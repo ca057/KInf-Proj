@@ -334,6 +334,7 @@ public class DetailsViewController implements Initializable {
 			throw new IllegalArgumentException("Das Suchergebnis für die Details einer Person hat keinen Wert.");
 		}
 		ResultSetMetaData crsMeta;
+		// FIXME Prompt texts auf default zurücksetzen
 		try {
 			crsMeta = searchResult.getMetaData();
 

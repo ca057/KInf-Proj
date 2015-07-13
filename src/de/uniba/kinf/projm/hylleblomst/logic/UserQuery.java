@@ -47,8 +47,22 @@ public interface UserQuery {
 	String getWhere();
 
 	/**
+	 * Returns the number of "?" which have to be filled in with the query input
+	 * in the prepared statement
+	 * 
+	 * @return
+	 */
+	int getNumberOfInputs();
+
+	/**
+	 * @return {@code true} - if the database column has the value {@code int}
+	 */
+	Boolean isInt();
+
+	/**
 	 * @return {@code true} - if the user wishes less exact search with more
 	 *         results.
+	 * 
 	 */
 	Boolean isOpenSearch();
 
@@ -63,8 +77,4 @@ public interface UserQuery {
 	 *         instead of AND
 	 */
 	Boolean isOrCondition();
-
-	int getNumberOfInputs();
-
-	Boolean isInt();
 }

@@ -32,6 +32,10 @@ public class Model extends Observable {
 	DetailsViewController detailsController;
 	ExportDataToFile export;
 
+	/**
+	 * 
+	 * @param search
+	 */
 	public Model(SearchInitiator search) {
 		if (search != null) {
 			this.search = search;
@@ -40,10 +44,18 @@ public class Model extends Observable {
 		}
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	public CachedRowSet getSearchResult() {
 		return searchResult;
 	}
 
+	/**
+	 * 
+	 * @param detailsController
+	 */
 	public void setDetailsController(DetailsViewController detailsController) {
 		if (detailsController != null) {
 			this.detailsController = detailsController;
@@ -53,6 +65,11 @@ public class Model extends Observable {
 		}
 	}
 
+	/**
+	 * 
+	 * @param userQuery
+	 * @throws SQLException
+	 */
 	public void search(Collection<UserQuery> userQuery) throws SQLException {
 		if (!(userQuery == null || userQuery.isEmpty())) {
 			searchResult = search.search(userQuery);
@@ -63,6 +80,12 @@ public class Model extends Observable {
 		}
 	}
 
+	/**
+	 * 
+	 * @param personIDQuery
+	 * @throws SQLException
+	 * @throws SearchException
+	 */
 	public void searchPerson(UserQuery personIDQuery) throws SQLException, SearchException {
 		if (personIDQuery != null) {
 			searchResult = search.searchPersonOrNotation(personIDQuery);
@@ -86,6 +109,12 @@ public class Model extends Observable {
 		return detailsResult;
 	}
 
+	/**
+	 * 
+	 * @param file
+	 * @param cachedRowSet
+	 * @throws ExportException
+	 */
 	public void exportSearchedData(File file, CachedRowSet cachedRowSet) throws ExportException {
 		if (file == null || cachedRowSet == null) {
 			throw new InputMismatchException("Der übergebene Dateipfad hat keinen Wert.");
@@ -99,6 +128,11 @@ public class Model extends Observable {
 		}
 	}
 
+	/**
+	 * 
+	 * @param dirForSetup
+	 * @throws SetUpException
+	 */
 	public void setUpDatabase(File dirForSetup) throws SetUpException {
 		if (dirForSetup != null) {
 			dbManagement = new DatabaseManagement(dirForSetup);
@@ -116,6 +150,11 @@ public class Model extends Observable {
 		}
 	}
 
+	/**
+	 * 
+	 * @param importFile
+	 * @throws ImportException
+	 */
 	public void importData(File importFile) throws ImportException {
 		if (importFile != null) {
 			try {
@@ -130,6 +169,10 @@ public class Model extends Observable {
 		}
 	}
 
+	/**
+	 * 
+	 * @throws SetUpException
+	 */
 	public void clearDatabase() throws SetUpException {
 		try {
 			dbManagement.tearDownTables();

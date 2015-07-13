@@ -50,6 +50,12 @@ public class StartController {
 		setUpView();
 	}
 
+	/*
+	 * Makes all setups for the view. The {@link FXMLLoader} loads in the main
+	 * fxml-document, the {@link Stage} and {@link Scene} is set and the {@link
+	 * MainController} is set. After loading in all resources, the {@link Model}
+	 * is set to the {@link MainController} and all of its 'sub'-controllers.
+	 */
 	private void setUpView() {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/hylleblomstView.fxml"));
@@ -61,7 +67,7 @@ public class StartController {
 
 			mainController = loader.getController();
 			mainController.setModel(model);
-			mainController.setModelToControllers(model);
+			mainController.setStartController(this);
 
 			mainStage.setTitle(new ViewHelper().getAppName());
 			mainStage.getIcons().add(new Image(getClass().getResourceAsStream("../view/unicorn-icon.png")));
@@ -79,7 +85,7 @@ public class StartController {
 	}
 
 	/**
-	 * Method for starting the {@link MainStage}.
+	 * Method for starting the {@link Stage}.
 	 * 
 	 * <p>
 	 * <b>Precondition</b>
@@ -94,4 +100,17 @@ public class StartController {
 		}
 	}
 
+	/**
+	 * Method for closing the {@link Stage}.
+	 * 
+	 * <p>
+	 * <b>Precondition</b>
+	 * <ul>
+	 * <li>stage to close must not be {@code null}</li>
+	 * </ul>
+	 * </b>
+	 */
+	public void closeView() {
+		mainStage.close();
+	}
 }

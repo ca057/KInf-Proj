@@ -15,6 +15,7 @@ import de.uniba.kinf.projm.hylleblomst.logic.UserQuery;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.UserQueryImpl;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -28,6 +29,11 @@ import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 
+/**
+ * 
+ * @author Christian
+ *
+ */
 public class TableViewController implements Initializable, Observer {
 
 	private Model model;
@@ -36,7 +42,9 @@ public class TableViewController implements Initializable, Observer {
 
 	private CachedRowSet result;
 
-	private StringProperty sourceLabelName = new SimpleStringProperty("Quelle: ");
+	private MainController mainController;
+
+	private StringProperty sourceLabelName;
 
 	@FXML
 	private TableView<ObservableList<String>> resultTable;
@@ -44,10 +52,17 @@ public class TableViewController implements Initializable, Observer {
 	@FXML
 	private Label search_sourceLabel;
 
+	/**
+	 * 
+	 */
 	public TableViewController() {
 		viewHelper = new ViewHelper();
 	}
 
+	/**
+	 * 
+	 * @param model
+	 */
 	public void setModel(Model model) {
 		if (model == null) {
 			throw new IllegalArgumentException("Das übergebene Model hat keinen Wert.");
@@ -55,10 +70,26 @@ public class TableViewController implements Initializable, Observer {
 		this.model = model;
 	}
 
+	/**
+	 * @param mainController
+	 *            the mainController to set
+	 */
+	public void setMainController(MainController mainController) {
+		if (mainController == null) {
+			throw new IllegalArgumentException("Der übergebene MainController hat keinen Wert.");
+		}
+		this.mainController = mainController;
+		setBindingsWithMainController();
+	}
+
+	/**
+	 * 
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		clearResultTable();
 		setTableViewEventHandlers();
+		search_sourceLabel.textProperty().set("Quelle: Keine Quelle ausgewählt.");
 	}
 
 	/*
@@ -78,8 +109,6 @@ public class TableViewController implements Initializable, Observer {
 			public void handle(MouseEvent event) {
 				if (resultTable.getSelectionModel().getSelectedItem() != null) {
 					if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
-						System.out.println(
-								"Suche Details von ID " + resultTable.getSelectionModel().getSelectedItem().get(0));
 						startSinglePersonSearch(resultTable.getSelectionModel().getSelectedItem().get(0));
 					}
 				}
@@ -88,6 +117,29 @@ public class TableViewController implements Initializable, Observer {
 		});
 	}
 
+	/*
+	 * 
+	 */
+	private void setBindingsWithMainController() {
+		sourceLabelName = new SimpleStringProperty();
+		sourceLabelName.bind(mainController.getSelectedSourceProperty());
+		sourceLabelName.addListener(new ChangeListener<String>() {
+
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				if (observable == null || newValue == null) {
+					search_sourceLabel.textProperty().set("Quelle: Keine Quelle ausgewählt.");
+				} else {
+					search_sourceLabel.textProperty().set("Quelle: " + newValue);
+				}
+			}
+		});
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
 	public CachedRowSet getResult() {
 		return result;
 	}
@@ -149,6 +201,7 @@ public class TableViewController implements Initializable, Observer {
 		if (resultCachedRowSet == null || resultCachedRowSet.size() == 0) {
 			viewHelper.showInfo("Die Suche hat kein Ergebnis zurückgeliefert.");
 		} else {
+			clearResultTable();
 			ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
 			result = resultCachedRowSet;
 			try {
@@ -161,6 +214,7 @@ public class TableViewController implements Initializable, Observer {
 					}
 					TableColumn<ObservableList<String>, String> col = new TableColumn<ObservableList<String>, String>(
 							columnName);
+					col.setPrefWidth(125.0);
 					if ("DATUMSFELDERGESETZT".equals(columnName)) {
 						col.setVisible(false);
 					}
@@ -216,23 +270,4 @@ public class TableViewController implements Initializable, Observer {
 			}
 		}
 	}
-
-	/**
-	 * When the search was started and the user selected a source, the name of
-	 * the search is shown beneath the {@link TableView}. This methods sets the
-	 * {@link Label} which displays the source.
-	 */
-	private void setLabelSource() {
-		// FIXME
-		String labelText = /* search_sourcekey_selection.getValue(); */ "";
-		if (labelText == null) {
-			labelText = "Keine Quelle ausgewählt.";
-		} else if ("normalisiert".equals(labelText)) {
-			labelText += " (Hinweis: Datensätze ohne Normalisierung werden nicht angezeigt.)";
-		}
-		// FIXME
-		sourceLabelName.set("Quelle: " + labelText);
-		search_sourceLabel.setText(sourceLabelName.getValueSafe());
-	}
-
 }

@@ -6,7 +6,7 @@ import java.util.ResourceBundle;
 import javax.sql.rowset.CachedRowSet;
 
 import de.uniba.kinf.projm.hylleblomst.gui.model.Model;
-import de.uniba.kinf.projm.hylleblomst.keys.DatabaseKeys;
+import javafx.beans.property.StringProperty;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -23,7 +23,7 @@ public class MainController implements Initializable {
 
 	private Model model;
 
-	private ViewHelper viewHelper;
+	private StartController startController;
 
 	@FXML
 	private BorderPane root;
@@ -53,62 +53,83 @@ public class MainController implements Initializable {
 	private DetailsViewController detailsViewController;
 
 	/**
-	 * Constructor for a new Controller. The constructor initiates all
-	 * variables, inititates the {@link Model} and {@link SearchController}.
-	 * {@link DatabaseKeys} are set to a default value.
-	 * 
+	 * Default constructor.
 	 */
 	public MainController() {
-		viewHelper = new ViewHelper();
+
 	}
 
 	/**
-	 * Implemented from Initializable, this method initializes all
-	 * FXML-variables. It makes different default setups, like clearing the
-	 * result table or setting up the event handlers. The execution of these
-	 * setups is delegated to helper functions.
+	 * Implemented from Initializable. After the JavaFX-elements with
+	 * FXML-Annotations are initialized, the event handlers are set.
 	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		setEventHandlers();
 	}
 
-	public void setModel(Model model) {
+	/**
+	 * The {@link MainModel} is set.
+	 * 
+	 * <p>
+	 * <b>Precondition</b>
+	 * <ul>
+	 * <li>the {@link MainModel} must not be {@code null}</li>
+	 * </ul>
+	 * </b>
+	 * 
+	 * @param model
+	 *            the {@link MainModel} to set
+	 */
+	void setModel(Model model) {
 		if (model == null) {
 			throw new IllegalArgumentException("Das übergene Model ist ungültig und hat keinen Wert.");
 		}
 		this.model = model;
+		setModelToControllers();
 	}
 
-	public void setModelToControllers(Model model) {
-		if (model == null) {
-			throw new IllegalArgumentException("Das übergene Model ist ungültig und hat keinen Wert.");
-		}
-		detailsViewController.setModel(model);
-		mainMenuController.setModel(model);
-		mainMenuController.setViewController(this);
-		inputViewController.setModel(model);
-		tableViewController.setModel(model);
+	/*
+	 * Called by the {@link StartController}, this methods sets the model for
+	 * all controllers. It also sets a {@link TableViewController} as observer
+	 * to the {@link MainModel} and adds a {@link DetailsViewController}.
+	 */
+	private void setModelToControllers() {
 		model.setDetailsController(detailsViewController);
 		model.addObserver(tableViewController);
+		detailsViewController.setModel(model);
+		mainMenuController.setModel(model);
+		mainMenuController.setMainController(this);
+		inputViewController.setModel(model);
+		tableViewController.setModel(model);
+		tableViewController.setMainController(this);
 	}
 
 	/**
-	 * Function sets up event handlers for key input, numerical input in input
-	 * fields, for the menu and the table view. Setting up the different
-	 * handlers is delegated to different helper functions.
+	 * Sets the {@link StartController}.
+	 * 
+	 * <p>
+	 * <b>Precondition</b>
+	 * <ul>
+	 * <li>the {@link StartController} must not be {@code null}</li>
+	 * </ul>
+	 * </b>
+	 * 
+	 * @param startController
+	 *            the {@link StartController} to set
+	 */
+	void setStartController(StartController startController) {
+		if (startController == null) {
+			throw new IllegalArgumentException(
+					"Der übergebene StartController hat keinen Wert und kann nicht gesetzt werden.");
+		}
+		this.startController = startController;
+	}
+
+	/*
+	 * Function sets up event handlers for key input.
 	 */
 	private void setEventHandlers() {
-		setKeyEvents();
-		// setNumericalInputEventHandlers();
-		// setTableViewEventHandlers();
-	}
-
-	/**
-	 * Sets up all 'global' key events. At the moment, this is only the ENTER
-	 * key starting the search when a valid input was done.
-	 */
-	private void setKeyEvents() {
 		root.setOnKeyReleased(new EventHandler<KeyEvent>() {
 
 			@Override
@@ -121,7 +142,30 @@ public class MainController implements Initializable {
 		});
 	}
 
+	/**
+	 * The function calls the {@link TableViewController} to return the
+	 * {@link CachedRowSet} with the result and returns it.
+	 * 
+	 * @return the {@link CachedRowSet} with the search results
+	 */
 	CachedRowSet getResult() {
 		return tableViewController.getResult();
+	}
+
+	/**
+	 * The {@link StartController} is called to close the window.
+	 */
+	void closeWindow() {
+		startController.closeView();
+	}
+
+	/**
+	 * The function calls the {@link InputController} to returns the selected
+	 * source as property.
+	 * 
+	 * @return the selected source as {@link StringProperty}
+	 */
+	StringProperty getSelectedSourceProperty() {
+		return inputViewController.getSelectedSourceProperty();
 	}
 }
