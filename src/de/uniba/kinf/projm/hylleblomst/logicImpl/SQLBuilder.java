@@ -85,20 +85,23 @@ public class SQLBuilder {
 	 */
 	private void buildSearchMask() throws SQLException {
 		StringBuilder sqlWhere = new StringBuilder();
+		StringBuilder sqlSelect2 = new StringBuilder();
+		sqlStatement.append("SELECT DISTINCT " + ColumnNameKeys.PERSON_ID + ", " + ColumnNameKeys.VORNAME_NORM + ", "
+				+ ColumnNameKeys.NAME_NORM + ", " + ColumnNameKeys.ORT_NORM + ", " + ColumnNameKeys.FAKULTAETEN_NORM);
+
 		for (UserQuery query : userQuery) {
-			sqlStatement.append("SELECT DISTINCT " + ColumnNameKeys.PERSON_ID + ", " + ColumnNameKeys.VORNAME_NORM
-					+ ", " + ColumnNameKeys.NAME_NORM + ", " + ColumnNameKeys.ORT_NORM + ", "
-					+ ColumnNameKeys.FAKULTAETEN_NORM + ", Hylleblomst.AGGREGATE_VARCHAR(' ' || " + query.getColumn()
-					+ ")" + " FROM(");
-			sqlStatement.append(buildSelectMask(query));
+			sqlStatement.append(", Hylleblomst.AGGREGATE_VARCHAR(' ' || " + query.getColumn() + ") ");
+			sqlSelect2.append(buildSelectMask(query));
 			sqlWhere.append(buildWhere(query));
 			for (int i = 1; i <= query.getNumberOfInputs(); i++) {
 				inputs.add(query.getInput());
 			}
 		}
-		sqlStatement.append(buildFrom()).append(" WHERE ").append(sqlWhere).append(") T ")
-				.append(" GROUP BY PERSONID" + ", " + ColumnNameKeys.VORNAME_NORM + ", " + ColumnNameKeys.NAME_NORM
-						+ ", " + ColumnNameKeys.ORT_NORM + ", " + ColumnNameKeys.FAKULTAETEN_NORM);
+		sqlStatement.append(" FROM (SELECT DISTINCT ").append(sqlSelect2).append(buildFrom()).append(" WHERE ")
+				.append(sqlWhere).append(") T ")
+				.append(" GROUP BY " + ColumnNameKeys.PERSON_ID + ", " + ColumnNameKeys.VORNAME_NORM + ", "
+						+ ColumnNameKeys.NAME_NORM + ", " + ColumnNameKeys.ORT_NORM + ", "
+						+ ColumnNameKeys.FAKULTAETEN_NORM);
 	}
 
 	/*
@@ -127,12 +130,12 @@ public class SQLBuilder {
 	private String buildSelectMask(UserQuery userQuery) {
 		String result = "";
 		if (needsStandardFields) {
-			result = "SELECT DISTINCT " + TableNameKeys.PERSON + "." + ColumnNameKeys.PERSON_ID + " AS "
-					+ ColumnNameKeys.PERSON_ID + ", " + TableNameKeys.VORNAME_NORM + "." + ColumnNameKeys.VORNAME_NORM
-					+ " AS " + ColumnNameKeys.VORNAME_NORM + ", " + TableNameKeys.NAME_NORM + "."
-					+ ColumnNameKeys.NAME_NORM + " AS " + ColumnNameKeys.NAME_NORM + ", " + TableNameKeys.ORT_NORM + "."
-					+ ColumnNameKeys.ORT_NORM + " AS " + ColumnNameKeys.ORT_NORM + ", " + TableNameKeys.FAKULTAETEN
-					+ "." + ColumnNameKeys.FAKULTAETEN_NORM + " AS " + ColumnNameKeys.FAKULTAETEN_NORM;
+			result = TableNameKeys.PERSON + "." + ColumnNameKeys.PERSON_ID + " AS " + ColumnNameKeys.PERSON_ID + ", "
+					+ TableNameKeys.VORNAME_NORM + "." + ColumnNameKeys.VORNAME_NORM + " AS "
+					+ ColumnNameKeys.VORNAME_NORM + ", " + TableNameKeys.NAME_NORM + "." + ColumnNameKeys.NAME_NORM
+					+ " AS " + ColumnNameKeys.NAME_NORM + ", " + TableNameKeys.ORT_NORM + "." + ColumnNameKeys.ORT_NORM
+					+ " AS " + ColumnNameKeys.ORT_NORM + ", " + TableNameKeys.FAKULTAETEN + "."
+					+ ColumnNameKeys.FAKULTAETEN_NORM + " AS " + ColumnNameKeys.FAKULTAETEN_NORM;
 			needsStandardFields = false;
 		}
 		if (ColumnNameKeys.DATUM.equals(userQuery.getColumn())) {
