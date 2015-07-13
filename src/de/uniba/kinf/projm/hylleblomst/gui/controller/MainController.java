@@ -60,16 +60,27 @@ public class MainController implements Initializable {
 	}
 
 	/**
-	 * Implemented from Initializable, this method initializes all
-	 * FXML-variables. It makes different default setups, like clearing the
-	 * result table or setting up the event handlers. The execution of these
-	 * setups is delegated to helper functions.
+	 * Implemented from Initializable. After the JavaFX-elements with
+	 * FXML-Annotations are initialized, the event handlers are set.
 	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		setEventHandlers();
 	}
 
+	/**
+	 * The {@link MainModel} is set.
+	 * 
+	 * <p>
+	 * <b>Precondition</b>
+	 * <ul>
+	 * <li>the {@link MainModel} must not be {@code null}</li>
+	 * </ul>
+	 * </b>
+	 * 
+	 * @param model
+	 *            the {@link MainModel} to set
+	 */
 	public void setModel(Model model) {
 		if (model == null) {
 			throw new IllegalArgumentException("Das übergene Model ist ungültig und hat keinen Wert.");
@@ -78,6 +89,11 @@ public class MainController implements Initializable {
 		setModelToControllers();
 	}
 
+	/*
+	 * Called by the {@link StartController}, this methods sets the model for
+	 * all controllers. It also sets a {@link TableViewController} as observer
+	 * to the {@link MainModel} and adds a {@link DetailsViewController}.
+	 */
 	private void setModelToControllers() {
 		model.setDetailsController(detailsViewController);
 		model.addObserver(tableViewController);
