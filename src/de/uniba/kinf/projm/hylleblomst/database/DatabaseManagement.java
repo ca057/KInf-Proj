@@ -31,10 +31,11 @@ public class DatabaseManagement {
 	 * @throws SetUpException
 	 */
 	public void setUpDatabase() throws SetUpException {
-		try {
-			new SetUpDatabase().run(db.dbURL, DBUserKeys.adminUser,
-					DBUserKeys.adminPassword);
-		} catch (SetUpException e) {
+		try (Connection con = DriverManager.getConnection(db.dbURL
+				+ "; create=true", DBUserKeys.adminUser,
+				DBUserKeys.adminPassword)) {
+			new SetUpDatabase().setUpDatabase(con);
+		} catch (SQLException | SetUpException e) {
 			StringBuilder errorMessage = new StringBuilder();
 			errorMessage.append("Database could not be set up: ");
 			errorMessage.append(e.getMessage());
@@ -49,12 +50,12 @@ public class DatabaseManagement {
 	 * @throws SetUpException
 	 */
 	public void setUpTables() throws SetUpException {
-		try {
-			new SetUpTables().run(db.dbURL, DBUserKeys.adminUser,
-					DBUserKeys.adminPassword);
+		try (Connection con = DriverManager.getConnection(db.dbURL,
+				DBUserKeys.adminUser, DBUserKeys.adminPassword)) {
+			new SetUpTables().setUpTables(con);
 			new SetUpDatabaseFunctions().setUpUserDefinedFunctions(db.dbURL,
 					DBUserKeys.adminUser, DBUserKeys.adminPassword);
-		} catch (SetUpException e) {
+		} catch (SQLException | SetUpException e) {
 			StringBuilder errorMessage = new StringBuilder();
 			errorMessage.append("Database could not be set up: ");
 			errorMessage.append(e.getMessage());

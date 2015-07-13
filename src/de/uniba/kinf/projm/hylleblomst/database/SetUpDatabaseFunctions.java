@@ -1,5 +1,9 @@
 package de.uniba.kinf.projm.hylleblomst.database;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -37,16 +41,38 @@ public class SetUpDatabaseFunctions {
 
 	void setUpGroupConcat(Connection con) throws SetUpException {
 		String sqlGroupConcat = "CREATE FUNCTION HYLLEBLOMST.GROUP_CONCAT ( SEPARATOR CHAR, ARGS VARCHAR(255) ... ) RETURNS VARCHAR(2000) PARAMETER STYLE DERBY NO SQL LANGUAGE JAVA EXTERNAL NAME 'de.uniba.kinf.projm.hylleblomst.database.utils.GroupConcat.groupConcat'";
-		String sqlCall = "CALL SQLJ.INSTALL_JAR ('./lib/groupconcat.jar','HYLLEBLOMST.groupconcat',0)";
+
+		Path file = Paths.get("./lib/groupconcat.jar");
+		String dbLocation = "";
+
+		try {
+			dbLocation = con.getMetaData().getURL()
+					.replaceFirst("jdbc:derby:", "").replaceFirst("MyDB", "");
+			dbLocation += "/groupconcat.jar";
+			Files.copy(file, Paths.get(dbLocation));
+		} catch (SQLException e) {
+			if (e.getErrorCode() != 30000) {
+				throw new SetUpException(e);
+			}
+		} catch (IOException e) {
+			throw new SetUpException(e);
+		}
+
+		String sqlCall = "CALL SQLJ.INSTALL_JAR ('groupconcat.jar','HYLLEBLOMST.groupconcat',0)";
 
 		try (PreparedStatement stmt = con.prepareStatement(sqlGroupConcat);
 				PreparedStatement stmtCall = con.prepareCall(sqlCall);) {
 			stmt.executeUpdate();
 			stmtCall.executeUpdate();
+			Files.delete(Paths.get(dbLocation));
 		} catch (SQLException e) {
 			throw new SetUpException(e.getErrorCode()
 					+ ": Function Group_Concat could not be set up: "
 					+ e.getMessage(), e);
+		} catch (IOException e) {
+			throw new SetUpException(
+					"Function Group_Concat could not be set up: "
+							+ e.getMessage(), e);
 		}
 	}
 }

@@ -7,6 +7,12 @@ CREATE FUNCTION HYLLEBLOMST.GROUP_CONCAT
 	
 DROP function HYLLEBLOMST.GROUP_CONCAT;
 
+CREATE SCHEMA test;
+CREATE TABLE test.test(a varchar(10), b varchar(10));
+INSERT INTO  test.test values('eins','zwei');
+
+SELECT HYLLEBLOMST.GROUP_CONCAT(',',a,b) FROM test.test;
+
 SELECT HYLLEBLOMST.GROUP_CONCAT (', ',QuellenName,FakultaetenNorm) FROM HYLLEBLOMST.quellen, HYLLEBLOMST.fakultaeten WHERE Hylleblomst.quellen.quellenID<=3 AND Hylleblomst.fakultaeten.fakultaetenID<=3; 
 SELECT HYLLEBLOMST.GROUP_CONCAT (',',AnredeTrad) FROM HYLLEBLOMST.Anrede_Trad;
 

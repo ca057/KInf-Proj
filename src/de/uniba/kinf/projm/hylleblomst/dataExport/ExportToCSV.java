@@ -1,8 +1,11 @@
 package de.uniba.kinf.projm.hylleblomst.dataExport;
 
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -29,7 +32,7 @@ public class ExportToCSV {
 	 * @param crs
 	 *            The CachedRowSet containing the result of a query
 	 * @throws ExportException
-	 *             If the file could not be created in the loation or if the
+	 *             If the file could not be created in the location or if the
 	 *             file could not be written to
 	 */
 	public void exportToCsv(File file, CachedRowSet crs) throws ExportException {
@@ -43,10 +46,11 @@ public class ExportToCSV {
 		}
 
 		try (ResultSet rs = crs.getOriginal();
-				CSVWriter writer = new CSVWriter(new FileWriter(
-						file.getAbsolutePath()));) {
+				Writer writer = new OutputStreamWriter(new FileOutputStream(
+						file), StandardCharsets.UTF_8);
+				CSVWriter csvWriter = new CSVWriter(writer);) {
 
-			writer.writeAll(rs, true);
+			csvWriter.writeAll(rs, true);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new ExportException(e.getErrorCode()
