@@ -187,6 +187,7 @@ public class UserQueryImpl implements UserQuery {
 				sqlWhere = String.format("%s.%s <> ''", table, column);
 				break;
 			case STUDIENJAHR_VON:
+				validateInputForYear();
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.STUDIENJAHR_INT;
 				sqlWhere = String.format("%s.%s >= ?", table, column);
@@ -195,6 +196,7 @@ public class UserQueryImpl implements UserQuery {
 				isInt = true;
 				break;
 			case STUDIENJAHR_BIS:
+				validateInputForYear();
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.STUDIENJAHR_INT;
 				sqlWhere = String.format("%s.%s <= ?", table, column);
@@ -203,6 +205,7 @@ public class UserQueryImpl implements UserQuery {
 				isInt = true;
 				break;
 			case EINSCHREIBEDATUM_VON:
+				validateInputForYear();
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.DATUM;
 				isOpenSearch = false;
@@ -218,6 +221,7 @@ public class UserQueryImpl implements UserQuery {
 				}
 				break;
 			case EINSCHREIBEDATUM_BIS:
+				validateInputForYear();
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.DATUM;
 				isOpenSearch = false;
@@ -452,5 +456,13 @@ public class UserQueryImpl implements UserQuery {
 			newInput.append("%" + input.substring(i, i + 1));
 		}
 		this.input = "%" + newInput + "%";
+	}
+
+	private void validateInputForYear() {
+		try {
+			Integer.parseInt(input.substring(0, 4));
+		} catch (NumberFormatException e) {
+			throw new IllegalArgumentException("Der Input in einem Datumsfeld muss aus Zahlen bestehen");
+		}
 	}
 }
