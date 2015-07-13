@@ -86,9 +86,9 @@ public class SQLBuilder {
 	private void buildSearchMask() throws SQLException {
 		StringBuilder sqlWhere = new StringBuilder();
 		for (UserQuery query : userQuery) {
-			sqlStatement.append("SELECT " + ColumnNameKeys.PERSON_ID + ", " + ColumnNameKeys.VORNAME_NORM + ", "
-					+ ColumnNameKeys.NAME_NORM + ", " + ColumnNameKeys.ORT_NORM + ", " + ColumnNameKeys.FAKULTAETEN_NORM
-					+ ", Hylleblomst.AGGREGATE_VARCHAR( OrtTrad)" + " FROM(");
+			sqlStatement.append("SELECT DISTINCT " + ColumnNameKeys.PERSON_ID + ", " + ColumnNameKeys.VORNAME_NORM
+					+ ", " + ColumnNameKeys.NAME_NORM + ", " + ColumnNameKeys.ORT_NORM + ", "
+					+ ColumnNameKeys.FAKULTAETEN_NORM + ", Hylleblomst.AGGREGATE_VARCHAR( OrtTrad)" + " FROM(");
 			sqlStatement.append(buildSelectMask(query));
 			sqlWhere.append(buildWhere(query));
 			for (int i = 1; i <= query.getNumberOfInputs(); i++) {
