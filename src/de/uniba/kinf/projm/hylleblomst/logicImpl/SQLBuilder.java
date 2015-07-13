@@ -45,16 +45,16 @@ public class SQLBuilder {
 		}
 		this.queryCollection = userQuery;
 		buildSearchMask();
-		print();
+		// print();
 	}
 
 	/*
 	 * Use this to see the finished SQL statements (with the commented line 48
 	 * and 76 (more or less))
 	 */
-	private void print() {
-		System.out.println(sqlStatement);
-	}
+	// private void print() {
+	// System.out.println(sqlStatement);
+	// }
 
 	/**
 	 * With this constructor, the sql-Statement to execute a search of a person
@@ -157,7 +157,7 @@ public class SQLBuilder {
 	}
 
 	/*
-	 * Build the SELECT part of the SQL statement needed for queries hit by the
+	 * Builds the SELECT part of the SQL statement needed for queries hit by the
 	 * search mask.
 	 */
 	private String buildNestedSelect(UserQuery userQuery) {
@@ -186,7 +186,7 @@ public class SQLBuilder {
 	}
 
 	/*
-	 * If every normalized column (or other, if without normalization) of the
+	 * If every normalized column (or other, without normalization) of the
 	 * database is wanted, this method provides the suitable SELECT part.
 	 */
 	private String buildSelectPersonDetails() {

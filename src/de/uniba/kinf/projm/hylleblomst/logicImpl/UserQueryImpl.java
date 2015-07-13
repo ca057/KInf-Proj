@@ -457,6 +457,9 @@ public class UserQueryImpl implements UserQuery {
 		this.input = "%" + newInput + "%";
 	}
 
+	/*
+	 * Validates whether the first 4 Chars of a String are Integers.
+	 */
 	private void validateInputForYear() {
 		try {
 			Integer.parseInt(input.substring(0, 4));
