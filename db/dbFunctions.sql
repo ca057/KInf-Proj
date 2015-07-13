@@ -1,22 +1,18 @@
-CREATE FUNCTION HYLLEBLOMST.GROUP_CONCAT
-    ( SEPARATOR CHAR, ARGS VARCHAR(255) ... )
-    RETURNS VARCHAR(2000)
-    PARAMETER STYLE DERBY
-    NO SQL LANGUAGE JAVA
-	EXTERNAL NAME 'de.uniba.kinf.projm.hylleblomst.database.utils.GroupConcat.groupConcat';
+CREATE DERBY AGGREGATE HYLLEBLOMST.AGGREGATE_VARCHAR FOR VARCHAR(255) RETURNS VARCHAR(2000)	EXTERNAL NAME 'de.uniba.kinf.projm.hylleblomst.database.utils.GroupConcat';
 	
-DROP function HYLLEBLOMST.GROUP_CONCAT;
+DROP DERBY AGGREGATE HYLLEBLOMST.AGGREGATE_VARCHAR RESTRICT;
+
+SELECT HYLLEBLOMST.AGGREGATE_VARCHAR(QuellenName) FROM HYLLEBLOMST.QUELLEN;
 
 CREATE SCHEMA test;
 CREATE TABLE test.test(a varchar(10), b varchar(10));
 INSERT INTO  test.test values('eins','zwei');
 
-SELECT HYLLEBLOMST.GROUP_CONCAT(',',a,b) FROM test.test;
+SELECT a,b FROM test.test;
+SELECT a, HYLLEBLOMST.AGGREGATE_VARCHAR(b) FROM test.test;
 
-SELECT HYLLEBLOMST.GROUP_CONCAT (', ',QuellenName,FakultaetenNorm) FROM HYLLEBLOMST.quellen, HYLLEBLOMST.fakultaeten WHERE Hylleblomst.quellen.quellenID<=3 AND Hylleblomst.fakultaeten.fakultaetenID<=3; 
-SELECT HYLLEBLOMST.GROUP_CONCAT (',',AnredeTrad) FROM HYLLEBLOMST.Anrede_Trad;
 
 CALL SQLJ.INSTALL_JAR (
-	'groupconcat.jar','HYLLEBLOMST.groupconcat',0);
+	'C:\Users\Simon\git\KInf-Projekt\lib\groupconcat.jar','groupconcat',0);
 CALL SQLJ.REMOVE_JAR (
-	'HYLLEBLOMST.groupconcat.jar',0)
+	'sys.groupconcat.jar',0);

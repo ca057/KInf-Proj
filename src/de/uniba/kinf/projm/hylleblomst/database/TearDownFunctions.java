@@ -16,9 +16,10 @@ public class TearDownFunctions {
 	}
 
 	private void tearDownGroupConcat(Connection con) throws SetUpException {
-		StringBuilder sqlConcatTable = new StringBuilder("DROP FUNCTION ");
+		StringBuilder sqlConcatTable = new StringBuilder(
+				"DROP DERBY AGGREGATE HYLLEBLOMST");
 		sqlConcatTable.append(TableNameKeys.SCHEMA_NAME);
-		sqlConcatTable.append(".GROUP_CONCAT");
+		sqlConcatTable.append(".AGGREGATE_VARCHAR RESTRICT");
 
 		try (PreparedStatement stmt = con.prepareStatement(sqlConcatTable
 				.toString())) {
