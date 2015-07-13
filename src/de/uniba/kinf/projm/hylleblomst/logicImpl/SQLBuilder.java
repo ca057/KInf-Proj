@@ -107,8 +107,7 @@ public class SQLBuilder {
 	 * of a person by searching with the ID of this person.
 	 */
 	private void buildPersonSearch() {
-		StringBuilder sqlQuery = new StringBuilder();
-		sqlStatement = sqlQuery.append("SELECT DISTINCT " + buildSelectPersonDetails()).append(" FROM " + buildFrom())
+		sqlStatement.append("SELECT DISTINCT " + buildSelectPersonDetails()).append(" FROM " + buildFrom())
 				.append(" WHERE " + TableNameKeys.PERSON).append("." + ColumnNameKeys.PERSON_ID).append(" = ?");
 	}
 
@@ -160,12 +159,7 @@ public class SQLBuilder {
 	private String buildNestedSelect(UserQuery userQuery) {
 		String result = "";
 		if (needsStandardFields) {
-			result = TableNameKeys.PERSON + "." + ColumnNameKeys.PERSON_ID + " AS " + ColumnNameKeys.PERSON_ID + ", "
-					+ TableNameKeys.VORNAME_NORM + "." + ColumnNameKeys.VORNAME_NORM + " AS "
-					+ ColumnNameKeys.VORNAME_NORM + ", " + TableNameKeys.NAME_NORM + "." + ColumnNameKeys.NAME_NORM
-					+ " AS " + ColumnNameKeys.NAME_NORM + ", " + TableNameKeys.ORT_NORM + "." + ColumnNameKeys.ORT_NORM
-					+ " AS " + ColumnNameKeys.ORT_NORM + ", " + TableNameKeys.FAKULTAETEN + "."
-					+ ColumnNameKeys.FAKULTAETEN_NORM + " AS " + ColumnNameKeys.FAKULTAETEN_NORM;
+			result = addStandardFieldsASColumnName();
 			needsStandardFields = false;
 		}
 		if (ColumnNameKeys.STUDIENJAHR_INT.equals(userQuery.getColumn()) && !hasStudyYear) {
@@ -329,6 +323,20 @@ public class SQLBuilder {
 		} else {
 			return false;
 		}
+	}
+
+	/*
+	 * Helper method for a string representation of all standard fields
+	 */
+	private String addStandardFieldsASColumnName() {
+		String result;
+		result = TableNameKeys.PERSON + "." + ColumnNameKeys.PERSON_ID + " AS " + ColumnNameKeys.PERSON_ID + ", "
+				+ TableNameKeys.VORNAME_NORM + "." + ColumnNameKeys.VORNAME_NORM + " AS " + ColumnNameKeys.VORNAME_NORM
+				+ ", " + TableNameKeys.NAME_NORM + "." + ColumnNameKeys.NAME_NORM + " AS " + ColumnNameKeys.NAME_NORM
+				+ ", " + TableNameKeys.ORT_NORM + "." + ColumnNameKeys.ORT_NORM + " AS " + ColumnNameKeys.ORT_NORM
+				+ ", " + TableNameKeys.FAKULTAETEN + "." + ColumnNameKeys.FAKULTAETEN_NORM + " AS "
+				+ ColumnNameKeys.FAKULTAETEN_NORM;
+		return result;
 	}
 
 }
