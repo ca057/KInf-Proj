@@ -57,8 +57,8 @@ public class SetUpDatabaseFunctions {
 			throw new SetUpException(e);
 		}
 
-		String sqlGroupConcat = "CREATE DERBY AGGREGATE HYLLEBLOMST.AGGREGATE_VARCHAR FOR VARCHAR(255) "
-				+ "RETURNS VARCHAR(2000) "
+		String sqlGroupConcat = "CREATE DERBY AGGREGATE HYLLEBLOMST.AGGREGATE_VARCHAR FOR VARCHAR(2000) "
+				+ "RETURNS VARCHAR(10000) "
 				+ "EXTERNAL NAME 'de.uniba.kinf.projm.hylleblomst.database.utils.GroupConcat'";
 		String sqlCall = "CALL SQLJ.INSTALL_JAR ('" + installationPath
 				+ "','groupconcat',0)";
