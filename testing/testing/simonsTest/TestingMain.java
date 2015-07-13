@@ -13,10 +13,9 @@ public class TestingMain {
 			System.exit(0);
 		}
 
-		try (Connection con = DriverManager.getConnection("jdbc:derby:"
-				+ args[0] + "/MyDB;user=admin;password=r+l=j");
-				PreparedStatement stmt = con
-						.prepareStatement("SELECT HYLLEBLOMST.AGGREGATE_VARCHAR(QuellenName) FROM HYLLEBLOMST.QUELLEN");) {
+		try (Connection con = DriverManager.getConnection("jdbc:derby:" + args[0] + "/MyDB;user=admin;password=r+l=j");
+				PreparedStatement stmt = con.prepareStatement(
+						"SELECT HYLLEBLOMST.AGGREGATE_VARCHAR(QuellenName) FROM HYLLEBLOMST.QUELLEN");) {
 
 			ResultSet rs = stmt.executeQuery();
 			con.setAutoCommit(false);
@@ -26,7 +25,6 @@ public class TestingMain {
 			con.setAutoCommit(true);
 			rs.close();
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
