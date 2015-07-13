@@ -16,6 +16,9 @@ import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.TableNameKeys;
 
 /**
+ * Implements {@code DataImport}. Class is highly customized to match specific
+ * use case.
+ * 
  * @author Simon
  *
  */

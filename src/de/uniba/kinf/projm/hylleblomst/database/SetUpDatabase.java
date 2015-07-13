@@ -8,22 +8,26 @@ import de.uniba.kinf.projm.hylleblomst.exceptions.SetUpException;
 import de.uniba.kinf.projm.hylleblomst.keys.DBUserKeys;
 
 /**
+ * This classes allows the creation of a database in a specified location and
+ * creates standard users. By intention, the default access should be set to
+ * READ_ONLY, but Derby seemed to have other plans. In later development, this
+ * would be an opportunity for improvement.
+ * 
  * @author Simon
  *
  */
 public class SetUpDatabase {
-
+	/**
+	 * Set up the database and invoke subsequent methods for the standard
+	 * configuration.
+	 * 
+	 * @param con
+	 *            The current connection to a database.
+	 * @throws SetUpException
+	 *             If an error occurs during the SetUp, e.g. the location could
+	 *             not be accessed due to limited user rights.
+	 */
 	public void setUpDatabase(Connection con) throws SetUpException {
-		// if (!Files.isDirectory(Paths.get(dbURL))) {
-		// throw new SetUpException("Path is no directory");
-		// }
-
-		// StringBuilder urlStatement = new StringBuilder(dbURL);
-		// urlStatement.append("; create=true");
-		// urlStatement.append("; user=");
-		// urlStatement.append(DBUserKeys.adminUser);
-		// urlStatement.append("; password=");
-		// urlStatement.append(DBUserKeys.adminPassword);
 
 		try {
 			// Create users
