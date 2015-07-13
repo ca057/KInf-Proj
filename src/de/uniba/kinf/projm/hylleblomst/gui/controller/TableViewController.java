@@ -192,6 +192,7 @@ public class TableViewController implements Initializable, Observer {
 					}
 					TableColumn<ObservableList<String>, String> col = new TableColumn<ObservableList<String>, String>(
 							columnName);
+					col.setPrefWidth(125.0);
 					if ("DATUMSFELDERGESETZT".equals(columnName)) {
 						col.setVisible(false);
 					}
