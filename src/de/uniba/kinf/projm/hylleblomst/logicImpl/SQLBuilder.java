@@ -43,13 +43,16 @@ public class SQLBuilder {
 		}
 		this.userQuery = userQuery;
 		buildSearchMask();
-		print();
+		// print();
 	}
 
-	private void print() {
-		// FIXME Delete this.
-		System.out.println(sqlStatement);
-	}
+	/*
+	 * Use this to see the finished SQL statements (with the commented line 46
+	 * and 73)
+	 */
+	// private void print() {
+	// System.out.println(sqlStatement);
+	// }
 
 	/**
 	 * With this constructor, the sql-Statement to execute a search of a person
@@ -68,7 +71,7 @@ public class SQLBuilder {
 		} else {
 			buildNotationSearch(userQuery);
 		}
-		print();
+		// print();
 	}
 
 	public String getSQLStatement() {
