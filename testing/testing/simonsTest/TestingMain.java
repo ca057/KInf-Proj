@@ -10,7 +10,7 @@ public class TestingMain {
 
 	public static void main(String[] args) {
 		try (Connection con = DriverManager
-				.getConnection("jdbc:derby:./db/MyDB;user=admin;password=r+l=j");
+				.getConnection("jdbc:derby:C:/Users/Simon/Documents/proving_grounds/MyDB;user=admin;password=r+l=j");
 				PreparedStatement stmt = con
 						.prepareStatement("SELECT HYLLEBLOMST.AGGREGATE_VARCHAR(QuellenName) FROM HYLLEBLOMST.QUELLEN");) {
 
