@@ -4,14 +4,14 @@ import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 
 /**
  * Passes rows to
- * {@link de.uniba.kinf.projm.hylleblomst.database.ImportDatabase}.
+ * {@link de.uniba.kinf.projm.hylleblomst.dataImport.DataImport}.
  * 
  * @author Johannes
  * 
- * @see {@link de.uniba.kinf.projm.hylleblomst.database.ImportDatabase}
+ * @see {@link de.uniba.kinf.projm.hylleblomst.dataImport.DataImport}
  *
  */
-public interface ImportData {
+public interface DataImportController {
 
 	/**
 	 * Takes the passed {@code String} path to the file and starts the import.

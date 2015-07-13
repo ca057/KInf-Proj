@@ -1,4 +1,4 @@
-package de.uniba.kinf.projm.hylleblomst.database;
+package de.uniba.kinf.projm.hylleblomst.dataImport;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
  * @author Hannes, Simon
  * 
  */
-public interface ImportDatabase {
+public interface DataImport {
 
 	/**
 	 * Imports data from a List of String[] into a database. The strings inside

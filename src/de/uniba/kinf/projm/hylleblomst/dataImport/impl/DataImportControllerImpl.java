@@ -1,12 +1,13 @@
-package de.uniba.kinf.projm.hylleblomst.dataImport;
+package de.uniba.kinf.projm.hylleblomst.dataImport.impl;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-import de.uniba.kinf.projm.hylleblomst.database.ImportDatabase;
-import de.uniba.kinf.projm.hylleblomst.database.ImportDatabaseImpl;
+import de.uniba.kinf.projm.hylleblomst.dataImport.CsvHelper;
+import de.uniba.kinf.projm.hylleblomst.dataImport.DataImportController;
+import de.uniba.kinf.projm.hylleblomst.dataImport.DataImport;
 import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 import de.uniba.kinf.projm.hylleblomst.keys.DBUserKeys;
 
@@ -14,7 +15,7 @@ import de.uniba.kinf.projm.hylleblomst.keys.DBUserKeys;
  * @author Johannes, Simon
  *
  */
-public class ImportDataImpl implements ImportData {
+public class DataImportControllerImpl implements DataImportController {
 
 	@Override
 	public void addData(String databaseURL, String path) throws ImportException {
@@ -47,7 +48,7 @@ public class ImportDataImpl implements ImportData {
 		CsvHelper csvhelper = new CsvHelper(path);
 		List<String[]> rows = csvhelper.getAllLines();
 		try {
-			ImportDatabase database = new ImportDatabaseImpl(databaseURL, DBUserKeys.adminUser,
+			DataImport database = new DataImportImpl(databaseURL, DBUserKeys.adminUser,
 					DBUserKeys.adminPassword);
 			database.importData(rows);
 		} catch (ImportException e) {

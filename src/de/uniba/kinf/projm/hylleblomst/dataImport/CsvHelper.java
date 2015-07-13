@@ -17,11 +17,11 @@ import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
  * @author Johannes
  *
  */
-class CsvHelper {
+public class CsvHelper {
 	private List<String[]> allLines;
 	private Path path;
 
-	CsvHelper(Path path) {
+	public CsvHelper(Path path) {
 		this.path = path;
 	}
 
@@ -33,9 +33,10 @@ class CsvHelper {
 	 *             if path was not set correctly or there was a problem during
 	 *             import
 	 */
-	List<String[]> getAllLines() throws ImportException {
+	public List<String[]> getAllLines() throws ImportException {
 		try {
-			CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream(path.toString()), "UTF-8"));
+			CSVReader reader = new CSVReader(new InputStreamReader(
+					new FileInputStream(path.toString()), "UTF-8"));
 			allLines = reader.readAll();
 			reader.close();
 			return allLines;

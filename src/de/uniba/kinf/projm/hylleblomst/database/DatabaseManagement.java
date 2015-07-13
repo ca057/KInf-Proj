@@ -6,7 +6,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import de.uniba.kinf.projm.hylleblomst.dataImport.CsvFormatVerifier;
-import de.uniba.kinf.projm.hylleblomst.dataImport.ImportDataImpl;
+import de.uniba.kinf.projm.hylleblomst.dataImport.impl.DataImportControllerImpl;
 import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 import de.uniba.kinf.projm.hylleblomst.exceptions.SetUpException;
 import de.uniba.kinf.projm.hylleblomst.keys.DBUserKeys;
@@ -92,7 +92,7 @@ public class DatabaseManagement {
 	public void importDataIntoDatabase(File file) throws ImportException {
 		try {
 			if (CsvFormatVerifier.verifyCsv(file)) {
-				new ImportDataImpl().addData(db.dbURL, file.getAbsolutePath());
+				new DataImportControllerImpl().addData(db.dbURL, file.getAbsolutePath());
 			} else {
 				throw new ImportException("Chosen file is not in valid format");
 			}
