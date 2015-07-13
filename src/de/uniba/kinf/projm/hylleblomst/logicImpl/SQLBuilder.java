@@ -88,7 +88,8 @@ public class SQLBuilder {
 		for (UserQuery query : userQuery) {
 			sqlStatement.append("SELECT DISTINCT " + ColumnNameKeys.PERSON_ID + ", " + ColumnNameKeys.VORNAME_NORM
 					+ ", " + ColumnNameKeys.NAME_NORM + ", " + ColumnNameKeys.ORT_NORM + ", "
-					+ ColumnNameKeys.FAKULTAETEN_NORM + ", Hylleblomst.AGGREGATE_VARCHAR( OrtTrad)" + " FROM(");
+					+ ColumnNameKeys.FAKULTAETEN_NORM + ", Hylleblomst.AGGREGATE_VARCHAR(' ' || " + query.getColumn()
+					+ ")" + " FROM(");
 			sqlStatement.append(buildSelectMask(query));
 			sqlWhere.append(buildWhere(query));
 			for (int i = 1; i <= query.getNumberOfInputs(); i++) {
