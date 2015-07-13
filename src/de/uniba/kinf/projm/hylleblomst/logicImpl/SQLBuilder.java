@@ -87,7 +87,7 @@ public class SQLBuilder {
 	private void buildNormalSearch() throws SQLException {
 		StringBuilder sqlWhere = new StringBuilder();
 		for (UserQuery query : userQuery) {
-			sqlStatement.append("SELECT vorname_norm, GROUP_CONCAT(OrtTrad) FROM (").append(buildSelect(query));
+			sqlStatement.append("SELECT DISTINCT *").append(" FROM (").append(buildSelect(query));
 			sqlWhere.append(buildWhere(query));
 			for (int i = 1; i <= query.getNumberOfInputs(); i++) {
 				inputs.add(query.getInput());
