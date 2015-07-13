@@ -213,9 +213,9 @@ public class UserQueryImpl implements UserQuery {
 				if (input.contains("mm-dd")) {
 					input = input.substring(0, input.indexOf("-", 1)) + "-01-01";
 				} else if (input.contains("mm")) {
-					input = input.substring(0, input.indexOf("-", 2)) + "-01-" + input.substring(8, 9);
+					input = input.substring(0, input.indexOf("-", 3)) + "-01-" + input.substring(8, 9);
 				} else if (input.contains("dd")) {
-					input = input.substring(0, input.indexOf("-", 3)) + "-01";
+					input = input.substring(0, input.lastIndexOf("-")) + "-01";
 				}
 				break;
 			case EINSCHREIBEDATUM_BIS:
@@ -229,9 +229,9 @@ public class UserQueryImpl implements UserQuery {
 				if (input.contains("mm-dd")) {
 					input = input.substring(0, input.indexOf("-", 1)) + "-12-31";
 				} else if (input.contains("mm")) {
-					input = input.substring(0, input.indexOf("-", 2)) + "-12-" + input.substring(8, 9);
+					input = input.substring(0, input.indexOf("-", 3)) + "-12-" + input.substring(8, 9);
 				} else if (input.contains("dd")) {
-					input = input.substring(0, input.indexOf("-", 3)) + "-31";
+					input = input.substring(0, input.lastIndexOf("-")) + "-31";
 				}
 				break;
 			case ANMERKUNGEN:
