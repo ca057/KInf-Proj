@@ -22,6 +22,10 @@ public final class GroupConcat {
 		return result.toString();
 	}
 
+	// public static String groupConcatColumn(String separator, ) {
+	//
+	// }
+
 	// public static void main(String[] args) {
 	// try (Connection con =
 	// DriverManager.getConnection("jdbc:derby:./db/MyDB;user=admin;password=r+l=j"))

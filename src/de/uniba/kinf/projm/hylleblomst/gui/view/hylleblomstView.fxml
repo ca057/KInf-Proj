@@ -11,29 +11,7 @@
 
 <BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniba.kinf.projm.hylleblomst.gui.controller.ViewController">
 	<top>
-		<MenuBar fx:id="mainMenu" BorderPane.alignment="CENTER">
-			<menus>
-				<Menu fx:id="mainMenu_file" mnemonicParsing="false" text="Datei">
-					<items>
-						<MenuItem fx:id="mainMenu_file_export" mnemonicParsing="false" text="Export" />
-						<MenuItem fx:id="mainMenu_file_close" mnemonicParsing="false" text="Programm beenden" />
-					</items>
-				</Menu>
-				<Menu fx:id="mainMenu_database" mnemonicParsing="false" text="Datenbank">
-					<items>
-						<MenuItem fx:id="mainMenu_database_setupDatabase" mnemonicParsing="false" text="Datenbank anlegen/verbinden" />
-						<MenuItem fx:id="mainMenu_database_importData" mnemonicParsing="false" text="Daten importieren" />
-						<MenuItem fx:id="mainMenu_database_clearDatabase" mnemonicParsing="false" text="Datenbank löschen" />
-					</items>
-				</Menu>
-				<Menu fx:id="mainMenu_help" mnemonicParsing="false" text="Hilfe">
-					<items>
-						<MenuItem fx:id="mainMenu_help_help" mnemonicParsing="false" text="Hilfe" />
-						<MenuItem fx:id="mainMenu_help_about" mnemonicParsing="false" onAction="#showInfo" text="Über" />
-					</items>
-				</Menu>
-			</menus>
-		</MenuBar>
+		<fx:include fx:id="mainMenu" source="hylleblomstViewMainMenu.fxml" />
 	</top>
 	<center>
 		<HBox BorderPane.alignment="CENTER">

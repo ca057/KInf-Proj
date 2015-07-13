@@ -15,7 +15,7 @@ import de.uniba.kinf.projm.hylleblomst.database.DatabaseManagement;
 import de.uniba.kinf.projm.hylleblomst.exceptions.ExportException;
 import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 import de.uniba.kinf.projm.hylleblomst.exceptions.SetUpException;
-import de.uniba.kinf.projm.hylleblomst.exceptions.ViewException;
+import de.uniba.kinf.projm.hylleblomst.exceptions.SearchException;
 import de.uniba.kinf.projm.hylleblomst.gui.controller.DetailsViewController;
 import de.uniba.kinf.projm.hylleblomst.keys.DatabaseKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.SearchInitiator;
@@ -63,7 +63,7 @@ public class Model extends Observable {
 		}
 	}
 
-	public void searchPerson(UserQuery personIDQuery) throws SQLException, ViewException {
+	public void searchPerson(UserQuery personIDQuery) throws SQLException, SearchException {
 		if (personIDQuery != null) {
 			searchResult = search.searchPersonOrNotation(personIDQuery);
 			detailsController.processCompleteSearchResult(searchResult);
