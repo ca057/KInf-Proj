@@ -24,10 +24,12 @@ import de.uniba.kinf.projm.hylleblomst.logic.UserQuery;
 public class SQLBuilder {
 
 	private Collection<UserQuery> userQuery;
-	private ArrayList<Object> inputs;
+	private ArrayList<Object> inputs = new ArrayList<Object>();;
 	private StringBuilder sqlStatement = new StringBuilder();
 	private Boolean needsStandardFields = true;
 	private Boolean whereIsEmpty = true;
+	private String standardSelection = ColumnNameKeys.PERSON_ID + ", " + ColumnNameKeys.VORNAME_NORM + ", "
+			+ ColumnNameKeys.NAME_NORM + ", " + ColumnNameKeys.ORT_NORM + ", " + ColumnNameKeys.FAKULTAETEN_NORM;
 
 	/**
 	 * With this constructor, the sql-Statement to execute a search hit by the
@@ -37,7 +39,6 @@ public class SQLBuilder {
 	 * @throws SQLException
 	 */
 	public SQLBuilder(Collection<UserQuery> userQuery) throws SQLException {
-		inputs = new ArrayList<Object>();
 		if (userQuery == null || userQuery.isEmpty()) {
 			throw new InputMismatchException("Die übergebene Collection darf nicht leer bzw. null sein.");
 		}
@@ -59,10 +60,9 @@ public class SQLBuilder {
 	 * @throws SQLException
 	 */
 	public SQLBuilder(UserQuery userQuery) throws SQLException {
-		if (userQuery == null) {
-			throw new InputMismatchException("Das übergebene Query darf nicht null sein.");
+		if (userQuery == null || userQuery.getInput() == null) {
+			throw new InputMismatchException("Das übergebene Query und dessen input dürfen nicht null sein.");
 		}
-		inputs = new ArrayList<Object>();
 		inputs.add(userQuery.getInput());
 		if (userQuery.isPersonSearch()) {
 			buildPersonSearch();
@@ -84,24 +84,21 @@ public class SQLBuilder {
 	 * Builds the SQL-statement for a search hit by the search mask
 	 */
 	private void buildSearchMask() throws SQLException {
-		StringBuilder sqlWhere = new StringBuilder();
-		StringBuilder sqlSelect2 = new StringBuilder();
-		sqlStatement.append("SELECT DISTINCT " + ColumnNameKeys.PERSON_ID + ", " + ColumnNameKeys.VORNAME_NORM + ", "
-				+ ColumnNameKeys.NAME_NORM + ", " + ColumnNameKeys.ORT_NORM + ", " + ColumnNameKeys.FAKULTAETEN_NORM);
+		sqlStatement.append("SELECT DISTINCT " + standardSelection);
 
+		StringBuilder sqlWhere = new StringBuilder();
+		StringBuilder sqlNestedSelect = new StringBuilder();
 		for (UserQuery query : userQuery) {
-			sqlStatement.append(", Hylleblomst.AGGREGATE_VARCHAR(' ' || " + query.getColumn() + ") ");
-			sqlSelect2.append(buildSelectMask(query));
+			sqlStatement.append(
+					", Hylleblomst.AGGREGATE_VARCHAR(' ' || " + query.getColumn() + ") AS " + query.getColumn());
+			sqlNestedSelect.append(buildSelectMask(query));
 			sqlWhere.append(buildWhere(query));
 			for (int i = 1; i <= query.getNumberOfInputs(); i++) {
 				inputs.add(query.getInput());
 			}
 		}
-		sqlStatement.append(" FROM (SELECT DISTINCT ").append(sqlSelect2).append(buildFrom()).append(" WHERE ")
-				.append(sqlWhere).append(") T ")
-				.append(" GROUP BY " + ColumnNameKeys.PERSON_ID + ", " + ColumnNameKeys.VORNAME_NORM + ", "
-						+ ColumnNameKeys.NAME_NORM + ", " + ColumnNameKeys.ORT_NORM + ", "
-						+ ColumnNameKeys.FAKULTAETEN_NORM);
+		sqlStatement.append(" FROM (SELECT DISTINCT ").append(sqlNestedSelect).append(" FROM " + buildFrom())
+				.append(" WHERE ").append(sqlWhere).append(") T ").append(" GROUP BY " + standardSelection);
 	}
 
 	/*
@@ -110,8 +107,8 @@ public class SQLBuilder {
 	 */
 	private void buildPersonSearch() {
 		StringBuilder sqlQuery = new StringBuilder();
-		sqlStatement = sqlQuery.append(buildSelectPersonDetails()).append(buildFrom()).append(" WHERE ")
-				.append(TableNameKeys.PERSON).append(".").append(ColumnNameKeys.PERSON_ID).append(" = ?");
+		sqlStatement = sqlQuery.append("SELECT DISTINCT " + buildSelectPersonDetails()).append(" FROM " + buildFrom())
+				.append(" WHERE " + TableNameKeys.PERSON).append("." + ColumnNameKeys.PERSON_ID).append(" = ?");
 	}
 
 	/*
@@ -120,7 +117,8 @@ public class SQLBuilder {
 	 */
 	private void buildNotationSearch(UserQuery query) {
 		needsStandardFields = false;
-		sqlStatement.append(buildSelectNotation(query)).append(buildFrom()).append(" WHERE ").append(query.getWhere());
+		sqlStatement.append("SELECT DISTINCT " + buildSelectNotation(query)).append(" FROM " + buildFrom())
+				.append(" WHERE ").append(query.getWhere());
 	}
 
 	/*
@@ -158,30 +156,29 @@ public class SQLBuilder {
 	 * database is wanted, this method provides the suitable SELECT part.
 	 */
 	private String buildSelectPersonDetails() {
-		return "SELECT DISTINCT " + TableNameKeys.PERSON + "." + ColumnNameKeys.PERSON_ID + " AS "
-				+ ColumnNameKeys.PERSON_ID + ", " + TableNameKeys.ANREDE_NORM + "." + ColumnNameKeys.ANREDE_NORM
-				+ " AS " + ColumnNameKeys.ANREDE_NORM + ", " + TableNameKeys.TITEL_NORM + "."
-				+ ColumnNameKeys.TITEL_NORM + " AS " + ColumnNameKeys.TITEL_NORM + ", " + TableNameKeys.VORNAME_NORM
-				+ "." + ColumnNameKeys.VORNAME_NORM + " AS " + ColumnNameKeys.VORNAME_NORM + ", "
-				+ TableNameKeys.NAME_NORM + "." + ColumnNameKeys.NAME_NORM + " AS " + ColumnNameKeys.NAME_NORM + ", "
-				+ TableNameKeys.PERSON + "." + ColumnNameKeys.ADLIG + " AS " + ColumnNameKeys.ADLIG + ", "
-				+ TableNameKeys.PERSON + "." + ColumnNameKeys.JESUIT + " AS " + ColumnNameKeys.JESUIT + ", "
-				+ TableNameKeys.WIRTSCHAFTSLAGE_NORM + "." + ColumnNameKeys.WIRTSCHAFTSLAGE_NORM + " AS "
-				+ ColumnNameKeys.WIRTSCHAFTSLAGE_NORM + ", " + TableNameKeys.ORT_NORM + "." + ColumnNameKeys.ORT_NORM
-				+ " AS " + ColumnNameKeys.ORT_NORM + ", " + TableNameKeys.FACH_NORM + "." + ColumnNameKeys.FACH_NORM
-				+ " AS " + ColumnNameKeys.FACH_NORM + ", " + TableNameKeys.FAKULTAETEN + "."
-				+ ColumnNameKeys.FAKULTAETEN_NORM + " AS " + ColumnNameKeys.FAKULTAETEN_NORM + ", "
-				+ TableNameKeys.SEMINAR_NORM + "." + ColumnNameKeys.SEMINAR_NORM + " AS " + ColumnNameKeys.SEMINAR_NORM
-				+ ", " + TableNameKeys.PERSON + "." + ColumnNameKeys.GRADUIERT + " AS " + ColumnNameKeys.GRADUIERT
-				+ ", " + TableNameKeys.PERSON + "." + ColumnNameKeys.STUDIENJAHR + " AS " + ColumnNameKeys.STUDIENJAHR
-				+ ", " + TableNameKeys.PERSON + "." + ColumnNameKeys.DATUM + " AS " + ColumnNameKeys.DATUM + ", "
-				+ TableNameKeys.PERSON + "." + ColumnNameKeys.DATUMS_FELDER_GESETZT + " AS "
-				+ ColumnNameKeys.DATUMS_FELDER_GESETZT + ", " + TableNameKeys.ZUSAETZE + "." + ColumnNameKeys.ZUSAETZE
-				+ " AS " + ColumnNameKeys.ZUSAETZE + ", " + TableNameKeys.FUNDORTE + "." + ColumnNameKeys.FUNDORTE_NORM
-				+ " AS " + ColumnNameKeys.FUNDORTE_NORM + ", " + TableNameKeys.PERSON + "." + ColumnNameKeys.ANMERKUNG
-				+ " AS " + ColumnNameKeys.ANMERKUNG + ", " + TableNameKeys.PERSON + "." + ColumnNameKeys.SEITE_ORIGINAL
-				+ " AS " + ColumnNameKeys.SEITE_ORIGINAL + ", " + TableNameKeys.PERSON + "."
-				+ ColumnNameKeys.NUMMER_HESS;
+		return TableNameKeys.PERSON + "." + ColumnNameKeys.PERSON_ID + " AS " + ColumnNameKeys.PERSON_ID + ", "
+				+ TableNameKeys.ANREDE_NORM + "." + ColumnNameKeys.ANREDE_NORM + " AS " + ColumnNameKeys.ANREDE_NORM
+				+ ", " + TableNameKeys.TITEL_NORM + "." + ColumnNameKeys.TITEL_NORM + " AS " + ColumnNameKeys.TITEL_NORM
+				+ ", " + TableNameKeys.VORNAME_NORM + "." + ColumnNameKeys.VORNAME_NORM + " AS "
+				+ ColumnNameKeys.VORNAME_NORM + ", " + TableNameKeys.NAME_NORM + "." + ColumnNameKeys.NAME_NORM + " AS "
+				+ ColumnNameKeys.NAME_NORM + ", " + TableNameKeys.PERSON + "." + ColumnNameKeys.ADLIG + " AS "
+				+ ColumnNameKeys.ADLIG + ", " + TableNameKeys.PERSON + "." + ColumnNameKeys.JESUIT + " AS "
+				+ ColumnNameKeys.JESUIT + ", " + TableNameKeys.WIRTSCHAFTSLAGE_NORM + "."
+				+ ColumnNameKeys.WIRTSCHAFTSLAGE_NORM + " AS " + ColumnNameKeys.WIRTSCHAFTSLAGE_NORM + ", "
+				+ TableNameKeys.ORT_NORM + "." + ColumnNameKeys.ORT_NORM + " AS " + ColumnNameKeys.ORT_NORM + ", "
+				+ TableNameKeys.FACH_NORM + "." + ColumnNameKeys.FACH_NORM + " AS " + ColumnNameKeys.FACH_NORM + ", "
+				+ TableNameKeys.FAKULTAETEN + "." + ColumnNameKeys.FAKULTAETEN_NORM + " AS "
+				+ ColumnNameKeys.FAKULTAETEN_NORM + ", " + TableNameKeys.SEMINAR_NORM + "."
+				+ ColumnNameKeys.SEMINAR_NORM + " AS " + ColumnNameKeys.SEMINAR_NORM + ", " + TableNameKeys.PERSON + "."
+				+ ColumnNameKeys.GRADUIERT + " AS " + ColumnNameKeys.GRADUIERT + ", " + TableNameKeys.PERSON + "."
+				+ ColumnNameKeys.STUDIENJAHR + " AS " + ColumnNameKeys.STUDIENJAHR + ", " + TableNameKeys.PERSON + "."
+				+ ColumnNameKeys.DATUM + " AS " + ColumnNameKeys.DATUM + ", " + TableNameKeys.PERSON + "."
+				+ ColumnNameKeys.DATUMS_FELDER_GESETZT + " AS " + ColumnNameKeys.DATUMS_FELDER_GESETZT + ", "
+				+ TableNameKeys.ZUSAETZE + "." + ColumnNameKeys.ZUSAETZE + " AS " + ColumnNameKeys.ZUSAETZE + ", "
+				+ TableNameKeys.FUNDORTE + "." + ColumnNameKeys.FUNDORTE_NORM + " AS " + ColumnNameKeys.FUNDORTE_NORM
+				+ ", " + TableNameKeys.PERSON + "." + ColumnNameKeys.ANMERKUNG + " AS " + ColumnNameKeys.ANMERKUNG
+				+ ", " + TableNameKeys.PERSON + "." + ColumnNameKeys.SEITE_ORIGINAL + " AS "
+				+ ColumnNameKeys.SEITE_ORIGINAL + ", " + TableNameKeys.PERSON + "." + ColumnNameKeys.NUMMER_HESS;
 	}
 
 	/*
@@ -189,7 +186,7 @@ public class SQLBuilder {
 	 * with a specific source
 	 */
 	private Object buildSelectNotation(UserQuery query) {
-		return "SELECT DISTINCT " + query.getTable() + "." + query.getColumn() + " AS " + query.getSearchField();
+		return query.getTable() + "." + query.getColumn() + " AS " + query.getSearchField();
 	}
 
 	/*
@@ -255,9 +252,9 @@ public class SQLBuilder {
 				+ ColumnNameKeys.FAKULTAETEN_ID;
 		String fundorte = TableNameKeys.FUNDORTE + " ON " + TableNameKeys.PERSON + "." + ColumnNameKeys.FUNDORTE_ID
 				+ " = " + TableNameKeys.FUNDORTE + "." + ColumnNameKeys.FUNDORTE_ID;
-		return " FROM " + vorname + " LEFT OUTER JOIN " + name + " LEFT OUTER JOIN " + ort + " LEFT OUTER JOIN "
-				+ seminar + " LEFT OUTER JOIN " + wirtschaftslage + " LEFT OUTER JOIN " + zusaetze + " LEFT OUTER JOIN "
-				+ fach + " LEFT OUTER JOIN " + anrede + " LEFT OUTER JOIN " + titel + " LEFT OUTER JOIN " + fakultaeten
+		return vorname + " LEFT OUTER JOIN " + name + " LEFT OUTER JOIN " + ort + " LEFT OUTER JOIN " + seminar
+				+ " LEFT OUTER JOIN " + wirtschaftslage + " LEFT OUTER JOIN " + zusaetze + " LEFT OUTER JOIN " + fach
+				+ " LEFT OUTER JOIN " + anrede + " LEFT OUTER JOIN " + titel + " LEFT OUTER JOIN " + fakultaeten
 				+ " LEFT OUTER JOIN " + fundorte + ", " + TableNameKeys.QUELLEN;
 	}
 
