@@ -4,7 +4,6 @@ import java.io.File;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.InputMismatchException;
-import java.util.Observable;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -23,7 +22,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
-public class MenuController implements ControllerInterface, Initializable {
+public class MenuController implements Initializable {
 
 	private Model model;
 
@@ -167,12 +166,12 @@ public class MenuController implements ControllerInterface, Initializable {
 
 			@Override
 			public void handle(ActionEvent event) {
-				if (viewHelper.getUserConfirmation("Datenbank löschen")) {
+				if (viewHelper.getUserConfirmation("Datenbank leeren")) {
 					try {
 						model.clearDatabase();
 					} catch (SetUpException e) {
 						e.printStackTrace();
-						viewHelper.showErrorMessage("Datenbank konnte nicht gelöscht werden:\n" + e.getMessage());
+						viewHelper.showErrorMessage("Datenbank konnte nicht geleert werden:\n" + e.getMessage());
 					}
 				}
 				event.consume();
@@ -181,12 +180,6 @@ public class MenuController implements ControllerInterface, Initializable {
 		mainMenu_help_about.setOnAction((event) -> {
 			viewHelper.showApplicationInfo();
 		});
-	}
-
-	@Override
-	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
-
 	}
 
 	/**

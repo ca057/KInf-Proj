@@ -4,7 +4,6 @@ import java.net.URL;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.InputMismatchException;
-import java.util.Observable;
 import java.util.ResourceBundle;
 
 import javax.sql.rowset.CachedRowSet;
@@ -26,7 +25,7 @@ import javafx.scene.layout.GridPane;
  * Controller for displaying the details of a person.
  *
  */
-public class DetailsViewController implements ControllerInterface, Initializable {
+public class DetailsViewController implements Initializable {
 
 	private StringProperty personID;
 
@@ -523,12 +522,6 @@ public class DetailsViewController implements ControllerInterface, Initializable
 			e.printStackTrace();
 			viewHelper.showErrorMessage("Es konnten keine Tradierungen gefunden werden.\n" + e.getMessage());
 		}
-	}
-
-	@Override
-	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

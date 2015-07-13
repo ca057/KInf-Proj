@@ -4,6 +4,7 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.util.InputMismatchException;
 import java.util.Observable;
+import java.util.Observer;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -47,7 +48,7 @@ import javafx.util.Callback;
  * Controller for the main graphical user interface. The ViewController manages
  * all the nodes of the layout and several more important classes.
  */
-public class ViewController implements ControllerInterface, Initializable {
+public class ViewController implements Observer, Initializable {
 
 	private SearchInitiator initiator;
 
