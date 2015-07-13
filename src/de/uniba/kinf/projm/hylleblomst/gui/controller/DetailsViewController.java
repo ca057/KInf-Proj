@@ -22,6 +22,8 @@ import javafx.scene.layout.GridPane;
 
 /**
  * Controller for displaying the details of a person.
+ * 
+ * @author Christian
  *
  */
 public class DetailsViewController implements Initializable {
@@ -141,11 +143,28 @@ public class DetailsViewController implements Initializable {
 	private Label result_details_nummerhess;
 	private StringProperty nummerhess = new SimpleStringProperty();
 
+	/**
+	 * Default constructor. The {@link ViewHelper} and variables are
+	 * instantiated.
+	 */
 	public DetailsViewController() {
 		viewHelper = new ViewHelper();
 		personID = new SimpleStringProperty();
 	}
 
+	/**
+	 * The function sets the {@link Model}.
+	 * 
+	 * <p>
+	 * <b>Precondition</b>
+	 * <ul>
+	 * <li>the {@link Model} must not be {@code null}</li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param model
+	 *            the {@link Model} to set
+	 */
 	public void setModel(Model model) {
 		if (model != null) {
 			this.model = model;
@@ -155,6 +174,10 @@ public class DetailsViewController implements Initializable {
 		}
 	}
 
+	/**
+	 * Implemented from Interface {@link Initializable}. After all FXML-elements
+	 * are initialized, the event handlers and bindings are set.
+	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		setUpEventHandlers();
@@ -163,6 +186,10 @@ public class DetailsViewController implements Initializable {
 		setUpTooltips();
 	}
 
+	/*
+	 * The event handlers are set. All selection boxes initiates a search with
+	 * the corresponding {@link SearchFieldKey} and the source.
+	 */
 	private void setUpEventHandlers() {
 		result_details_anredeselection.setOnAction((event) -> {
 			getSourceDetails(SearchFieldKeys.ANREDE,
@@ -202,6 +229,11 @@ public class DetailsViewController implements Initializable {
 		});
 	}
 
+	/*
+	 * The bindings of the view are set. At this moment of implementation, this
+	 * is only one binding. When there is no or an empty person ID, the view is
+	 * disabled.
+	 */
 	private void setUpViewBindings() {
 		BooleanBinding existsID = new BooleanBinding() {
 
@@ -220,6 +252,11 @@ public class DetailsViewController implements Initializable {
 		rootDetails.disableProperty().bind(existsID);
 	}
 
+	/*
+	 * The label with the details are bound to {@link SimpleStringProperty}s,
+	 * which are changed when a new person is loaded into the details view or
+	 * the search for a specific search is started.
+	 */
 	private void setUpLabelBindings() {
 		result_details_adlig.textProperty().bind(adlig);
 		result_details_anmerkungen.textProperty().bind(anmerkungen);
@@ -243,6 +280,11 @@ public class DetailsViewController implements Initializable {
 		result_details_zusaetze.textProperty().bind(zusaetze);
 	}
 
+	/*
+	 * The tooltips for all {@link Label}s are set. They show the value of the
+	 * label, especially when the text length is too long for the size of the
+	 * label.
+	 */
 	private void setUpTooltips() {
 		Tooltip adligTooltip = new Tooltip();
 		adligTooltip.textProperty().bind(adlig);
@@ -326,15 +368,17 @@ public class DetailsViewController implements Initializable {
 	}
 
 	/**
+	 * This function takes an {@link CachedRowSet} and processes it in a way,
+	 * that all the search result can be shown in the view.
 	 * 
 	 * @param searchResult
+	 *            the {@link CachedRowSet} to show
 	 */
 	public void processCompleteSearchResult(CachedRowSet searchResult) {
 		if (searchResult == null) {
 			throw new IllegalArgumentException("Das Suchergebnis für die Details einer Person hat keinen Wert.");
 		}
 		ResultSetMetaData crsMeta;
-		// FIXME Prompt texts auf default zurücksetzen
 		try {
 			crsMeta = searchResult.getMetaData();
 
@@ -465,12 +509,16 @@ public class DetailsViewController implements Initializable {
 				}
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
 			viewHelper.showErrorMessage(
 					"Es können keine Detailinformationen für diese Person angezeigt werden.\n" + e.getMessage());
 		}
 	}
 
+	/*
+	 * The function takes a {@link SearchFieldKey} and a source as {@link
+	 * String} as input, calls the model to execute the search. After a
+	 * completed search, the result is shown in the corresponding {@link Label}.
+	 */
 	private void getSourceDetails(SearchFieldKeys sfk, String source) {
 		if (sfk == null || source == null || source.isEmpty()) {
 			throw new IllegalArgumentException(
@@ -519,7 +567,6 @@ public class DetailsViewController implements Initializable {
 						+ " konnte keinem Feld zugeordnet werden.");
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
 			viewHelper.showErrorMessage("Es konnten keine Tradierungen gefunden werden.\n" + e.getMessage());
 		}
 	}

@@ -30,6 +30,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
 /**
+ * This controller executes all interactions done on the input fields.
  * 
  * @author Christian
  *
@@ -182,7 +183,8 @@ public class InputController implements Initializable {
 	private Button searchMenu_search;
 
 	/**
-	 * 
+	 * The default constructor. The {@link ViewHelper} is instantiated, the
+	 * array with {@link SearchFieldKeys} is generated.
 	 */
 	public InputController() {
 		viewHelper = new ViewHelper();
@@ -191,8 +193,17 @@ public class InputController implements Initializable {
 	}
 
 	/**
+	 * The function sets the {@link Model}.
+	 * 
+	 * <p>
+	 * <b>Precondition</b>
+	 * <ul>
+	 * <li>the {@link Model} must not be {@code null}</li>
+	 * </ul>
+	 * </p>
 	 * 
 	 * @param model
+	 *            the {@link Model} to set
 	 */
 	public void setModel(Model model) {
 		if (model == null) {
@@ -202,29 +213,29 @@ public class InputController implements Initializable {
 	}
 
 	/**
-	 * 
+	 * Implemented from Interface {@link Initializable}. After all FXML-elements
+	 * are initialized, the event handlers and bindings are set.
 	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		setUpNodes();
 		setNumericalInputEventHandlers();
 		setUpBindings();
-		setUpTooltips();
+		setUpTooltipsAsHint();
 	}
 
 	/*
-	 * Makes default setups for different nodes, like setting the default
-	 * expanded pane for the accordion or label names.
+	 * Makes default setups for different nodes. At the moment, only the by
+	 * default expanded {@link TitledPane} is set.
 	 */
 	private void setUpNodes() {
 		searchCategories.setExpandedPane(searchCategory_person);
-		// searchCategory_study_einschreibeHinweis.setText("Hinweis: Für eine
-		// erfolgreiche Suche muss jeweils mindestens das Jahr ausgefüllt
-		// sein.");
 	}
 
 	/*
-	 * 
+	 * All event handlers for numerical input are set. While entering, the input
+	 * is validated and parsed to check, if it is a valid input. If not, an
+	 * error window is shown to the user.
 	 */
 	private void setNumericalInputEventHandlers() {
 		searchCategory_study_studienjahrVon.setOnKeyReleased(new EventHandler<KeyEvent>() {
@@ -432,16 +443,20 @@ public class InputController implements Initializable {
 	}
 
 	/*
-	 * 
+	 * The bindings for the view are set. At the moment, this is only the
+	 * selection of the source to a {@link SimpleStringProperty} for passing it
+	 * to other controllers.
 	 */
 	private void setUpBindings() {
 		selectedSourceProperty.bind(search_sourcekey_selection.valueProperty());
 	}
 
 	/*
-	 * 
+	 * Because for a valid input of 'Einschreibung von/bis' a year is needed,
+	 * the user gets an tooltip with this information when hovering over the
+	 * fields.
 	 */
-	private void setUpTooltips() {
+	private void setUpTooltipsAsHint() {
 		Tooltip einschreibeHinweis = new Tooltip();
 		einschreibeHinweis
 				.setText("Hinweis: Für eine erfolgreiche Suche muss jeweils mindestens das Jahr ausgefüllt sein.");
@@ -454,8 +469,9 @@ public class InputController implements Initializable {
 	}
 
 	/**
+	 * The selected source is returned as {@link StringProperty}.
 	 * 
-	 * @return
+	 * @return the selected source as {@link StringProperty}
 	 */
 	public StringProperty getSelectedSourceProperty() {
 		if (selectedSourceProperty == null) {
@@ -465,7 +481,10 @@ public class InputController implements Initializable {
 	}
 
 	/**
-	 * 
+	 * The search is started and executed. Using the arrays with
+	 * {@link SearchFieldKeys}, {@link SourceFieldKeys} as {@code int}s and the
+	 * user input, this function generates a list of {@link UserQueryImpl}s and
+	 * passes it to the {@link Model}, where the actual search is executed.
 	 */
 	@FXML
 	void startSearch() {
@@ -504,7 +523,8 @@ public class InputController implements Initializable {
 	}
 
 	/**
-	 * 
+	 * This method starts the search for a single person, by passing a
+	 * {@link UserQueryImpl} to the {@link Model}.
 	 * <p>
 	 * <b>Precondition</b>
 	 * <ul>

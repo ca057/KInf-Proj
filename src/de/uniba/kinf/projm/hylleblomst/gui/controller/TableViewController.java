@@ -30,6 +30,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.util.Callback;
 
 /**
+ * The controller for the {@link TableView}, which displays all search results.
  * 
  * @author Christian
  *
@@ -60,8 +61,17 @@ public class TableViewController implements Initializable, Observer {
 	}
 
 	/**
+	 * The function sets the {@link Model}.
+	 * 
+	 * <p>
+	 * <b>Precondition</b>
+	 * <ul>
+	 * <li>the {@link Model} must not be {@code null}</li>
+	 * </ul>
+	 * </p>
 	 * 
 	 * @param model
+	 *            the {@link Model} to set
 	 */
 	public void setModel(Model model) {
 		if (model == null) {

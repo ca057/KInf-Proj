@@ -11,6 +11,8 @@ import javafx.scene.image.ImageView;
 /**
  * Supports the creation of a lovely user interface <3.
  *
+ * @author Christian
+ *
  */
 public class ViewHelper {
 
@@ -20,6 +22,10 @@ public class ViewHelper {
 
 	private Alert alertConfirmation;
 
+	/**
+	 * The default constructor of a new {@code ViewHelper}. All {@link Alert}
+	 * windows are instantiated.
+	 */
 	public ViewHelper() {
 		alertInformation = new Alert(AlertType.INFORMATION);
 		alertConfirmation = new Alert(AlertType.CONFIRMATION);
@@ -134,6 +140,15 @@ public class ViewHelper {
 		exceptionAlert.showAndWait();
 	}
 
+	/**
+	 * Gets the user confirmation for any kind of action. The name of the action
+	 * is passed to the function as a string and will be shown to the user.
+	 * 
+	 * @param nameOfAction
+	 *            the name of the action as string
+	 * @return {@code true} if the user submits the action, {@code false}
+	 *         otherwise
+	 */
 	boolean getUserConfirmation(String nameOfAction) {
 		if (nameOfAction == null || nameOfAction.isEmpty()) {
 			throw new IllegalArgumentException(
@@ -152,10 +167,6 @@ public class ViewHelper {
 			alertConfirmation.close();
 			return false;
 		}
-	}
-
-	void showMoreInformation(String infosToShow) {
-		// TODO show more information in window
 	}
 
 	/**
@@ -199,6 +210,18 @@ public class ViewHelper {
 		return SourceKeys.NO_SELECTION;
 	}
 
+	/**
+	 * Due to the fact that the dates are changed when importing the data into
+	 * the database, this function formats the date in a readable way and
+	 * deletes added data.
+	 * 
+	 * @param oldDate
+	 *            the date like it is in the database
+	 * @param key
+	 *            the key which gives information, which parts of the dates were
+	 *            changed during import
+	 * @return the formatted date as string
+	 */
 	String formatDateForDisplaying(String oldDate, String key) {
 		String[] dateArray = oldDate.split("-");
 		if ("1".equals(key.substring(2))) {
