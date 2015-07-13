@@ -36,6 +36,8 @@ public class TableViewController implements Initializable, Observer {
 
 	private CachedRowSet result;
 
+	private MainController mainController;
+
 	private StringProperty sourceLabelName = new SimpleStringProperty("Quelle: ");
 
 	@FXML
@@ -53,6 +55,17 @@ public class TableViewController implements Initializable, Observer {
 			throw new IllegalArgumentException("Das übergebene Model hat keinen Wert.");
 		}
 		this.model = model;
+	}
+
+	/**
+	 * @param mainController
+	 *            the mainController to set
+	 */
+	public void setMainController(MainController mainController) {
+		if (mainController == null) {
+			throw new IllegalArgumentException("Der übergebene MainController hat keinen Wert.");
+		}
+		this.mainController = mainController;
 	}
 
 	@Override
@@ -149,8 +162,10 @@ public class TableViewController implements Initializable, Observer {
 		if (resultCachedRowSet == null || resultCachedRowSet.size() == 0) {
 			viewHelper.showInfo("Die Suche hat kein Ergebnis zurückgeliefert.");
 		} else {
+			clearResultTable();
 			ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
 			result = resultCachedRowSet;
+			setLabelSource();
 			try {
 				result.beforeFirst();
 				for (int i = 0; i < result.getMetaData().getColumnCount(); i++) {
@@ -223,14 +238,12 @@ public class TableViewController implements Initializable, Observer {
 	 * {@link Label} which displays the source.
 	 */
 	private void setLabelSource() {
-		// FIXME
-		String labelText = /* search_sourcekey_selection.getValue(); */ "";
+		String labelText = mainController.getSelectedSource();
 		if (labelText == null) {
 			labelText = "Keine Quelle ausgewählt.";
 		} else if ("normalisiert".equals(labelText)) {
 			labelText += " (Hinweis: Datensätze ohne Normalisierung werden nicht angezeigt.)";
 		}
-		// FIXME
 		sourceLabelName.set("Quelle: " + labelText);
 		search_sourceLabel.setText(sourceLabelName.getValueSafe());
 	}

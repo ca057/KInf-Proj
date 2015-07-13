@@ -10,7 +10,7 @@ import javax.sql.rowset.CachedRowSet;
 
 import com.sun.rowset.CachedRowSetImpl;
 
-import de.uniba.kinf.projm.hylleblomst.dataExport.ExportDataToCSV;
+import de.uniba.kinf.projm.hylleblomst.dataExport.ExportDataToFile;
 import de.uniba.kinf.projm.hylleblomst.database.DatabaseManagement;
 import de.uniba.kinf.projm.hylleblomst.exceptions.ExportException;
 import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
@@ -30,7 +30,7 @@ public class Model extends Observable {
 	CachedRowSet searchResult;
 	DatabaseManagement dbManagement;
 	DetailsViewController detailsController;
-	ExportDataToCSV export;
+	ExportDataToFile export;
 
 	public Model(SearchInitiator search) {
 		if (search != null) {
@@ -90,7 +90,7 @@ public class Model extends Observable {
 		if (file == null || cachedRowSet == null) {
 			throw new InputMismatchException("Der übergebene Dateipfad hat keinen Wert.");
 		}
-		export = new ExportDataToCSV();
+		export = new ExportDataToFile();
 		try {
 			export.exportToCsv(file, cachedRowSet);
 		} catch (ExportException e) {
