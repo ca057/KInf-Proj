@@ -89,8 +89,8 @@ public class SQLBuilder {
 		StringBuilder sqlWhere = new StringBuilder();
 		StringBuilder sqlNestedSelect = new StringBuilder();
 		for (UserQuery query : userQuery) {
-			sqlStatement.append(
-					", Hylleblomst.AGGREGATE_VARCHAR(' ' || " + query.getColumn() + ") AS " + query.getColumn());
+			sqlStatement.append(", Hylleblomst.AGGREGATE_VARCHAR(' ' || ").append(query.getColumn())
+					.append(") AS " + query.getColumn());
 			sqlNestedSelect.append(buildSelectMask(query));
 			sqlWhere.append(buildWhere(query));
 			for (int i = 1; i <= query.getNumberOfInputs(); i++) {

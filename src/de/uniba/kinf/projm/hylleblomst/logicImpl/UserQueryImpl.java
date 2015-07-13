@@ -141,11 +141,6 @@ public class UserQueryImpl implements UserQuery {
 	}
 
 	@Override
-	public Boolean isInt() {
-		return isInt;
-	}
-
-	@Override
 	public Boolean isPersonSearch() {
 		return isPersonSearch;
 	}
