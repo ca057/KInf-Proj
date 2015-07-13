@@ -30,7 +30,7 @@ public class MenuController implements Initializable {
 
 	private FileChooser fileChooser;
 
-	private ViewController viewController;
+	private MainController mainController;
 
 	@FXML
 	private MenuBar menuRoot;
@@ -71,9 +71,9 @@ public class MenuController implements Initializable {
 		}
 	}
 
-	public void setViewController(ViewController viewController) {
+	public void setViewController(MainController viewController) {
 		if (viewController != null) {
-			this.viewController = viewController;
+			this.mainController = viewController;
 		} else {
 			throw new InputMismatchException(
 					"Der übergebene ViewController ist fehlerhaft und kann nicht gesetzt werden.");
@@ -89,7 +89,7 @@ public class MenuController implements Initializable {
 
 			@Override
 			public void handle(ActionEvent event) {
-				if (viewController.getResult() != null) {
+				if (mainController.getResult() != null) {
 					fileChooser.setTitle(viewHelper.getAppName() + " - Speicherort für Export auswählen");
 					fileChooser.getExtensionFilters().add(new ExtensionFilter("CSV-Datei (*.csv)", "*.csv"));
 
@@ -97,8 +97,8 @@ public class MenuController implements Initializable {
 							.ofNullable(fileChooser.showSaveDialog(menuRoot.getScene().getWindow()));
 					if (exportFile.isPresent()) {
 						try {
-							if (viewController.getResult().getMetaData().getColumnCount() != 0) {
-								model.exportSearchedData(exportFile.get(), viewController.getResult());
+							if (mainController.getResult().getMetaData().getColumnCount() != 0) {
+								model.exportSearchedData(exportFile.get(), mainController.getResult());
 								viewHelper.showInfo("Export der Daten in Datei " + exportFile.get().getName()
 										+ " war erfolgreich.");
 							} else {
