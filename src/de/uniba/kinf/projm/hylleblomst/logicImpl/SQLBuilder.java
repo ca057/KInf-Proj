@@ -88,44 +88,18 @@ public class SQLBuilder {
 	 * Builds the SQL-statement for a search hit by the search mask
 	 */
 	private void buildSearchMask() throws SQLException {
-		sqlStatement.append("SELECT DISTINCT " + standardSelection);
 
+		StringBuilder sqlSelect = new StringBuilder();
 		StringBuilder sqlWhere = new StringBuilder();
 		StringBuilder sqlNestedSelect = new StringBuilder();
 		StringBuilder sqlGroupBy = new StringBuilder();
-		for (UserQuery query : queryCollection) {
-			sqlWhere.append(buildWhere(query));
-			sqlNestedSelect.append(buildNestedSelect(query));
-			if (!query.isInt()) {
-				sqlStatement.append(", Hylleblomst.AGGREGATE_VARCHAR(' ' || ");
-			}
-			if (ColumnNameKeys.DATUM.equals(query.getColumn()) && !hasDate) {
-				sqlStatement.append(", " + query.getColumn()).append(", " + ColumnNameKeys.DATUMS_FELDER_GESETZT);
-				sqlGroupBy.append(", " + query.getColumn()).append(", " + ColumnNameKeys.DATUMS_FELDER_GESETZT);
-				hasDate = true;
-			} else if (ColumnNameKeys.STUDIENJAHR_INT.equals(query.getColumn()) && !hasStudyYear) {
-				sqlStatement.append(", " + ColumnNameKeys.STUDIENJAHR);
-				sqlGroupBy.append(", " + ColumnNameKeys.STUDIENJAHR);
-				hasStudyYear = true;
-			} else if (query.isInt()) {
-				sqlGroupBy.append(", " + query.getColumn());
-			} else if (!(ColumnNameKeys.DATUM.equals(query.getColumn())
-					|| ColumnNameKeys.STUDIENJAHR_INT.equals(query.getColumn()))) {
-				sqlStatement.append(query.getColumn());
-			}
-			if (!query.isInt()) {
-				sqlStatement.append(") AS " + query.getColumn());
-			}
-			for (int i = 1; i <= query.getNumberOfInputs(); i++) {
-				inputs.add(query.getInput());
-			}
-		}
-		sqlStatement.append(" FROM (SELECT DISTINCT ").append(sqlNestedSelect).append(" FROM " + buildFrom())
-				.append(" WHERE ").append(sqlWhere).append(") T ").append(" GROUP BY " + standardSelection)
-				.append(sqlGroupBy);
-		needsStandardFields = true;
-		hasDate = false;
-		hasStudyYear = false;
+		iterateOverQueries(sqlSelect, sqlWhere, sqlNestedSelect, sqlGroupBy);
+
+		sqlStatement.append("SELECT DISTINCT " + standardSelection).append(sqlSelect).append(" FROM (SELECT DISTINCT ")
+				.append(sqlNestedSelect).append(" FROM " + buildFrom()).append(" WHERE ").append(sqlWhere)
+				.append(") T ").append(" GROUP BY " + standardSelection).append(sqlGroupBy);
+
+		resetBooleans();
 	}
 
 	/*
@@ -133,8 +107,7 @@ public class SQLBuilder {
 	 * of a person by searching with the ID of this person.
 	 */
 	private void buildPersonSearch() {
-		StringBuilder sqlQuery = new StringBuilder();
-		sqlStatement = sqlQuery.append("SELECT DISTINCT " + buildSelectPersonDetails()).append(" FROM " + buildFrom())
+		sqlStatement.append("SELECT DISTINCT " + buildSelectPersonDetails()).append(" FROM " + buildFrom())
 				.append(" WHERE " + TableNameKeys.PERSON).append("." + ColumnNameKeys.PERSON_ID).append(" = ?");
 	}
 
@@ -148,6 +121,37 @@ public class SQLBuilder {
 				.append(" WHERE ").append(query.getWhere());
 	}
 
+	private void iterateOverQueries(StringBuilder sqlSelect, StringBuilder sqlWhere, StringBuilder sqlNestedSelect,
+			StringBuilder sqlGroupBy) {
+		for (UserQuery query : queryCollection) {
+			sqlWhere.append(buildWhere(query));
+			sqlNestedSelect.append(buildNestedSelect(query));
+			if (!query.isInt()) {
+				sqlSelect.append(", Hylleblomst.AGGREGATE_VARCHAR(' ' || ");
+			}
+			if (ColumnNameKeys.DATUM.equals(query.getColumn()) && !hasDate) {
+				sqlSelect.append(", " + query.getColumn()).append(", " + ColumnNameKeys.DATUMS_FELDER_GESETZT);
+				sqlGroupBy.append(", " + query.getColumn()).append(", " + ColumnNameKeys.DATUMS_FELDER_GESETZT);
+				hasDate = true;
+			} else if (ColumnNameKeys.STUDIENJAHR_INT.equals(query.getColumn()) && !hasStudyYear) {
+				sqlSelect.append(", " + ColumnNameKeys.STUDIENJAHR);
+				sqlGroupBy.append(", " + ColumnNameKeys.STUDIENJAHR);
+				hasStudyYear = true;
+			} else if (query.isInt()) {
+				sqlGroupBy.append(", " + query.getColumn());
+			} else if (!(ColumnNameKeys.DATUM.equals(query.getColumn())
+					|| ColumnNameKeys.STUDIENJAHR_INT.equals(query.getColumn()))) {
+				sqlSelect.append(query.getColumn());
+			}
+			if (!query.isInt()) {
+				sqlSelect.append(") AS " + query.getColumn());
+			}
+			for (int i = 1; i <= query.getNumberOfInputs(); i++) {
+				inputs.add(query.getInput());
+			}
+		}
+	}
+
 	/*
 	 * Build the SELECT part of the SQL statement needed for queries hit by the
 	 * search mask.
@@ -155,12 +159,7 @@ public class SQLBuilder {
 	private String buildNestedSelect(UserQuery userQuery) {
 		String result = "";
 		if (needsStandardFields) {
-			result = TableNameKeys.PERSON + "." + ColumnNameKeys.PERSON_ID + " AS " + ColumnNameKeys.PERSON_ID + ", "
-					+ TableNameKeys.VORNAME_NORM + "." + ColumnNameKeys.VORNAME_NORM + " AS "
-					+ ColumnNameKeys.VORNAME_NORM + ", " + TableNameKeys.NAME_NORM + "." + ColumnNameKeys.NAME_NORM
-					+ " AS " + ColumnNameKeys.NAME_NORM + ", " + TableNameKeys.ORT_NORM + "." + ColumnNameKeys.ORT_NORM
-					+ " AS " + ColumnNameKeys.ORT_NORM + ", " + TableNameKeys.FAKULTAETEN + "."
-					+ ColumnNameKeys.FAKULTAETEN_NORM + " AS " + ColumnNameKeys.FAKULTAETEN_NORM;
+			result = addStandardFieldsASColumnName();
 			needsStandardFields = false;
 		}
 		if (ColumnNameKeys.STUDIENJAHR_INT.equals(userQuery.getColumn()) && !hasStudyYear) {
@@ -170,12 +169,7 @@ public class SQLBuilder {
 			result += ", " + userQuery.getTable() + "." + ColumnNameKeys.DATUM + " AS " + ColumnNameKeys.DATUM + ", "
 					+ userQuery.getTable() + "." + ColumnNameKeys.DATUMS_FELDER_GESETZT + " AS "
 					+ ColumnNameKeys.DATUMS_FELDER_GESETZT;
-		} else if (!(ColumnNameKeys.PERSON_ID.equals(userQuery.getColumn())
-				|| ColumnNameKeys.VORNAME_NORM.equals(userQuery.getColumn())
-				|| ColumnNameKeys.NAME_NORM.equals(userQuery.getColumn())
-				|| ColumnNameKeys.ORT_NORM.equals(userQuery.getColumn())
-				|| ColumnNameKeys.FAKULTAETEN_NORM.equals(userQuery.getColumn())
-				|| ColumnNameKeys.DATUM.equals(userQuery.getColumn())
+		} else if (!(isStandardField(userQuery.getColumn()) || ColumnNameKeys.DATUM.equals(userQuery.getColumn())
 				|| ColumnNameKeys.STUDIENJAHR_INT.equals(userQuery.getColumn()))) {
 			result += ", " + userQuery.getTable() + "." + userQuery.getColumn() + " AS " + userQuery.getColumn();
 		}
@@ -307,6 +301,42 @@ public class SQLBuilder {
 		} else {
 			return " AND " + query.getWhere();
 		}
+	}
+
+	/*
+	 * Resets the Booleans needed during search for the next query.
+	 */
+	private void resetBooleans() {
+		needsStandardFields = true;
+		hasDate = false;
+		hasStudyYear = false;
+	}
+
+	/*
+	 * Checks is a column belongs to the fields which always are set in SELECT
+	 */
+	private Boolean isStandardField(String column) {
+		if (ColumnNameKeys.PERSON_ID.equals(column) || ColumnNameKeys.VORNAME_NORM.equals(column)
+				|| ColumnNameKeys.NAME_NORM.equals(column) || ColumnNameKeys.ORT_NORM.equals(column)
+				|| ColumnNameKeys.FAKULTAETEN_NORM.equals(column)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/*
+	 * Helper method for a string representation of all standard fields
+	 */
+	private String addStandardFieldsASColumnName() {
+		String result;
+		result = TableNameKeys.PERSON + "." + ColumnNameKeys.PERSON_ID + " AS " + ColumnNameKeys.PERSON_ID + ", "
+				+ TableNameKeys.VORNAME_NORM + "." + ColumnNameKeys.VORNAME_NORM + " AS " + ColumnNameKeys.VORNAME_NORM
+				+ ", " + TableNameKeys.NAME_NORM + "." + ColumnNameKeys.NAME_NORM + " AS " + ColumnNameKeys.NAME_NORM
+				+ ", " + TableNameKeys.ORT_NORM + "." + ColumnNameKeys.ORT_NORM + " AS " + ColumnNameKeys.ORT_NORM
+				+ ", " + TableNameKeys.FAKULTAETEN + "." + ColumnNameKeys.FAKULTAETEN_NORM + " AS "
+				+ ColumnNameKeys.FAKULTAETEN_NORM;
+		return result;
 	}
 
 }
