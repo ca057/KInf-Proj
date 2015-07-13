@@ -1,47 +1,54 @@
 package de.uniba.kinf.projm.hylleblomst.database.utils;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
+
+import org.apache.derby.agg.Aggregator;
 
 /**
  * @author Simon
  *
  */
-public final class GroupConcat {
-	/**
-	 * This function returns a concatenation of the given Strings separated by
-	 * the given separator
-	 * 
-	 * @param separator
-	 * @param arguments
-	 * @return A String in the format "arg0, arg1, ..., argN"
-	 */
-	public static String groupConcat(String separator, String... arguments) {
-		StringBuilder result = new StringBuilder("");
-		for (String arg : arguments) {
-			result.append(arg + separator);
-		}
-		result.delete(result.length() - separator.length(), result.length());
-		return result.toString();
+@SuppressWarnings("serial")
+public final class GroupConcat implements
+		Aggregator<String, String, GroupConcat> {
+
+	private ArrayList<String> values;
+
+	public GroupConcat() {
+
 	}
 
-	public static void main(String[] args) {
-		try (Connection con = DriverManager
-				.getConnection("jdbc:derby:./db/MyDB;user=admin;password=r+l=j")) {
+	@Override
+	public void accumulate(String nextArg) {
+		values.add(nextArg);
+	}
 
-			PreparedStatement stmt = con
-					.prepareStatement("SELECT HYLLEBLOMST.GROUP_CONCAT (', ',QuellenName,FakultaetenNorm) FROM HYLLEBLOMST.quellen, HYLLEBLOMST.fakultaeten WHERE	 Hylleblomst.quellen.quellenID<=3 AND	 Hylleblomst.fakultaeten.fakultaetenID<=3");
-			ResultSet string = stmt.executeQuery();
-			for (; string.next();) {
-				System.out.println(string.getString(1));
+	@Override
+	public void init() {
+		values = new ArrayList<String>();
+	}
+
+	@Override
+	public void merge(GroupConcat args) {
+		values.addAll(args.values);
+	}
+
+	@Override
+	public String terminate() {
+		Collections.sort(values);
+
+		int count = values.size();
+
+		if (count == 0) {
+			return null;
+		} else {
+			StringBuilder result = new StringBuilder("");
+			for (String value : values) {
+				result.append(value);
+				result.append(";");
 			}
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			return result.toString().substring(0, result.length() - 1);
 		}
 	}
 }
