@@ -85,7 +85,7 @@ public class SQLBuilder {
 	 */
 	private void buildSearchMask() throws SQLException {
 		StringBuilder sqlWhere = new StringBuilder();
-		sqlStatement.append("SELECT DISTINCT * FROM( ");
+		sqlStatement.append("SELECT DISTINCT GROUP_CONCAT(OrtTrad) FROM( ");
 		for (UserQuery query : userQuery) {
 			sqlStatement.append(buildSelectMask(query));
 			sqlWhere.append(buildWhere(query));
