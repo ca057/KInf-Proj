@@ -24,7 +24,7 @@ public class StartController {
 
 	private Stage mainStage;
 
-	private MainController viewController;
+	private MainController mainController;
 
 	/**
 	 * Constructor for a new MainController. Needs a {@link Model} as parameter
@@ -47,18 +47,21 @@ public class StartController {
 			throw new IllegalArgumentException("Das übergebene Model hat keinen Wert/ist fehlerhaft.");
 		}
 		this.model = model;
+		setUpView();
+	}
+
+	private void setUpView() {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/hylleblomstView.fxml"));
 			BorderPane rootPane = (BorderPane) loader.load();
 
-			viewController = loader.getController();
-			viewController.setModel(model);
-
-			viewController.setModelAndControllers(model);
-
 			Scene scene = new Scene(rootPane);
 			mainStage = new Stage();
 			mainStage.setScene(scene);
+
+			mainController = loader.getController();
+			mainController.setModel(model);
+			mainController.setModelToControllers(model);
 
 			mainStage.setTitle(new ViewHelper().getAppName());
 			mainStage.getIcons().add(new Image(getClass().getResourceAsStream("../view/unicorn-icon.png")));

@@ -70,30 +70,7 @@ public class MainController implements Initializable {
 	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		// clearResultTable();
-		// setUpNodes();
 		setEventHandlers();
-		// setUpBindings();
-		// when import of embedded fxml is finished, set the DetailsController
-		// of the model
-		// model.setDetailsController(detailsViewController);
-		// detailsViewController.setModel(model);
-		// mainMenuController.setModel(model);
-		// mainMenuController.setViewController(this);
-		// model.addObserver(tableViewController);
-	}
-
-	public void setModelAndControllers(Model model) {
-		if (model == null) {
-			throw new IllegalArgumentException("Das übergene Model ist ungültig und hat keinen Wert.");
-		}
-		model.setDetailsController(detailsViewController);
-		detailsViewController.setModel(model);
-		mainMenuController.setModel(model);
-		mainMenuController.setViewController(this);
-		inputViewController.setModel(model);
-		tableViewController.setModel(model);
-		model.addObserver(tableViewController);
 	}
 
 	public void setModel(Model model) {
@@ -101,6 +78,19 @@ public class MainController implements Initializable {
 			throw new IllegalArgumentException("Das übergene Model ist ungültig und hat keinen Wert.");
 		}
 		this.model = model;
+	}
+
+	public void setModelToControllers(Model model) {
+		if (model == null) {
+			throw new IllegalArgumentException("Das übergene Model ist ungültig und hat keinen Wert.");
+		}
+		detailsViewController.setModel(model);
+		mainMenuController.setModel(model);
+		mainMenuController.setViewController(this);
+		inputViewController.setModel(model);
+		tableViewController.setModel(model);
+		model.setDetailsController(detailsViewController);
+		model.addObserver(tableViewController);
 	}
 
 	/**
