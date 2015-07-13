@@ -37,9 +37,12 @@ public class SetUpDatabaseFunctions {
 
 	void setUpGroupConcat(Connection con) throws SetUpException {
 		String sqlGroupConcat = "CREATE FUNCTION HYLLEBLOMST.GROUP_CONCAT ( SEPARATOR CHAR, ARGS VARCHAR(255) ... ) RETURNS VARCHAR(2000) PARAMETER STYLE DERBY NO SQL LANGUAGE JAVA EXTERNAL NAME 'de.uniba.kinf.projm.hylleblomst.database.utils.GroupConcat.groupConcat'";
+		String sqlCall = "CALL SQLJ.INSTALL_JAR ('./lib/groupconcat.jar','HYLLEBLOMST.groupconcat',0)";
 
-		try (PreparedStatement stmt = con.prepareStatement(sqlGroupConcat);) {
+		try (PreparedStatement stmt = con.prepareStatement(sqlGroupConcat);
+				PreparedStatement stmtCall = con.prepareCall(sqlCall);) {
 			stmt.executeUpdate();
+			stmtCall.executeUpdate();
 		} catch (SQLException e) {
 			throw new SetUpException(e.getErrorCode()
 					+ ": Function Group_Concat could not be set up: "

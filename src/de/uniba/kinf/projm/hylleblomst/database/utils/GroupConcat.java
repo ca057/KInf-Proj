@@ -1,6 +1,5 @@
 package de.uniba.kinf.projm.hylleblomst.database.utils;
 
-
 /**
  * @author Simon
  *
@@ -22,6 +21,10 @@ public final class GroupConcat {
 		result.delete(result.length() - separator.length(), result.length());
 		return result.toString();
 	}
+
+	// public static String groupConcatColumn(String separator, ) {
+	//
+	// }
 
 	// public static void main(String[] args) {
 	// try (Connection con = DriverManager
