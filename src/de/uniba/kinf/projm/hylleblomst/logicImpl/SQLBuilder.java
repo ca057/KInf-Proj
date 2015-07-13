@@ -45,16 +45,16 @@ public class SQLBuilder {
 		}
 		this.queryCollection = userQuery;
 		buildSearchMask();
-		print();
+		// print();
 	}
 
 	/*
 	 * Use this to see the finished SQL statements (with the commented line 48
 	 * and 76 (more or less))
 	 */
-	private void print() {
-		System.out.println(sqlStatement);
-	}
+	// private void print() {
+	// System.out.println(sqlStatement);
+	// }
 
 	/**
 	 * With this constructor, the sql-Statement to execute a search of a person
