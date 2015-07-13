@@ -85,7 +85,7 @@ public class SQLBuilder {
 	 */
 	private void buildSearchMask() throws SQLException {
 		StringBuilder sqlWhere = new StringBuilder();
-		sqlStatement.append("SELECT GROUP_CONCAT(OrtTrad) FROM( ");
+		sqlStatement.append("SELECT Hylleblomst.GROUP_CONCAT(OrtTrad) FROM( ");
 		for (UserQuery query : userQuery) {
 			sqlStatement.append(buildSelectMask(query));
 			sqlWhere.append(buildWhere(query));
