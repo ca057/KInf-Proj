@@ -32,7 +32,7 @@ public class ExportToCSV {
 	 * @param crs
 	 *            The CachedRowSet containing the result of a query
 	 * @throws ExportException
-	 *             If the file could not be created in the loation or if the
+	 *             If the file could not be created in the location or if the
 	 *             file could not be written to
 	 */
 	public void exportToCsv(File file, CachedRowSet crs) throws ExportException {
