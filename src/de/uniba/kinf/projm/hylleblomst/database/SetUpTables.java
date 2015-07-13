@@ -1,7 +1,6 @@
 package de.uniba.kinf.projm.hylleblomst.database;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -19,11 +18,9 @@ import de.uniba.kinf.projm.hylleblomst.keys.TableNameKeys;
  */
 public class SetUpTables {
 
-	public void run(String dbURL, String adminUser, String adminPassword)
-			throws SetUpException {
+	public void setUpTables(Connection con) throws SetUpException {
 		int interrupt = 0;
-		try (Connection con = DriverManager.getConnection(dbURL, adminUser,
-				adminPassword);)
+		try
 		// PreparedStatement stmt = con.prepareStatement(
 		// "SELECT * FROM SYS.SYSTABLES",
 		// ResultSet.TYPE_SCROLL_INSENSITIVE,

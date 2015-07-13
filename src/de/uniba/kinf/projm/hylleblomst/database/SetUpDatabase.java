@@ -1,7 +1,6 @@
 package de.uniba.kinf.projm.hylleblomst.database;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -14,8 +13,7 @@ import de.uniba.kinf.projm.hylleblomst.keys.DBUserKeys;
  */
 public class SetUpDatabase {
 
-	public void run(String dbURL, String adminUser, String adminPassword)
-			throws SetUpException {
+	public void setUpDatabase(Connection con) throws SetUpException {
 		// if (!Files.isDirectory(Paths.get(dbURL))) {
 		// throw new SetUpException("Path is no directory");
 		// }
@@ -27,8 +25,7 @@ public class SetUpDatabase {
 		// urlStatement.append("; password=");
 		// urlStatement.append(DBUserKeys.adminPassword);
 
-		try (Connection con = DriverManager.getConnection(dbURL
-				+ "; create=true", adminUser, adminPassword)) {
+		try {
 			// Create users
 			createUsers(con);
 
@@ -40,8 +37,6 @@ public class SetUpDatabase {
 
 		} catch (SetUpException e) {
 			throw new SetUpException(e.getMessage());
-		} catch (SQLException e) {
-			throw new SetUpException("Connection refused: " + e.getMessage());
 		}
 	}
 
