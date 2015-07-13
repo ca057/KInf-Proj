@@ -1,4 +1,4 @@
-package de.uniba.kinf.projm.hylleblomst.database;
+package de.uniba.kinf.projm.hylleblomst.dataImport.impl;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -10,6 +10,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import de.uniba.kinf.projm.hylleblomst.dataImport.ImportDatabase;
 import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.TableNameKeys;

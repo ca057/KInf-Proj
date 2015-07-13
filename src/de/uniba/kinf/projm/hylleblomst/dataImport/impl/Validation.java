@@ -1,4 +1,4 @@
-package de.uniba.kinf.projm.hylleblomst.database;
+package de.uniba.kinf.projm.hylleblomst.dataImport.impl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

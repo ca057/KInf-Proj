@@ -5,8 +5,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-import de.uniba.kinf.projm.hylleblomst.database.ImportDatabase;
-import de.uniba.kinf.projm.hylleblomst.database.ImportDatabaseImpl;
+import de.uniba.kinf.projm.hylleblomst.dataImport.impl.ImportDatabaseImpl;
 import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 import de.uniba.kinf.projm.hylleblomst.keys.DBUserKeys;
 
