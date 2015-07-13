@@ -6,14 +6,14 @@
 	<menus>
 		<Menu fx:id="mainMenu_file" mnemonicParsing="false" text="Datei">
 			<items>
-				<MenuItem fx:id="mainMenu_file_export" mnemonicParsing="false" text="Export" />
+				<MenuItem fx:id="mainMenu_file_exportSearchResult" mnemonicParsing="false" text="Suchergebnis exportieren" />
 				<MenuItem fx:id="mainMenu_file_close" mnemonicParsing="false" text="Programm beenden" />
 			</items>
 		</Menu>
 		<Menu fx:id="mainMenu_database" mnemonicParsing="false" text="Datenbank">
 			<items>
 				<MenuItem fx:id="mainMenu_database_setupDatabase" mnemonicParsing="false" text="Datenbank anlegen/verbinden" />
-				<MenuItem fx:id="mainMenu_database_importData" mnemonicParsing="false" text="Daten importieren" />
+				<MenuItem fx:id="mainMenu_database_importData" mnemonicParsing="false" text="Daten in Datenbank importieren" />
 				<MenuItem fx:id="mainMenu_database_clearDatabase" mnemonicParsing="false" text="Datenbank leeren" />
 			</items>
 		</Menu>
