@@ -19,9 +19,9 @@ import de.uniba.kinf.projm.hylleblomst.exceptions.ExportException;
  * @author Simon
  *
  */
-public class ExportToCSV {
+public class ExportDataToCSV {
 
-	public ExportToCSV() {
+	public ExportDataToCSV() {
 	}
 
 	/**
