@@ -39,7 +39,7 @@ public class SQLBuilder {
 			throw new InputMismatchException("Die übergebene Collection darf nicht leer bzw. null sein.");
 		}
 		this.userQuery = userQuery;
-		buildQuery();
+		buildNormalSearch();
 		print();
 	}
 
@@ -84,43 +84,18 @@ public class SQLBuilder {
 	 * @return
 	 * @throws SQLException
 	 */
-	void buildQuery() throws SQLException {
-
+	private void buildNormalSearch() throws SQLException {
 		StringBuilder sqlWhere = new StringBuilder();
-		StringBuilder sqlGroup = new StringBuilder();
 		for (UserQuery query : userQuery) {
-			sqlStatement.append(buildSelect(query));
+			sqlStatement.append("SELECT vorname_norm, GROUP_CONCAT(OrtTrad) FROM (").append(buildSelect(query));
 			sqlWhere.append(buildWhere(query));
-			sqlGroup.append("," + query.getColumn());
-			if (query.getColumn() == ColumnNameKeys.DATUM) {
-				sqlGroup.append(", " + ColumnNameKeys.DATUMS_FELDER_GESETZT);
-			}
 			for (int i = 1; i <= query.getNumberOfInputs(); i++) {
 				inputs.add(query.getInput());
 			}
 
 		}
-		sqlStatement.append(buildFrom()).append(" WHERE ")
-				.append(sqlWhere + " GROUP BY " + TableNameKeys.PERSON + "." + ColumnNameKeys.PERSON_ID + ","
-						+ TableNameKeys.VORNAME_NORM + "." + ColumnNameKeys.VORNAME_NORM + "," + TableNameKeys.NAME_NORM
-						+ "." + ColumnNameKeys.NAME_NORM + "," + TableNameKeys.ORT_NORM + "." + ColumnNameKeys.ORT_NORM
-						+ "," + TableNameKeys.FAKULTAETEN + "." + ColumnNameKeys.FAKULTAETEN_NORM)
-				.append(sqlGroup);
-	}
+		sqlStatement.append(buildFrom()).append(" WHERE ").append(sqlWhere).append(") T");
 
-	/*
-	 * Builds the WHERE part of a SQL-statement, depending on what operation is
-	 * wanted.
-	 */
-	private String buildWhere(UserQuery query) {
-		if (whereIsEmpty) {
-			whereIsEmpty = false;
-			return query.getWhere();
-		} else if (query.isOrCondition()) {
-			return " OR " + query.getWhere();
-		} else {
-			return " AND " + query.getWhere();
-		}
 	}
 
 	/*
@@ -161,22 +136,17 @@ public class SQLBuilder {
 					+ TableNameKeys.FAKULTAETEN + "." + ColumnNameKeys.FAKULTAETEN_NORM + " AS fakultaet_norm";
 			needsStandardFields = false;
 		}
-
-		if (ColumnNameKeys.STUDIENJAHR_INT.equals(userQuery.getColumn())) {
-			result += ", " + userQuery.getTable() + "." + ColumnNameKeys.STUDIENJAHR + " AS "
-					+ ColumnNameKeys.STUDIENJAHR;
-		} else if (ColumnNameKeys.DATUM.equals(userQuery.getColumn())) {
-			result += ", " + userQuery.getTable() + "." + ColumnNameKeys.DATUM + ", " + userQuery.getTable() + "."
-					+ ColumnNameKeys.DATUMS_FELDER_GESETZT + " AS " + ColumnNameKeys.STUDIENJAHR;
-
+		if (ColumnNameKeys.DATUM.equals(userQuery.getColumn())) {
+			result += ", " + userQuery.getTable() + "." + ColumnNameKeys.DATUM + " AS " + ColumnNameKeys.STUDIENJAHR
+					+ ", " + userQuery.getTable() + "." + ColumnNameKeys.DATUMS_FELDER_GESETZT + " AS "
+					+ ColumnNameKeys.STUDIENJAHR_INT;
 		} else {
-			result += ", " + " Hylleblomst.GROUP_CONCAT(', ', max(" + userQuery.getTable() + "." + userQuery.getColumn()
-					+ "))";
+			result += ", " + userQuery.getTable() + "." + userQuery.getColumn() + " AS " + userQuery.getColumn();
 		}
 		if (userQuery.getSource() == SourceKeys.ORT_NORM_AB || (SearchFieldKeys.ORT.equals(userQuery.getSearchField())
 				&& userQuery.getSource() == SourceKeys.NORM)) {
-			result += ", " + " Hylleblomst.GROUP_CONCAT(', ', " + TableNameKeys.ORT_ABWEICHUNG_NORM + "."
-					+ ColumnNameKeys.ORT_ABWEICHUNG_NORM + ") AS " + ColumnNameKeys.ORT_ABWEICHUNG_NORM;
+			result += ", " + TableNameKeys.ORT_ABWEICHUNG_NORM + "." + ColumnNameKeys.ORT_ABWEICHUNG_NORM + " AS "
+					+ ColumnNameKeys.ORT_ABWEICHUNG_NORM;
 		}
 		return result;
 	}
@@ -279,6 +249,21 @@ public class SQLBuilder {
 				+ seminar + " LEFT OUTER JOIN " + wirtschaftslage + " LEFT OUTER JOIN " + zusaetze + " LEFT OUTER JOIN "
 				+ fach + " LEFT OUTER JOIN " + anrede + " LEFT OUTER JOIN " + titel + " LEFT OUTER JOIN " + fakultaeten
 				+ " LEFT OUTER JOIN " + fundorte + ", " + TableNameKeys.QUELLEN;
+	}
+
+	/*
+	 * Builds the WHERE part of a SQL-statement, depending on what operation is
+	 * wanted.
+	 */
+	private String buildWhere(UserQuery query) {
+		if (whereIsEmpty) {
+			whereIsEmpty = false;
+			return query.getWhere();
+		} else if (query.isOrCondition()) {
+			return " OR " + query.getWhere();
+		} else {
+			return " AND " + query.getWhere();
+		}
 	}
 
 }
