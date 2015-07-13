@@ -6,28 +6,28 @@ package de.uniba.kinf.projm.hylleblomst.exceptions;
  * @author Simon
  *
  */
-public class ViewException extends Exception {
+public class SearchException extends Exception {
 
 	private static final long serialVersionUID = -6395504747881967115L;
 
-	public ViewException() {
+	public SearchException() {
 		super();
 	}
 
-	public ViewException(String message, Throwable cause,
+	public SearchException(String message, Throwable cause,
 			boolean enableSuppression, boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 	}
 
-	public ViewException(String message, Throwable cause) {
+	public SearchException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
-	public ViewException(String message) {
+	public SearchException(String message) {
 		super(message);
 	}
 
-	public ViewException(Throwable cause) {
+	public SearchException(Throwable cause) {
 		super(cause);
 	}
 

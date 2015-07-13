@@ -134,7 +134,6 @@ public class DetailsViewController implements ControllerInterface, Initializable
 
 	@FXML
 	private Label result_details_nummer;
-	// label value is set with personID
 
 	@FXML
 	private Label result_details_seite;

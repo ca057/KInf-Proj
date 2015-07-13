@@ -164,7 +164,10 @@ public class UserQueryImpl implements UserQuery {
 	 * happens here to avoid further iterations.
 	 */
 	private void searchFieldKeyToDatabaseData() {
-		if (source >= SourceKeys.bottom && source <= SourceKeys.top) {
+		if (source < SourceKeys.bottom && source > SourceKeys.top) {
+			throw new IllegalArgumentException("Die Werte für Suchfeld " + searchField.toString() + " und Quelle "
+					+ source + " konnten keiner Tabelle und Spalte zugeordnet werden.");
+		} else {
 			switch (searchField) {
 			case ADLIG:
 				table = TableNameKeys.PERSON;
@@ -180,6 +183,7 @@ public class UserQueryImpl implements UserQuery {
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.STUDIENJAHR_INT;
 				sqlWhere = String.format("%s.%s >= ?", table, column);
+				numberOfInputs++;
 				isOpenSearch = false;
 				isInt = true;
 				break;
@@ -187,6 +191,7 @@ public class UserQueryImpl implements UserQuery {
 				table = TableNameKeys.PERSON;
 				column = ColumnNameKeys.STUDIENJAHR_INT;
 				sqlWhere = String.format("%s.%s <= ?", table, column);
+				numberOfInputs++;
 				isOpenSearch = false;
 				isInt = true;
 				break;
@@ -196,6 +201,7 @@ public class UserQueryImpl implements UserQuery {
 				isOpenSearch = false;
 				isInt = true;
 				sqlWhere = String.format("%s.%s >= ?", table, column);
+				numberOfInputs++;
 				if (input.contains("mm-dd")) {
 					input = input.substring(0, input.indexOf("-", 1)) + "-01-01";
 				} else if (input.contains("mm")) {
@@ -210,6 +216,7 @@ public class UserQueryImpl implements UserQuery {
 				isOpenSearch = false;
 				isInt = true;
 				sqlWhere = String.format("%s.%s <= ?", table, column);
+				numberOfInputs++;
 				if (input.contains("mm-dd")) {
 					input = input.substring(0, input.indexOf("-", 1)) + "-12-31";
 				} else if (input.contains("mm")) {
@@ -350,14 +357,10 @@ public class UserQueryImpl implements UserQuery {
 				throw new IllegalArgumentException(
 						"Das zugehörige Tabellenelement für Suchfeld " + searchField.name() + " ist nicht definiert.");
 			}
-		} else {
-			throw new IllegalArgumentException("Die Werte für Suchfeld " + searchField.toString() + " und Quelle "
-					+ source + " konnten keiner Tabelle und Spalte zugeordnet werden.");
 		}
 		if (isOpenSearch) {
 			updateInputForOpenSearch();
 		}
-		numberOfInputs++;
 	}
 
 	/*
@@ -367,6 +370,7 @@ public class UserQueryImpl implements UserQuery {
 	 * "Ort_Abweichung_Norm" has to be included in the search as well.
 	 */
 	private String buildSQLWhere() {
+		numberOfInputs++;
 		StringBuilder result = new StringBuilder();
 		result.append("(");
 		String upperFront = "";
@@ -379,7 +383,6 @@ public class UserQueryImpl implements UserQuery {
 		}
 		result.append(String.format("%s%s.%s%s", upperFront, table, column, upperEnd)).append(getEquationSymbol())
 				.append(String.format("%s?%s", upperFront, upperEnd));
-
 		if (source == SourceKeys.NO_SELECTION || source == SourceKeys.ORT_NORM_AB) {
 			result.append(String.format(" OR UPPER(%s_norm.%snorm) ", table.substring(0, table.indexOf("_")),
 					column.substring(0, column.length() - 4))).append(getEquationSymbol()).append("UPPER(?)");
@@ -397,18 +400,23 @@ public class UserQueryImpl implements UserQuery {
 
 		if (!(source == SourceKeys.NORM || source == SourceKeys.NO_SOURCE || source == SourceKeys.NO_SELECTION
 				|| source == SourceKeys.ORT_NORM_AB || SearchFieldKeys.ANREDE.equals(searchField)
-				|| SearchFieldKeys.TITEL.equals(searchField))) {
+				|| SearchFieldKeys.TITEL.equals(searchField) || SearchFieldKeys.ZUSAETZE.equals(searchField))) {
 			result.append(String.format(" AND %1s_info.%s = %s", table.substring(0, table.indexOf("_")),
 					ColumnNameKeys.QUELLEN_ID, source));
 		}
 		return result.toString();
 	}
 
+	/*
+	 * Sets the WHERE part, if a notation of a field (i.e. name) is searched.
+	 */
 	private String buildSQLWhereNotation() {
 		StringBuilder result = new StringBuilder();
 		result.append(String.format("%s.%s = ?", TableNameKeys.PERSON, ColumnNameKeys.PERSON_ID));
 		numberOfInputs++;
-		if (!(source == SourceKeys.NORM || source == SourceKeys.NO_SOURCE || source == SourceKeys.NO_SELECTION
+		if (SearchFieldKeys.ZUSAETZE.equals(searchField)) {
+			result.append(String.format(" AND %s_info.%s = %s", table, ColumnNameKeys.QUELLEN_ID, source));
+		} else if (!(source == SourceKeys.NORM || source == SourceKeys.NO_SOURCE || source == SourceKeys.NO_SELECTION
 				|| source == SourceKeys.ORT_NORM_AB || SearchFieldKeys.ANREDE.equals(searchField)
 				|| SearchFieldKeys.TITEL.equals(searchField))) {
 			result.append(String.format(" AND %s_info.%s = %s", table.substring(0, table.indexOf("_")),

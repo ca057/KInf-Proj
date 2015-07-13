@@ -87,16 +87,25 @@ public class SQLBuilder {
 	void buildQuery() throws SQLException {
 
 		StringBuilder sqlWhere = new StringBuilder();
+		StringBuilder sqlGroup = new StringBuilder();
 		for (UserQuery query : userQuery) {
 			sqlStatement.append(buildSelect(query));
 			sqlWhere.append(buildWhere(query));
-
+			sqlGroup.append("," + query.getColumn());
+			if (query.getColumn() == ColumnNameKeys.DATUM) {
+				sqlGroup.append(", " + ColumnNameKeys.DATUMS_FELDER_GESETZT);
+			}
 			for (int i = 1; i <= query.getNumberOfInputs(); i++) {
 				inputs.add(query.getInput());
 			}
 
 		}
-		sqlStatement.append(buildFrom()).append(" WHERE ").append(sqlWhere);
+		sqlStatement.append(buildFrom()).append(" WHERE ")
+				.append(sqlWhere + " GROUP BY " + TableNameKeys.PERSON + "." + ColumnNameKeys.PERSON_ID + ","
+						+ TableNameKeys.VORNAME_NORM + "." + ColumnNameKeys.VORNAME_NORM + "," + TableNameKeys.NAME_NORM
+						+ "." + ColumnNameKeys.NAME_NORM + "," + TableNameKeys.ORT_NORM + "." + ColumnNameKeys.ORT_NORM
+						+ "," + TableNameKeys.FAKULTAETEN + "." + ColumnNameKeys.FAKULTAETEN_NORM)
+				.append(sqlGroup);
 	}
 
 	/*
@@ -152,24 +161,22 @@ public class SQLBuilder {
 					+ TableNameKeys.FAKULTAETEN + "." + ColumnNameKeys.FAKULTAETEN_NORM + " AS fakultaet_norm";
 			needsStandardFields = false;
 		}
-		if (userQuery.isInt()) {
-			if (ColumnNameKeys.STUDIENJAHR_INT.equals(userQuery.getColumn())) {
-				result += ", " + userQuery.getTable() + "." + ColumnNameKeys.STUDIENJAHR + " AS "
-						+ userQuery.getSearchField();
-			} else if (ColumnNameKeys.DATUM.equals(userQuery.getColumn())) {
-				result += ", " + userQuery.getTable() + "." + ColumnNameKeys.DATUM + ", " + userQuery.getTable() + "."
-						+ ColumnNameKeys.DATUMS_FELDER_GESETZT;
-			} else {
-				result += ", CAST(" + userQuery.getTable() + "." + userQuery.getColumn() + " AS INTEGER) AS "
-						+ userQuery.getSearchField();
-			}
+
+		if (ColumnNameKeys.STUDIENJAHR_INT.equals(userQuery.getColumn())) {
+			result += ", " + userQuery.getTable() + "." + ColumnNameKeys.STUDIENJAHR + " AS "
+					+ ColumnNameKeys.STUDIENJAHR;
+		} else if (ColumnNameKeys.DATUM.equals(userQuery.getColumn())) {
+			result += ", " + userQuery.getTable() + "." + ColumnNameKeys.DATUM + ", " + userQuery.getTable() + "."
+					+ ColumnNameKeys.DATUMS_FELDER_GESETZT + " AS " + ColumnNameKeys.STUDIENJAHR;
+
 		} else {
-			result += ", " + userQuery.getTable() + "." + userQuery.getColumn() + " AS " + userQuery.getSearchField();
+			result += ", " + " Hylleblomst.GROUP_CONCAT(', ', max(" + userQuery.getTable() + "." + userQuery.getColumn()
+					+ "))";
 		}
 		if (userQuery.getSource() == SourceKeys.ORT_NORM_AB || (SearchFieldKeys.ORT.equals(userQuery.getSearchField())
 				&& userQuery.getSource() == SourceKeys.NORM)) {
-			result += ", " + TableNameKeys.ORT_ABWEICHUNG_NORM + "." + ColumnNameKeys.ORT_ABWEICHUNG_NORM + " AS "
-					+ ColumnNameKeys.ORT_ABWEICHUNG_NORM;
+			result += ", " + " Hylleblomst.GROUP_CONCAT(', ', " + TableNameKeys.ORT_ABWEICHUNG_NORM + "."
+					+ ColumnNameKeys.ORT_ABWEICHUNG_NORM + ") AS " + ColumnNameKeys.ORT_ABWEICHUNG_NORM;
 		}
 		return result;
 	}

@@ -1,6 +1,5 @@
 package de.uniba.kinf.projm.hylleblomst.gui.controller;
 
-import java.io.File;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.InputMismatchException;
@@ -10,10 +9,7 @@ import java.util.ResourceBundle;
 
 import javax.sql.rowset.CachedRowSet;
 
-import de.uniba.kinf.projm.hylleblomst.exceptions.ExportException;
-import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
-import de.uniba.kinf.projm.hylleblomst.exceptions.SetUpException;
-import de.uniba.kinf.projm.hylleblomst.exceptions.ViewException;
+import de.uniba.kinf.projm.hylleblomst.exceptions.SearchException;
 import de.uniba.kinf.projm.hylleblomst.gui.model.Model;
 import de.uniba.kinf.projm.hylleblomst.keys.DatabaseKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
@@ -26,7 +22,6 @@ import javafx.beans.property.StringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -36,7 +31,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
@@ -47,10 +41,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
-import javafx.stage.Stage;
 import javafx.util.Callback;
 
 /**
@@ -69,8 +59,6 @@ public class ViewController implements ControllerInterface, Initializable {
 
 	private int inputFieldCounter = 24;
 
-	private FileChooser fileChooser;
-
 	private StringProperty sourceLabelName = new SimpleStringProperty("Quelle: ");
 
 	private CachedRowSet result;
@@ -79,27 +67,6 @@ public class ViewController implements ControllerInterface, Initializable {
 
 	@FXML
 	private BorderPane root;
-
-	@FXML
-	private MenuItem mainMenu_file_export;
-
-	@FXML
-	private MenuItem mainMenu_file_close;
-
-	@FXML
-	private MenuItem mainMenu_database_setupDatabase;
-
-	@FXML
-	private MenuItem mainMenu_database_importData;
-
-	@FXML
-	private MenuItem mainMenu_database_clearDatabase;
-
-	@FXML
-	private MenuItem mainMenu_help_help;
-
-	@FXML
-	private MenuItem mainMenu_help_about;
 
 	@FXML
 	private ComboBox<String> search_sourcekey_selection;
@@ -249,10 +216,16 @@ public class ViewController implements ControllerInterface, Initializable {
 	private AnchorPane result_persondetails_anchorpane;
 
 	@FXML
-	Parent detailsView;
+	private Parent detailsView;
 
 	@FXML
-	DetailsViewController detailsViewController;
+	private DetailsViewController detailsViewController;
+
+	@FXML
+	private Parent mainMenu;
+
+	@FXML
+	private MenuController mainMenuController;
 
 	/**
 	 * Constructor for a new Controller. The constructor initiates all
@@ -264,33 +237,48 @@ public class ViewController implements ControllerInterface, Initializable {
 		dbKey = new DatabaseKeys("./db");
 		viewHelper = new ViewHelper();
 		initiator = new SearchInitiatorImpl(dbKey);
-		fileChooser = new FileChooser();
 		model = new Model(initiator);
 		model.addObserver(this);
 		searchCtrl = new SearchController(inputFieldCounter, model);
 	}
 
+	/**
+	 * Implemented from Initializable, this method initializes all
+	 * FXML-variables. It makes different default setups, like clearing the
+	 * result table or setting up the event handlers. The execution of these
+	 * setups is delegated to helper functions.
+	 */
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		clearResultTable();
 		setUpNodes();
 		setEventHandlers();
-		setUpLabels();
 		setUpBindings();
 		// when import of embedded fxml is finished, set the DetailsController
 		// of the model
 		model.setDetailsController(detailsViewController);
 		detailsViewController.setModel(model);
+		mainMenuController.setModel(model);
+		mainMenuController.setViewController(this);
 	}
 
+	/**
+	 * Clears the {@link TableView}.
+	 */
 	private void clearResultTable() {
 		resultTable.getColumns().clear();
 		resultTable.getItems().clear();
 	}
 
+	/**
+	 * Makes default setups for different nodes, like setting the default
+	 * expanded pane for the accordion or label names.
+	 */
 	private void setUpNodes() {
 		searchCategories.setExpandedPane(searchCategory_person);
 		search_sourceLabel.setText(sourceLabelName.getValueSafe());
+		searchCategory_study_einschreibeHinweis
+				.setText("Hinweis: Für eine erfolgreiche Suche muss jeweils mindestens das Jahr ausgefüllt sein.");
 	}
 
 	/**
@@ -304,14 +292,27 @@ public class ViewController implements ControllerInterface, Initializable {
 
 	/**
 	 * 
+	 * @return
+	 */
+	CachedRowSet getResult() {
+		return result;
+	}
+
+	/**
+	 * Function sets up event handlers for key input, numerical input in input
+	 * fields, for the menu and the table view. Setting up the different
+	 * handlers is delegated to different helper functions.
 	 */
 	private void setEventHandlers() {
 		setKeyEvents();
-		setMenuEventHandlers();
 		setNumericalInputEventHandlers();
 		setTableViewEventHandlers();
 	}
 
+	/**
+	 * Sets up all 'global' key events. At the moment, this is only the ENTER
+	 * key starting the search when a valid input was done.
+	 */
 	private void setKeyEvents() {
 		root.setOnKeyReleased(new EventHandler<KeyEvent>() {
 
@@ -321,116 +322,6 @@ public class ViewController implements ControllerInterface, Initializable {
 					startSearch();
 				}
 				ke.consume();
-			}
-		});
-	}
-
-	private void setMenuEventHandlers() {
-		mainMenu_file_export.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				if (result != null) {
-					fileChooser.setTitle(viewHelper.getAppName() + " - Speicherort für Export auswählen");
-					fileChooser.getExtensionFilters().add(new ExtensionFilter("CSV-Datei (*.csv)", "*.csv"));
-
-					Optional<File> exportFile = Optional
-							.ofNullable(fileChooser.showSaveDialog(root.getScene().getWindow()));
-					if (exportFile.isPresent()) {
-						try {
-							if (result.getMetaData().getColumnCount() != 0) {
-								model.exportSearchedData(exportFile.get(), result);
-								viewHelper.showInfo("Export der Daten in Datei " + exportFile.get().getName()
-										+ " war erfolgreich.");
-							} else {
-								viewHelper.showErrorMessage(
-										"Suchergebnis enthält keine Daten, Export ist nicht möglich.");
-							}
-						} catch (ExportException | SQLException e) {
-							e.printStackTrace();
-							viewHelper
-									.showErrorMessage("Export der Daten in Datei " + exportFile.get().getAbsolutePath()
-											+ " war nicht erfolgreich.\n" + e.getMessage());
-						}
-					}
-				} else {
-					viewHelper.showErrorMessage("Keine Suchergebnisse vorhanden, Export der Daten nicht möglich.");
-				}
-				event.consume();
-			}
-		});
-		mainMenu_file_close.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				closeWindow();
-				event.consume();
-			}
-		});
-		mainMenu_database_setupDatabase.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				DirectoryChooser dirChooser = new DirectoryChooser();
-				dirChooser.setTitle(viewHelper.getAppName() + " - Pfad für Datenbank auswählen");
-				Optional<File> setupDir = Optional.ofNullable(dirChooser.showDialog(root.getScene().getWindow()));
-				if (setupDir.isPresent()) {
-					try {
-						model.setUpDatabase(setupDir.get().getAbsoluteFile());
-						viewHelper.showInfo("Das Anlegen der Datenbank und Tabellen im Verzeichnis "
-								+ setupDir.get().toString() + " war erfolgreich.");
-					} catch (SetUpException e) {
-						viewHelper.showErrorMessage("Datenbank konnte nicht angelegt werden:\n" + e.getMessage());
-						e.printStackTrace();
-					}
-				}
-				event.consume();
-			}
-		});
-		mainMenu_database_importData.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				fileChooser.setTitle(viewHelper.getAppName() + " - CSV-Datei für Import auswählen");
-				fileChooser.getExtensionFilters().add(new ExtensionFilter("CSV-Datei (*.csv)", "*.csv"));
-
-				Optional<File> importFile = Optional
-						.ofNullable(fileChooser.showOpenDialog(root.getScene().getWindow()));
-				if (importFile.isPresent()) {
-					try {
-						model.importData(importFile.get().getAbsoluteFile());
-						viewHelper.showInfo("Import der Datei " + importFile.get().getName() + " war erfolgreich.");
-					} catch (ImportException e) {
-						viewHelper.showErrorMessage("Datei konnte nicht importiert werden:\n" + e.getMessage());
-						e.printStackTrace();
-					}
-				}
-				event.consume();
-			}
-		});
-		mainMenu_database_clearDatabase.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				if (viewHelper.getUserConfirmation("Datenbank löschen")) {
-					try {
-						model.clearDatabase();
-					} catch (SetUpException e) {
-						e.printStackTrace();
-						viewHelper.showErrorMessage("Datenbank konnte nicht gelöscht werden:\n" + e.getMessage());
-					}
-				}
-				event.consume();
-			}
-		});
-
-		mainMenu_help_help.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				HelpFrameController helpFrameController = new HelpFrameController();
-				helpFrameController.showView();
-				event.consume();
 			}
 		});
 	}
@@ -449,7 +340,8 @@ public class ViewController implements ControllerInterface, Initializable {
 						viewHelper.showErrorMessage("Studienjahr muss eine Zahl zwischen 0 und 2015 sein.");
 						searchCategory_study_studienjahrVon.clear();
 					}
-				} else if (ke.getCode() != KeyCode.TAB) {
+				} else if (ke.getCode() != KeyCode.TAB && ke.getCode() != KeyCode.BACK_SPACE
+						&& ke.getCode() != KeyCode.SHIFT && ke.getCode() != KeyCode.DELETE) {
 					viewHelper.showErrorMessage("Studienjahr muss eine Zahl zwischen 0 und 2015 sein.");
 					searchCategory_study_studienjahrVon.clear();
 				}
@@ -464,8 +356,10 @@ public class ViewController implements ControllerInterface, Initializable {
 					if (getParsedInt(searchCategory_study_studienjahrBis.getText()) < 0
 							|| getParsedInt(searchCategory_study_studienjahrBis.getText()) > 2015) {
 						viewHelper.showErrorMessage("Studienjahr muss eine Zahl zwischen 0 und 2015 sein.");
+						searchCategory_study_studienjahrBis.clear();
 					}
-				} else if (ke.getCode() != KeyCode.TAB) {
+				} else if (ke.getCode() != KeyCode.TAB && ke.getCode() != KeyCode.BACK_SPACE
+						&& ke.getCode() != KeyCode.SHIFT && ke.getCode() != KeyCode.DELETE) {
 					viewHelper.showErrorMessage("Studienjahr muss eine Zahl zwischen 0 und 2015 sein.");
 					searchCategory_study_studienjahrBis.clear();
 				}
@@ -479,10 +373,14 @@ public class ViewController implements ControllerInterface, Initializable {
 				if (searchCategory_study_einschreibeJahrVon.getText().matches("[0-9]{1,4}")) {
 					if (getParsedInt(searchCategory_study_einschreibeJahrVon.getText()) < 0
 							|| getParsedInt(searchCategory_study_einschreibeJahrVon.getText()) > 2015) {
-						viewHelper.showErrorMessage("Einschreibejahr muss eine Zahl zwischen 0 und 2015 sein.");
+						viewHelper.showErrorMessage(
+								"Einschreibejahr muss eine vierstellige Eingabe zwischen 0 und 2015 sein.");
+						searchCategory_study_einschreibeJahrVon.clear();
 					}
-				} else if (ke.getCode() != KeyCode.TAB) {
-					viewHelper.showErrorMessage("Einschreibejahr muss eine Zahl zwischen 0 und 2015 sein.");
+				} else if (ke.getCode() != KeyCode.TAB && ke.getCode() != KeyCode.BACK_SPACE
+						&& ke.getCode() != KeyCode.SHIFT && ke.getCode() != KeyCode.DELETE) {
+					viewHelper.showErrorMessage(
+							"Einschreibejahr muss eine vierstellige Eingabe zwischen 0 und 2015 sein.");
 					searchCategory_study_einschreibeJahrVon.clear();
 				}
 				ke.consume();
@@ -492,12 +390,14 @@ public class ViewController implements ControllerInterface, Initializable {
 
 			@Override
 			public void handle(KeyEvent ke) {
-				if (searchCategory_study_einschreibeMonatVon.getText().matches("[1-9][0-2]?")) {
+				if (searchCategory_study_einschreibeMonatVon.getText().matches("[0-9][0-2]?")) {
 					if (getParsedInt(searchCategory_study_einschreibeMonatVon.getText()) < 1
 							|| getParsedInt(searchCategory_study_einschreibeMonatVon.getText()) > 12) {
 						viewHelper.showErrorMessage("Einschreibemonat muss eine Zahl von 1 bis 12 sein.");
+						searchCategory_study_einschreibeMonatVon.clear();
 					}
-				} else if (ke.getCode() != KeyCode.TAB) {
+				} else if (ke.getCode() != KeyCode.TAB && ke.getCode() != KeyCode.BACK_SPACE
+						&& ke.getCode() != KeyCode.SHIFT && ke.getCode() != KeyCode.DELETE) {
 					viewHelper.showErrorMessage("Einschreibemonat muss eine Zahl von 1 bis 12 sein.");
 					searchCategory_study_einschreibeMonatVon.clear();
 				}
@@ -508,12 +408,14 @@ public class ViewController implements ControllerInterface, Initializable {
 
 			@Override
 			public void handle(KeyEvent ke) {
-				if (searchCategory_study_einschreibeTagVon.getText().matches("[1-3][0-9]?")) {
+				if (searchCategory_study_einschreibeTagVon.getText().matches("[0-9][0-9]?")) {
 					if (getParsedInt(searchCategory_study_einschreibeTagVon.getText()) < 1
 							|| getParsedInt(searchCategory_study_einschreibeTagVon.getText()) > 31) {
 						viewHelper.showErrorMessage("Einschreibetag muss eine Zahl von 1 bis 31 sein.");
+						searchCategory_study_einschreibeTagVon.clear();
 					}
-				} else if (ke.getCode() != KeyCode.TAB) {
+				} else if (ke.getCode() != KeyCode.TAB && ke.getCode() != KeyCode.BACK_SPACE
+						&& ke.getCode() != KeyCode.SHIFT && ke.getCode() != KeyCode.DELETE) {
 					viewHelper.showErrorMessage("Einschreibetag muss eine Zahl von 1 bis 31 sein.");
 					searchCategory_study_einschreibeTagVon.clear();
 				}
@@ -527,10 +429,14 @@ public class ViewController implements ControllerInterface, Initializable {
 				if (searchCategory_study_einschreibeJahrBis.getText().matches("[0-9]{1,4}")) {
 					if (getParsedInt(searchCategory_study_einschreibeJahrBis.getText()) < 0
 							|| getParsedInt(searchCategory_study_einschreibeJahrBis.getText()) > 2015) {
-						viewHelper.showErrorMessage("Einschreibejahr muss eine Zahl zwischen 0 und 2015 sein.");
+						viewHelper.showErrorMessage(
+								"Einschreibejahr muss eine vierstellige Eingabe zwischen 0 und 2015 sein.");
+						searchCategory_study_einschreibeJahrBis.clear();
 					}
-				} else if (ke.getCode() != KeyCode.TAB) {
-					viewHelper.showErrorMessage("Einschreibejahr muss eine Zahl zwischen 0 und 2015 sein.");
+				} else if (ke.getCode() != KeyCode.TAB && ke.getCode() != KeyCode.BACK_SPACE
+						&& ke.getCode() != KeyCode.SHIFT && ke.getCode() != KeyCode.DELETE) {
+					viewHelper.showErrorMessage(
+							"Einschreibejahr muss eine vierstellige Eingabe zwischen 0 und 2015 sein.");
 					searchCategory_study_einschreibeJahrBis.clear();
 				}
 				ke.consume();
@@ -540,12 +446,14 @@ public class ViewController implements ControllerInterface, Initializable {
 
 			@Override
 			public void handle(KeyEvent ke) {
-				if (searchCategory_study_einschreibeMonatBis.getText().matches("[1-9][0-2]?")) {
+				if (searchCategory_study_einschreibeMonatBis.getText().matches("[0-9][0-2]?")) {
 					if (getParsedInt(searchCategory_study_einschreibeMonatBis.getText()) < 1
 							|| getParsedInt(searchCategory_study_einschreibeMonatBis.getText()) > 12) {
 						viewHelper.showErrorMessage("Einschreibemonat muss eine Zahl von 1 bis 12 sein.");
+						searchCategory_study_einschreibeMonatBis.clear();
 					}
-				} else if (ke.getCode() != KeyCode.TAB) {
+				} else if (ke.getCode() != KeyCode.TAB && ke.getCode() != KeyCode.BACK_SPACE
+						&& ke.getCode() != KeyCode.SHIFT && ke.getCode() != KeyCode.DELETE) {
 					viewHelper.showErrorMessage("Einschreibemonat muss eine Zahl von 1 bis 12 sein.");
 					searchCategory_study_einschreibeMonatBis.clear();
 				}
@@ -556,12 +464,14 @@ public class ViewController implements ControllerInterface, Initializable {
 
 			@Override
 			public void handle(KeyEvent ke) {
-				if (searchCategory_study_einschreibeTagBis.getText().matches("[1-3][0-9]?")) {
+				if (searchCategory_study_einschreibeTagBis.getText().matches("[0-9][0-9]?")) {
 					if (getParsedInt(searchCategory_study_einschreibeTagBis.getText()) < 1
 							|| getParsedInt(searchCategory_study_einschreibeTagBis.getText()) > 31) {
 						viewHelper.showErrorMessage("Einschreibetag muss eine Zahl von 1 bis 31 sein.");
+						searchCategory_study_einschreibeTagBis.clear();
 					}
-				} else if (ke.getCode() != KeyCode.TAB) {
+				} else if (ke.getCode() != KeyCode.TAB && ke.getCode() != KeyCode.BACK_SPACE
+						&& ke.getCode() != KeyCode.SHIFT && ke.getCode() != KeyCode.DELETE) {
 					viewHelper.showErrorMessage("Einschreibetag muss eine Zahl von 1 bis 31 sein.");
 					searchCategory_study_einschreibeTagBis.clear();
 				}
@@ -577,7 +487,8 @@ public class ViewController implements ControllerInterface, Initializable {
 						viewHelper.showErrorMessage(
 								"Nummer muss eine nicht-negative Zahl sein und darf keine Buchstaben enthalten.");
 					}
-				} else if (ke.getCode() != KeyCode.TAB) {
+				} else if (ke.getCode() != KeyCode.TAB && ke.getCode() != KeyCode.BACK_SPACE
+						&& ke.getCode() != KeyCode.SHIFT && ke.getCode() != KeyCode.DELETE) {
 					viewHelper.showErrorMessage(
 							"Nummer muss eine nicht-negative Zahl sein und darf keine Buchstaben enthalten.");
 					searchCategory_other_nummer.clear();
@@ -594,7 +505,8 @@ public class ViewController implements ControllerInterface, Initializable {
 						viewHelper.showErrorMessage(
 								"Nummer Hess muss eine nicht-negative Zahl sein und darf keine Buchstaben enthalten.");
 					}
-				} else if (ke.getCode() != KeyCode.TAB) {
+				} else if (ke.getCode() != KeyCode.TAB && ke.getCode() != KeyCode.BACK_SPACE
+						&& ke.getCode() != KeyCode.SHIFT && ke.getCode() != KeyCode.DELETE) {
 					viewHelper.showErrorMessage(
 							"Nummer Hess muss eine nicht-negative Zahl sein und darf keine Buchstaben enthalten.");
 					searchCategory_other_nummerhess.clear();
@@ -611,7 +523,8 @@ public class ViewController implements ControllerInterface, Initializable {
 						viewHelper.showErrorMessage(
 								"Seite muss eine nicht-negative Zahl sein und darf keine Buchstaben enthalten.");
 					}
-				} else if (ke.getCode() != KeyCode.TAB) {
+				} else if (ke.getCode() != KeyCode.TAB && ke.getCode() != KeyCode.BACK_SPACE
+						&& ke.getCode() != KeyCode.SHIFT && ke.getCode() != KeyCode.DELETE) {
 					viewHelper.showErrorMessage(
 							"Seite muss eine nicht-negative Zahl sein und darf keine Buchstaben enthalten.");
 					searchCategory_other_seite.clear();
@@ -635,11 +548,6 @@ public class ViewController implements ControllerInterface, Initializable {
 				event.consume();
 			}
 		});
-	}
-
-	private void setUpLabels() {
-		searchCategory_study_einschreibeHinweis
-				.setText("Hinweis: Für eine erfolgreiche Suche muss jeweils mindestens das Jahr ausgefüllt sein.");
 	}
 
 	private void setUpBindings() {
@@ -668,11 +576,11 @@ public class ViewController implements ControllerInterface, Initializable {
 	}
 
 	/**
-	 * Collects all data from the input fields and starts the search.
-	 * 
-	 * @throws IllegalArgumentException
-	 *             if the list with all input fields could not be generated or
-	 *             is null
+	 * Collects all data from the input, gets all source keys and starts the
+	 * search by calling the corresponding function of the
+	 * {@link SearchContoller}. If the search could not be started, a error
+	 * message is shown to the user. If an exception occurs while the search is
+	 * executed, again an error message is shown.
 	 */
 	@FXML
 	private void startSearch() {
@@ -690,7 +598,7 @@ public class ViewController implements ControllerInterface, Initializable {
 			} else {
 				setLabelSource();
 			}
-		} catch (ViewException e) {
+		} catch (SearchException e) {
 			e.printStackTrace();
 			if (e.getMessage().isEmpty()) {
 				viewHelper.showErrorMessage("Bei der Suche ist ein Fehler aufgetreten.");
@@ -701,8 +609,19 @@ public class ViewController implements ControllerInterface, Initializable {
 	}
 
 	/**
+	 * Starts the search for a single person, which then will be shown in the
+	 * details view, therefore a {@link DetailsViewController} is used. To start
+	 * the search for a single person, the id ("Nummer") of this person is
+	 * needed.
+	 * <p>
+	 * <b>Precondition</b>
+	 * <ul>
+	 * <li>the {@code id} must not be null or an empty string</li>
+	 * </ul>
+	 * </p>
 	 * 
 	 * @param string
+	 *            the id of the person
 	 */
 	private void startSearchForSinglePerson(String id) {
 		if (id == null || id.isEmpty()) {
@@ -712,13 +631,32 @@ public class ViewController implements ControllerInterface, Initializable {
 		UserQueryImpl idQuery = new UserQueryImpl(id);
 		try {
 			searchCtrl.startSinglePersonSearch(idQuery);
-		} catch (ViewException e) {
+		} catch (SearchException e) {
 			e.printStackTrace();
 			viewHelper.showErrorMessage(
 					"Es können keine Detailinformationen für diese Person angezeigt werden.\n" + e.getMessage());
 		}
 	}
 
+	/**
+	 * Using the passed {@link CachedRowSet}, the {@link TableView} of the user
+	 * interface is filled with the search result. Depending on the number of
+	 * columns, the {@link TableView} is generated dynamically. Several columns
+	 * with additional information (like person id or if date fields were
+	 * manipulated while importing the data) are hidden, the user gets the data
+	 * displayed in the original state.
+	 * 
+	 * <p>
+	 * <b>Precondition</b>
+	 * <ul>
+	 * <li>the {@link CachedRowSet} must not be null or empty (
+	 * {@code size != 0})</li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param resultCachedRowSet
+	 *            the {@link CachedRowSet} with the search result
+	 */
 	private void fillResultTable(CachedRowSet resultCachedRowSet) {
 		if (resultCachedRowSet == null || resultCachedRowSet.size() == 0) {
 			viewHelper.showInfo("Die Suche hat kein Ergebnis zurückgeliefert.");
@@ -778,6 +716,10 @@ public class ViewController implements ControllerInterface, Initializable {
 		}
 	}
 
+	/**
+	 * Implemented by the {@link ControllerInterface}, this method is needed to
+	 * get the data from the model for filling the result table.
+	 */
 	@Override
 	public void update(Observable observable, Object updateData) {
 		if (observable != null) {
@@ -814,8 +756,10 @@ public class ViewController implements ControllerInterface, Initializable {
 			inputFields[13] = String.valueOf(searchCategory_study_graduiert.isSelected());
 			inputFields[14] = searchCategory_study_studienjahrVon.getText();
 			inputFields[15] = searchCategory_study_studienjahrBis.getText();
-			inputFields[16] = getEinschreibungVon();
-			inputFields[17] = getEinschreibungBis();
+			inputFields[16] = getEinschreibungAsFormattedString(searchCategory_study_einschreibeJahrVon,
+					searchCategory_study_einschreibeMonatVon, searchCategory_study_einschreibeTagVon);
+			inputFields[17] = getEinschreibungAsFormattedString(searchCategory_study_einschreibeJahrBis,
+					searchCategory_study_einschreibeMonatBis, searchCategory_study_einschreibeTagBis);
 			inputFields[18] = searchCategory_other_zusaetzeinput.getText();
 			inputFields[19] = searchCategory_other_fundort.getText();
 			inputFields[20] = searchCategory_other_anmerkungen.getText();
@@ -829,44 +773,59 @@ public class ViewController implements ControllerInterface, Initializable {
 	}
 
 	/**
+	 * Gets the input of years of "Einschreibung" as formatted string as needed
+	 * for a correct search. The given input fields are checked if an input is
+	 * done. If true, the input is used to build the return string. The year
+	 * needs to have 4 characters, so if there are less, the first postions are
+	 * filled with 0 until the year has a length of 4.
 	 * 
-	 * @return
+	 * <p>
+	 * <b>Precondition</b>
+	 * <ul>
+	 * <li>the {@link TextFields} must not be null but can be empty</li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param inputYear
+	 *            the {@link TextField} with the input of the year
+	 * @param inputMonth
+	 *            the {@link TextField} with the input of the year
+	 * @param inputDay
+	 *            the {@link TextField} with the input of the year
+	 * @return the string with the input in the form {@code yyyy-mm-dd}
 	 */
-	private String getEinschreibungVon() {
-		String jahr = "yyyy";
-		String monat = "mm";
-		String tag = "dd";
+	private String getEinschreibungAsFormattedString(TextField inputYear, TextField inputMonth, TextField inputDay) {
+		if (inputYear == null || inputMonth == null || inputDay == null) {
+			throw new InputMismatchException(
+					"Die Eingabe in den Feldern Einschreibung konnte nicht verarbeitet werden, da eines der Felder keinen Wert hat.");
+		}
+		String year = "yyyy";
+		String month = "mm";
+		String day = "dd";
 
-		if (!searchCategory_study_einschreibeJahrVon.getText().isEmpty()) {
-			jahr = searchCategory_study_einschreibeJahrVon.getText();
-			if (!searchCategory_study_einschreibeMonatVon.getText().isEmpty()) {
-				monat = searchCategory_study_einschreibeMonatVon.getText();
+		if (!inputYear.getText().isEmpty()) {
+			year = "0000" + inputYear.getText();
+			year = year.substring(year.length() - 4);
+			if (!inputMonth.getText().isEmpty()) {
+				month = inputMonth.getText();
 			}
-			if (!searchCategory_study_einschreibeTagVon.getText().isEmpty()) {
-				tag = searchCategory_study_einschreibeTagVon.getText();
+			if (!inputDay.getText().isEmpty()) {
+				day = inputDay.getText();
 			}
 		}
-
-		return jahr + "-" + monat + "-" + tag;
+		System.out.println(year + "-" + month + "-" + day);
+		return year + "-" + month + "-" + day;
 	}
 
-	private String getEinschreibungBis() {
-		String jahr = "yyyy";
-		String monat = "mm";
-		String tag = "dd";
-
-		if (!searchCategory_study_einschreibeJahrBis.getText().isEmpty()) {
-			jahr = searchCategory_study_einschreibeJahrBis.getText();
-			if (!searchCategory_study_einschreibeMonatBis.getText().isEmpty()) {
-				monat = searchCategory_study_einschreibeMonatBis.getText();
-			}
-			if (!searchCategory_study_einschreibeTagBis.getText().isEmpty()) {
-				tag = searchCategory_study_einschreibeTagBis.getText();
-			}
-		}
-		return jahr + "-" + monat + "-" + tag;
-	}
-
+	/**
+	 * Gets a string and returns it if possible as a parsed {@code int}. If the
+	 * parsing could not be done, an exception is thrown with a problem
+	 * description.
+	 * 
+	 * @param input
+	 *            the string which needs to be parsed
+	 * @return the parsed string as {@code int}
+	 */
 	private int getParsedInt(String input) {
 		if (input == null || input.isEmpty()) {
 			throw new IllegalArgumentException("Ein Fehler bei der Verarbeitung der Zahleingabe ist aufgetreten.");
@@ -881,7 +840,10 @@ public class ViewController implements ControllerInterface, Initializable {
 	}
 
 	/**
+	 * 
 	 * The array with {@link SourceKeys} is generated.
+	 *
+	 * @return the array with all {@link SourceKeys}
 	 */
 	private int[] generateArrayWithSourceFieldKeys() {
 		int[] inputSourceKey = new int[inputFieldCounter];
@@ -919,6 +881,11 @@ public class ViewController implements ControllerInterface, Initializable {
 		return inputSourceKey;
 	}
 
+	/**
+	 * When the search was started and the user selected a source, the name of
+	 * the search is shown beneath the {@link TableView}. This methods sets the
+	 * {@link Label} which displays the source.
+	 */
 	private void setLabelSource() {
 		String labelText = search_sourcekey_selection.getValue();
 		if (labelText == null) {
@@ -966,25 +933,5 @@ public class ViewController implements ControllerInterface, Initializable {
 		search_sourcekey_selection.getSelectionModel().clearSelection();
 		search_useOrConjunction.setSelected(false);
 		search_useOpenSearch.setSelected(false);
-	}
-
-	/**
-	 * Closes the window when the users submits the action.
-	 */
-	@FXML
-	private void closeWindow() {
-		Stage stage = (Stage) root.getScene().getWindow();
-		if (viewHelper.askForClosingWindow()) {
-			stage.close();
-			System.exit(0);
-		}
-	}
-
-	/**
-	 * Opens an alert window with some random information.
-	 */
-	@FXML
-	private void showInfo() {
-		viewHelper.showApplicationInfo();
 	}
 }
