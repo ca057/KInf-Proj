@@ -813,7 +813,6 @@ public class ViewController implements Observer, Initializable {
 				day = inputDay.getText();
 			}
 		}
-		System.out.println(year + "-" + month + "-" + day);
 		return year + "-" + month + "-" + day;
 	}
 
