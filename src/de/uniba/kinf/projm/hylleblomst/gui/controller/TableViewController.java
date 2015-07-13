@@ -15,6 +15,7 @@ import de.uniba.kinf.projm.hylleblomst.logic.UserQuery;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.UserQueryImpl;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -38,7 +39,7 @@ public class TableViewController implements Initializable, Observer {
 
 	private MainController mainController;
 
-	private StringProperty sourceLabelName = new SimpleStringProperty("Quelle: ");
+	private StringProperty sourceLabelName;
 
 	@FXML
 	private TableView<ObservableList<String>> resultTable;
@@ -66,12 +67,14 @@ public class TableViewController implements Initializable, Observer {
 			throw new IllegalArgumentException("Der übergebene MainController hat keinen Wert.");
 		}
 		this.mainController = mainController;
+		setBindingsWithMainController();
 	}
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		clearResultTable();
 		setTableViewEventHandlers();
+		search_sourceLabel.textProperty().set("Quelle: Keine Quelle ausgewählt.");
 	}
 
 	/*
@@ -91,12 +94,40 @@ public class TableViewController implements Initializable, Observer {
 			public void handle(MouseEvent event) {
 				if (resultTable.getSelectionModel().getSelectedItem() != null) {
 					if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
-						System.out.println(
-								"Suche Details von ID " + resultTable.getSelectionModel().getSelectedItem().get(0));
 						startSinglePersonSearch(resultTable.getSelectionModel().getSelectedItem().get(0));
 					}
 				}
 				event.consume();
+			}
+		});
+	}
+
+	// private void setSourceLabelListener() {
+	// sourceLabelName.addListener(new ChangeListener<String>() {
+	//
+	// @Override
+	// public void changed(ObservableValue<? extends String> observable, String
+	// oldValue, String newValue) {
+	// if ("null".equals(newValue)) {
+	// search_sourceLabel.textProperty().set("Quelle: Keine Quelle
+	// ausgewählt.");
+	// }
+	// search_sourceLabel.textProperty().set("Quelle: " + newValue);
+	// }
+	// });
+	// }
+
+	private void setBindingsWithMainController() {
+		sourceLabelName = new SimpleStringProperty();
+		sourceLabelName.bind(mainController.getSelectedSourceProperty());
+		sourceLabelName.addListener(new ChangeListener<String>() {
+
+			@Override
+			public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+				if ("null".equals(newValue)) {
+					search_sourceLabel.textProperty().set("Quelle: Keine Quelle ausgewählt.");
+				}
+				search_sourceLabel.textProperty().set("Quelle: " + newValue);
 			}
 		});
 	}
@@ -165,7 +196,6 @@ public class TableViewController implements Initializable, Observer {
 			clearResultTable();
 			ObservableList<ObservableList<String>> data = FXCollections.observableArrayList();
 			result = resultCachedRowSet;
-			setLabelSource();
 			try {
 				result.beforeFirst();
 				for (int i = 0; i < result.getMetaData().getColumnCount(); i++) {
@@ -231,21 +261,4 @@ public class TableViewController implements Initializable, Observer {
 			}
 		}
 	}
-
-	/**
-	 * When the search was started and the user selected a source, the name of
-	 * the search is shown beneath the {@link TableView}. This methods sets the
-	 * {@link Label} which displays the source.
-	 */
-	private void setLabelSource() {
-		String labelText = mainController.getSelectedSource();
-		if (labelText == null) {
-			labelText = "Keine Quelle ausgewählt.";
-		} else if ("normalisiert".equals(labelText)) {
-			labelText += " (Hinweis: Datensätze ohne Normalisierung werden nicht angezeigt.)";
-		}
-		sourceLabelName.set("Quelle: " + labelText);
-		search_sourceLabel.setText(sourceLabelName.getValueSafe());
-	}
-
 }

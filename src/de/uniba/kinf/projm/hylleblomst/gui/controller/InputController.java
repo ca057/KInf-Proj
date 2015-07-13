@@ -13,6 +13,8 @@ import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.UserQuery;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.UserQueryImpl;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -36,6 +38,8 @@ public class InputController implements Initializable {
 	private int inputFieldCounter = 24;
 
 	private SearchFieldKeys[] searchFieldKeys;
+
+	private StringProperty selectedSourceProperty;
 
 	@FXML
 	private ScrollPane rootInput;
@@ -181,6 +185,7 @@ public class InputController implements Initializable {
 	public InputController() {
 		viewHelper = new ViewHelper();
 		searchFieldKeys = generateSearchFieldKeyArray();
+		selectedSourceProperty = new SimpleStringProperty("");
 	}
 
 	public void setModel(Model model) {
@@ -438,10 +443,14 @@ public class InputController implements Initializable {
 			}
 		};
 		searchCategory_study_einschreibeHinweis.visibleProperty().bind(booleanBindingEinschreibeHinweis);
+		selectedSourceProperty.bind(search_sourcekey_selection.valueProperty());
 	}
 
-	public String getSelectedSource() {
-		return search_sourcekey_selection.getValue();
+	public StringProperty getSelectedSourceProperty() {
+		if (selectedSourceProperty == null) {
+			return new SimpleStringProperty();
+		}
+		return selectedSourceProperty;
 	}
 
 	/**

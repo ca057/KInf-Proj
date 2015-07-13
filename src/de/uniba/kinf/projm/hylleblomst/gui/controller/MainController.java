@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 import javax.sql.rowset.CachedRowSet;
 
 import de.uniba.kinf.projm.hylleblomst.gui.model.Model;
+import javafx.beans.property.StringProperty;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -78,14 +79,14 @@ public class MainController implements Initializable {
 	}
 
 	private void setModelToControllers() {
+		model.setDetailsController(detailsViewController);
+		model.addObserver(tableViewController);
 		detailsViewController.setModel(model);
 		mainMenuController.setModel(model);
 		mainMenuController.setMainController(this);
 		inputViewController.setModel(model);
 		tableViewController.setModel(model);
 		tableViewController.setMainController(this);
-		model.setDetailsController(detailsViewController);
-		model.addObserver(tableViewController);
 	}
 
 	public void setStartController(StartController startController) {
@@ -133,7 +134,7 @@ public class MainController implements Initializable {
 	 * 
 	 * @return
 	 */
-	String getSelectedSource() {
-		return inputViewController.getSelectedSource();
+	StringProperty getSelectedSourceProperty() {
+		return inputViewController.getSelectedSourceProperty();
 	}
 }
