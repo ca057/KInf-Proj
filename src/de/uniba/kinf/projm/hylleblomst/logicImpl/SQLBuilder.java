@@ -49,8 +49,8 @@ public class SQLBuilder {
 	}
 
 	/*
-	 * Use this to see the finished SQL statements (with the commented line 46
-	 * and 73)
+	 * Use this to see the finished SQL statements (with the commented line 48
+	 * and 76 (more or less))
 	 */
 	private void print() {
 		System.out.println(sqlStatement);
@@ -121,6 +121,10 @@ public class SQLBuilder {
 				.append(" WHERE ").append(query.getWhere());
 	}
 
+	/*
+	 * This method iterates over a query collection and searches all relevant
+	 * information
+	 */
 	private void iterateOverQueries(StringBuilder sqlSelect, StringBuilder sqlWhere, StringBuilder sqlNestedSelect,
 			StringBuilder sqlGroupBy) {
 		for (UserQuery query : queryCollection) {
