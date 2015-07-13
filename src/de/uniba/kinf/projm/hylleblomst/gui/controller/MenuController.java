@@ -35,7 +35,7 @@ public class MenuController implements Initializable {
 	private MenuBar menuRoot;
 
 	@FXML
-	private MenuItem mainMenu_file_export;
+	private MenuItem mainMenu_file_exportSearchResult;
 
 	@FXML
 	private MenuItem mainMenu_file_close;
@@ -98,7 +98,7 @@ public class MenuController implements Initializable {
 	 * not be performed, an alert window with information on the error is shown.
 	 */
 	private void setMenuEventHandlers() {
-		mainMenu_file_export.setOnAction(new EventHandler<ActionEvent>() {
+		mainMenu_file_exportSearchResult.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
