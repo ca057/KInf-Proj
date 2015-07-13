@@ -2,21 +2,24 @@ package de.uniba.kinf.projm.hylleblomst.gui.controller;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.List;
-import java.util.Observable;
 
 import de.uniba.kinf.projm.hylleblomst.exceptions.SearchException;
 import de.uniba.kinf.projm.hylleblomst.gui.model.Model;
 import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
+import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.UserQuery;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.UserQueryImpl;
 
 /**
- * Controller for executing the search.
+ * Controller for executing the search. Is not connected to a part of the view,
+ * but is used by their controllers for starting the search.
+ * 
+ * All search requests are checked for correct values, processed in a way the
+ * model can finally execute the search.
  *
  */
-public class SearchController implements ControllerInterface {
+public class SearchController {
 
 	/**
 	 * Array stores for every input field the corresponding search field key.
@@ -35,13 +38,17 @@ public class SearchController implements ControllerInterface {
 	private Model model;
 
 	/**
+	 * The constructor for an SearchController. Gets the number of input fields
+	 * and a {@link Model}, which is needed to execute the search.
 	 * 
 	 * @param inputFieldCounter
+	 *            the number of input fields of the view
 	 * @param model
+	 *            the {@ Model} of the application
 	 */
 	public SearchController(int inputFieldCounter, Model model) {
 		if (inputFieldCounter == 0 || model == null) {
-			throw new InputMismatchException("Die Anzahl der Eingabefelder ist 0 oder das Model hat keinen Wert.");
+			throw new IllegalArgumentException("Die Anzahl der Eingabefelder ist 0 oder das Model hat keinen Wert.");
 		}
 		this.model = model;
 		inputCounter = inputFieldCounter;
@@ -49,10 +56,27 @@ public class SearchController implements ControllerInterface {
 	}
 
 	/**
+	 * Main function for executing the search. Gets several parameters from the
+	 * {@link ViewController} and processes them in a way the {@link Model} can
+	 * use them for starting the search.
 	 * 
 	 * @param inputValues
+	 *            a string array with all input values from the graphical user
+	 *            interface
 	 * @param inputSourceKey
+	 *            an array of the corresponding {@code int}s of
+	 *            {@link SourceKeys}, depending on the users input
+	 * @param isOr
+	 *            {@code true} if the user selected this option, {@code false}
+	 *            otherwise
+	 * @param isOpenedSearch
+	 *            {@code true} if the user selected this option, {@code false}
+	 *            otherwise
+	 * @return {@code true} if the search could be started, {@code false}
+	 *         otherwise
 	 * @throws SearchException
+	 *             if an error occurs while the execution of the search, thrown
+	 *             up by the {@link Model}
 	 */
 	boolean executeSearch(String[] inputValues, int[] inputSourceKey, boolean isOr, boolean isOpenedSearch)
 			throws SearchException {
@@ -83,14 +107,29 @@ public class SearchController implements ControllerInterface {
 	}
 
 	/**
+	 * After the user had clicked on a single row in the {@link TableView}, a
+	 * {@link UserQuery} is created and passed as parameter to this function. If
+	 * its a valid {@link UserQuery}, it is passed to the model to finally
+	 * execute the search.
 	 * 
-	 * @param id
+	 * <p>
+	 * <b>Precondition</b>
+	 * <ul>
+	 * <li>the {@link UserQuery} must not be {@code null} and contain the ID of
+	 * the person</li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param personIDQuery
+	 *            the {@link UserQuery} to search for
 	 * @throws SearchException
+	 *             if an error occurs while searching, a {@link SearchException}
+	 *             is thrown
 	 */
 	public void startSinglePersonSearch(UserQuery personIDQuery) throws SearchException {
 		if (personIDQuery == null) {
-			throw new InputMismatchException(
-					"Übergebene ID ist leer oder hat keinen Wert. Personendetails können nicht gesucht werden.");
+			throw new IllegalArgumentException(
+					"Übergebene Suchanfrage hat keinen Wert. Personendetails können nicht gesucht werden.");
 		}
 		try {
 			model.searchPerson(personIDQuery);
@@ -102,8 +141,9 @@ public class SearchController implements ControllerInterface {
 	}
 
 	/**
+	 * An array with all {@link SearchFieldKeys} is generated and returned.
 	 * 
-	 * @return
+	 * @return the array with {@link SearchFieldKeys}
 	 */
 	private SearchFieldKeys[] generateSearchFieldKeyArray() {
 		SearchFieldKeys[] sfkArray = new SearchFieldKeys[inputCounter];
@@ -134,13 +174,5 @@ public class SearchController implements ControllerInterface {
 		sfkArray[23] = SearchFieldKeys.NUMMER_HESS;
 
 		return sfkArray;
-	}
-
-	/**
-	 * Not needed for the implementation of this controller.
-	 */
-	@Override
-	public void update(Observable arg0, Object arg1) {
-
 	}
 }

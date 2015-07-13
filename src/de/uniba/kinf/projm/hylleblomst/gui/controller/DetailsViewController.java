@@ -3,8 +3,6 @@ package de.uniba.kinf.projm.hylleblomst.gui.controller;
 import java.net.URL;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.InputMismatchException;
-import java.util.Observable;
 import java.util.ResourceBundle;
 
 import javax.sql.rowset.CachedRowSet;
@@ -26,7 +24,7 @@ import javafx.scene.layout.GridPane;
  * Controller for displaying the details of a person.
  *
  */
-public class DetailsViewController implements ControllerInterface, Initializable {
+public class DetailsViewController implements Initializable {
 
 	private StringProperty personID;
 
@@ -152,7 +150,7 @@ public class DetailsViewController implements ControllerInterface, Initializable
 		if (model != null) {
 			this.model = model;
 		} else {
-			throw new InputMismatchException(
+			throw new IllegalArgumentException(
 					"Model ist fehlerhaft, kann dem DetailsViewController nicht hinzugefügt werden.");
 		}
 	}
@@ -333,7 +331,7 @@ public class DetailsViewController implements ControllerInterface, Initializable
 	 */
 	public void processCompleteSearchResult(CachedRowSet searchResult) {
 		if (searchResult == null) {
-			throw new InputMismatchException("Das Suchergebnis für die Details einer Person hat keinen Wert.");
+			throw new IllegalArgumentException("Das Suchergebnis für die Details einer Person hat keinen Wert.");
 		}
 		ResultSetMetaData crsMeta;
 		try {
@@ -474,7 +472,7 @@ public class DetailsViewController implements ControllerInterface, Initializable
 
 	private void getSourceDetails(SearchFieldKeys sfk, String source) {
 		if (sfk == null || source == null || source.isEmpty()) {
-			throw new InputMismatchException(
+			throw new IllegalArgumentException(
 					"Es können keine Tradierungen gesucht werden, da das Suchfeld oder die Quelle keinen Wert hat oder leer ist.");
 		}
 		try {
@@ -523,12 +521,6 @@ public class DetailsViewController implements ControllerInterface, Initializable
 			e.printStackTrace();
 			viewHelper.showErrorMessage("Es konnten keine Tradierungen gefunden werden.\n" + e.getMessage());
 		}
-	}
-
-	@Override
-	public void update(Observable o, Object arg) {
-		// TODO Auto-generated method stub
-
 	}
 
 }
