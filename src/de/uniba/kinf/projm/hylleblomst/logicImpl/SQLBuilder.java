@@ -94,11 +94,10 @@ public class SQLBuilder {
 		StringBuilder sqlNestedSelect = new StringBuilder();
 		StringBuilder sqlGroupBy = new StringBuilder();
 		for (UserQuery query : queryCollection) {
-			sqlGroupBy.append(", " + query.getColumn());
 			sqlWhere.append(buildWhere(query));
 			sqlNestedSelect.append(buildSelectMask(query));
 			if (!query.isInt()) {
-				sqlStatement.append(" Hylleblomst.AGGREGATE_VARCHAR(' ' || ");
+				sqlStatement.append(", Hylleblomst.AGGREGATE_VARCHAR(' ' || ");
 			}
 			if (ColumnNameKeys.DATUM.equals(query.getColumn()) && !hasDate) {
 				sqlStatement.append(", " + query.getColumn());
@@ -109,11 +108,11 @@ public class SQLBuilder {
 				sqlStatement.append(", " + ColumnNameKeys.STUDIENJAHR);
 				sqlGroupBy.append(", " + ColumnNameKeys.STUDIENJAHR);
 				hasStudyYear = true;
+			} else if (query.isInt()) {
+				sqlGroupBy.append(", " + query.getColumn());
 			} else if (!(ColumnNameKeys.DATUM.equals(query.getColumn())
 					|| ColumnNameKeys.STUDIENJAHR_INT.equals(query.getColumn()))) {
-				sqlStatement.append(", ");
 				sqlStatement.append(query.getColumn());
-				sqlStatement.append(" AS " + query.getColumn());
 			}
 			if (!query.isInt()) {
 				sqlStatement.append(") ");
