@@ -95,14 +95,13 @@ public class SQLBuilder {
 		StringBuilder sqlGroupBy = new StringBuilder();
 		for (UserQuery query : queryCollection) {
 			sqlWhere.append(buildWhere(query));
-			sqlNestedSelect.append(buildSelectMask(query));
+			sqlNestedSelect.append(buildNestedSelect(query));
 			if (!query.isInt()) {
 				sqlStatement.append(", Hylleblomst.AGGREGATE_VARCHAR(' ' || ");
 			}
 			if (ColumnNameKeys.DATUM.equals(query.getColumn()) && !hasDate) {
-				sqlStatement.append(", " + query.getColumn());
-				sqlStatement.append(", " + ColumnNameKeys.DATUMS_FELDER_GESETZT);
-				sqlGroupBy.append(", " + ColumnNameKeys.DATUMS_FELDER_GESETZT);
+				sqlStatement.append(", " + query.getColumn()).append(", " + ColumnNameKeys.DATUMS_FELDER_GESETZT);
+				sqlGroupBy.append(", " + query.getColumn()).append(", " + ColumnNameKeys.DATUMS_FELDER_GESETZT);
 				hasDate = true;
 			} else if (ColumnNameKeys.STUDIENJAHR_INT.equals(query.getColumn()) && !hasStudyYear) {
 				sqlStatement.append(", " + ColumnNameKeys.STUDIENJAHR);
@@ -115,7 +114,7 @@ public class SQLBuilder {
 				sqlStatement.append(query.getColumn());
 			}
 			if (!query.isInt()) {
-				sqlStatement.append(") ");
+				sqlStatement.append(") AS " + query.getColumn());
 			}
 			for (int i = 1; i <= query.getNumberOfInputs(); i++) {
 				inputs.add(query.getInput());
@@ -153,7 +152,7 @@ public class SQLBuilder {
 	 * Build the SELECT part of the SQL statement needed for queries hit by the
 	 * search mask.
 	 */
-	private String buildSelectMask(UserQuery userQuery) {
+	private String buildNestedSelect(UserQuery userQuery) {
 		String result = "";
 		if (needsStandardFields) {
 			result = TableNameKeys.PERSON + "." + ColumnNameKeys.PERSON_ID + " AS " + ColumnNameKeys.PERSON_ID + ", "
@@ -168,7 +167,8 @@ public class SQLBuilder {
 			result += ", " + userQuery.getTable() + "." + ColumnNameKeys.STUDIENJAHR + " AS "
 					+ ColumnNameKeys.STUDIENJAHR + ", " + userQuery.getTable() + "." + userQuery.getColumn();
 		} else if (ColumnNameKeys.DATUM.equals(userQuery.getColumn()) && !hasDate) {
-			result += ", " + userQuery.getTable() + "." + ColumnNameKeys.DATUMS_FELDER_GESETZT + " AS "
+			result += ", " + userQuery.getTable() + "." + ColumnNameKeys.DATUM + " AS " + ColumnNameKeys.DATUM + ", "
+					+ userQuery.getTable() + "." + ColumnNameKeys.DATUMS_FELDER_GESETZT + " AS "
 					+ ColumnNameKeys.DATUMS_FELDER_GESETZT;
 		} else if (!(ColumnNameKeys.PERSON_ID.equals(userQuery.getColumn())
 				|| ColumnNameKeys.VORNAME_NORM.equals(userQuery.getColumn())
