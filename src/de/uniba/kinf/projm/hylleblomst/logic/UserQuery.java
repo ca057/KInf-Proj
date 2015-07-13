@@ -55,6 +55,11 @@ public interface UserQuery {
 	int getNumberOfInputs();
 
 	/**
+	 * @return {@code true} - if the database column has the value {@code int}
+	 */
+	Boolean isInt();
+
+	/**
 	 * @return {@code true} - if the user wishes less exact search with more
 	 *         results.
 	 * 

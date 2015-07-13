@@ -22,7 +22,7 @@ import de.uniba.kinf.projm.hylleblomst.logic.UserQuery;
  */
 public class SQLBuilder {
 
-	private Collection<UserQuery> userQuery;
+	private Collection<UserQuery> queryCollection;
 	private ArrayList<Object> inputs = new ArrayList<Object>();;
 	private StringBuilder sqlStatement = new StringBuilder();
 	private Boolean needsStandardFields = true;
@@ -34,31 +34,31 @@ public class SQLBuilder {
 	 * With this constructor, the sql-Statement to execute a search hit by the
 	 * search mask is created.
 	 * 
-	 * @param userQuery
+	 * @param queryCollection
 	 * @throws SQLException
 	 */
 	public SQLBuilder(Collection<UserQuery> userQuery) throws SQLException {
 		if (userQuery == null || userQuery.isEmpty()) {
 			throw new IllegalArgumentException("Die übergebene Collection darf nicht leer bzw. null sein.");
 		}
-		this.userQuery = userQuery;
+		this.queryCollection = userQuery;
 		buildSearchMask();
-		// print();
+		print();
 	}
 
 	/*
 	 * Use this to see the finished SQL statements (with the commented line 46
 	 * and 73)
 	 */
-	// private void print() {
-	// System.out.println(sqlStatement);
-	// }
+	private void print() {
+		System.out.println(sqlStatement);
+	}
 
 	/**
 	 * With this constructor, the sql-Statement to execute a search of a person
 	 * or a notation of a specific search field related to a person
 	 * 
-	 * @param userQuery
+	 * @param queryCollection
 	 * @throws SQLException
 	 */
 	public SQLBuilder(UserQuery userQuery) throws SQLException {
@@ -90,17 +90,27 @@ public class SQLBuilder {
 
 		StringBuilder sqlWhere = new StringBuilder();
 		StringBuilder sqlNestedSelect = new StringBuilder();
-		for (UserQuery query : userQuery) {
-			sqlStatement.append(", Hylleblomst.AGGREGATE_VARCHAR(' ' || ").append(query.getColumn())
-					.append(") AS " + query.getColumn());
+		StringBuilder sqlGroupBy = new StringBuilder();
+		for (UserQuery query : queryCollection) {
+			sqlStatement.append(", ");
+			if (!query.isInt()) {
+				sqlStatement.append(" Hylleblomst.AGGREGATE_VARCHAR(' ' || ");
+			}
+			sqlStatement.append(query.getColumn());
+			if (!query.isInt()) {
+				sqlStatement.append(") ");
+			}
+			sqlStatement.append(" AS " + query.getColumn());
 			sqlNestedSelect.append(buildSelectMask(query));
 			sqlWhere.append(buildWhere(query));
+			sqlGroupBy.append(", " + query.getColumn());
 			for (int i = 1; i <= query.getNumberOfInputs(); i++) {
 				inputs.add(query.getInput());
 			}
 		}
 		sqlStatement.append(" FROM (SELECT DISTINCT ").append(sqlNestedSelect).append(" FROM " + buildFrom())
-				.append(" WHERE ").append(sqlWhere).append(") T ").append(" GROUP BY " + standardSelection);
+				.append(" WHERE ").append(sqlWhere).append(") T ").append(" GROUP BY " + standardSelection)
+				.append(sqlGroupBy);
 	}
 
 	/*
@@ -138,11 +148,24 @@ public class SQLBuilder {
 					+ ColumnNameKeys.FAKULTAETEN_NORM + " AS " + ColumnNameKeys.FAKULTAETEN_NORM;
 			needsStandardFields = false;
 		}
-		if (ColumnNameKeys.DATUM.equals(userQuery.getColumn())) {
-			result += ", " + userQuery.getTable() + "." + ColumnNameKeys.DATUM + " AS " + ColumnNameKeys.STUDIENJAHR
-					+ ", " + userQuery.getTable() + "." + ColumnNameKeys.DATUMS_FELDER_GESETZT + " AS "
-					+ ColumnNameKeys.STUDIENJAHR_INT;
-		} else {
+		// if (ColumnNameKeys.DATUM.equals(userQuery.getColumn())) {
+		// result += ", " + userQuery.getTable() + "." + ColumnNameKeys.DATUM +
+		// " AS " + ColumnNameKeys.DATUM + ", "
+		// + userQuery.getTable() + "." + ColumnNameKeys.DATUMS_FELDER_GESETZT +
+		// " AS "
+		// + ColumnNameKeys.DATUMS_FELDER_GESETZT;
+		// }
+		// if (ColumnNameKeys.STUDIENJAHR.equals(userQuery.getColumn())) {
+		// result += ", " + userQuery.getTable() + "." +
+		// ColumnNameKeys.STUDIENJAHR + " AS "
+		// + ColumnNameKeys.STUDIENJAHR + ", " + userQuery.getTable() + "." +
+		// ColumnNameKeys.STUDIENJAHR
+		// + " AS " + ColumnNameKeys.STUDIENJAHR_INT;
+		if (!(ColumnNameKeys.PERSON_ID.equals(userQuery.getColumn())
+				|| ColumnNameKeys.VORNAME_NORM.equals(userQuery.getColumn())
+				|| ColumnNameKeys.NAME_NORM.equals(userQuery.getColumn())
+				|| ColumnNameKeys.ORT_NORM.equals(userQuery.getColumn())
+				|| ColumnNameKeys.FAKULTAETEN_NORM.equals(userQuery.getColumn()))) {
 			result += ", " + userQuery.getTable() + "." + userQuery.getColumn() + " AS " + userQuery.getColumn();
 		}
 		if (userQuery.getSource() == SourceKeys.ORT_NORM_AB || (SearchFieldKeys.ORT.equals(userQuery.getSearchField())
