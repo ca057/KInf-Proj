@@ -40,7 +40,9 @@ public class SetUpDatabaseFunctions {
 	}
 
 	void setUpGroupConcat(Connection con) throws SetUpException {
-		String sqlGroupConcat = "CREATE FUNCTION HYLLEBLOMST.GROUP_CONCAT ( SEPARATOR CHAR, ARGS VARCHAR(255) ... ) RETURNS VARCHAR(2000) PARAMETER STYLE DERBY NO SQL LANGUAGE JAVA EXTERNAL NAME 'de.uniba.kinf.projm.hylleblomst.database.utils.GroupConcat.groupConcat'";
+		String sqlGroupConcat = "CREATE DERBY AGGREGATE HYLLEBLOMST.AGGREGATE_VARCHAR FOR VARCHAR(255) "
+				+ "RETURNS VARCHAR(2000) "
+				+ "EXTERNAL NAME 'de.uniba.kinf.projm.hylleblomst.database.utils.GroupConcat'";
 
 		Path file = Paths.get("./lib/groupconcat.jar");
 		String dbLocation = "";
@@ -59,7 +61,7 @@ public class SetUpDatabaseFunctions {
 		}
 
 		String sqlCall = "CALL SQLJ.INSTALL_JAR ('" + dbLocation
-				+ "','HYLLEBLOMST.groupconcat',0)";
+				+ "','groupconcat',0)";
 
 		try (PreparedStatement stmt = con.prepareStatement(sqlGroupConcat);
 				PreparedStatement stmtCall = con.prepareCall(sqlCall);) {
