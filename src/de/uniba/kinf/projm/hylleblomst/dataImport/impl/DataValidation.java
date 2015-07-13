@@ -16,7 +16,7 @@ import de.uniba.kinf.projm.hylleblomst.keys.ColumnNameKeys;
  * @author Simon
  *
  */
-class Validation {
+class DataValidation {
 
 	private Connection con;
 
@@ -26,7 +26,7 @@ class Validation {
 	 * @param con
 	 *            The {@link Connection} to use to access database.
 	 */
-	protected Validation(Connection con) {
+	protected DataValidation(Connection con) {
 		this.con = con;
 	}
 

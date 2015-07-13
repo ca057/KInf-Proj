@@ -25,7 +25,7 @@ public class DataImportImpl implements DataImport {
 	private String user;
 	private String password;
 
-	Validation validation;
+	DataValidation validation;
 
 	private final int[] quellenID = { SourceKeys.STANDARD,
 			SourceKeys.HSB_AUB_I11, SourceKeys.HSC_AUB_I131,
@@ -51,7 +51,7 @@ public class DataImportImpl implements DataImport {
 	public void importData(List<String[]> rows) throws ImportException {
 		try (Connection con = DriverManager
 				.getConnection(dbURL, user, password);) {
-			validation = new Validation(con);
+			validation = new DataValidation(con);
 
 			insertSourcesIntoDatabase(con);
 
