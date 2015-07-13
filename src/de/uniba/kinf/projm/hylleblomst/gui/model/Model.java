@@ -40,7 +40,8 @@ public class Model extends Observable {
 		if (search != null) {
 			this.search = search;
 		} else {
-			throw new InputMismatchException("Die Logik des Programms ist fehlerhaft (null)");
+			throw new InputMismatchException(
+					"Die Logik des Programms ist fehlerhaft (null)");
 		}
 	}
 
@@ -76,7 +77,8 @@ public class Model extends Observable {
 			setChanged();
 			notifyObservers(searchResult);
 		} else {
-			throw new InputMismatchException("Die übergebene Collection ist fehlerhaft: " + search);
+			throw new InputMismatchException(
+					"Die übergebene Collection ist fehlerhaft: " + search);
 		}
 	}
 
@@ -86,12 +88,14 @@ public class Model extends Observable {
 	 * @throws SQLException
 	 * @throws SearchException
 	 */
-	public void searchPerson(UserQuery personIDQuery) throws SQLException, SearchException {
+	public void searchPerson(UserQuery personIDQuery) throws SQLException,
+			SearchException {
 		if (personIDQuery != null) {
 			searchResult = search.searchPersonOrNotation(personIDQuery);
 			detailsController.processCompleteSearchResult(searchResult);
 		} else {
-			throw new InputMismatchException("Die übergebene ID ist fehlerhaft (null)");
+			throw new InputMismatchException(
+					"Die übergebene ID ist fehlerhaft (null)");
 		}
 	}
 
@@ -101,7 +105,8 @@ public class Model extends Observable {
 	 * @param sourceDetails
 	 * @throws SQLException
 	 */
-	public CachedRowSet searchSourceDetails(UserQuery sourceDetails) throws SQLException {
+	public CachedRowSet searchSourceDetails(UserQuery sourceDetails)
+			throws SQLException {
 		CachedRowSet detailsResult = new CachedRowSetImpl();
 		if (sourceDetails != null) {
 			detailsResult = search.searchPersonOrNotation(sourceDetails);
@@ -115,15 +120,16 @@ public class Model extends Observable {
 	 * @param cachedRowSet
 	 * @throws ExportException
 	 */
-	public void exportSearchedData(File file, CachedRowSet cachedRowSet) throws ExportException {
+	public void exportSearchedData(File file, CachedRowSet cachedRowSet)
+			throws ExportException {
 		if (file == null || cachedRowSet == null) {
-			throw new InputMismatchException("Der übergebene Dateipfad hat keinen Wert.");
+			throw new InputMismatchException(
+					"Der übergebene Dateipfad hat keinen Wert.");
 		}
 		export = new ExportDataToFile();
 		try {
 			export.exportToCsv(file, cachedRowSet);
 		} catch (ExportException e) {
-			e.printStackTrace();
 			throw new ExportException(e.getMessage());
 		}
 	}
@@ -141,7 +147,6 @@ public class Model extends Observable {
 				dbManagement.setUpTables();
 				search.setDbKey(new DatabaseKeys(dirForSetup));
 			} catch (SetUpException e) {
-				e.printStackTrace();
 				throw new SetUpException(e.getMessage());
 			}
 		} else {
@@ -160,7 +165,6 @@ public class Model extends Observable {
 			try {
 				dbManagement.importDataIntoDatabase(importFile);
 			} catch (ImportException e) {
-				e.printStackTrace();
 				throw new ImportException(e.getMessage());
 			}
 		} else {
@@ -177,7 +181,6 @@ public class Model extends Observable {
 		try {
 			dbManagement.tearDownTables();
 		} catch (SetUpException e) {
-			e.printStackTrace();
 			throw new SetUpException(e.getMessage());
 		}
 	}
