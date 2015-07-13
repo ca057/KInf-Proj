@@ -1,6 +1,8 @@
 package de.uniba.kinf.projm.hylleblomst.keys;
 
 /**
+ * The name of all tables of the database.
+ * 
  * @author Simon
  *
  */

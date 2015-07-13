@@ -1,6 +1,9 @@
 package de.uniba.kinf.projm.hylleblomst.keys;
 
 /**
+ * All available sources as final Integer. If possible, these Integers
+ * correspond to the respective ID of the source in the database.
+ * 
  * @author Christian, Johannes
  *
  */

@@ -1,6 +1,8 @@
 package de.uniba.kinf.projm.hylleblomst.keys;
 
 /**
+ * The name of all columns of the database
+ * 
  * @author Simon
  *
  */
@@ -60,7 +62,6 @@ public interface ColumnNameKeys {
 	public static final String STUDIENJAHR = "Studienjahr";
 	public static final String STUDIENJAHR_INT = "StudienjahrInt";
 	public static final String GRADUIERT = "Graduiert";
-	// TODO umbenennen wegen Verwechslungsgefahr
 	public static final String ANMERKUNG = "Anmerkung";
 
 	public static String[][] getNormTableColumnNames() {

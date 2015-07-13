@@ -1,6 +1,8 @@
 package de.uniba.kinf.projm.hylleblomst.keys;
 
 /**
+ * All possible fields for user input of the GUI as Enum
+ * 
  * @author Christian, Johannes
  *
  */
