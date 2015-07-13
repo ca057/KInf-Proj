@@ -33,7 +33,7 @@ public class DetailsViewController implements Initializable {
 	private ViewHelper viewHelper;
 
 	@FXML
-	private GridPane root;
+	private GridPane rootDetails;
 
 	@FXML
 	private ComboBox<String> result_details_anredeselection;
@@ -217,7 +217,7 @@ public class DetailsViewController implements Initializable {
 				return false;
 			}
 		};
-		root.disableProperty().bind(existsID);
+		rootDetails.disableProperty().bind(existsID);
 	}
 
 	private void setUpLabelBindings() {

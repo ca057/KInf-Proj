@@ -1,14 +1,12 @@
 package de.uniba.kinf.projm.hylleblomst.main;
 
-import de.uniba.kinf.projm.hylleblomst.gui.controller.ViewHelper;
+import de.uniba.kinf.projm.hylleblomst.gui.controller.StartController;
+import de.uniba.kinf.projm.hylleblomst.gui.model.Model;
+import de.uniba.kinf.projm.hylleblomst.keys.DatabaseKeys;
+import de.uniba.kinf.projm.hylleblomst.logic.SearchInitiator;
+import de.uniba.kinf.projm.hylleblomst.logicImpl.SearchInitiatorImpl;
 import javafx.application.Application;
-import javafx.event.EventHandler;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.image.Image;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 /**
  * This program provides a possibility to analyze database data. It was
@@ -41,26 +39,12 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		// Logik starten
-		// SearchInitiator initiator = new SearchInitiatorImpl();
-		// Model starten
-		// Model model = new Model(initiator);
-		// ViewController starten und Stage übergeben
-		try {
-			BorderPane root = (BorderPane) FXMLLoader.load(getClass().getResource("../gui/view/hylleblomstView.fxml"));
-			Scene scene = new Scene(root);
-			primaryStage.setScene(scene);
-			primaryStage.setTitle(new ViewHelper().getAppName());
-			primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("../gui/view/unicorn-icon.png")));
-			primaryStage.show();
-			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-				@Override
-				public void handle(WindowEvent we) {
-					primaryStage.close();
-					System.exit(0);
-				}
-			});
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		SearchInitiator initiator = new SearchInitiatorImpl(new DatabaseKeys("./db"));
+		// Model starten, SearchInitiator übergeben
+		Model model = new Model(initiator);
+		// StartController starten und View anzeigen
+		StartController startController = new StartController(model);
+		startController.showView();
+
 	}
 }

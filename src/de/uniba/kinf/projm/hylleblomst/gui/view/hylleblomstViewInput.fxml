@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.collections.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.collections.FXCollections ?>
+
+<ScrollPane fx:id="rootInput" hbarPolicy="NEVER" maxWidth="300.0" minWidth="300.0" prefHeight="675.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniba.kinf.projm.hylleblomst.gui.controller.InputController">
+	<content>
+		<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="675.0" prefWidth="300.0">
+			<children>
+				<VBox maxWidth="300.0" prefWidth="300.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+					<children>
+						<ComboBox fx:id="search_sourcekey_selection" prefWidth="275.0" promptText="Quelle auswählen">
+								<items>
+									<FXCollections fx:factory="observableArrayList">
+										<String fx:value="keine Quelle auswählen" />
+										<String fx:value="Standard" />
+										<String fx:value="normalisiert" />
+										<String fx:value="HS B (AUB, I 11)" />
+										<String fx:value="HS C (AUB, I 13/1)" />
+										<String fx:value="HS D (AUB, I 13/2)" />
+										<String fx:value="HS E (AUB, I 9)" />
+										<String fx:value="HS F (AUB, I 8)" />
+										<String fx:value="HS G (AUB, I 6)" />
+										<String fx:value="HS H (AEB, Rep. I, Nr. 321)" />
+										<String fx:value="HS I (SB Bamberg, Msc.Add.3a)" />
+										<String fx:value="HS J (SB Bamberg, Msc.Add.3)" />
+										<String fx:value="AUB, V E 38" />
+									</FXCollections>
+								</items>
+							<VBox.margin>
+								<Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+							</VBox.margin>
+						</ComboBox>
+                          <CheckBox fx:id="search_useOrConjunction" mnemonicParsing="false" text="OR-Verknüpfung bei Suche nutzen">
+                             <VBox.margin>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                             </VBox.margin>
+                          </CheckBox>
+                          <CheckBox fx:id="search_useOpenSearch" mnemonicParsing="false" text="offenere Suche nutzen">
+                             <VBox.margin>
+                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                             </VBox.margin>
+                          </CheckBox>
+						<Accordion fx:id="searchCategories" prefHeight="635.0" prefWidth="300.0">
+							<panes>
+								<TitledPane fx:id="searchCategory_person" animated="false" text="Person">
+									<content>
+										<VBox maxWidth="300.0" prefWidth="300.0">
+											<padding>
+												<Insets bottom="10.0" left="10.0" right="20.0" top="10.0" />
+											</padding>
+											<children>
+												<Label text="Anrede" />
+												<TextField fx:id="searchCategory_person_anrede" promptText="Anrede" />
+												<Label text="Anrede (normalisiert)">
+													<VBox.margin>
+														<Insets top="5.0" />
+													</VBox.margin>
+												</Label>
+												<TextField fx:id="searchCategory_person_anredenorm" promptText="Anrede (normalisiert)" />
+												<Label text="Titel">
+													<VBox.margin>
+														<Insets top="15.0" />
+													</VBox.margin>
+												</Label>
+												<TextField fx:id="searchCategory_person_titel" promptText="Titel" />
+												<Label text="Titel (normalisiert)">
+													<VBox.margin>
+														<Insets top="5.0" />
+													</VBox.margin>
+												</Label>
+												<TextField fx:id="searchCategory_person_titelnorm" promptText="Titel (normalisiert)" />
+												<Label text="Vorname">
+													<VBox.margin>
+														<Insets top="15.0" />
+													</VBox.margin>
+												</Label>
+												<TextField fx:id="searchCategory_person_vornameinput" promptText="Vorname">
+													<VBox.margin>
+														<Insets top="5.0" />
+													</VBox.margin>
+												</TextField>
+												<Label text="Nachname">
+													<VBox.margin>
+														<Insets top="15.0" />
+													</VBox.margin>
+												</Label>
+												<TextField fx:id="searchCategory_person_nachnameinput" promptText="Nachname">
+													<VBox.margin>
+														<Insets top="5.0" />
+													</VBox.margin>
+												</TextField>
+											</children>
+										</VBox>
+									</content>
+								</TitledPane>
+								<TitledPane fx:id="searchCategory_personExtended" animated="false" text="erweiterte Personensuche">
+									<content>
+										<VBox maxWidth="300.0" prefWidth="300.0">
+											<children>
+												<CheckBox fx:id="searchCategory_personExtended_adeliger" mnemonicParsing="false" text="Adeliger" />
+												<CheckBox fx:id="searchCategory_personExtended_jesuit" mnemonicParsing="false" text="Jesuit">
+													<VBox.margin>
+														<Insets top="15.0" />
+													</VBox.margin>
+												</CheckBox>
+												<Label text="Wirtschaftliche Lage">
+													<VBox.margin>
+														<Insets top="15.0" />
+													</VBox.margin>
+												</Label>
+												<TextField fx:id="searchCategory_personExtended_wirtschaftinput" maxWidth="300.0" prefWidth="300.0" promptText="Wirtschaftliche Lage">
+													<VBox.margin>
+														<Insets top="5.0" />
+													</VBox.margin>
+												</TextField>
+												<Label text="Ort">
+													<VBox.margin>
+														<Insets top="15.0" />
+													</VBox.margin>
+												</Label>
+												<TextField fx:id="searchCategory_personExtended_ortinput" maxWidth="300.0" prefWidth="300.0" promptText="Ort">
+													<VBox.margin>
+														<Insets top="5.0" />
+													</VBox.margin>
+												</TextField>
+											</children>
+											<padding>
+												<Insets bottom="10.0" left="10.0" right="20.0" top="10.0" />
+											</padding>
+										</VBox>
+									</content>
+								</TitledPane>
+								<TitledPane fx:id="searchCategory_study" animated="false" text="Studium">
+									<content>
+										<VBox prefWidth="100.0">
+											<padding>
+												<Insets bottom="10.0" left="10.0" right="20.0" top="10.0" />
+											</padding>
+											<children>
+												<Label text="Studienfach" />
+												<TextField fx:id="searchCategory_study_studienfachinput" promptText="Studienfach">
+													<VBox.margin>
+														<Insets top="5.0" />
+													</VBox.margin>
+												</TextField>
+												<Label text="Fakultät">
+													<VBox.margin>
+														<Insets top="15.0" />
+													</VBox.margin>
+												</Label>
+												<TextField fx:id="searchCategory_study_fakultaet" promptText="Fakultät" />
+												<Label text="Seminar">
+													<VBox.margin>
+														<Insets top="15.0" />
+													</VBox.margin>
+												</Label>
+												<TextField fx:id="searchCategory_study_seminarinput" promptText="Seminar">
+													<VBox.margin>
+														<Insets top="5.0" />
+													</VBox.margin>
+												</TextField>
+												<CheckBox fx:id="searchCategory_study_graduiert" mnemonicParsing="false" text="Graduiert">
+													<VBox.margin>
+														<Insets top="15.0" />
+													</VBox.margin>
+												</CheckBox>
+												<Label text="Studienjahr">
+													<VBox.margin>
+														<Insets top="15.0" />
+													</VBox.margin>
+												</Label>
+												<GridPane>
+													<columnConstraints>
+														<ColumnConstraints hgrow="SOMETIMES" maxWidth="129.0" minWidth="10.0" prefWidth="50.0" />
+														<ColumnConstraints hgrow="SOMETIMES" maxWidth="230.0" minWidth="10.0" prefWidth="224.0" />
+													</columnConstraints>
+													<rowConstraints>
+														<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+														<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+													</rowConstraints>
+													<children>
+														<Label text="von" />
+														<Label text="bis" GridPane.rowIndex="1" />
+														<TextField fx:id="searchCategory_study_studienjahrVon" maxWidth="75.0" minWidth="50.0" prefWidth="50.0" promptText="von Jahr" GridPane.columnIndex="1" />
+														<TextField fx:id="searchCategory_study_studienjahrBis" maxWidth="75.0" minWidth="50.0" prefWidth="50.0" promptText="bis Jahr" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+													</children>
+												</GridPane>
+												<Label text="Einschreibedatum">
+													<VBox.margin>
+														<Insets top="15.0" />
+													</VBox.margin>
+												</Label>
+												<GridPane prefHeight="90.0" prefWidth="258.0">
+													<columnConstraints>
+														<ColumnConstraints hgrow="SOMETIMES" maxWidth="50.0" minWidth="10.0" percentWidth="22.5" />
+														<ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="27.5" />
+                                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="22.5" />
+                                                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="27.5" />
+													</columnConstraints>
+													<rowConstraints>
+														<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+														<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+														<RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+													</rowConstraints>
+													<children>
+														<Label text="von Tag" />
+														<Label text="von Monat" GridPane.rowIndex="1" />
+														<Label text="von Jahr" GridPane.rowIndex="2" />
+														<TextField fx:id="searchCategory_study_einschreibeTagVon" maxWidth="75.0" minWidth="50.0" prefWidth="50.0" promptText="von Tag" GridPane.columnIndex="1">
+                                                     <GridPane.margin>
+                                                        <Insets />
+                                                     </GridPane.margin></TextField>
+														<TextField fx:id="searchCategory_study_einschreibeMonatVon" maxWidth="75.0" minWidth="50.0" prefWidth="50.0" promptText="von Monat" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                                     <GridPane.margin>
+                                                        <Insets />
+                                                     </GridPane.margin></TextField>
+														<TextField fx:id="searchCategory_study_einschreibeJahrVon" maxWidth="75.0" minWidth="50.0" prefWidth="50.0" promptText="von Jahr" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                                     <GridPane.margin>
+                                                        <Insets />
+                                                     </GridPane.margin></TextField>
+                                                  <Label text="bis Tag" GridPane.columnIndex="2">
+                                                     <GridPane.margin>
+                                                        <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                                     </GridPane.margin></Label>
+                                                  <Label text="bis Monat" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                                                     <GridPane.margin>
+                                                        <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                                     </GridPane.margin></Label>
+                                                  <Label text="bis Jahr" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                                                     <GridPane.margin>
+                                                        <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+                                                     </GridPane.margin></Label>
+                                                  <TextField fx:id="searchCategory_study_einschreibeTagBis" maxWidth="75.0" minWidth="50.0" prefWidth="50.0" promptText="bis Tag" GridPane.columnIndex="3">
+                                                     <GridPane.margin>
+                                                        <Insets />
+                                                     </GridPane.margin>
+                                                  </TextField>
+                                                  <TextField fx:id="searchCategory_study_einschreibeMonatBis" maxWidth="75.0" minWidth="50.0" prefWidth="50.0" promptText="bis Monat" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                                                     <GridPane.margin>
+                                                        <Insets />
+                                                     </GridPane.margin>
+                                                  </TextField>
+                                                  <TextField fx:id="searchCategory_study_einschreibeJahrBis" maxWidth="75.0" minWidth="50.0" prefWidth="50.0" promptText="bis Jahr" GridPane.columnIndex="3" GridPane.rowIndex="2">
+                                                     <GridPane.margin>
+                                                        <Insets />
+                                                     </GridPane.margin>
+                                                  </TextField>
+													</children>
+												</GridPane>
+                                            <Label fx:id="searchCategory_study_einschreibeHinweis" wrapText="true" />
+											</children>
+										</VBox>
+									</content>
+								</TitledPane>
+								<TitledPane fx:id="searchCategory_other" animated="false" text="sonstiges">
+									<content>
+										<VBox prefHeight="200.0" prefWidth="100.0">
+											<padding>
+												<Insets bottom="10.0" left="10.0" right="20.0" top="10.0" />
+											</padding>
+											<children>
+												<Label text="Zusätze" />
+												<TextField fx:id="searchCategory_other_zusaetzeinput" promptText="Zusätze">
+													<VBox.margin>
+														<Insets top="5.0" />
+													</VBox.margin>
+												</TextField>
+												<Label text="Fundort">
+													<VBox.margin>
+														<Insets top="15.0" />
+													</VBox.margin>
+												</Label>
+												<TextField fx:id="searchCategory_other_fundort" promptText="Fundort" />
+												<Label text="Anmerkungen">
+													<VBox.margin>
+														<Insets top="15.0" />
+													</VBox.margin>
+												</Label>
+												<TextField fx:id="searchCategory_other_anmerkungen" promptText="Anmerkungen" />
+												<Label text="Nummer">
+													<VBox.margin>
+														<Insets top="15.0" />
+													</VBox.margin>
+												</Label>
+												<TextField fx:id="searchCategory_other_nummer" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" promptText="Nummer" />
+												<Label text="Seite Original">
+													<VBox.margin>
+														<Insets top="15.0" />
+													</VBox.margin>
+												</Label>
+												<TextField fx:id="searchCategory_other_seite" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" promptText="Seite Original">
+													<VBox.margin>
+														<Insets top="5.0" />
+													</VBox.margin>
+												</TextField>
+												<Label text="Nummer Hess">
+													<VBox.margin>
+														<Insets top="15.0" />
+													</VBox.margin>
+												</Label>
+												<TextField fx:id="searchCategory_other_nummerhess" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" promptText="Nummer Hess">
+													<VBox.margin>
+														<Insets top="5.0" />
+													</VBox.margin>
+												</TextField>
+											</children>
+										</VBox>
+									</content>
+								</TitledPane>
+							</panes>
+						</Accordion>
+						<ButtonBar fx:id="searchMenu" maxHeight="40.0" maxWidth="300.0" minHeight="40.0" prefHeight="40.0" prefWidth="300.0">
+							<buttons>
+								<Button fx:id="searchMenu_clearSearch" mnemonicParsing="false" onAction="#clearSearchInput" text="Suche leeren" />
+								<Button fx:id="searchMenu_search" mnemonicParsing="false" onAction="#startSearch" text="Suchen" />
+							</buttons>
+							<padding>
+								<Insets bottom="10.0" left="10.0" right="20.0" top="10.0" />
+							</padding>
+						</ButtonBar>
+					</children>
+				</VBox>
+			</children>
+		</AnchorPane>
+	</content>
+</ScrollPane>
