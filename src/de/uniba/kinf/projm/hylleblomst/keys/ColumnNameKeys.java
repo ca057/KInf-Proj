@@ -1,7 +1,8 @@
 package de.uniba.kinf.projm.hylleblomst.keys;
 
 /**
- * The name of all columns of the database
+ * The name of all columns of the database. Mostly, they are self-explanatory.
+ * If not, there is a separate explanation to find.
  * 
  * @author Simon
  *
@@ -31,6 +32,9 @@ public interface ColumnNameKeys {
 	public static final String ORT_NORM = "OrtNorm";
 	public static final String ORT_TRAD_ID = "OrtTradID";
 	public static final String ORT_TRAD = "OrtTrad";
+	/**
+	 * PersonID equals "Nummer" in GUI and the underlying csv.
+	 */
 	public static final String PERSON_ID = "PersonID";
 	public static final String QUELLEN_ID = "QuellenID";
 	public static final String QUELLEN_NAME = "QuellenName";
@@ -58,8 +62,20 @@ public interface ColumnNameKeys {
 	public static final String JESUIT = "Jesuit";
 	public static final String ADLIG = "Adlig";
 	public static final String DATUM = "Datum";
+	/**
+	 * This column shows which information of a date (year/month/day) was saved
+	 * in {@link #STUDIENJAHR}. For example, "000" means that everything was
+	 * set, while "011" means that only the year was set and month and year are
+	 * dummy data and must not be shown to the user.
+	 */
 	public static final String DATUMS_FELDER_GESETZT = "DatumsFelderGesetzt";
 	public static final String STUDIENJAHR = "Studienjahr";
+
+	/**
+	 * This is a column with the first year of {@link #STUDIENJAHR}. Because it
+	 * is saved there as "yyyy/yy", this column is used for queries, while
+	 * {@link #STUDIENJAHR} is shown to the user
+	 */
 	public static final String STUDIENJAHR_INT = "StudienjahrInt";
 	public static final String GRADUIERT = "Graduiert";
 	public static final String ANMERKUNG = "Anmerkung";
