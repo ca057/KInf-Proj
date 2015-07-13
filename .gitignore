@@ -6,7 +6,8 @@
 
 
 .log
-
+.sql
 
 /derby.log
 .uml
+/testing/

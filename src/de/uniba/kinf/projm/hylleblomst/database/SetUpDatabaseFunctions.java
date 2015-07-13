@@ -5,40 +5,39 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import de.uniba.kinf.projm.hylleblomst.exceptions.SetUpException;
 
+/**
+ * This class allows the incorporation of user defined functions into a
+ * database.
+ * 
+ * @author Simon
+ *
+ */
 public class SetUpDatabaseFunctions {
 	/**
 	 * Sets up all defined functions in this class to enhance functionality of
 	 * the chosen database.
 	 * 
-	 * @param dbURL
-	 *            The URL to the database which contains the driver definition
-	 *            and further options.
-	 * @param user
-	 *            The user, typically the admin.
-	 * @param password
-	 *            The password of the user.
+	 * @param con
+	 *            The connection to the database
 	 * @throws SetUpException
 	 *             If one or more of the functions could not be set up.
 	 */
-	public void setUpUserDefinedFunctions(String dbURL, String user,
-			String password) throws SetUpException {
-		try (Connection con = DriverManager
-				.getConnection(dbURL, user, password);) {
-
-			setUpGroupConcat(con);
-
-		} catch (SQLException e) {
-			throw new SetUpException(e.getErrorCode()
-					+ ": Functions could not be set up: " + e.getMessage(), e);
-		}
+	public void setUpUserDefinedFunctions(Connection con) throws SetUpException {
+		setUpGroupConcat(con);
 	}
 
+	/**
+	 * This method sets up a standard aggregation function for Derby.
+	 * 
+	 * @param con
+	 *            The connection to the database
+	 * @throws SetUpException
+	 */
 	void setUpGroupConcat(Connection con) throws SetUpException {
 		Path pathToInstallationJar = Paths.get("./lib/groupconcat.jar");
 		String installationPath = "";

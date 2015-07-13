@@ -18,7 +18,15 @@ import de.uniba.kinf.projm.hylleblomst.keys.TableNameKeys;
  *
  */
 public class TearDownTables {
-
+	/**
+	 * Tear down the use case specific tables in the database. Can be used to
+	 * reset the held data, so careful usage is advised.
+	 * 
+	 * @param con
+	 *            The connection to the database.
+	 * @return <code>True</code> if tables were successfully torn down.
+	 * @throws SetUpException
+	 */
 	public boolean tearDownTables(Connection con) throws SetUpException {
 		int interrupt = 0;
 
@@ -45,7 +53,7 @@ public class TearDownTables {
 				try {
 					stmt.executeUpdate(String.format("DROP SCHEMA %s RESTRICT",
 							TableNameKeys.SCHEMA_NAME));
-				} catch (Exception e) {
+				} catch (SQLException e) {
 					// empty by intention
 				}
 			}

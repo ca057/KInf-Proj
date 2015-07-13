@@ -6,6 +6,9 @@ import java.nio.file.Paths;
 import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
 
 /**
+ * Verifies the format of a csv to match with a referenced csv. This aims to
+ * ensure type compatibility for the data import.
+ * 
  * @author Simon
  *
  */

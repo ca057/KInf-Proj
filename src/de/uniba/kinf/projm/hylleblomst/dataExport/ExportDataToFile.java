@@ -16,13 +16,13 @@ import com.opencsv.CSVWriter;
 import de.uniba.kinf.projm.hylleblomst.exceptions.ExportException;
 
 /**
+ * This classes provides methods to export data to files. Currently, only
+ * Csv-format is supported.
+ * 
  * @author Simon
  *
  */
-public class ExportDataToCSV {
-
-	public ExportDataToCSV() {
-	}
+public class ExportDataToFile {
 
 	/**
 	 * Export ResultSets to a CSV-file in file system
