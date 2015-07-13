@@ -2,7 +2,6 @@ package de.uniba.kinf.projm.hylleblomst.gui.controller;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
 import java.util.List;
 
 import de.uniba.kinf.projm.hylleblomst.exceptions.SearchException;
@@ -49,7 +48,7 @@ public class SearchController {
 	 */
 	public SearchController(int inputFieldCounter, Model model) {
 		if (inputFieldCounter == 0 || model == null) {
-			throw new InputMismatchException("Die Anzahl der Eingabefelder ist 0 oder das Model hat keinen Wert.");
+			throw new IllegalArgumentException("Die Anzahl der Eingabefelder ist 0 oder das Model hat keinen Wert.");
 		}
 		this.model = model;
 		inputCounter = inputFieldCounter;
@@ -129,7 +128,7 @@ public class SearchController {
 	 */
 	public void startSinglePersonSearch(UserQuery personIDQuery) throws SearchException {
 		if (personIDQuery == null) {
-			throw new InputMismatchException(
+			throw new IllegalArgumentException(
 					"Übergebene Suchanfrage hat keinen Wert. Personendetails können nicht gesucht werden.");
 		}
 		try {

@@ -3,7 +3,6 @@ package de.uniba.kinf.projm.hylleblomst.gui.controller;
 import java.net.URL;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.util.InputMismatchException;
 import java.util.ResourceBundle;
 
 import javax.sql.rowset.CachedRowSet;
@@ -151,7 +150,7 @@ public class DetailsViewController implements Initializable {
 		if (model != null) {
 			this.model = model;
 		} else {
-			throw new InputMismatchException(
+			throw new IllegalArgumentException(
 					"Model ist fehlerhaft, kann dem DetailsViewController nicht hinzugefügt werden.");
 		}
 	}
@@ -332,7 +331,7 @@ public class DetailsViewController implements Initializable {
 	 */
 	public void processCompleteSearchResult(CachedRowSet searchResult) {
 		if (searchResult == null) {
-			throw new InputMismatchException("Das Suchergebnis für die Details einer Person hat keinen Wert.");
+			throw new IllegalArgumentException("Das Suchergebnis für die Details einer Person hat keinen Wert.");
 		}
 		ResultSetMetaData crsMeta;
 		try {
@@ -473,7 +472,7 @@ public class DetailsViewController implements Initializable {
 
 	private void getSourceDetails(SearchFieldKeys sfk, String source) {
 		if (sfk == null || source == null || source.isEmpty()) {
-			throw new InputMismatchException(
+			throw new IllegalArgumentException(
 					"Es können keine Tradierungen gesucht werden, da das Suchfeld oder die Quelle keinen Wert hat oder leer ist.");
 		}
 		try {

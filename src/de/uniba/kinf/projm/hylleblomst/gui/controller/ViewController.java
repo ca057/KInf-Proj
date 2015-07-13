@@ -2,7 +2,6 @@ package de.uniba.kinf.projm.hylleblomst.gui.controller;
 
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.InputMismatchException;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Optional;
@@ -626,7 +625,7 @@ public class ViewController implements Observer, Initializable {
 	 */
 	private void startSearchForSinglePerson(String id) {
 		if (id == null || id.isEmpty()) {
-			throw new InputMismatchException(
+			throw new IllegalArgumentException(
 					"Übergebene ID ist leer oder hat keinen Wert, es können keine Details zur Person gesucht werden.");
 		}
 		UserQueryImpl idQuery = new UserQueryImpl(id);
@@ -797,7 +796,7 @@ public class ViewController implements Observer, Initializable {
 	 */
 	private String getEinschreibungAsFormattedString(TextField inputYear, TextField inputMonth, TextField inputDay) {
 		if (inputYear == null || inputMonth == null || inputDay == null) {
-			throw new InputMismatchException(
+			throw new IllegalArgumentException(
 					"Die Eingabe in den Feldern Einschreibung konnte nicht verarbeitet werden, da eines der Felder keinen Wert hat.");
 		}
 		String year = "yyyy";
@@ -814,7 +813,6 @@ public class ViewController implements Observer, Initializable {
 				day = inputDay.getText();
 			}
 		}
-		System.out.println(year + "-" + month + "-" + day);
 		return year + "-" + month + "-" + day;
 	}
 

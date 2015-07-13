@@ -14,7 +14,7 @@ import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
  * This class processes csv-files. It has rudimentary methods to get the data of
  * the file in lines.
  * 
- * @author Hannes
+ * @author Johannes
  *
  */
 class CsvHelper {

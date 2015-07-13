@@ -25,8 +25,6 @@ import de.uniba.kinf.projm.hylleblomst.logic.UserQuery;
  *
  */
 public class SearchInitiatorImpl implements SearchInitiator {
-	// DBAccess db = new DBAccess(DBUserKeys.dbURL, DBUserKeys.guestUser2,
-	// DBUserKeys.guestPassword2);
 	SQLBuilder sqlBuilder;
 	private String dbKey;
 	private String user;
@@ -48,7 +46,7 @@ public class SearchInitiatorImpl implements SearchInitiator {
 	}
 
 	@Override
-	public void setUser(String user) {
+	public void setDbUser(String user) {
 		if (user != null) {
 			this.user = user;
 		} else {
@@ -57,7 +55,7 @@ public class SearchInitiatorImpl implements SearchInitiator {
 	}
 
 	@Override
-	public void setPassword(String password) {
+	public void setDbPassword(String password) {
 		if (password != null) {
 			this.password = password;
 		} else {
@@ -85,6 +83,10 @@ public class SearchInitiatorImpl implements SearchInitiator {
 		}
 	}
 
+	/*
+	 * This method initiates the connection to the database, executes the query
+	 * and returns the result as CachedRowSet
+	 */
 	private CachedRowSet startQuery(String sqlStatement, List<Object> inputs) throws SQLException {
 		CachedRowSet crs = new CachedRowSetImpl();
 		try (Connection con = DriverManager.getConnection(dbKey, user, password);
@@ -93,12 +95,7 @@ public class SearchInitiatorImpl implements SearchInitiator {
 			int parameterIndex = 1;
 			if (inputs != null) {
 				for (Object input : inputs) {
-					// if (input instanceof String) {
 					stmt.setString(parameterIndex, (String) input);
-					// } else if (input instanceof Integer) {
-					// stmt.setInt(parameterIndex, (Integer) input);
-					//
-					// }
 					parameterIndex++;
 				}
 			}
