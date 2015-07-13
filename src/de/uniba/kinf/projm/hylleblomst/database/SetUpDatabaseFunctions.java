@@ -49,15 +49,15 @@ public class SetUpDatabaseFunctions {
 
 		try {
 			dbLocation = con.getMetaData().getURL()
-					.replaceFirst("jdbc:derby:", "").replaceFirst("MyDB", "");
+					.replaceFirst("jdbc:derby:", "").replaceFirst("/MyDB", "");
 			dbLocation += "/groupconcat.jar";
-			// Files.copy(file, Paths.get(dbLocation));
+			Files.copy(file, Paths.get(dbLocation));
 		} catch (SQLException e) {
 			if (e.getErrorCode() != 30000) {
 				throw new SetUpException(e);
 			}
-			// } catch (IOException e) {
-			// throw new SetUpException(e);
+		} catch (IOException e) {
+			throw new SetUpException(e);
 		}
 
 		String sqlCall = "CALL SQLJ.INSTALL_JAR ('" + dbLocation
