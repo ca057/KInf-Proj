@@ -12,7 +12,6 @@ import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.SourceKeys;
 import de.uniba.kinf.projm.hylleblomst.logic.UserQuery;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.UserQueryImpl;
-import javafx.beans.binding.BooleanBinding;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.event.EventHandler;
@@ -26,6 +25,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
@@ -209,6 +209,7 @@ public class InputController implements Initializable {
 		setUpNodes();
 		setNumericalInputEventHandlers();
 		setUpBindings();
+		setUpTooltips();
 	}
 
 	/*
@@ -217,8 +218,9 @@ public class InputController implements Initializable {
 	 */
 	private void setUpNodes() {
 		searchCategories.setExpandedPane(searchCategory_person);
-		searchCategory_study_einschreibeHinweis
-				.setText("Hinweis: Für eine erfolgreiche Suche muss jeweils mindestens das Jahr ausgefüllt sein.");
+		// searchCategory_study_einschreibeHinweis.setText("Hinweis: Für eine
+		// erfolgreiche Suche muss jeweils mindestens das Jahr ausgefüllt
+		// sein.");
 	}
 
 	/*
@@ -433,29 +435,22 @@ public class InputController implements Initializable {
 	 * 
 	 */
 	private void setUpBindings() {
-		BooleanBinding booleanBindingEinschreibeHinweis = new BooleanBinding() {
-
-			{
-				super.bind(searchCategory_study_einschreibeTagVon.textProperty(),
-						searchCategory_study_einschreibeTagBis.textProperty(),
-						searchCategory_study_einschreibeMonatVon.textProperty(),
-						searchCategory_study_einschreibeMonatBis.textProperty(),
-						searchCategory_study_einschreibeJahrVon.textProperty(),
-						searchCategory_study_einschreibeJahrBis.textProperty());
-			}
-
-			@Override
-			protected boolean computeValue() {
-				return (!searchCategory_study_einschreibeTagVon.getText().isEmpty()
-						|| !searchCategory_study_einschreibeTagBis.getText().isEmpty()
-						|| !searchCategory_study_einschreibeMonatVon.getText().isEmpty()
-						|| !searchCategory_study_einschreibeMonatBis.getText().isEmpty())
-						&& (searchCategory_study_einschreibeJahrVon.getText().isEmpty()
-								|| searchCategory_study_einschreibeJahrBis.getText().isEmpty());
-			}
-		};
-		searchCategory_study_einschreibeHinweis.visibleProperty().bind(booleanBindingEinschreibeHinweis);
 		selectedSourceProperty.bind(search_sourcekey_selection.valueProperty());
+	}
+
+	/*
+	 * 
+	 */
+	private void setUpTooltips() {
+		Tooltip einschreibeHinweis = new Tooltip();
+		einschreibeHinweis
+				.setText("Hinweis: Für eine erfolgreiche Suche muss jeweils mindestens das Jahr ausgefüllt sein.");
+		searchCategory_study_einschreibeTagVon.tooltipProperty().set(einschreibeHinweis);
+		searchCategory_study_einschreibeTagBis.tooltipProperty().set(einschreibeHinweis);
+		searchCategory_study_einschreibeMonatVon.tooltipProperty().set(einschreibeHinweis);
+		searchCategory_study_einschreibeMonatBis.tooltipProperty().set(einschreibeHinweis);
+		searchCategory_study_einschreibeJahrVon.tooltipProperty().set(einschreibeHinweis);
+		searchCategory_study_einschreibeJahrBis.tooltipProperty().set(einschreibeHinweis);
 	}
 
 	/**
