@@ -27,6 +27,7 @@ public class SQLBuilder {
 	private StringBuilder sqlStatement = new StringBuilder();
 	private Boolean needsStandardFields = true;
 	private Boolean whereIsEmpty = true;
+	private Boolean hasDate = false;
 	private String standardSelection = ColumnNameKeys.PERSON_ID + ", " + ColumnNameKeys.VORNAME_NORM + ", "
 			+ ColumnNameKeys.NAME_NORM + ", " + ColumnNameKeys.ORT_NORM + ", " + ColumnNameKeys.FAKULTAETEN_NORM;
 
@@ -92,26 +93,25 @@ public class SQLBuilder {
 		StringBuilder sqlNestedSelect = new StringBuilder();
 		StringBuilder sqlGroupBy = new StringBuilder();
 		for (UserQuery query : queryCollection) {
-			sqlStatement.append(", ");
+			sqlGroupBy.append(", " + query.getColumn());
+			sqlWhere.append(buildWhere(query));
+			sqlNestedSelect.append(buildSelectMask(query));
 			if (!query.isInt()) {
 				sqlStatement.append(" Hylleblomst.AGGREGATE_VARCHAR(' ' || ");
 			}
-			sqlStatement.append(query.getColumn());
+			if (ColumnNameKeys.DATUM.equals(query.getColumn()) && !hasDate) {
+				sqlStatement.append(", " + query.getColumn());
+				sqlStatement.append(", " + ColumnNameKeys.DATUMS_FELDER_GESETZT);
+				sqlGroupBy.append(", " + ColumnNameKeys.DATUMS_FELDER_GESETZT);
+				hasDate = true;
+			} else if (!ColumnNameKeys.DATUM.equals(query.getColumn())) {
+				sqlStatement.append(", ");
+				sqlStatement.append(query.getColumn());
+				sqlStatement.append(" AS " + query.getColumn());
+			}
 			if (!query.isInt()) {
 				sqlStatement.append(") ");
 			}
-			sqlStatement.append(" AS " + query.getColumn());
-			if (SearchFieldKeys.EINSCHREIBEDATUM_VON.equals(query.getSearchField())) {
-				sqlStatement.append(", " + ColumnNameKeys.DATUMS_FELDER_GESETZT + "_VON");
-				sqlGroupBy.append(", " + ColumnNameKeys.DATUMS_FELDER_GESETZT + "_VON");
-			}
-			if (SearchFieldKeys.EINSCHREIBEDATUM_BIS.equals(query.getSearchField())) {
-				sqlStatement.append(", " + ColumnNameKeys.DATUMS_FELDER_GESETZT + "_BIS");
-				sqlGroupBy.append(", " + ColumnNameKeys.DATUMS_FELDER_GESETZT + "_BIS");
-			}
-			sqlNestedSelect.append(buildSelectMask(query));
-			sqlWhere.append(buildWhere(query));
-			sqlGroupBy.append(", " + query.getColumn());
 			for (int i = 1; i <= query.getNumberOfInputs(); i++) {
 				inputs.add(query.getInput());
 			}
@@ -156,17 +156,12 @@ public class SQLBuilder {
 					+ ColumnNameKeys.FAKULTAETEN_NORM + " AS " + ColumnNameKeys.FAKULTAETEN_NORM;
 			needsStandardFields = false;
 		}
-		if (SearchFieldKeys.EINSCHREIBEDATUM_VON.equals(userQuery.getSearchField())) {
-			result += ", " + userQuery.getTable() + "." + ColumnNameKeys.DATUMS_FELDER_GESETZT + " AS "
-					+ ColumnNameKeys.DATUMS_FELDER_GESETZT + "_VON";
-		}
-		if (SearchFieldKeys.EINSCHREIBEDATUM_BIS.equals(userQuery.getSearchField())) {
-			result += ", " + userQuery.getTable() + "." + ColumnNameKeys.DATUMS_FELDER_GESETZT + " AS "
-					+ ColumnNameKeys.DATUMS_FELDER_GESETZT + "_BIS";
-		}
 		if (ColumnNameKeys.STUDIENJAHR.equals(userQuery.getColumn())) {
 			result += ", " + userQuery.getTable() + "." + ColumnNameKeys.STUDIENJAHR_INT + " AS "
 					+ ColumnNameKeys.STUDIENJAHR_INT;
+		} else if (ColumnNameKeys.DATUM.equals(userQuery.getColumn()) && !hasDate) {
+			result += ", " + userQuery.getTable() + "." + ColumnNameKeys.DATUMS_FELDER_GESETZT + " AS "
+					+ ColumnNameKeys.DATUMS_FELDER_GESETZT;
 		} else if (!(ColumnNameKeys.PERSON_ID.equals(userQuery.getColumn())
 				|| ColumnNameKeys.VORNAME_NORM.equals(userQuery.getColumn())
 				|| ColumnNameKeys.NAME_NORM.equals(userQuery.getColumn())
