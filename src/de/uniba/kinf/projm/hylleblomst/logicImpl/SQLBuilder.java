@@ -101,6 +101,14 @@ public class SQLBuilder {
 				sqlStatement.append(") ");
 			}
 			sqlStatement.append(" AS " + query.getColumn());
+			if (SearchFieldKeys.EINSCHREIBEDATUM_VON.equals(query.getSearchField())) {
+				sqlStatement.append(", " + ColumnNameKeys.DATUMS_FELDER_GESETZT + "_VON");
+				sqlGroupBy.append(", " + ColumnNameKeys.DATUMS_FELDER_GESETZT + "_VON");
+			}
+			if (SearchFieldKeys.EINSCHREIBEDATUM_BIS.equals(query.getSearchField())) {
+				sqlStatement.append(", " + ColumnNameKeys.DATUMS_FELDER_GESETZT + "_BIS");
+				sqlGroupBy.append(", " + ColumnNameKeys.DATUMS_FELDER_GESETZT + "_BIS");
+			}
 			sqlNestedSelect.append(buildSelectMask(query));
 			sqlWhere.append(buildWhere(query));
 			sqlGroupBy.append(", " + query.getColumn());
@@ -148,20 +156,18 @@ public class SQLBuilder {
 					+ ColumnNameKeys.FAKULTAETEN_NORM + " AS " + ColumnNameKeys.FAKULTAETEN_NORM;
 			needsStandardFields = false;
 		}
-		// if (ColumnNameKeys.DATUM.equals(userQuery.getColumn())) {
-		// result += ", " + userQuery.getTable() + "." + ColumnNameKeys.DATUM +
-		// " AS " + ColumnNameKeys.DATUM + ", "
-		// + userQuery.getTable() + "." + ColumnNameKeys.DATUMS_FELDER_GESETZT +
-		// " AS "
-		// + ColumnNameKeys.DATUMS_FELDER_GESETZT;
-		// }
-		// if (ColumnNameKeys.STUDIENJAHR.equals(userQuery.getColumn())) {
-		// result += ", " + userQuery.getTable() + "." +
-		// ColumnNameKeys.STUDIENJAHR + " AS "
-		// + ColumnNameKeys.STUDIENJAHR + ", " + userQuery.getTable() + "." +
-		// ColumnNameKeys.STUDIENJAHR
-		// + " AS " + ColumnNameKeys.STUDIENJAHR_INT;
-		if (!(ColumnNameKeys.PERSON_ID.equals(userQuery.getColumn())
+		if (SearchFieldKeys.EINSCHREIBEDATUM_VON.equals(userQuery.getSearchField())) {
+			result += ", " + userQuery.getTable() + "." + ColumnNameKeys.DATUMS_FELDER_GESETZT + " AS "
+					+ ColumnNameKeys.DATUMS_FELDER_GESETZT + "_VON";
+		}
+		if (SearchFieldKeys.EINSCHREIBEDATUM_BIS.equals(userQuery.getSearchField())) {
+			result += ", " + userQuery.getTable() + "." + ColumnNameKeys.DATUMS_FELDER_GESETZT + " AS "
+					+ ColumnNameKeys.DATUMS_FELDER_GESETZT + "_BIS";
+		}
+		if (ColumnNameKeys.STUDIENJAHR.equals(userQuery.getColumn())) {
+			result += ", " + userQuery.getTable() + "." + ColumnNameKeys.STUDIENJAHR_INT + " AS "
+					+ ColumnNameKeys.STUDIENJAHR_INT;
+		} else if (!(ColumnNameKeys.PERSON_ID.equals(userQuery.getColumn())
 				|| ColumnNameKeys.VORNAME_NORM.equals(userQuery.getColumn())
 				|| ColumnNameKeys.NAME_NORM.equals(userQuery.getColumn())
 				|| ColumnNameKeys.ORT_NORM.equals(userQuery.getColumn())
