@@ -11,7 +11,7 @@ import de.uniba.kinf.projm.hylleblomst.exceptions.ImportException;
  * @see {@link de.uniba.kinf.projm.hylleblomst.dataImport.ImportDatabase}
  *
  */
-public interface ImportData {
+public interface DataImportController {
 
 	/**
 	 * Takes the passed {@code String} path to the file and starts the import.
