@@ -35,7 +35,7 @@ public class InputController implements Initializable {
 
 	private ViewHelper viewHelper;
 
-	private int inputFieldCounter = 24;
+	private int inputFieldCounter = 22;
 
 	private SearchFieldKeys[] searchFieldKeys;
 
@@ -63,13 +63,7 @@ public class InputController implements Initializable {
 	private TextField searchCategory_person_anrede;
 
 	@FXML
-	private TextField searchCategory_person_anredenorm;
-
-	@FXML
 	private TextField searchCategory_person_titel;
-
-	@FXML
-	private TextField searchCategory_person_titelnorm;
 
 	@FXML
 	private ComboBox<String> searchCategory_person_vornameselection;
@@ -542,31 +536,29 @@ public class InputController implements Initializable {
 		String[] inputFields = new String[inputFieldCounter];
 		try {
 			inputFields[0] = searchCategory_person_anrede.getText();
-			inputFields[1] = searchCategory_person_anredenorm.getText();
-			inputFields[2] = searchCategory_person_titel.getText();
-			inputFields[3] = searchCategory_person_titelnorm.getText();
-			inputFields[4] = searchCategory_person_vornameinput.getText();
-			inputFields[5] = searchCategory_person_nachnameinput.getText();
-			inputFields[6] = String.valueOf(searchCategory_personExtended_adeliger.isSelected());
-			inputFields[7] = String.valueOf(searchCategory_personExtended_jesuit.isSelected());
-			inputFields[8] = searchCategory_personExtended_wirtschaftinput.getText();
-			inputFields[9] = searchCategory_personExtended_ortinput.getText();
-			inputFields[10] = searchCategory_study_studienfachinput.getText();
-			inputFields[11] = searchCategory_study_fakultaet.getText();
-			inputFields[12] = searchCategory_study_seminarinput.getText();
-			inputFields[13] = String.valueOf(searchCategory_study_graduiert.isSelected());
-			inputFields[14] = searchCategory_study_studienjahrVon.getText();
-			inputFields[15] = searchCategory_study_studienjahrBis.getText();
-			inputFields[16] = getEinschreibungAsFormattedString(searchCategory_study_einschreibeJahrVon,
+			inputFields[1] = searchCategory_person_titel.getText();
+			inputFields[2] = searchCategory_person_vornameinput.getText();
+			inputFields[3] = searchCategory_person_nachnameinput.getText();
+			inputFields[4] = String.valueOf(searchCategory_personExtended_adeliger.isSelected());
+			inputFields[5] = String.valueOf(searchCategory_personExtended_jesuit.isSelected());
+			inputFields[6] = searchCategory_personExtended_wirtschaftinput.getText();
+			inputFields[7] = searchCategory_personExtended_ortinput.getText();
+			inputFields[8] = searchCategory_study_studienfachinput.getText();
+			inputFields[9] = searchCategory_study_fakultaet.getText();
+			inputFields[10] = searchCategory_study_seminarinput.getText();
+			inputFields[11] = String.valueOf(searchCategory_study_graduiert.isSelected());
+			inputFields[12] = searchCategory_study_studienjahrVon.getText();
+			inputFields[13] = searchCategory_study_studienjahrBis.getText();
+			inputFields[14] = getEinschreibungAsFormattedString(searchCategory_study_einschreibeJahrVon,
 					searchCategory_study_einschreibeMonatVon, searchCategory_study_einschreibeTagVon);
-			inputFields[17] = getEinschreibungAsFormattedString(searchCategory_study_einschreibeJahrBis,
+			inputFields[15] = getEinschreibungAsFormattedString(searchCategory_study_einschreibeJahrBis,
 					searchCategory_study_einschreibeMonatBis, searchCategory_study_einschreibeTagBis);
-			inputFields[18] = searchCategory_other_zusaetzeinput.getText();
-			inputFields[19] = searchCategory_other_fundort.getText();
-			inputFields[20] = searchCategory_other_anmerkungen.getText();
-			inputFields[21] = searchCategory_other_nummer.getText();
-			inputFields[22] = searchCategory_other_seite.getText();
-			inputFields[23] = searchCategory_other_nummerhess.getText();
+			inputFields[16] = searchCategory_other_zusaetzeinput.getText();
+			inputFields[17] = searchCategory_other_fundort.getText();
+			inputFields[18] = searchCategory_other_anmerkungen.getText();
+			inputFields[19] = searchCategory_other_nummer.getText();
+			inputFields[20] = searchCategory_other_seite.getText();
+			inputFields[21] = searchCategory_other_nummerhess.getText();
 		} catch (IllegalArgumentException e) {
 			viewHelper.showErrorMessage(e.getMessage());
 		}
@@ -650,33 +642,31 @@ public class InputController implements Initializable {
 
 		if (viewHelper.getSourceKeyByValueAsString(search_sourcekey_selection.getValue()) != SourceKeys.NORM) {
 			inputSourceKey[0] = SourceKeys.NO_SOURCE;
-			inputSourceKey[2] = SourceKeys.NO_SOURCE;
+			inputSourceKey[1] = SourceKeys.NO_SOURCE;
 		} else {
 			inputSourceKey[0] = SourceKeys.NORM;
-			inputSourceKey[2] = SourceKeys.NORM;
+			inputSourceKey[1] = SourceKeys.NORM;
 		}
-		inputSourceKey[1] = SourceKeys.NORM;
-		inputSourceKey[3] = SourceKeys.NORM;
-		inputSourceKey[4] = viewHelper.getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
-		inputSourceKey[5] = viewHelper.getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
-		inputSourceKey[6] = SourceKeys.NO_SOURCE;
-		inputSourceKey[7] = SourceKeys.NO_SOURCE;
+		inputSourceKey[2] = viewHelper.getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
+		inputSourceKey[3] = viewHelper.getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
+		inputSourceKey[4] = SourceKeys.NO_SOURCE;
+		inputSourceKey[5] = SourceKeys.NO_SOURCE;
+		inputSourceKey[6] = viewHelper.getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
+		inputSourceKey[7] = viewHelper.getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
 		inputSourceKey[8] = viewHelper.getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
-		inputSourceKey[9] = viewHelper.getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
+		inputSourceKey[9] = SourceKeys.NO_SOURCE;
 		inputSourceKey[10] = viewHelper.getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
 		inputSourceKey[11] = SourceKeys.NO_SOURCE;
-		inputSourceKey[12] = viewHelper.getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
+		inputSourceKey[12] = SourceKeys.NO_SOURCE;
 		inputSourceKey[13] = SourceKeys.NO_SOURCE;
 		inputSourceKey[14] = SourceKeys.NO_SOURCE;
 		inputSourceKey[15] = SourceKeys.NO_SOURCE;
-		inputSourceKey[16] = SourceKeys.NO_SOURCE;
+		inputSourceKey[16] = viewHelper.getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
 		inputSourceKey[17] = SourceKeys.NO_SOURCE;
-		inputSourceKey[18] = viewHelper.getSourceKeyByValueAsString(search_sourcekey_selection.getValue());
+		inputSourceKey[18] = SourceKeys.NO_SOURCE;
 		inputSourceKey[19] = SourceKeys.NO_SOURCE;
 		inputSourceKey[20] = SourceKeys.NO_SOURCE;
 		inputSourceKey[21] = SourceKeys.NO_SOURCE;
-		inputSourceKey[22] = SourceKeys.NO_SOURCE;
-		inputSourceKey[23] = SourceKeys.NO_SOURCE;
 
 		return inputSourceKey;
 	}
@@ -690,29 +680,27 @@ public class InputController implements Initializable {
 		SearchFieldKeys[] sfkArray = new SearchFieldKeys[inputFieldCounter];
 
 		sfkArray[0] = SearchFieldKeys.ANREDE;
-		sfkArray[1] = SearchFieldKeys.ANREDE;
-		sfkArray[2] = SearchFieldKeys.TITEL;
-		sfkArray[3] = SearchFieldKeys.TITEL;
-		sfkArray[4] = SearchFieldKeys.VORNAME;
-		sfkArray[5] = SearchFieldKeys.NACHNAME;
-		sfkArray[6] = SearchFieldKeys.ADLIG;
-		sfkArray[7] = SearchFieldKeys.JESUIT;
-		sfkArray[8] = SearchFieldKeys.WIRTSCHAFTSLAGE;
-		sfkArray[9] = SearchFieldKeys.ORT;
-		sfkArray[10] = SearchFieldKeys.FACH;
-		sfkArray[11] = SearchFieldKeys.FAKULTAETEN;
-		sfkArray[12] = SearchFieldKeys.SEMINAR;
-		sfkArray[13] = SearchFieldKeys.GRADUIERT;
-		sfkArray[14] = SearchFieldKeys.STUDIENJAHR_VON;
-		sfkArray[15] = SearchFieldKeys.STUDIENJAHR_BIS;
-		sfkArray[16] = SearchFieldKeys.EINSCHREIBEDATUM_VON;
-		sfkArray[17] = SearchFieldKeys.EINSCHREIBEDATUM_BIS;
-		sfkArray[18] = SearchFieldKeys.ZUSAETZE;
-		sfkArray[19] = SearchFieldKeys.FUNDORTE;
-		sfkArray[20] = SearchFieldKeys.ANMERKUNGEN;
-		sfkArray[21] = SearchFieldKeys.NUMMER;
-		sfkArray[22] = SearchFieldKeys.SEITE_ORIGINALE;
-		sfkArray[23] = SearchFieldKeys.NUMMER_HESS;
+		sfkArray[1] = SearchFieldKeys.TITEL;
+		sfkArray[2] = SearchFieldKeys.VORNAME;
+		sfkArray[3] = SearchFieldKeys.NACHNAME;
+		sfkArray[4] = SearchFieldKeys.ADLIG;
+		sfkArray[5] = SearchFieldKeys.JESUIT;
+		sfkArray[6] = SearchFieldKeys.WIRTSCHAFTSLAGE;
+		sfkArray[7] = SearchFieldKeys.ORT;
+		sfkArray[8] = SearchFieldKeys.FACH;
+		sfkArray[9] = SearchFieldKeys.FAKULTAETEN;
+		sfkArray[10] = SearchFieldKeys.SEMINAR;
+		sfkArray[11] = SearchFieldKeys.GRADUIERT;
+		sfkArray[12] = SearchFieldKeys.STUDIENJAHR_VON;
+		sfkArray[13] = SearchFieldKeys.STUDIENJAHR_BIS;
+		sfkArray[14] = SearchFieldKeys.EINSCHREIBEDATUM_VON;
+		sfkArray[15] = SearchFieldKeys.EINSCHREIBEDATUM_BIS;
+		sfkArray[16] = SearchFieldKeys.ZUSAETZE;
+		sfkArray[17] = SearchFieldKeys.FUNDORTE;
+		sfkArray[18] = SearchFieldKeys.ANMERKUNGEN;
+		sfkArray[19] = SearchFieldKeys.NUMMER;
+		sfkArray[20] = SearchFieldKeys.SEITE_ORIGINALE;
+		sfkArray[21] = SearchFieldKeys.NUMMER_HESS;
 
 		return sfkArray;
 	}
@@ -723,9 +711,7 @@ public class InputController implements Initializable {
 	@FXML
 	private void clearSearchInput() {
 		searchCategory_person_anrede.clear();
-		searchCategory_person_anredenorm.clear();
 		searchCategory_person_titel.clear();
-		searchCategory_person_titelnorm.clear();
 		searchCategory_person_vornameinput.clear();
 		searchCategory_person_nachnameinput.clear();
 		searchCategory_personExtended_adeliger.setSelected(false);
