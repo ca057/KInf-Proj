@@ -25,9 +25,10 @@ public class SQLBuilder {
 	private Collection<UserQuery> queryCollection;
 	private ArrayList<Object> inputs = new ArrayList<Object>();;
 	private StringBuilder sqlStatement = new StringBuilder();
-	private Boolean needsStandardFields = true;
 	private Boolean whereIsEmpty = true;
+	private Boolean needsStandardFields = true;
 	private Boolean hasDate = false;
+	private Boolean hasStudyYear = false;
 	private String standardSelection = ColumnNameKeys.PERSON_ID + ", " + ColumnNameKeys.VORNAME_NORM + ", "
 			+ ColumnNameKeys.NAME_NORM + ", " + ColumnNameKeys.ORT_NORM + ", " + ColumnNameKeys.FAKULTAETEN_NORM;
 
@@ -104,7 +105,12 @@ public class SQLBuilder {
 				sqlStatement.append(", " + ColumnNameKeys.DATUMS_FELDER_GESETZT);
 				sqlGroupBy.append(", " + ColumnNameKeys.DATUMS_FELDER_GESETZT);
 				hasDate = true;
-			} else if (!ColumnNameKeys.DATUM.equals(query.getColumn())) {
+			} else if (ColumnNameKeys.STUDIENJAHR_INT.equals(query.getColumn()) && !hasStudyYear) {
+				sqlStatement.append(", " + ColumnNameKeys.STUDIENJAHR);
+				sqlGroupBy.append(", " + ColumnNameKeys.STUDIENJAHR);
+				hasStudyYear = true;
+			} else if (!(ColumnNameKeys.DATUM.equals(query.getColumn())
+					|| ColumnNameKeys.STUDIENJAHR_INT.equals(query.getColumn()))) {
 				sqlStatement.append(", ");
 				sqlStatement.append(query.getColumn());
 				sqlStatement.append(" AS " + query.getColumn());
@@ -119,6 +125,9 @@ public class SQLBuilder {
 		sqlStatement.append(" FROM (SELECT DISTINCT ").append(sqlNestedSelect).append(" FROM " + buildFrom())
 				.append(" WHERE ").append(sqlWhere).append(") T ").append(" GROUP BY " + standardSelection)
 				.append(sqlGroupBy);
+		needsStandardFields = true;
+		hasDate = false;
+		hasStudyYear = false;
 	}
 
 	/*
@@ -156,9 +165,9 @@ public class SQLBuilder {
 					+ ColumnNameKeys.FAKULTAETEN_NORM + " AS " + ColumnNameKeys.FAKULTAETEN_NORM;
 			needsStandardFields = false;
 		}
-		if (ColumnNameKeys.STUDIENJAHR.equals(userQuery.getColumn())) {
-			result += ", " + userQuery.getTable() + "." + ColumnNameKeys.STUDIENJAHR_INT + " AS "
-					+ ColumnNameKeys.STUDIENJAHR_INT;
+		if (ColumnNameKeys.STUDIENJAHR_INT.equals(userQuery.getColumn()) && !hasStudyYear) {
+			result += ", " + userQuery.getTable() + "." + ColumnNameKeys.STUDIENJAHR + " AS "
+					+ ColumnNameKeys.STUDIENJAHR + ", " + userQuery.getTable() + "." + userQuery.getColumn();
 		} else if (ColumnNameKeys.DATUM.equals(userQuery.getColumn()) && !hasDate) {
 			result += ", " + userQuery.getTable() + "." + ColumnNameKeys.DATUMS_FELDER_GESETZT + " AS "
 					+ ColumnNameKeys.DATUMS_FELDER_GESETZT;
@@ -166,7 +175,9 @@ public class SQLBuilder {
 				|| ColumnNameKeys.VORNAME_NORM.equals(userQuery.getColumn())
 				|| ColumnNameKeys.NAME_NORM.equals(userQuery.getColumn())
 				|| ColumnNameKeys.ORT_NORM.equals(userQuery.getColumn())
-				|| ColumnNameKeys.FAKULTAETEN_NORM.equals(userQuery.getColumn()))) {
+				|| ColumnNameKeys.FAKULTAETEN_NORM.equals(userQuery.getColumn())
+				|| ColumnNameKeys.DATUM.equals(userQuery.getColumn())
+				|| ColumnNameKeys.STUDIENJAHR_INT.equals(userQuery.getColumn()))) {
 			result += ", " + userQuery.getTable() + "." + userQuery.getColumn() + " AS " + userQuery.getColumn();
 		}
 		if (userQuery.getSource() == SourceKeys.ORT_NORM_AB || (SearchFieldKeys.ORT.equals(userQuery.getSearchField())
