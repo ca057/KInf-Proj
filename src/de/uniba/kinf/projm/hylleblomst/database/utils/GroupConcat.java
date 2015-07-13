@@ -1,5 +1,6 @@
 package de.uniba.kinf.projm.hylleblomst.database.utils;
 
+
 /**
  * @author Simon
  *
@@ -22,20 +23,12 @@ public final class GroupConcat {
 		return result.toString();
 	}
 
-	// public static String groupConcatColumn(String separator, ) {
-	//
-	// }
-
 	// public static void main(String[] args) {
-	// try (Connection con =
-	// DriverManager.getConnection("jdbc:derby:./db/MyDB;user=admin;password=r+l=j"))
-	// {
+	// try (Connection con = DriverManager
+	// .getConnection("jdbc:derby:./db/MyDB;user=admin;password=r+l=j")) {
 	//
-	// PreparedStatement stmt = con.prepareStatement(
-	// "SELECT HYLLEBLOMST.GROUP_CONCAT (', ',QuellenName,FakultaetenNorm) FROM
-	// HYLLEBLOMST.quellen, HYLLEBLOMST.fakultaeten WHERE
-	// Hylleblomst.quellen.quellenID<=3 AND
-	// Hylleblomst.fakultaeten.fakultaetenID<=3");
+	// PreparedStatement stmt = con
+	// .prepareStatement("SELECT HYLLEBLOMST.GROUP_CONCAT (', ',QuellenName,FakultaetenNorm) FROM HYLLEBLOMST.quellen, HYLLEBLOMST.fakultaeten WHERE	 Hylleblomst.quellen.quellenID<=3 AND	 Hylleblomst.fakultaeten.fakultaetenID<=3");
 	// ResultSet string = stmt.executeQuery();
 	// for (; string.next();) {
 	// System.out.println(string.getString(1));

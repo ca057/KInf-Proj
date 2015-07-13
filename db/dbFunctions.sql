@@ -11,12 +11,13 @@ CREATE SCHEMA test;
 CREATE TABLE test.test(a varchar(10), b varchar(10));
 INSERT INTO  test.test values('eins','zwei');
 
+SELECT a,b FROM test.test;
 SELECT HYLLEBLOMST.GROUP_CONCAT(',',a,b) FROM test.test;
 
-SELECT HYLLEBLOMST.GROUP_CONCAT (', ',QuellenName,FakultaetenNorm) FROM HYLLEBLOMST.quellen, HYLLEBLOMST.fakultaeten WHERE Hylleblomst.quellen.quellenID<=3 AND Hylleblomst.fakultaeten.fakultaetenID<=3; 
+SELECT HYLLEBLOMST.GROUP_CONCAT (',',QuellenName,FakultaetenNorm) FROM HYLLEBLOMST.quellen, HYLLEBLOMST.fakultaeten WHERE Hylleblomst.quellen.quellenID<=3 AND Hylleblomst.fakultaeten.fakultaetenID<=3; 
 SELECT HYLLEBLOMST.GROUP_CONCAT (',',AnredeTrad) FROM HYLLEBLOMST.Anrede_Trad;
 
 CALL SQLJ.INSTALL_JAR (
-	'groupconcat.jar','HYLLEBLOMST.groupconcat',0);
+	'C:\Users\Simon\git\KInf-Projekt\db\MyDB\groupconcat.jar','HYLLEBLOMST.groupconcat',0);
 CALL SQLJ.REMOVE_JAR (
-	'HYLLEBLOMST.groupconcat.jar',0)
+	'HYLLEBLOMST.groupconcat.jar',0);
