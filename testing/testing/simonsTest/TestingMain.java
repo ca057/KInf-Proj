@@ -9,8 +9,12 @@ import java.sql.SQLException;
 public class TestingMain {
 
 	public static void main(String[] args) {
-		try (Connection con = DriverManager
-				.getConnection("jdbc:derby:C:/Users/Simon/Documents/proving_grounds/MyDB;user=admin;password=r+l=j");
+		if (args.length == 0) {
+			System.exit(0);
+		}
+
+		try (Connection con = DriverManager.getConnection("jdbc:derby:"
+				+ args[0] + "/MyDB;user=admin;password=r+l=j");
 				PreparedStatement stmt = con
 						.prepareStatement("SELECT HYLLEBLOMST.AGGREGATE_VARCHAR(QuellenName) FROM HYLLEBLOMST.QUELLEN");) {
 
