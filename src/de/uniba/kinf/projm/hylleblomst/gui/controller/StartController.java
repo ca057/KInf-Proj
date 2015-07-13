@@ -1,0 +1,94 @@
+package de.uniba.kinf.projm.hylleblomst.gui.controller;
+
+import java.io.IOException;
+
+import de.uniba.kinf.projm.hylleblomst.gui.model.Model;
+import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.image.Image;
+import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+
+/**
+ * The main controller for the graphical user interface of the application.
+ * Loads the view and initializes all controllers.
+ * 
+ * @author Christian
+ *
+ */
+public class StartController {
+
+	private Model model;
+
+	private Stage mainStage;
+
+	private MainController viewController;
+
+	/**
+	 * Constructor for a new MainController. Needs a {@link Model} as parameter
+	 * for setting all needed controllers and passing them the {@link Model} as
+	 * argument.
+	 * 
+	 * <p>
+	 * <b>Precondition</b>
+	 * <ul>
+	 * <li>the {@link Model} must not be {@code null}</li>
+	 * </ul>
+	 * </p>
+	 * 
+	 * @param model
+	 *            the {@link Model} needed for accessing the logic of the
+	 *            application
+	 */
+	public StartController(Model model) {
+		if (model == null) {
+			throw new IllegalArgumentException("Das übergebene Model hat keinen Wert/ist fehlerhaft.");
+		}
+		this.model = model;
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("../view/hylleblomstView.fxml"));
+			BorderPane rootPane = (BorderPane) loader.load();
+
+			viewController = loader.getController();
+			viewController.setModel(model);
+
+			viewController.setModelAndControllers(model);
+
+			Scene scene = new Scene(rootPane);
+			mainStage = new Stage();
+			mainStage.setScene(scene);
+
+			mainStage.setTitle(new ViewHelper().getAppName());
+			mainStage.getIcons().add(new Image(getClass().getResourceAsStream("../view/unicorn-icon.png")));
+			mainStage.show();
+			mainStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+				@Override
+				public void handle(WindowEvent we) {
+					mainStage.close();
+					System.exit(0);
+				}
+			});
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Method for starting the {@link MainStage}.
+	 * 
+	 * <p>
+	 * <b>Precondition</b>
+	 * <ul>
+	 * <li>stage to show must not be {@code null}</li>
+	 * </ul>
+	 * </b>
+	 */
+	public void showView() {
+		if (mainStage != null) {
+			mainStage.show();
+		}
+	}
+
+}

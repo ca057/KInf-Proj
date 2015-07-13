@@ -85,7 +85,7 @@ public class ViewHelper {
 		alertInformation.setTitle(appName + " - Über");
 		alertInformation.setHeaderText(appName + " v1.82.02.22.3");
 		alertInformation.setGraphic(new ImageView(this.getClass().getResource("../view/einhorn.gif").toString()));
-		String content = "Mit Liebe gemacht von\nSimon 'Datenbank-Push' Stemper, Johannes 'Git-Gott' Trepesch, Christian Ost\n";
+		String content = "Mit Liebe gemacht von\nSimon Stemper, Johannes 'Git-Gott' Trepesch, Christian Ost\n";
 		content += "WTFPL 2015 – Do What the Fuck You Want to Public License\n";
 		content += "Einhorn-Grafik: \u00A9 unbekannt\n";
 		alertInformation.setContentText(content);
