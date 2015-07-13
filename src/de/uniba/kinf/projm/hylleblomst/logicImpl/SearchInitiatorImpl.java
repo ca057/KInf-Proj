@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.InputMismatchException;
 import java.util.List;
 
 import javax.sql.rowset.CachedRowSet;
@@ -41,7 +40,7 @@ public class SearchInitiatorImpl implements SearchInitiator {
 		if (dbKey != null) {
 			this.dbKey = dbKey.dbURL;
 		} else {
-			throw new InputMismatchException("Der Pfad zur Datenbank darf nicht null sein.");
+			throw new IllegalArgumentException("Der Pfad zur Datenbank darf nicht null sein.");
 		}
 	}
 
@@ -50,7 +49,7 @@ public class SearchInitiatorImpl implements SearchInitiator {
 		if (user != null) {
 			this.user = user;
 		} else {
-			throw new InputMismatchException("Der Nutzer*innenname für die Datenbank darf nicht null sein.");
+			throw new IllegalArgumentException("Der Nutzer*innenname für die Datenbank darf nicht null sein.");
 		}
 	}
 
@@ -59,7 +58,7 @@ public class SearchInitiatorImpl implements SearchInitiator {
 		if (password != null) {
 			this.password = password;
 		} else {
-			throw new InputMismatchException("Das Passwort für die Datenbank darf nicht null sein.");
+			throw new IllegalArgumentException("Das Passwort für die Datenbank darf nicht null sein.");
 		}
 	}
 
@@ -69,7 +68,7 @@ public class SearchInitiatorImpl implements SearchInitiator {
 			sqlBuilder = new SQLBuilder(userQuery);
 			return startQuery(sqlBuilder.getSQLStatement(), sqlBuilder.getInputs());
 		} else {
-			throw new InputMismatchException("Die übergebene Collection ist fehlerhaft (null oder leer)");
+			throw new IllegalArgumentException("Die übergebene Collection ist fehlerhaft (null oder leer)");
 		}
 	}
 
@@ -79,7 +78,7 @@ public class SearchInitiatorImpl implements SearchInitiator {
 			sqlBuilder = new SQLBuilder(userQuery);
 			return startQuery(sqlBuilder.getSQLStatement(), sqlBuilder.getInputs());
 		} else {
-			throw new InputMismatchException("Die übergebene UserQuery ist fehlerhaft (null)");
+			throw new IllegalArgumentException("Die übergebene UserQuery ist fehlerhaft (null)");
 		}
 	}
 

@@ -4,7 +4,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.InputMismatchException;
 import java.util.List;
 
 import de.uniba.kinf.projm.hylleblomst.keys.ColumnNameKeys;
@@ -40,7 +39,7 @@ public class SQLBuilder {
 	 */
 	public SQLBuilder(Collection<UserQuery> userQuery) throws SQLException {
 		if (userQuery == null || userQuery.isEmpty()) {
-			throw new InputMismatchException("Die übergebene Collection darf nicht leer bzw. null sein.");
+			throw new IllegalArgumentException("Die übergebene Collection darf nicht leer bzw. null sein.");
 		}
 		this.userQuery = userQuery;
 		buildSearchMask();
@@ -61,7 +60,7 @@ public class SQLBuilder {
 	 */
 	public SQLBuilder(UserQuery userQuery) throws SQLException {
 		if (userQuery == null || userQuery.getInput() == null) {
-			throw new InputMismatchException("Das übergebene Query und dessen input dürfen nicht null sein.");
+			throw new IllegalArgumentException("Das übergebene Query und dessen input dürfen nicht null sein.");
 		}
 		inputs.add(userQuery.getInput());
 		if (userQuery.isPersonSearch()) {
