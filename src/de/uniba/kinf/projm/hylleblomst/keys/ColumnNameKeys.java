@@ -58,8 +58,15 @@ public interface ColumnNameKeys {
 	public static final String JESUIT = "Jesuit";
 	public static final String ADLIG = "Adlig";
 	public static final String DATUM = "Datum";
+	/**
+	 * This column shows which information of a date (year/month/day) was saved
+	 * in {@link #STUDIENJAHR}. For example, "000" means that everything was
+	 * set, while "011" means that only the year was set and month and year are
+	 * dummy data and must not be shown to the user.
+	 */
 	public static final String DATUMS_FELDER_GESETZT = "DatumsFelderGesetzt";
 	public static final String STUDIENJAHR = "Studienjahr";
+
 	public static final String STUDIENJAHR_INT = "StudienjahrInt";
 	public static final String GRADUIERT = "Graduiert";
 	public static final String ANMERKUNG = "Anmerkung";

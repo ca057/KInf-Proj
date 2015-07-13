@@ -85,7 +85,6 @@ public class SQLBuilder {
 	 */
 	private void buildSearchMask() throws SQLException {
 		StringBuilder sqlWhere = new StringBuilder();
-		sqlStatement.append("SELECT Hylleblomst.GROUP_CONCAT(OrtTrad) FROM( ");
 		for (UserQuery query : userQuery) {
 			sqlStatement.append(buildSelectMask(query));
 			sqlWhere.append(buildWhere(query));
@@ -93,8 +92,12 @@ public class SQLBuilder {
 				inputs.add(query.getInput());
 			}
 		}
-		sqlStatement.append(buildFrom()).append(" WHERE ").append(sqlWhere).append(") T");
-
+		sqlStatement.append(buildFrom()).append(" WHERE ").append(sqlWhere);
+		// GROUP BY
+		// ColumnNameKeys.PERSON_ID + ", " + ColumnNameKeys.VORNAME_NORM + ", "
+		// + ColumnNameKeys.NAME_NORM + ", "
+		// + ColumnNameKeys.ORT_NORM + ", "
+		// + ColumnNameKeys.FAKULTAETEN_NORM;
 	}
 
 	/*
@@ -123,11 +126,12 @@ public class SQLBuilder {
 	private String buildSelectMask(UserQuery userQuery) {
 		String result = "";
 		if (needsStandardFields) {
-			result = "SELECT " + TableNameKeys.PERSON + "." + ColumnNameKeys.PERSON_ID + " AS PersonID, "
-					+ TableNameKeys.VORNAME_NORM + "." + ColumnNameKeys.VORNAME_NORM + " AS vorname_norm, "
-					+ TableNameKeys.NAME_NORM + "." + ColumnNameKeys.NAME_NORM + " AS nachname_norm, "
-					+ TableNameKeys.ORT_NORM + "." + ColumnNameKeys.ORT_NORM + " AS ort_norm, "
-					+ TableNameKeys.FAKULTAETEN + "." + ColumnNameKeys.FAKULTAETEN_NORM + " AS fakultaet_norm";
+			result = "SELECT " + TableNameKeys.PERSON + "." + ColumnNameKeys.PERSON_ID + " AS "
+					+ ColumnNameKeys.PERSON_ID + ", " + TableNameKeys.VORNAME_NORM + "." + ColumnNameKeys.VORNAME_NORM
+					+ " AS " + ColumnNameKeys.VORNAME_NORM + ", " + TableNameKeys.NAME_NORM + "."
+					+ ColumnNameKeys.NAME_NORM + " AS " + ColumnNameKeys.NAME_NORM + ", " + TableNameKeys.ORT_NORM + "."
+					+ ColumnNameKeys.ORT_NORM + " AS " + ColumnNameKeys.ORT_NORM + ", " + TableNameKeys.FAKULTAETEN
+					+ "." + ColumnNameKeys.FAKULTAETEN_NORM + " AS " + ColumnNameKeys.FAKULTAETEN_NORM;
 			needsStandardFields = false;
 		}
 		if (ColumnNameKeys.DATUM.equals(userQuery.getColumn())) {
@@ -135,13 +139,15 @@ public class SQLBuilder {
 					+ ", " + userQuery.getTable() + "." + ColumnNameKeys.DATUMS_FELDER_GESETZT + " AS "
 					+ ColumnNameKeys.STUDIENJAHR_INT;
 		} else {
-			result += ", " + userQuery.getTable() + "." + userQuery.getColumn() + " AS " + userQuery.getColumn();
+			result += ", Hylleblomst.AGGREGATE(" + userQuery.getTable() + "." + userQuery.getColumn() + " AS "
+					+ userQuery.getColumn();
 		}
 		if (userQuery.getSource() == SourceKeys.ORT_NORM_AB || (SearchFieldKeys.ORT.equals(userQuery.getSearchField())
 				&& userQuery.getSource() == SourceKeys.NORM)) {
 			result += ", " + TableNameKeys.ORT_ABWEICHUNG_NORM + "." + ColumnNameKeys.ORT_ABWEICHUNG_NORM + " AS "
 					+ ColumnNameKeys.ORT_ABWEICHUNG_NORM;
 		}
+		result += ")";
 		return result;
 	}
 

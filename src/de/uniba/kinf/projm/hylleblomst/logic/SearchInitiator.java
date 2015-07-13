@@ -7,6 +7,7 @@ import javax.sql.rowset.CachedRowSet;
 
 import de.uniba.kinf.projm.hylleblomst.keys.ColumnNameKeys;
 import de.uniba.kinf.projm.hylleblomst.keys.DatabaseKeys;
+import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
 
 /**
  * A SearchInitiator is the interface between UI and database. It receives all
@@ -42,12 +43,24 @@ public interface SearchInitiator {
 	 * <b>Preconditions</b>:
 	 * <ul>
 	 * <li>Have to be specified by the respective implementation
+	 * <li>If a dates are analyzed, missing information must be filled
+	 * correctly.<br/>
+	 * <ul>
+	 * <li>Example1: User searches for date later than 1720. The passed input
+	 * has to be 1720-01-01.
+	 * <li>Example2: User fills fields for date earlier than March 1720. The
+	 * passed input has to be 1720-03-31.
+	 * </ul>
 	 * </ul>
 	 * 
 	 * <b>Postconditions</b>: <br/>
 	 * The returned CachedRowSet contains
 	 * <ul>
 	 * <li>All fields AS their specific value of {@link ColumnNameKeys}
+	 * <li>If searched for {@link SearchFieldKeys#EINSCHREIBEDATUM_BIS} or
+	 * {@link SearchFieldKeys#EINSCHREIBEDATUM_VON}, the column
+	 * {@link ColumnNameKeys#DATUMS_FELDER_GESETZT} is passed as well. More
+	 * information can be found there.
 	 * </ul>
 	 * 
 	 * @param userQuery
