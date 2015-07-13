@@ -6,7 +6,6 @@ import java.util.ResourceBundle;
 import javax.sql.rowset.CachedRowSet;
 
 import de.uniba.kinf.projm.hylleblomst.gui.model.Model;
-import de.uniba.kinf.projm.hylleblomst.keys.DatabaseKeys;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -23,7 +22,7 @@ public class MainController implements Initializable {
 
 	private Model model;
 
-	private ViewHelper viewHelper;
+	private StartController startController;
 
 	@FXML
 	private BorderPane root;
@@ -53,13 +52,10 @@ public class MainController implements Initializable {
 	private DetailsViewController detailsViewController;
 
 	/**
-	 * Constructor for a new Controller. The constructor initiates all
-	 * variables, inititates the {@link Model} and {@link SearchController}.
-	 * {@link DatabaseKeys} are set to a default value.
-	 * 
+	 * Default constructor.
 	 */
 	public MainController() {
-		viewHelper = new ViewHelper();
+
 	}
 
 	/**
@@ -78,19 +74,26 @@ public class MainController implements Initializable {
 			throw new IllegalArgumentException("Das übergene Model ist ungültig und hat keinen Wert.");
 		}
 		this.model = model;
+		setModelToControllers();
 	}
 
-	public void setModelToControllers(Model model) {
-		if (model == null) {
-			throw new IllegalArgumentException("Das übergene Model ist ungültig und hat keinen Wert.");
-		}
+	private void setModelToControllers() {
 		detailsViewController.setModel(model);
 		mainMenuController.setModel(model);
-		mainMenuController.setViewController(this);
+		mainMenuController.setMainController(this);
 		inputViewController.setModel(model);
 		tableViewController.setModel(model);
+		tableViewController.setMainController(this);
 		model.setDetailsController(detailsViewController);
 		model.addObserver(tableViewController);
+	}
+
+	public void setStartController(StartController startController) {
+		if (startController == null) {
+			throw new IllegalArgumentException(
+					"Der übergebene StartController hat keinen Wert und kann nicht gesetzt werden.");
+		}
+		this.startController = startController;
 	}
 
 	/**
@@ -99,16 +102,6 @@ public class MainController implements Initializable {
 	 * handlers is delegated to different helper functions.
 	 */
 	private void setEventHandlers() {
-		setKeyEvents();
-		// setNumericalInputEventHandlers();
-		// setTableViewEventHandlers();
-	}
-
-	/**
-	 * Sets up all 'global' key events. At the moment, this is only the ENTER
-	 * key starting the search when a valid input was done.
-	 */
-	private void setKeyEvents() {
 		root.setOnKeyReleased(new EventHandler<KeyEvent>() {
 
 			@Override
@@ -121,7 +114,26 @@ public class MainController implements Initializable {
 		});
 	}
 
+	/**
+	 * 
+	 * @return
+	 */
 	CachedRowSet getResult() {
 		return tableViewController.getResult();
+	}
+
+	/**
+	 * 
+	 */
+	void closeWindow() {
+		startController.closeView();
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	String getSelectedSource() {
+		return inputViewController.getSelectedSource();
 	}
 }

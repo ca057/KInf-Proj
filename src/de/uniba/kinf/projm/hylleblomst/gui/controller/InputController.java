@@ -203,8 +203,6 @@ public class InputController implements Initializable {
 	 */
 	private void setUpNodes() {
 		searchCategories.setExpandedPane(searchCategory_person);
-		// FIXME
-		// search_sourceLabel.setText(sourceLabelName.getValueSafe());
 		searchCategory_study_einschreibeHinweis
 				.setText("Hinweis: Für eine erfolgreiche Suche muss jeweils mindestens das Jahr ausgefüllt sein.");
 	}
@@ -442,6 +440,10 @@ public class InputController implements Initializable {
 		searchCategory_study_einschreibeHinweis.visibleProperty().bind(booleanBindingEinschreibeHinweis);
 	}
 
+	public String getSelectedSource() {
+		return search_sourcekey_selection.getValue();
+	}
+
 	/**
 	 * Collects all data from the input, gets all source keys and starts the
 	 * search by calling the corresponding function of the
@@ -451,9 +453,6 @@ public class InputController implements Initializable {
 	 */
 	@FXML
 	void startSearch() {
-		// FIXME
-		// resultTable.getColumns().clear();
-		// resultTable.getItems().clear();
 		String[] input = generateArrayWithInputValues();
 		int[] sources = generateArrayWithSourceFieldKeys();
 		try {
@@ -473,8 +472,6 @@ public class InputController implements Initializable {
 			}
 			try {
 				model.search(requestList);
-				// FIXME
-				// setLabelSource();
 			} catch (SQLException e) {
 				e.printStackTrace();
 				throw new SearchException("Ein Fehler bei der Suche ist aufgetreten:\n" + e.getMessage());

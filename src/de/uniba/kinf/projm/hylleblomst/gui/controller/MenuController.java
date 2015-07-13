@@ -20,7 +20,6 @@ import javafx.scene.control.MenuItem;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-import javafx.stage.Stage;
 
 public class MenuController implements Initializable {
 
@@ -53,16 +52,18 @@ public class MenuController implements Initializable {
 	@FXML
 	private MenuItem mainMenu_help_about;
 
+	/**
+	 * 
+	 */
 	public MenuController() {
 		viewHelper = new ViewHelper();
 		fileChooser = new FileChooser();
 	}
 
-	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
-		setMenuEventHandlers();
-	}
-
+	/**
+	 * 
+	 * @param model
+	 */
 	public void setModel(Model model) {
 		if (model != null) {
 			this.model = model;
@@ -71,9 +72,21 @@ public class MenuController implements Initializable {
 		}
 	}
 
-	public void setViewController(MainController viewController) {
-		if (viewController != null) {
-			this.mainController = viewController;
+	/**
+	 * 
+	 */
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		setMenuEventHandlers();
+	}
+
+	/**
+	 * 
+	 * @param mainController
+	 */
+	public void setMainController(MainController mainController) {
+		if (mainController != null) {
+			this.mainController = mainController;
 		} else {
 			throw new InputMismatchException(
 					"Der übergebene ViewController ist fehlerhaft und kann nicht gesetzt werden.");
@@ -186,10 +199,8 @@ public class MenuController implements Initializable {
 	 * Closes the window when the users submits the action.
 	 */
 	private void closeWindow() {
-		Stage stage = (Stage) menuRoot.getScene().getWindow();
 		if (viewHelper.askForClosingWindow()) {
-			stage.close();
-			System.exit(0);
+			mainController.closeWindow();
 		}
 	}
 

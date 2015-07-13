@@ -61,7 +61,7 @@ public class StartController {
 
 			mainController = loader.getController();
 			mainController.setModel(model);
-			mainController.setModelToControllers(model);
+			mainController.setStartController(this);
 
 			mainStage.setTitle(new ViewHelper().getAppName());
 			mainStage.getIcons().add(new Image(getClass().getResourceAsStream("../view/unicorn-icon.png")));
@@ -94,4 +94,7 @@ public class StartController {
 		}
 	}
 
+	public void closeView() {
+		mainStage.close();
+	}
 }
