@@ -336,6 +336,7 @@ public class UserQueryImpl implements UserQuery {
 			case FAKULTAETEN:
 				table = TableNameKeys.FAKULTAETEN;
 				column = ColumnNameKeys.FAKULTAETEN_NORM;
+				sqlWhere = buildSQLWhere();
 				break;
 			case SEMINAR:
 				if (source == SourceKeys.NORM) {
