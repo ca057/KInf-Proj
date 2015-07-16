@@ -391,8 +391,8 @@ public class UserQueryImpl implements UserQuery {
 		}
 		result.append(String.format("%s%s.%s%s", upperFront, table, column, upperEnd)).append(getEquationSymbol())
 				.append(String.format("%s?%s", upperFront, upperEnd));
-		if ((source == SourceKeys.NO_SELECTION || source == SourceKeys.ORT_NORM_AB)
-				&& !SearchFieldKeys.ZUSAETZE.equals(searchField)) {
+		if ((source == SourceKeys.NO_SELECTION || source == SourceKeys.ORT_NORM_AB
+				|| SearchFieldKeys.ANREDE.equals(searchField)) && !SearchFieldKeys.ZUSAETZE.equals(searchField)) {
 			result.append(String.format(" OR UPPER(%s_norm.%snorm) ", table.substring(0, table.indexOf("_")),
 					column.substring(0, column.length() - 4))).append(getEquationSymbol()).append("UPPER(?)");
 			numberOfInputs++;
