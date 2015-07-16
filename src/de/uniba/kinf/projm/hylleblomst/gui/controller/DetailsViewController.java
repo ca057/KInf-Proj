@@ -11,6 +11,8 @@ import de.uniba.kinf.projm.hylleblomst.gui.model.Model;
 import de.uniba.kinf.projm.hylleblomst.keys.SearchFieldKeys;
 import de.uniba.kinf.projm.hylleblomst.logicImpl.UserQueryImpl;
 import javafx.beans.binding.BooleanBinding;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.FXML;
@@ -29,6 +31,8 @@ import javafx.scene.layout.GridPane;
 public class DetailsViewController implements Initializable {
 
 	private StringProperty personID;
+
+	private BooleanProperty noSelectionEvent;
 
 	private Model model;
 
@@ -150,6 +154,7 @@ public class DetailsViewController implements Initializable {
 	public DetailsViewController() {
 		viewHelper = new ViewHelper();
 		personID = new SimpleStringProperty();
+		noSelectionEvent = new SimpleBooleanProperty(false);
 	}
 
 	/**
@@ -192,40 +197,58 @@ public class DetailsViewController implements Initializable {
 	 */
 	private void setUpEventHandlers() {
 		result_details_anredeselection.setOnAction((event) -> {
-			getSourceDetails(SearchFieldKeys.ANREDE,
-					result_details_anredeselection.getSelectionModel().getSelectedItem());
+			if (!noSelectionEvent.get()) {
+				getSourceDetails(SearchFieldKeys.ANREDE,
+						result_details_titelselection.getSelectionModel().getSelectedItem());
+			}
 		});
-
 		result_details_titelselection.setOnAction((event) -> {
-			getSourceDetails(SearchFieldKeys.TITEL,
-					result_details_titelselection.getSelectionModel().getSelectedItem());
+			if (!noSelectionEvent.get()) {
+				getSourceDetails(SearchFieldKeys.TITEL,
+						result_details_titelselection.getSelectionModel().getSelectedItem());
+			}
 		});
 		result_details_vornameselection.setOnAction((event) -> {
-			getSourceDetails(SearchFieldKeys.VORNAME,
-					result_details_vornameselection.getSelectionModel().getSelectedItem());
+			if (!noSelectionEvent.get()) {
+				getSourceDetails(SearchFieldKeys.VORNAME,
+						result_details_vornameselection.getSelectionModel().getSelectedItem());
+			}
 		});
 		result_details_nachnameselection.setOnAction((event) -> {
-			getSourceDetails(SearchFieldKeys.NACHNAME,
-					result_details_nachnameselection.getSelectionModel().getSelectedItem());
+			if (!noSelectionEvent.get()) {
+				getSourceDetails(SearchFieldKeys.NACHNAME,
+						result_details_nachnameselection.getSelectionModel().getSelectedItem());
+			}
 		});
 		result_details_wirtschaftselection.setOnAction((event) -> {
-			getSourceDetails(SearchFieldKeys.WIRTSCHAFTSLAGE,
-					result_details_wirtschaftselection.getSelectionModel().getSelectedItem());
+			if (!noSelectionEvent.get()) {
+				getSourceDetails(SearchFieldKeys.WIRTSCHAFTSLAGE,
+						result_details_wirtschaftselection.getSelectionModel().getSelectedItem());
+			}
 		});
 		result_details_ortselection.setOnAction((event) -> {
-			getSourceDetails(SearchFieldKeys.ORT, result_details_ortselection.getSelectionModel().getSelectedItem());
+			if (!noSelectionEvent.get()) {
+				getSourceDetails(SearchFieldKeys.ORT,
+						result_details_ortselection.getSelectionModel().getSelectedItem());
+			}
 		});
 		result_details_studienfachselection.setOnAction((event) -> {
-			getSourceDetails(SearchFieldKeys.FACH,
-					result_details_studienfachselection.getSelectionModel().getSelectedItem());
+			if (!noSelectionEvent.get()) {
+				getSourceDetails(SearchFieldKeys.FACH,
+						result_details_studienfachselection.getSelectionModel().getSelectedItem());
+			}
 		});
 		result_details_seminarselection.setOnAction((event) -> {
-			getSourceDetails(SearchFieldKeys.SEMINAR,
-					result_details_seminarselection.getSelectionModel().getSelectedItem());
+			if (!noSelectionEvent.get()) {
+				getSourceDetails(SearchFieldKeys.SEMINAR,
+						result_details_seminarselection.getSelectionModel().getSelectedItem());
+			}
 		});
 		result_details_zusaetzeselection.setOnAction((event) -> {
-			getSourceDetails(SearchFieldKeys.ZUSAETZE,
-					result_details_zusaetzeselection.getSelectionModel().getSelectedItem());
+			if (!noSelectionEvent.get()) {
+				getSourceDetails(SearchFieldKeys.ZUSAETZE,
+						result_details_zusaetzeselection.getSelectionModel().getSelectedItem());
+			}
 		});
 	}
 
@@ -600,16 +623,17 @@ public class DetailsViewController implements Initializable {
 	}
 
 	private void setSelectionValueToDefault() {
-		result_details_anredeselection.setValue(null);
-		result_details_anredeselection.setValue(null);
-		result_details_nachnameselection.setValue(null);
-		result_details_ortselection.setValue(null);
-		result_details_seminarselection.setValue(null);
-		result_details_studienfachselection.setValue(null);
-		result_details_titelselection.setValue(null);
-		result_details_vornameselection.setValue(null);
-		result_details_wirtschaftselection.setValue(null);
-		result_details_zusaetzeselection.setValue(null);
+		noSelectionEvent.setValue(true);
+		result_details_anredeselection.getSelectionModel().clearSelection();
+		result_details_nachnameselection.getSelectionModel().clearSelection();
+		result_details_ortselection.getSelectionModel().clearSelection();
+		result_details_seminarselection.getSelectionModel().clearSelection();
+		result_details_studienfachselection.getSelectionModel().clearSelection();
+		result_details_titelselection.getSelectionModel().clearSelection();
+		result_details_vornameselection.getSelectionModel().clearSelection();
+		result_details_wirtschaftselection.getSelectionModel().clearSelection();
+		result_details_zusaetzeselection.getSelectionModel().clearSelection();
+		noSelectionEvent.setValue(false);
 	}
 
 }
