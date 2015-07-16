@@ -381,7 +381,7 @@ public class DetailsViewController implements Initializable {
 		ResultSetMetaData crsMeta;
 		try {
 			crsMeta = searchResult.getMetaData();
-
+			clearDetailsView();
 			while (searchResult.next()) {
 				for (int i = 1; i <= crsMeta.getColumnCount(); i++) {
 					if (crsMeta.getColumnName(i).equals("PERSONID")) {
@@ -569,6 +569,47 @@ public class DetailsViewController implements Initializable {
 		} catch (SQLException e) {
 			viewHelper.showErrorMessage("Es konnten keine Tradierungen gefunden werden.\n" + e.getMessage());
 		}
+	}
+
+	private void clearDetailsView() {
+		setLabelValuesToEmptyString();
+		setSelectionValueToDefault();
+	}
+
+	private void setLabelValuesToEmptyString() {
+		anrede.setValue("");
+		adlig.setValue("");
+		anmerkungen.setValue("");
+		einschreibedatum.setValue("");
+		fakultaet.setValue("");
+		fundort.setValue("");
+		graduiert.setValue("");
+		jesuit.setValue("");
+		nachname.setValue("");
+		nummerhess.setValue("");
+		ort.setValue("");
+		personID.setValue("");
+		seite.setValue("");
+		seminar.setValue("");
+		studienfach.setValue("");
+		studienjahr.setValue("");
+		titel.setValue("");
+		vorname.setValue("");
+		wirtschaft.setValue("");
+		zusaetze.setValue("");
+	}
+
+	private void setSelectionValueToDefault() {
+		result_details_anredeselection.setValue(null);
+		result_details_anredeselection.setValue(null);
+		result_details_nachnameselection.setValue(null);
+		result_details_ortselection.setValue(null);
+		result_details_seminarselection.setValue(null);
+		result_details_studienfachselection.setValue(null);
+		result_details_titelselection.setValue(null);
+		result_details_vornameselection.setValue(null);
+		result_details_wirtschaftselection.setValue(null);
+		result_details_zusaetzeselection.setValue(null);
 	}
 
 }

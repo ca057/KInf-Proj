@@ -250,7 +250,7 @@ public class TableViewController implements Initializable, Observer {
 					resultTable.getColumns().add(col);
 				}
 				// set visibility of first column with ID to false
-				resultTable.getColumns().get(0).setVisible(false);
+				// resultTable.getColumns().get(0).setVisible(false);
 				result.beforeFirst();
 				while (result.next()) {
 					ObservableList<String> row = FXCollections.observableArrayList();
