@@ -95,9 +95,16 @@ public class SQLBuilder {
 		StringBuilder sqlGroupBy = new StringBuilder();
 		iterateOverQueries(sqlSelect, sqlWhere, sqlNestedSelect, sqlGroupBy);
 
-		sqlStatement.append("SELECT DISTINCT " + standardSelection).append(sqlSelect).append(" FROM (SELECT DISTINCT ")
-				.append(sqlNestedSelect).append(" FROM " + buildFrom()).append(" WHERE ").append(sqlWhere)
-				.append(") T ").append(" GROUP BY " + standardSelection).append(sqlGroupBy);
+		sqlStatement
+				.append("SELECT DISTINCT " + ColumnNameKeys.PERSON_ID + " AS ID"
+						+ ", Hylleblomst.AGGREGATE_VARCHAR(' ' || " + ColumnNameKeys.VORNAME_NORM
+						+ ") AS VORNAME, Hylleblomst.AGGREGATE_VARCHAR(' ' || " + ColumnNameKeys.NAME_NORM
+						+ ") AS NAME, Hylleblomst.AGGREGATE_VARCHAR(' ' || " + ColumnNameKeys.ORT_NORM
+						+ ") AS ORT, Hylleblomst.AGGREGATE_VARCHAR(' ' || " + ColumnNameKeys.FAKULTAETEN_NORM
+						+ ") AS FAKULTÄT")
+				.append(sqlSelect).append(" FROM (SELECT DISTINCT ").append(sqlNestedSelect)
+				.append(" FROM " + buildFrom()).append(" WHERE ").append(sqlWhere).append(") T ")
+				.append(" GROUP BY " + standardSelection).append(sqlGroupBy);
 
 		resetBooleans();
 	}
