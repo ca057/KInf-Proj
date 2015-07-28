@@ -131,7 +131,7 @@ public class SQLBuilder {
 			sqlWhere.append(buildWhere(query));
 			sqlNestedSelect.append(buildNestedSelect(query));
 			if (!query.isInt()) {
-				sqlSelect.append(", Hylleblomst.AGGREGATE_VARCHAR(' ' || ");
+				sqlSelect.append(", " + TableNameKeys.SCHEMA_NAME + ".AGGREGATE_VARCHAR(' ' || ");
 			}
 			if (ColumnNameKeys.DATUM.equals(query.getColumn()) && !hasDate) {
 				sqlSelect.append(", " + query.getColumn()).append(", " + ColumnNameKeys.DATUMS_FELDER_GESETZT);
