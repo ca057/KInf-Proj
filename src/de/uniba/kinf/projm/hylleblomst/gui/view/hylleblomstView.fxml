@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniba.kinf.projm.hylleblomst.gui.controller.MainController">
+	<top>
+		<fx:include fx:id="mainMenu" source="hylleblomstViewMainMenu.fxml" />
+	</top>
+	<center>
+		<HBox BorderPane.alignment="CENTER">
+			<children>
+				<fx:include fx:id="inputView" source="hylleblomstViewInput.fxml" />
+				<SplitPane dividerPositions="0.5022288261515602" orientation="VERTICAL" prefHeight="675.0" HBox.hgrow="ALWAYS">
+					<items>
+						<fx:include fx:id="tableView" source="hylleblomstViewTable.fxml" />
+						<ScrollPane fx:id="result_persondetails_scrollpane">
+		                  <fx:include fx:id="detailsView" source="hylleblomstViewDetails.fxml" />
+						</ScrollPane>
+					</items>
+				</SplitPane>
+			</children>
+		</HBox>
+	</center>
+</BorderPane>

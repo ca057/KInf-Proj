@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+
+<MenuBar fx:id="menuRoot" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniba.kinf.projm.hylleblomst.gui.controller.MenuController">
+	<menus>
+		<Menu fx:id="mainMenu_file" mnemonicParsing="false" text="Datei">
+			<items>
+				<MenuItem fx:id="mainMenu_file_exportSearchResult" mnemonicParsing="false" text="Suchergebnis exportieren" />
+				<MenuItem fx:id="mainMenu_file_close" mnemonicParsing="false" text="Programm beenden" />
+			</items>
+		</Menu>
+		<Menu fx:id="mainMenu_database" mnemonicParsing="false" text="Datenbank">
+			<items>
+				<MenuItem fx:id="mainMenu_database_setupDatabase" mnemonicParsing="false" text="Datenbank anlegen/verbinden" />
+				<MenuItem fx:id="mainMenu_database_importData" mnemonicParsing="false" text="Daten in Datenbank importieren" />
+				<MenuItem fx:id="mainMenu_database_clearDatabase" mnemonicParsing="false" text="Datenbank leeren" />
+			</items>
+		</Menu>
+		<Menu fx:id="mainMenu_help" mnemonicParsing="false" text="Hilfe">
+			<items>
+				<MenuItem fx:id="mainMenu_help_about" mnemonicParsing="false" text="Über" />
+			</items>
+		</Menu>
+	</menus>
+</MenuBar>
+

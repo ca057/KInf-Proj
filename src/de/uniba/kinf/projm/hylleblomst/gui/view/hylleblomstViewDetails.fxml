@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.collections.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.collections.FXCollections ?>
+
+<GridPane fx:id="rootDetails" prefHeight="331.0" prefWidth="698.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.uniba.kinf.projm.hylleblomst.gui.controller.DetailsViewController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="174.5" minWidth="10.0" percentWidth="25.0" prefWidth="174.5" />
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="174.5" minWidth="10.0" percentWidth="25.0" prefWidth="174.5" />
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" percentWidth="25.0" prefWidth="100.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <padding>
+      <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+   </padding>
+   <children>
+      <Label text="Adlig" GridPane.rowIndex="5">
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </Label>
+      <Label text="Jesuit" GridPane.rowIndex="6">
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </Label>
+      <ComboBox fx:id="result_details_anredeselection" prefWidth="150.0" promptText="Anrede" GridPane.rowIndex="1">
+      	<items>
+			<FXCollections fx:factory="observableArrayList">
+				<String fx:value="keine Quelle" />
+				<String fx:value="normalisiert" />
+			</FXCollections>
+		</items>
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </ComboBox>
+      <ComboBox fx:id="result_details_titelselection" prefWidth="150.0" promptText="Titel" GridPane.rowIndex="2">
+         <items>
+			<FXCollections fx:factory="observableArrayList">
+				<String fx:value="keine Quelle" />
+				<String fx:value="normalisiert" />
+			</FXCollections>
+		</items>
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </ComboBox>
+      <ComboBox fx:id="result_details_vornameselection" prefWidth="150.0" promptText="Vorname" GridPane.rowIndex="3">
+         <items>
+			<FXCollections fx:factory="observableArrayList">
+				<String fx:value="Standard" />
+				<String fx:value="normalisiert" />
+				<String fx:value="HS B (AUB, I 11)" />
+				<String fx:value="HS C (AUB, I 13/1)" />
+				<String fx:value="HS D (AUB, I 13/2)" />
+				<String fx:value="HS E (AUB, I 9)" />
+				<String fx:value="HS F (AUB, I 8)" />
+				<String fx:value="HS G (AUB, I 6)" />
+				<String fx:value="HS H (AEB, Rep. I, Nr. 321)" />
+				<String fx:value="HS I (SB Bamberg, Msc.Add.3a)" />
+				<String fx:value="HS J (SB Bamberg, Msc.Add.3)" />
+				<String fx:value="AUB, V E 38" />
+			</FXCollections>
+		</items>
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </ComboBox>
+      <ComboBox fx:id="result_details_nachnameselection" prefWidth="150.0" promptText="Nachname" GridPane.rowIndex="4">
+         <items>
+			<FXCollections fx:factory="observableArrayList">
+				<String fx:value="Standard" />
+				<String fx:value="normalisiert" />
+				<String fx:value="HS B (AUB, I 11)" />
+				<String fx:value="HS C (AUB, I 13/1)" />
+				<String fx:value="HS D (AUB, I 13/2)" />
+				<String fx:value="HS E (AUB, I 9)" />
+				<String fx:value="HS F (AUB, I 8)" />
+				<String fx:value="HS G (AUB, I 6)" />
+				<String fx:value="HS H (AEB, Rep. I, Nr. 321)" />
+				<String fx:value="HS I (SB Bamberg, Msc.Add.3a)" />
+				<String fx:value="HS J (SB Bamberg, Msc.Add.3)" />
+				<String fx:value="AUB, V E 38" />
+			</FXCollections>
+		</items>
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </ComboBox>
+      <ComboBox fx:id="result_details_wirtschaftselection" prefWidth="150.0" promptText="wirtschaftl. Lage" GridPane.rowIndex="7">
+         <items>
+			<FXCollections fx:factory="observableArrayList">
+				<String fx:value="Standard" />
+				<String fx:value="normalisiert" />
+				<String fx:value="HS B (AUB, I 11)" />
+				<String fx:value="HS D (AUB, I 13/2)" />
+				<String fx:value="HS J (SB Bamberg, Msc.Add.3)" />
+			</FXCollections>
+		</items>
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </ComboBox>
+      <ComboBox fx:id="result_details_ortselection" prefWidth="150.0" promptText="Ort" GridPane.rowIndex="8">
+	      <items>
+				<FXCollections fx:factory="observableArrayList">
+					<String fx:value="Standard" />
+					<String fx:value="normalisiert" />
+					<String fx:value="Abweichung normalisiert" />
+					<String fx:value="HS B (AUB, I 11)" />
+					<String fx:value="HS C (AUB, I 13/1)" />
+					<String fx:value="HS D (AUB, I 13/2)" />
+					<String fx:value="HS E (AUB, I 9)" />
+					<String fx:value="HS F (AUB, I 8)" />
+					<String fx:value="HS G (AUB, I 6)" />
+					<String fx:value="HS H (AEB, Rep. I, Nr. 321)" />
+					<String fx:value="HS I (SB Bamberg, Msc.Add.3a)" />
+					<String fx:value="HS J (SB Bamberg, Msc.Add.3)" />
+					<String fx:value="AUB, V E 38" />
+				</FXCollections>
+			</items>
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </ComboBox>
+      <ComboBox fx:id="result_details_studienfachselection" prefWidth="150.0" promptText="Studienfach" GridPane.rowIndex="9">
+	      	<items>
+				<FXCollections fx:factory="observableArrayList">
+					<String fx:value="Standard" />
+					<String fx:value="normalisiert" />
+					<String fx:value="HS B (AUB, I 11)" />
+				</FXCollections>
+			</items>
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </ComboBox>
+      <ComboBox fx:id="result_details_seminarselection" prefWidth="150.0" promptText="Seminar" GridPane.columnIndex="2" GridPane.rowIndex="1">
+          	<items>
+				<FXCollections fx:factory="observableArrayList">
+					<String fx:value="Standard" />
+					<String fx:value="normalisiert" />
+					<String fx:value="HS B (AUB, I 11)" />
+					<String fx:value="HS D (AUB, I 13/2)" />
+					<String fx:value="HS E (AUB, I 9)" />
+					<String fx:value="HS I (SB Bamberg, Msc.Add.3a)" />
+					<String fx:value="HS J (SB Bamberg, Msc.Add.3)" />
+				</FXCollections>
+			</items>
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </ComboBox>
+      <Label fx:id="result_details_anrede" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </Label>
+      <Label fx:id="result_details_titel" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2">
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </Label>
+      <Label fx:id="result_details_vorname" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3">
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </Label>
+      <Label fx:id="result_details_nachname" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4">
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </Label>
+      <Label fx:id="result_details_adlig" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="5">
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </Label>
+      <Label fx:id="result_details_jesuit" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="6">
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </Label>
+      <Label fx:id="result_details_wirtschaft" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="7">
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </Label>
+      <Label fx:id="result_details_ort" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="8">
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </Label>
+      <Label fx:id="result_details_studienfach" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="9">
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </Label>
+      <Label fx:id="result_details_fakultaet" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="10">
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </Label>
+      <Label fx:id="result_details_seminar" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </Label>
+      <ComboBox fx:id="result_details_zusaetzeselection" prefWidth="150.0" promptText="Zusätze" GridPane.columnIndex="2" GridPane.rowIndex="5">
+	      <items>
+			<FXCollections fx:factory="observableArrayList">
+				<String fx:value="Standard" />
+				<String fx:value="HS B (AUB, I 11)" />
+				<String fx:value="HS C (AUB, I 13/1)" />
+				<String fx:value="HS D (AUB, I 13/2)" />
+				<String fx:value="HS E (AUB, I 9)" />
+				<String fx:value="HS F (AUB, I 8)" />
+				<String fx:value="HS G (AUB, I 6)" />
+				<String fx:value="HS H (AEB, Rep. I, Nr. 321)" />
+				<String fx:value="HS I (SB Bamberg, Msc.Add.3a)" />
+				<String fx:value="HS J (SB Bamberg, Msc.Add.3)" />
+				<String fx:value="AUB, V E 38" />
+			</FXCollections>
+		</items>
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </ComboBox>
+      <Label text="Graduiert" GridPane.columnIndex="2" GridPane.rowIndex="2">
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </Label>
+      <Label text="Studienjahr" GridPane.columnIndex="2" GridPane.rowIndex="3">
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </Label>
+      <Label text="Einschreibedatum" GridPane.columnIndex="2" GridPane.rowIndex="4">
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </Label>
+      <Label text="Fundort" GridPane.columnIndex="2" GridPane.rowIndex="6">
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </Label>
+      <Label text="Anmerkungen" GridPane.columnIndex="2" GridPane.rowIndex="7">
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </Label>
+      <Label text="Nummer" GridPane.columnIndex="2" GridPane.rowIndex="8">
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </Label>
+      <Label text="Seite Original" GridPane.columnIndex="2" GridPane.rowIndex="9">
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </Label>
+      <Label text="Nummer Hess" GridPane.columnIndex="2" GridPane.rowIndex="10">
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </Label>
+      <Label text="Personendetails">
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+         <font>
+            <Font name="System Bold" size="12.0" />
+         </font>
+      </Label>
+      <Label fx:id="result_details_graduiert" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="2">
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </Label>
+      <Label fx:id="result_details_studienjahr" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="3">
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </Label>
+      <Label fx:id="result_details_einschreibedatum" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="4">
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </Label>
+      <Label fx:id="result_details_zusaetze" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="5">
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </Label>
+      <Label fx:id="result_details_fundort" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="6">
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </Label>
+      <Label fx:id="result_details_anmerkungen" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="7">
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </Label>
+      <Label fx:id="result_details_nummer" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="8">
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </Label>
+      <Label fx:id="result_details_seite" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="9">
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </Label>
+      <Label fx:id="result_details_nummerhess" text="Label" GridPane.columnIndex="3" GridPane.rowIndex="10">
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </Label>
+      <Label text="Fakultät" GridPane.rowIndex="10">
+         <GridPane.margin>
+            <Insets bottom="2.5" left="2.5" right="2.5" top="2.5" />
+         </GridPane.margin>
+      </Label>
+   </children>
+</GridPane>

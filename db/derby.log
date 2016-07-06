@@ -1,0 +1,19 @@
+----------------------------------------------------------------
+Sun Jul 12 00:03:47 CEST 2015:
+Booten von Derby-Version The Apache Software Foundation - Apache Derby - 10.11.1.1 - (1616546): Instanz a816c00e-014e-7f25-4b37-000006fa0618
+für Datenbankverzeichnis C:\Users\Simon\git\KInf-Projekt\db\MyDB mit Class Loader sun.misc.Launcher$AppClassLoader@6e0be858
+Geladen aus file:/C:/Program%20Files/Derby%2010/lib/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_45-b15
+user.dir=C:\Users\Simon\git\KInf-Projekt\db
+os.name=Windows 8.1
+os.arch=amd64
+os.version=6.3
+derby.system.home=null
+Datenbank-Class Loader wurde gestartet - derby.database.classpath=''
+----------------------------------------------------------------
+Sun Jul 12 00:04:12 CEST 2015: Derby-Engine wird heruntergefahren
+----------------------------------------------------------------
+Sun Jul 12 00:04:12 CEST 2015:
+Instanz a816c00e-014e-7f25-4b37-000006fa0618 im Datenbankverzeichnis C:\Users\Simon\git\KInf-Projekt\db\MyDB mit Class Loader sun.misc.Launcher$AppClassLoader@6e0be858 wird heruntergefahren
+----------------------------------------------------------------

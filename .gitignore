@@ -1,1 +1,13 @@
 /bin/
+
+/MyTestingDB
+
+.gitignore
+
+
+.log
+.sql
+
+/derby.log
+.uml
+/testing/
